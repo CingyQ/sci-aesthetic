@@ -102,6 +102,7 @@ let state = {
   paletteTabSwitcher: null,
   paletteBrowserChart: null,
   activePaletteColors: null,
+  chartType: 'bar',
   copyButtons: [],
 
   // 清理列表
@@ -201,30 +202,46 @@ export function render() {
       <section class="section-light" style="align-items:center;" id="m1p2-deltae">
         <div class="content-wrapper" style="max-width:700px;">
           <h2 class="page-hero-title" style="color:var(--text-on-light);text-align:center;margin-bottom:var(--space-sm);">色距感知：CIELAB ΔE</h2>
-          <p style="text-align:center;color:var(--text-on-light-2);font-size:var(--text-body);max-width:520px;margin:0 auto var(--space-xl);line-height:1.7;">
+          <p style="text-align:center;color:var(--text-on-light-2);font-size:var(--text-body);max-width:520px;margin:0 auto var(--space-lg);line-height:1.7;">
             两种颜色在人眼看来差多少？ΔE 给出量化答案
           </p>
+
+          <!-- 预设配对按钮 -->
+          <div style="display:flex;justify-content:center;gap:var(--space-xs);margin-bottom:var(--space-lg);flex-wrap:wrap;">
+            <span style="color:var(--text-on-light-3);font-size:var(--text-small);align-self:center;margin-right:var(--space-xs);">试试：</span>
+            <button class="btn-ghost btn-small m1p2-de-preset" data-c1="#E64B35" data-c2="#E8523D" style="font-size:var(--text-small);color:var(--text-on-light-2);border-color:var(--border-light);">极相似</button>
+            <button class="btn-ghost btn-small m1p2-de-preset" data-c1="#3C5488" data-c2="#4DBBD5" style="font-size:var(--text-small);color:var(--text-on-light-2);border-color:var(--border-light);">同色系</button>
+            <button class="btn-ghost btn-small m1p2-de-preset" data-c1="#E64B35" data-c2="#4DBBD5" style="font-size:var(--text-small);color:var(--text-on-light-2);border-color:var(--border-light);">互补色</button>
+            <button class="btn-ghost btn-small m1p2-de-preset" data-c1="#DC0000" data-c2="#009E73" style="font-size:var(--text-small);color:var(--text-on-light-2);border-color:var(--border-light);">红绿色盲</button>
+            <button class="btn-ghost btn-small" id="m1p2-de-random" style="font-size:var(--text-small);color:var(--accent);border-color:var(--accent);">🎲 随机</button>
+          </div>
 
           <!-- 双色输入 -->
           <div style="display:flex;gap:var(--space-lg);justify-content:center;align-items:flex-start;flex-wrap:wrap;margin-bottom:var(--space-lg);">
             <!-- 颜色 1 -->
-            <div style="text-align:center;">
-              <div id="m1p2-de-swatch1" style="margin:0 auto var(--space-sm);width:100px;height:100px;border-radius:var(--radius-md);border:2px solid var(--border-light);"></div>
-              <label style="font-size:var(--text-small);color:var(--text-on-light-2);display:block;margin-bottom:4px;">颜色 A</label>
+            <div style="text-align:center;position:relative;">
+              <div id="m1p2-de-swatch1" style="margin:0 auto var(--space-sm);width:100px;height:100px;border-radius:var(--radius-md);border:2px solid var(--border-light);cursor:pointer;transition:transform var(--t-fast),box-shadow var(--t-fast);position:relative;overflow:hidden;">
+                <input type="color" id="m1p2-de-picker1" value="#E64B35" style="position:absolute;inset:0;width:200%;height:200%;opacity:0;cursor:pointer;">
+              </div>
+              <label style="font-size:var(--text-small);color:var(--text-on-light-2);display:block;margin-bottom:4px;">颜色 A<span style="font-size:10px;color:var(--text-on-light-3);margin-left:4px;">点击选色</span></label>
               <input type="text" class="input" id="m1p2-de-input1" value="#E64B35" style="max-width:130px;text-align:center;font-family:var(--font-code);margin:0 auto;">
             </div>
 
             <!-- 结果 -->
-            <div style="text-align:center;align-self:center;min-width:120px;">
-              <div id="m1p2-de-value" style="font-size:var(--text-stat);font-weight:700;color:var(--text-on-light);line-height:1;font-family:var(--font-heading);">0</div>
+            <div style="text-align:center;align-self:center;min-width:140px;">
+              <div id="m1p2-de-value" style="font-size:var(--text-stat);font-weight:700;color:var(--text-on-light);line-height:1;font-family:var(--font-heading);transition:color 0.3s;">0</div>
               <div style="font-size:var(--text-caption);color:var(--text-on-light-3);margin-top:4px;">ΔE (CIE76)</div>
-              <div id="m1p2-de-label" style="font-size:var(--text-small);color:var(--accent);margin-top:var(--space-xs);font-weight:500;"></div>
+              <div id="m1p2-de-label" style="font-size:var(--text-small);color:var(--accent);margin-top:var(--space-xs);font-weight:500;min-height:20px;"></div>
+              <!-- 渐变条预览 -->
+              <div id="m1p2-de-gradient" style="margin-top:var(--space-sm);height:8px;border-radius:4px;max-width:140px;margin-left:auto;margin-right:auto;"></div>
             </div>
 
             <!-- 颜色 2 -->
-            <div style="text-align:center;">
-              <div id="m1p2-de-swatch2" style="margin:0 auto var(--space-sm);width:100px;height:100px;border-radius:var(--radius-md);border:2px solid var(--border-light);"></div>
-              <label style="font-size:var(--text-small);color:var(--text-on-light-2);display:block;margin-bottom:4px;">颜色 B</label>
+            <div style="text-align:center;position:relative;">
+              <div id="m1p2-de-swatch2" style="margin:0 auto var(--space-sm);width:100px;height:100px;border-radius:var(--radius-md);border:2px solid var(--border-light);cursor:pointer;transition:transform var(--t-fast),box-shadow var(--t-fast);position:relative;overflow:hidden;">
+                <input type="color" id="m1p2-de-picker2" value="#4DBBD5" style="position:absolute;inset:0;width:200%;height:200%;opacity:0;cursor:pointer;">
+              </div>
+              <label style="font-size:var(--text-small);color:var(--text-on-light-2);display:block;margin-bottom:4px;">颜色 B<span style="font-size:10px;color:var(--text-on-light-3);margin-left:4px;">点击选色</span></label>
               <input type="text" class="input" id="m1p2-de-input2" value="#4DBBD5" style="max-width:130px;text-align:center;font-family:var(--font-code);margin:0 auto;">
             </div>
           </div>
@@ -260,14 +277,24 @@ export function render() {
           <!-- 分类 Tab -->
           <div style="display:flex;justify-content:center;margin-bottom:var(--space-lg);overflow-x:auto;" id="m1p2-palette-tabs"></div>
 
-          <!-- 配色卡片列表 -->
-          <div id="m1p2-palette-list" style="display:flex;flex-direction:column;gap:var(--space-md);margin-bottom:var(--space-xl);"></div>
+          <!-- 响应式双栏布局 -->
+          <div class="m1p2-browser-layout">
+            <!-- 左侧：配色卡片列表 -->
+            <div class="m1p2-browser-left">
+              <div id="m1p2-palette-list" style="display:flex;flex-direction:column;gap:var(--space-md);"></div>
+            </div>
 
-          <!-- 图表预览区 -->
-          <div style="text-align:center;margin-bottom:var(--space-sm);">
-            <span style="color:var(--text-on-dark-3);font-size:var(--text-small);">配色效果预览</span>
+            <!-- 右侧：图表预览区 -->
+            <div class="m1p2-browser-right">
+              <div style="position:sticky;top:var(--space-lg);">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-md);flex-wrap:wrap;gap:var(--space-xs);">
+                  <span style="color:var(--text-on-dark-2);font-size:var(--text-small);font-weight:500;">配色效果预览</span>
+                  <div id="m1p2-chart-type-btns" style="display:flex;gap:4px;flex-wrap:wrap;"></div>
+                </div>
+                <div id="m1p2-palette-chart"></div>
+              </div>
+            </div>
           </div>
-          <div id="m1p2-palette-chart" style="max-width:600px;margin:0 auto;"></div>
         </div>
       </section>
 
@@ -384,7 +411,7 @@ function initHarmonySection() {
       width: 500,
       height: 280,
       margin: { top: 30, right: 30, bottom: 40, left: 40 },
-      bgColor: '#f0f0f2',
+      bgColor: '#ffffff',
     });
   }
 
@@ -530,25 +557,22 @@ function updateHarmonyChart(colors) {
     .domain([0, 110])
     .range([innerHeight, 0]);
 
-  // X 轴
   g.append('g')
     .attr('transform', `translate(0,${innerHeight})`)
     .call(d3.axisBottom(x).tickSize(0))
-    .call(sel => sel.select('.domain').attr('stroke', '#aaa'))
+    .call(sel => sel.select('.domain').attr('stroke', '#e0e0e0'))
     .selectAll('text')
-    .attr('fill', '#666')
+    .attr('fill', '#888')
     .attr('font-size', '11px');
 
-  // Y 轴 + 网格线
   g.append('g')
     .call(d3.axisLeft(y).ticks(5).tickSize(-innerWidth))
     .call(sel => sel.select('.domain').remove())
-    .call(sel => sel.selectAll('.tick line').attr('stroke', '#ddd').attr('stroke-dasharray', '3,3'))
+    .call(sel => sel.selectAll('.tick line').attr('stroke', '#e0e0e0').attr('stroke-dasharray', '3,3'))
     .selectAll('text')
-    .attr('fill', '#666')
+    .attr('fill', '#888')
     .attr('font-size', '11px');
 
-  // 柱形
   g.selectAll('.bar')
     .data(data)
     .join('rect')
@@ -757,6 +781,16 @@ function initDeltaESection() {
   const input2 = document.getElementById('m1p2-de-input2');
   const swatch1 = document.getElementById('m1p2-de-swatch1');
   const swatch2 = document.getElementById('m1p2-de-swatch2');
+  const picker1 = document.getElementById('m1p2-de-picker1');
+  const picker2 = document.getElementById('m1p2-de-picker2');
+
+  const setColors = (hex1, hex2) => {
+    if (input1) input1.value = hex1;
+    if (input2) input2.value = hex2;
+    if (picker1) picker1.value = hex1;
+    if (picker2) picker2.value = hex2;
+    update();
+  };
 
   const update = () => {
     const hex1 = normalizeHex(input1 ? input1.value : '#E64B35');
@@ -769,6 +803,14 @@ function initDeltaESection() {
     if (swatch1) swatch1.style.background = hex1;
     if (swatch2) swatch2.style.background = hex2;
 
+    // 同步 color picker
+    if (picker1 && picker1.value !== hex1) picker1.value = hex1;
+    if (picker2 && picker2.value !== hex2) picker2.value = hex2;
+
+    // 渐变条
+    const gradientEl = document.getElementById('m1p2-de-gradient');
+    if (gradientEl) gradientEl.style.background = `linear-gradient(to right, ${hex1}, ${hex2})`;
+
     // 计算 ΔE
     const de = deltaE(hex1, hex2);
     const valueEl = document.getElementById('m1p2-de-value');
@@ -776,13 +818,17 @@ function initDeltaESection() {
     const markerEl = document.getElementById('m1p2-de-marker');
 
     if (valueEl) {
-      // 动画数字
       gsap.to(valueEl, {
         textContent: de.toFixed(1),
         duration: 0.5,
         snap: { textContent: 0.1 },
         ease: 'power2.out',
       });
+      // 数值颜色随差异大小变化
+      if (de < 2) valueEl.style.color = '#34C759';
+      else if (de < 10) valueEl.style.color = '#7EC8E3';
+      else if (de < 50) valueEl.style.color = '#F0B27A';
+      else valueEl.style.color = '#E07A7A';
     }
 
     // 解读
@@ -808,6 +854,7 @@ function initDeltaESection() {
     }
   };
 
+  // 文字输入
   if (input1) {
     input1.addEventListener('input', update);
     state.cleanupFns.push(() => input1.removeEventListener('input', update));
@@ -816,6 +863,43 @@ function initDeltaESection() {
     input2.addEventListener('input', update);
     state.cleanupFns.push(() => input2.removeEventListener('input', update));
   }
+
+  // 原生颜色选择器同步到文字输入
+  if (picker1) {
+    const onPick1 = () => { if (input1) input1.value = picker1.value; update(); };
+    picker1.addEventListener('input', onPick1);
+    state.cleanupFns.push(() => picker1.removeEventListener('input', onPick1));
+  }
+  if (picker2) {
+    const onPick2 = () => { if (input2) input2.value = picker2.value; update(); };
+    picker2.addEventListener('input', onPick2);
+    state.cleanupFns.push(() => picker2.removeEventListener('input', onPick2));
+  }
+
+  // 预设配对按钮
+  document.querySelectorAll('.m1p2-de-preset').forEach(btn => {
+    const handler = () => setColors(btn.dataset.c1, btn.dataset.c2);
+    btn.addEventListener('click', handler);
+    state.cleanupFns.push(() => btn.removeEventListener('click', handler));
+  });
+
+  // 随机按钮
+  const randomBtn = document.getElementById('m1p2-de-random');
+  if (randomBtn) {
+    const onRandom = () => {
+      const rndHex = () => '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16).padStart(6, '0');
+      setColors(rndHex(), rndHex());
+    };
+    randomBtn.addEventListener('click', onRandom);
+    state.cleanupFns.push(() => randomBtn.removeEventListener('click', onRandom));
+  }
+
+  // Swatch hover 效果
+  [swatch1, swatch2].forEach(sw => {
+    if (!sw) return;
+    sw.addEventListener('pointerenter', () => { sw.style.transform = 'scale(1.05)'; sw.style.boxShadow = '0 4px 20px rgba(0,0,0,0.15)'; });
+    sw.addEventListener('pointerleave', () => { sw.style.transform = ''; sw.style.boxShadow = ''; });
+  });
 
   // 初始计算
   update();
@@ -826,6 +910,9 @@ function initDeltaESection() {
 // ═══════════════════════════════════════════════════
 
 function initPaletteBrowser() {
+  // 注入响应式 CSS
+  injectBrowserLayoutCSS();
+
   // 分类 Tab
   const tabsContainer = document.getElementById('m1p2-palette-tabs');
   if (tabsContainer) {
@@ -844,15 +931,97 @@ function initPaletteBrowser() {
   const chartContainer = document.getElementById('m1p2-palette-chart');
   if (chartContainer) {
     state.paletteBrowserChart = createChartPreview(chartContainer, {
-      width: 600,
-      height: 340,
+      width: 560,
+      height: 380,
       margin: { top: 30, right: 30, bottom: 50, left: 50 },
+      bgColor: '#ffffff',
     });
     state.activePaletteColors = PALETTE_DATA.nature[0].colors;
     renderBrowserChart();
   }
 
+  // 图表类型切换按钮
+  renderChartTypeButtons();
+
   renderPaletteList();
+}
+
+const CHART_TYPES = [
+  { id: 'bar', label: '柱状图' },
+  { id: 'line', label: '折线图' },
+  { id: 'donut', label: '圆环图' },
+  { id: 'scatter', label: '散点图' },
+  { id: 'area', label: '面积图' },
+];
+
+function renderChartTypeButtons() {
+  const container = document.getElementById('m1p2-chart-type-btns');
+  if (!container) return;
+
+  container.innerHTML = CHART_TYPES.map(t => `
+    <button class="m1p2-chart-type-btn${t.id === state.chartType ? ' active' : ''}" data-type="${t.id}" style="
+      padding:4px 12px;border-radius:var(--radius-full);font-size:11px;font-family:var(--font-heading);font-weight:500;
+      border:1px solid ${t.id === state.chartType ? 'var(--accent)' : 'var(--border-dark)'};
+      background:${t.id === state.chartType ? 'var(--accent-subtle)' : 'transparent'};
+      color:${t.id === state.chartType ? 'var(--accent)' : 'var(--text-on-dark-3)'};
+      cursor:pointer;transition:all var(--t-fast);min-height:28px;
+    ">${t.label}</button>
+  `).join('');
+
+  container.querySelectorAll('.m1p2-chart-type-btn').forEach(btn => {
+    const handler = () => {
+      state.chartType = btn.dataset.type;
+      renderChartTypeButtons();
+      renderBrowserChart();
+    };
+    btn.addEventListener('click', handler);
+    state.cleanupFns.push(() => btn.removeEventListener('click', handler));
+  });
+}
+
+function injectBrowserLayoutCSS() {
+  if (document.getElementById('m1p2-browser-layout-css')) return;
+  const style = document.createElement('style');
+  style.id = 'm1p2-browser-layout-css';
+  style.textContent = `
+    .m1p2-browser-layout {
+      display: flex;
+      gap: var(--space-lg);
+      align-items: flex-start;
+    }
+    .m1p2-browser-left {
+      flex: 0 0 42%;
+      min-width: 0;
+      max-height: 620px;
+      overflow-y: auto;
+      padding-right: var(--space-sm);
+      -webkit-overflow-scrolling: touch;
+    }
+    .m1p2-browser-left::-webkit-scrollbar { width: 4px; }
+    .m1p2-browser-left::-webkit-scrollbar-thumb { background: var(--border-dark); border-radius: 2px; }
+    .m1p2-browser-right {
+      flex: 1;
+      min-width: 0;
+    }
+    @media (max-width: 900px) {
+      .m1p2-browser-layout {
+        flex-direction: column;
+      }
+      .m1p2-browser-left {
+        flex: none;
+        width: 100%;
+        max-height: 400px;
+      }
+      .m1p2-browser-right {
+        width: 100%;
+      }
+      .m1p2-browser-right > div {
+        position: static !important;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+  state.cleanupFns.push(() => style.remove());
 }
 
 function renderPaletteList() {
@@ -929,94 +1098,207 @@ function renderBrowserChart() {
   const chart = state.paletteBrowserChart;
   if (!chart) return;
   const colors = state.activePaletteColors || PALETTE_DATA.nature[0].colors;
+  const type = state.chartType || 'bar';
 
   const g = chart.clear();
   const { innerWidth, innerHeight } = chart;
+  const textColor = '#333';
+  const subColor = '#888';
+  const gridColor = '#e0e0e0';
 
-  // 分组柱状图
-  const categories = ['Group A', 'Group B', 'Group C', 'Group D'];
-  const series = colors.slice(0, 5).map((c, i) => ({
-    name: 'S' + (i + 1),
-    color: c,
-  }));
+  // 共用：绘制图例
+  const drawLegend = (labels, cols, yOffset = -15) => {
+    const n = labels.length;
+    const spacing = Math.min(60, innerWidth / n);
+    const totalW = n * spacing;
+    const startX = innerWidth - totalW;
+    const legend = g.append('g').attr('transform', `translate(${startX}, ${yOffset})`);
+    labels.forEach((label, i) => {
+      const lg = legend.append('g').attr('transform', `translate(${i * spacing}, 0)`);
+      lg.append('rect').attr('width', 10).attr('height', 10).attr('rx', 2).attr('fill', cols[i]);
+      lg.append('text').attr('x', 14).attr('y', 9).attr('fill', subColor).attr('font-size', '10px').text(label);
+    });
+  };
 
-  const data = categories.flatMap((cat, ci) =>
-    series.map((s, si) => ({
-      category: cat,
-      series: s.name,
-      value: 20 + Math.sin(ci * 1.5 + si * 0.7) * 30 + 40,
-      color: s.color,
-    }))
-  );
+  if (type === 'bar') {
+    // 分组柱状图
+    const categories = ['Group A', 'Group B', 'Group C', 'Group D'];
+    const series = colors.slice(0, 5).map((c, i) => ({ name: 'S' + (i + 1), color: c }));
+    const data = categories.flatMap((cat, ci) =>
+      series.map((s, si) => ({ category: cat, series: s.name, value: 20 + Math.sin(ci * 1.5 + si * 0.7) * 30 + 40, color: s.color }))
+    );
+    const x0 = d3.scaleBand().domain(categories).range([0, innerWidth]).padding(0.2);
+    const x1 = d3.scaleBand().domain(series.map(s => s.name)).range([0, x0.bandwidth()]).padding(0.08);
+    const y = d3.scaleLinear().domain([0, 100]).range([innerHeight, 0]);
 
-  const x0 = d3.scaleBand()
-    .domain(categories)
-    .range([0, innerWidth])
-    .padding(0.2);
+    g.append('g').attr('transform', `translate(0,${innerHeight})`).call(d3.axisBottom(x0).tickSize(0))
+      .call(sel => sel.select('.domain').attr('stroke', gridColor))
+      .selectAll('text').attr('fill', subColor).attr('font-size', '11px');
+    g.append('g').call(d3.axisLeft(y).ticks(5).tickSize(-innerWidth))
+      .call(sel => sel.select('.domain').remove())
+      .call(sel => sel.selectAll('.tick line').attr('stroke', gridColor).attr('stroke-dasharray', '3,3'))
+      .selectAll('text').attr('fill', subColor).attr('font-size', '11px');
 
-  const x1 = d3.scaleBand()
-    .domain(series.map(s => s.name))
-    .range([0, x0.bandwidth()])
-    .padding(0.08);
+    g.selectAll('.bar').data(data).join('rect').attr('class', 'bar')
+      .attr('x', d => x0(d.category) + x1(d.series)).attr('width', x1.bandwidth())
+      .attr('rx', 3).attr('fill', d => d.color)
+      .attr('y', innerHeight).attr('height', 0)
+      .transition().duration(600).delay((d, i) => i * 20).ease(d3.easeCubicOut)
+      .attr('y', d => y(d.value)).attr('height', d => innerHeight - y(d.value));
 
-  const y = d3.scaleLinear()
-    .domain([0, 100])
-    .range([innerHeight, 0]);
+    drawLegend(series.map(s => s.name), series.map(s => s.color));
 
-  // X 轴
-  g.append('g')
-    .attr('transform', `translate(0,${innerHeight})`)
-    .call(d3.axisBottom(x0).tickSize(0))
-    .call(sel => sel.select('.domain').attr('stroke', '#444'))
-    .selectAll('text')
-    .attr('fill', '#999')
-    .attr('font-size', '11px');
+  } else if (type === 'line') {
+    // 多系列折线图
+    const n = Math.min(colors.length, 6);
+    const points = 8;
+    const x = d3.scaleLinear().domain([0, points - 1]).range([0, innerWidth]);
+    const y = d3.scaleLinear().domain([0, 100]).range([innerHeight, 0]);
 
-  // Y 轴 + 网格线
-  g.append('g')
-    .call(d3.axisLeft(y).ticks(5).tickSize(-innerWidth))
-    .call(sel => sel.select('.domain').remove())
-    .call(sel => sel.selectAll('.tick line').attr('stroke', '#333').attr('stroke-dasharray', '3,3'))
-    .selectAll('text')
-    .attr('fill', '#999')
-    .attr('font-size', '11px');
+    g.append('g').attr('transform', `translate(0,${innerHeight})`).call(d3.axisBottom(x).ticks(points).tickFormat(d => 'T' + d))
+      .call(sel => sel.select('.domain').attr('stroke', gridColor))
+      .selectAll('text').attr('fill', subColor).attr('font-size', '11px');
+    g.append('g').call(d3.axisLeft(y).ticks(5).tickSize(-innerWidth))
+      .call(sel => sel.select('.domain').remove())
+      .call(sel => sel.selectAll('.tick line').attr('stroke', gridColor).attr('stroke-dasharray', '3,3'))
+      .selectAll('text').attr('fill', subColor).attr('font-size', '11px');
 
-  // 柱形动画入场
-  g.selectAll('.bar-group')
-    .data(data)
-    .join('rect')
-    .attr('class', 'bar-group')
-    .attr('x', d => x0(d.category) + x1(d.series))
-    .attr('width', x1.bandwidth())
-    .attr('rx', 2)
-    .attr('fill', d => d.color)
-    .attr('y', innerHeight)
-    .attr('height', 0)
-    .transition()
-    .duration(600)
-    .delay((d, i) => i * 25)
-    .ease(d3.easeCubicOut)
-    .attr('y', d => y(d.value))
-    .attr('height', d => innerHeight - y(d.value));
+    for (let s = 0; s < n; s++) {
+      const lineData = Array.from({ length: points }, (_, i) => ({
+        x: i,
+        y: 30 + Math.sin(i * 0.8 + s * 1.2) * 25 + s * 5 + Math.cos(i * 0.5 + s) * 10,
+      }));
+      const line = d3.line().x(d => x(d.x)).y(d => y(d.y)).curve(d3.curveMonotoneX);
 
-  // 图例
-  const legend = g.append('g')
-    .attr('transform', `translate(${innerWidth - series.length * 56}, -15)`);
+      // 线条动画：用 stroke-dashoffset
+      const path = g.append('path').datum(lineData)
+        .attr('d', line).attr('fill', 'none').attr('stroke', colors[s]).attr('stroke-width', 2.5)
+        .attr('stroke-linecap', 'round');
+      const totalLen = path.node().getTotalLength();
+      path.attr('stroke-dasharray', totalLen).attr('stroke-dashoffset', totalLen)
+        .transition().duration(800).delay(s * 100).ease(d3.easeCubicOut)
+        .attr('stroke-dashoffset', 0);
 
-  series.forEach((s, i) => {
-    const lg = legend.append('g').attr('transform', `translate(${i * 56}, 0)`);
-    lg.append('rect')
-      .attr('width', 10)
-      .attr('height', 10)
-      .attr('rx', 2)
-      .attr('fill', s.color);
-    lg.append('text')
-      .attr('x', 14)
-      .attr('y', 9)
-      .attr('fill', '#999')
-      .attr('font-size', '10px')
-      .text(s.name);
-  });
+      // 数据点
+      g.selectAll(`.dot-${s}`).data(lineData).join('circle').attr('class', `dot-${s}`)
+        .attr('cx', d => x(d.x)).attr('cy', d => y(d.y))
+        .attr('r', 0).attr('fill', colors[s])
+        .transition().duration(400).delay((d, i) => 800 + s * 100 + i * 40)
+        .attr('r', 3.5);
+    }
+
+    drawLegend(Array.from({ length: n }, (_, i) => 'S' + (i + 1)), colors.slice(0, n));
+
+  } else if (type === 'donut') {
+    // 圆环图
+    const n = Math.min(colors.length, 8);
+    const pieData = Array.from({ length: n }, (_, i) => ({ value: 10 + Math.sin(i * 1.4) * 5 + 8, color: colors[i], label: 'Cat ' + (i + 1) }));
+    const radius = Math.min(innerWidth, innerHeight) / 2 - 10;
+    const arcGen = d3.arc().innerRadius(radius * 0.55).outerRadius(radius);
+    const pie = d3.pie().value(d => d.value).sort(null).padAngle(0.02);
+    const arcs = pie(pieData);
+    const center = g.append('g').attr('transform', `translate(${innerWidth / 2},${innerHeight / 2})`);
+
+    center.selectAll('.arc').data(arcs).join('path').attr('class', 'arc')
+      .attr('fill', d => d.data.color)
+      .attr('d', d3.arc().innerRadius(radius * 0.55).outerRadius(radius * 0.55))
+      .transition().duration(700).delay((d, i) => i * 60).ease(d3.easeCubicOut)
+      .attr('d', arcGen);
+
+    // 中心文字
+    center.append('text').attr('text-anchor', 'middle').attr('dy', '-0.2em')
+      .attr('fill', textColor).attr('font-size', '18px').attr('font-weight', '700').text('Total');
+    center.append('text').attr('text-anchor', 'middle').attr('dy', '1.2em')
+      .attr('fill', subColor).attr('font-size', '13px').text(pieData.reduce((s, d) => s + d.value, 0).toFixed(0));
+
+    // 标签
+    arcs.forEach((d, i) => {
+      const [lx, ly] = arcGen.centroid(d);
+      if (d.endAngle - d.startAngle > 0.3) {
+        center.append('text').attr('x', lx).attr('y', ly).attr('text-anchor', 'middle')
+          .attr('fill', '#fff').attr('font-size', '10px').attr('font-weight', '600')
+          .text(Math.round(d.data.value / pieData.reduce((s, p) => s + p.value, 0) * 100) + '%')
+          .attr('opacity', 0).transition().delay(700 + i * 60).duration(300).attr('opacity', 1);
+      }
+    });
+
+    drawLegend(pieData.map(d => d.label), pieData.map(d => d.color));
+
+  } else if (type === 'scatter') {
+    // 散点图
+    const n = Math.min(colors.length, 5);
+    const x = d3.scaleLinear().domain([0, 100]).range([0, innerWidth]);
+    const y = d3.scaleLinear().domain([0, 100]).range([innerHeight, 0]);
+
+    g.append('g').attr('transform', `translate(0,${innerHeight})`).call(d3.axisBottom(x).ticks(5))
+      .call(sel => sel.select('.domain').attr('stroke', gridColor))
+      .selectAll('text').attr('fill', subColor).attr('font-size', '11px');
+    g.append('g').call(d3.axisLeft(y).ticks(5).tickSize(-innerWidth))
+      .call(sel => sel.select('.domain').remove())
+      .call(sel => sel.selectAll('.tick line').attr('stroke', gridColor).attr('stroke-dasharray', '3,3'))
+      .selectAll('text').attr('fill', subColor).attr('font-size', '11px');
+
+    // 轴标签
+    g.append('text').attr('x', innerWidth / 2).attr('y', innerHeight + 38)
+      .attr('text-anchor', 'middle').attr('fill', subColor).attr('font-size', '11px').text('Variable X');
+    g.append('text').attr('transform', 'rotate(-90)').attr('x', -innerHeight / 2).attr('y', -38)
+      .attr('text-anchor', 'middle').attr('fill', subColor).attr('font-size', '11px').text('Variable Y');
+
+    for (let s = 0; s < n; s++) {
+      const pts = Array.from({ length: 12 }, () => ({
+        x: 10 + s * 15 + Math.random() * 30,
+        y: 20 + Math.random() * 60 + Math.sin(s) * 10,
+      }));
+      g.selectAll(`.scatter-${s}`).data(pts).join('circle').attr('class', `scatter-${s}`)
+        .attr('cx', d => x(d.x)).attr('cy', d => y(d.y))
+        .attr('r', 0).attr('fill', colors[s]).attr('opacity', 0.7)
+        .transition().duration(500).delay((d, i) => s * 80 + i * 20).ease(d3.easeCubicOut)
+        .attr('r', 5);
+    }
+
+    drawLegend(Array.from({ length: n }, (_, i) => 'Group ' + (i + 1)), colors.slice(0, n));
+
+  } else if (type === 'area') {
+    // 堆叠面积图
+    const n = Math.min(colors.length, 5);
+    const points = 10;
+    const x = d3.scaleLinear().domain([0, points - 1]).range([0, innerWidth]);
+
+    // 生成堆叠数据
+    const rawData = Array.from({ length: points }, (_, i) => {
+      const row = { x: i };
+      for (let s = 0; s < n; s++) row['s' + s] = 8 + Math.sin(i * 0.6 + s * 1.3) * 6 + 10;
+      return row;
+    });
+    const keys = Array.from({ length: n }, (_, i) => 's' + i);
+    const stack = d3.stack().keys(keys);
+    const layers = stack(rawData);
+    const yMax = d3.max(layers[layers.length - 1], d => d[1]);
+    const y = d3.scaleLinear().domain([0, yMax * 1.1]).range([innerHeight, 0]);
+
+    g.append('g').attr('transform', `translate(0,${innerHeight})`).call(d3.axisBottom(x).ticks(points).tickFormat(d => 'T' + d))
+      .call(sel => sel.select('.domain').attr('stroke', gridColor))
+      .selectAll('text').attr('fill', subColor).attr('font-size', '11px');
+    g.append('g').call(d3.axisLeft(y).ticks(5).tickSize(-innerWidth))
+      .call(sel => sel.select('.domain').remove())
+      .call(sel => sel.selectAll('.tick line').attr('stroke', gridColor).attr('stroke-dasharray', '3,3'))
+      .selectAll('text').attr('fill', subColor).attr('font-size', '11px');
+
+    const area = d3.area()
+      .x((d, i) => x(rawData[i].x))
+      .y0(d => y(d[0]))
+      .y1(d => y(d[1]))
+      .curve(d3.curveMonotoneX);
+
+    layers.forEach((layer, i) => {
+      g.append('path').datum(layer)
+        .attr('d', area).attr('fill', colors[i]).attr('opacity', 0)
+        .transition().duration(600).delay(i * 80).ease(d3.easeCubicOut)
+        .attr('opacity', 0.8);
+    });
+
+    drawLegend(Array.from({ length: n }, (_, i) => 'S' + (i + 1)), colors.slice(0, n));
+  }
 }
 
 // ═══════════════════════════════════════════════════
@@ -1072,6 +1354,7 @@ export function destroy() {
     paletteTabSwitcher: null,
     paletteBrowserChart: null,
     activePaletteColors: null,
+    chartType: 'bar',
     copyButtons: [],
     cleanupFns: [],
     resizeObservers: [],
