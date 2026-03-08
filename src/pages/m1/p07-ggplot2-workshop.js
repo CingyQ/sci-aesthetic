@@ -87,6 +87,81 @@ const BOXPLOT_DATA = (() => {
   }));
 })();
 
+const VIOLIN_DATA = (() => {
+  const rng = seededRandom(400);
+  const norm = makeNormal(rng);
+  return [
+    { name: 'Control', mu: 25, sigma: 5 },
+    { name: 'Drug A',  mu: 48, sigma: 8 },
+    { name: 'Drug B',  mu: 66, sigma: 6 },
+  ].map(g => ({
+    name: g.name,
+    pts: Array.from({ length: 50 }, () => Math.max(0, g.mu + g.sigma * norm())),
+  }));
+})();
+
+const HIST_DATA = (() => {
+  const rng = seededRandom(500);
+  const norm = makeNormal(rng);
+  const pts = [];
+  for (let i = 0; i < 120; i++) pts.push(30 + 8 * norm());
+  for (let i = 0; i < 80;  i++) pts.push(65 + 10 * norm());
+  return pts;
+})();
+
+const DENSITY_DATA = (() => {
+  const rng = seededRandom(600);
+  const norm = makeNormal(rng);
+  return [
+    { grp: 'Control',   color: '#7EC8E3', mu: 30, sigma: 6 },
+    { grp: 'Low Dose',  color: '#F0B27A', mu: 48, sigma: 9 },
+    { grp: 'High Dose', color: '#95D5B2', mu: 62, sigma: 7 },
+  ].map(g => ({
+    grp: g.grp, color: g.color,
+    pts: Array.from({ length: 80 }, () => Math.max(0, g.mu + g.sigma * norm())),
+  }));
+})();
+
+const HEATMAP_DATA = (() => {
+  const rng = seededRandom(700);
+  const genes = ['BRCA1', 'TP53', 'MYC', 'EGFR', 'VEGF', 'CDK4'];
+  const conds = ['Ctrl', 'Trt-1h', 'Trt-6h', 'Trt-24h', 'Recover'];
+  return genes.map((gene, gi) => ({
+    gene,
+    values: conds.map((cond, ci) => ({
+      cond,
+      val: (rng() - 0.5) * 4 + Math.sin(gi * 1.1 + ci * 0.7) * 1.5,
+    })),
+  }));
+})();
+
+const ERRORBAR_DATA = (() => {
+  const rng = seededRandom(800);
+  const groups = ['Control', 'Group A', 'Group B', 'Group C', 'Group D', 'Group E'];
+  return groups.map(g => {
+    const n = 8 + Math.floor(rng() * 12);
+    const mu = 20 + rng() * 60;
+    const sigma = 5 + rng() * 15;
+    const se = sigma / Math.sqrt(n);
+    return { grp: g, mean: mu, se, sd: sigma, ci95: se * 1.96 };
+  });
+})();
+
+const LOLLIPOP_DATA = (() => {
+  const rng = seededRandom(900);
+  const genes = ['BRCA2', 'KRAS', 'PIK3CA', 'APC', 'PTEN', 'RB1', 'SMAD4', 'VHL'];
+  return genes.map(gene => ({ gene, val: (rng() - 0.4) * 6 }));
+})();
+
+const RIDGELINE_DATA = (() => {
+  const rng = seededRandom(1000);
+  const norm = makeNormal(rng);
+  return ['Week 0', 'Week 4', 'Week 8', 'Week 12'].map((tp, ti) => ({
+    tp,
+    pts: Array.from({ length: 50 }, () => Math.max(0, (30 + ti * 12) + (5 + ti * 2) * norm())),
+  }));
+})();
+
 // ─────────────────────────────────────────────
 // 配色
 // ─────────────────────────────────────────────
@@ -115,16 +190,56 @@ const CHART_TYPES = [
     tags: ['分类 × 连续', '分布比较'],
     desc: '展示分布中位数、四分位和异常值',
     info: '3 组 · 每组 30 个观测值 · 模拟临床数据' },
+  { id: 'violin', name: '小提琴图', en: 'Violin Plot',
+    tags: ['分类 × 连续', '分布形态'],
+    desc: '核密度估计展示完整分布形状，比箱线图信息更丰富',
+    info: '3 组 · 每组 50 个观测值 · 模拟临床数据' },
+  { id: 'histogram', name: '直方图', en: 'Histogram',
+    tags: ['单变量', '频率分布'],
+    desc: '展示单个连续变量的频率分布，揭示数据偏斜与双峰',
+    info: '200 个观测值 · 双峰分布 · 模拟生物学数据' },
+  { id: 'density', name: '密度图', en: 'Density Plot',
+    tags: ['分布对比', '多组叠加'],
+    desc: '核密度估计平滑展示分布，多组重叠对比时优于直方图',
+    info: '3 组 · 每组 80 个观测值 · 模拟测量数据' },
+  { id: 'heatmap', name: '热力图', en: 'Heatmap',
+    tags: ['矩阵数据', '表达量'],
+    desc: '用颜色编码矩阵数值，常用于基因表达和相关性矩阵',
+    info: '6 基因 × 5 条件 · 模拟转录组数据' },
+  { id: 'area', name: '面积图', en: 'Area Chart',
+    tags: ['时间序列', '组成变化'],
+    desc: '展示随时间变化的组成比例，堆叠面积突出总量变化',
+    info: '5 个时间点 · 3 个处理组 · 比例数据' },
+  { id: 'errorbar', name: '误差线图', en: 'Error Bar',
+    tags: ['均值 ± 误差', '统计推断'],
+    desc: '展示均值与不确定性（SE/SD/CI），科研报告标配',
+    info: '6 个处理组 · 模拟实验重复数据' },
+  { id: 'lollipop', name: '棒棒糖图', en: 'Lollipop',
+    tags: ['排名比较', '简洁柱状'],
+    desc: '比柱状图更简洁，适合展示排名和单值比较',
+    info: '8 个基因 · 差异表达量 · 模拟 RNA-seq' },
+  { id: 'ridgeline', name: '山脊图', en: 'Ridgeline',
+    tags: ['多组分布', '时序演变'],
+    desc: '纵向堆叠的密度图，优雅展示多组分布的变化趋势',
+    info: '4 个时间点 · 每时间点 50 个观测值' },
 ];
 
 // ─────────────────────────────────────────────
 // 状态
 // ─────────────────────────────────────────────
 const DEFAULT_PARAMS = {
-  scatter: { size: 3, alpha: 0.7, jitter: 'none', regression: false, shape: 'circle' },
-  bar:     { arrangement: 'grouped', barWidth: 0.7, errorBars: false },
-  line:    { lineType: 'solid', lineWidth: 1.5, showPoints: true, smooth: false, fillArea: false },
-  boxplot: { boxWidth: 0.6, showOutliers: true, fillAlpha: 0.7, notch: false, showMean: true, whisker: 'iqr' },
+  scatter:   { size: 3, alpha: 0.7, jitter: 'none', regression: false, shape: 'circle' },
+  bar:       { arrangement: 'grouped', barWidth: 0.7, errorBars: false },
+  line:      { lineType: 'solid', lineWidth: 1.5, showPoints: true, smooth: false, fillArea: false },
+  boxplot:   { boxWidth: 0.6, showOutliers: true, fillAlpha: 0.7, notch: false, showMean: true, whisker: 'iqr' },
+  violin:    { bw: 0.5, fillAlpha: 0.7, showBoxplot: true, halfViolin: 'full' },
+  histogram: { bins: 20, fillAlpha: 0.8, densityOverlay: false },
+  density:   { bw: 1.0, fillAlpha: 0.25, showRug: false },
+  heatmap:   { colorScheme: 'rdbu', showValues: true },
+  area:      { arrangement: 'stacked', fillAlpha: 0.65, showLines: true },
+  errorbar:  { errorType: 'se', capWidth: 0.2, lineWidth: 1.5, dotSize: 5 },
+  lollipop:  { dotSize: 8, lineWidth: 1.2, sortBy: 'none', horizontal: false },
+  ridgeline: { overlap: 0.7, fillAlpha: 0.7, bw: 1.0 },
 };
 
 let state = {
@@ -161,6 +276,14 @@ function axisLabel(g, text, isY, iW, iH) {
       .style('font-size', '12px').text(text);
   }
 }
+// 高斯核密度估计
+function kdeGaussian(bw) {
+  return v => Math.exp(-0.5 * (v / bw) ** 2) / (bw * Math.sqrt(2 * Math.PI));
+}
+function computeKDE(data, kernel, thresholds) {
+  return thresholds.map(x => ({ x, y: d3.mean(data, v => kernel(x - v)) }));
+}
+
 function baseSVG(container, W, H, M) {
   d3.select(container).selectAll('*').remove();
   const svg = d3.select(container).append('svg')
@@ -499,7 +622,446 @@ function renderBoxplot(container, p) {
   });
 }
 
-const CHART_FNS = { scatter: renderScatter, bar: renderBar, line: renderLine, boxplot: renderBoxplot };
+// ─────────────────────────────────────────────
+// D3：小提琴图
+// ─────────────────────────────────────────────
+function renderViolin(container, p) {
+  const W = 540, H = 380, M = { top: 25, right: 20, bottom: 50, left: 60 };
+  const { g, iW, iH } = baseSVG(container, W, H, M);
+
+  const allPts = VIOLIN_DATA.flatMap(d => d.pts);
+  const xMin = d3.min(allPts) - 5, xMax = d3.max(allPts) + 5;
+  const thresholds = d3.range(xMin, xMax, (xMax - xMin) / 80);
+  const kernel = kdeGaussian(p.bw * 10);
+
+  const xSc = d3.scaleBand().domain(VIOLIN_DATA.map(d => d.name)).range([0, iW]).padding(0.3);
+  const ySc = d3.scaleLinear().domain([xMin, xMax]).range([iH, 0]);
+  const halfBW = xSc.bandwidth() / 2;
+
+  const densities = VIOLIN_DATA.map(d => computeKDE(d.pts, kernel, thresholds));
+  const maxDens = d3.max(densities, kde => d3.max(kde, k => k.y));
+  const wSc = d3.scaleLinear().domain([0, maxDens]).range([0, halfBW * 0.92]);
+
+  g.append('g').call(d3.axisLeft(ySc).ticks(5).tickSize(-iW).tickFormat('')).call(gridStyle);
+  g.append('g').attr('transform', `translate(0,${iH})`).call(d3.axisBottom(xSc)).call(axisStyle);
+  g.append('g').call(d3.axisLeft(ySc).ticks(5)).call(axisStyle);
+  axisLabel(g, 'Response Value', true, iW, iH);
+
+  VIOLIN_DATA.forEach((d, i) => {
+    const cx = xSc(d.name) + halfBW;
+    const col = BOX_COLORS[i];
+    const kde = densities[i];
+
+    const areaGen = d3.area()
+      .x0(pt => cx - (p.halfViolin !== 'right' ? wSc(pt.y) : 0))
+      .x1(pt => cx + (p.halfViolin !== 'left'  ? wSc(pt.y) : 0))
+      .y(pt => ySc(pt.x)).curve(d3.curveCatmullRom);
+
+    g.append('path').datum(kde).attr('d', areaGen)
+      .attr('fill', col).attr('opacity', p.fillAlpha)
+      .attr('stroke', col).attr('stroke-width', 1.5);
+
+    if (p.showBoxplot) {
+      const sorted = [...d.pts].sort((a, b) => a - b);
+      const q1 = d3.quantile(sorted, 0.25);
+      const med = d3.quantile(sorted, 0.5);
+      const q3 = d3.quantile(sorted, 0.75);
+      const iqr = q3 - q1;
+      const wMin = Math.max(d3.min(sorted), q1 - 1.5 * iqr);
+      const wMax = Math.min(d3.max(sorted), q3 + 1.5 * iqr);
+      const bW = halfBW * 0.22;
+      g.append('line').attr('x1', cx).attr('x2', cx)
+        .attr('y1', ySc(wMin)).attr('y2', ySc(wMax))
+        .attr('stroke', '#fff').attr('stroke-width', 1.5).attr('opacity', 0.8);
+      g.append('rect').attr('x', cx - bW).attr('y', ySc(q3))
+        .attr('width', bW * 2).attr('height', ySc(q1) - ySc(q3))
+        .attr('fill', '#111318').attr('stroke', '#fff').attr('stroke-width', 1.5).attr('rx', 2);
+      g.append('line').attr('x1', cx - bW).attr('x2', cx + bW)
+        .attr('y1', ySc(med)).attr('y2', ySc(med))
+        .attr('stroke', '#fff').attr('stroke-width', 2.5);
+    }
+  });
+}
+
+// ─────────────────────────────────────────────
+// D3：直方图
+// ─────────────────────────────────────────────
+function renderHistogram(container, p) {
+  const W = 540, H = 380, M = { top: 25, right: 30, bottom: 55, left: 55 };
+  const { g, iW, iH } = baseSVG(container, W, H, M);
+
+  const xMin = d3.min(HIST_DATA) - 2, xMax = d3.max(HIST_DATA) + 2;
+  const xSc = d3.scaleLinear().domain([xMin, xMax]).range([0, iW]);
+  const bins = d3.bin().domain([xMin, xMax]).thresholds(p.bins)(HIST_DATA);
+  const maxCount = d3.max(bins, d => d.length);
+  const ySc = d3.scaleLinear().domain([0, maxCount * 1.12]).range([iH, 0]);
+
+  g.append('g').call(d3.axisLeft(ySc).ticks(5).tickSize(-iW).tickFormat('')).call(gridStyle);
+  g.append('g').attr('transform', `translate(0,${iH})`).call(d3.axisBottom(xSc).ticks(8)).call(axisStyle);
+  g.append('g').call(d3.axisLeft(ySc).ticks(5)).call(axisStyle);
+  axisLabel(g, 'Value', false, iW, iH);
+  axisLabel(g, 'Count', true, iW, iH);
+
+  g.selectAll('.p7-hbar').data(bins).enter().append('rect').attr('class', 'p7-hbar')
+    .attr('x', d => xSc(d.x0) + 1).attr('y', d => ySc(d.length))
+    .attr('width', d => Math.max(0, xSc(d.x1) - xSc(d.x0) - 1))
+    .attr('height', d => iH - ySc(d.length))
+    .attr('fill', '#7EC8E3').attr('opacity', p.fillAlpha).attr('rx', 2);
+
+  if (p.densityOverlay) {
+    const kernel = kdeGaussian(3.2);
+    const thr = d3.range(xMin, xMax, (xMax - xMin) / 100);
+    const kde = computeKDE(HIST_DATA, kernel, thr);
+    const densMax = d3.max(kde, d => d.y);
+    const dSc = maxCount / densMax;
+    g.append('path').datum(kde)
+      .attr('d', d3.line().x(d => xSc(d.x)).y(d => ySc(d.y * dSc)).curve(d3.curveBasis))
+      .attr('fill', 'none').attr('stroke', '#F0B27A').attr('stroke-width', 2.5).attr('opacity', 0.9);
+    g.append('text').attr('x', iW - 4).attr('y', 14)
+      .attr('fill', '#F0B27A').style('font-size', '10px').attr('text-anchor', 'end').text('密度曲线');
+  }
+}
+
+// ─────────────────────────────────────────────
+// D3：密度图
+// ─────────────────────────────────────────────
+function renderDensity(container, p) {
+  const W = 540, H = 380, M = { top: 25, right: 105, bottom: 55, left: 60 };
+  const { g, iW, iH } = baseSVG(container, W, H, M);
+
+  const allPts = DENSITY_DATA.flatMap(d => d.pts);
+  const xMin = d3.min(allPts) - 5, xMax = d3.max(allPts) + 5;
+  const xSc = d3.scaleLinear().domain([xMin, xMax]).range([0, iW]);
+  const kernel = kdeGaussian(p.bw * 5);
+  const thr = d3.range(xMin, xMax, (xMax - xMin) / 100);
+
+  const densities = DENSITY_DATA.map(grp => ({ ...grp, kde: computeKDE(grp.pts, kernel, thr) }));
+  const maxY = d3.max(densities, d => d3.max(d.kde, k => k.y));
+  const ySc = d3.scaleLinear().domain([0, maxY * 1.12]).range([iH, 0]);
+
+  g.append('g').call(d3.axisLeft(ySc).ticks(5).tickSize(-iW).tickFormat('')).call(gridStyle);
+  g.append('g').attr('transform', `translate(0,${iH})`).call(d3.axisBottom(xSc).ticks(6)).call(axisStyle);
+  g.append('g').call(d3.axisLeft(ySc).ticks(4).tickFormat(d3.format('.3f'))).call(axisStyle);
+  axisLabel(g, 'Value', false, iW, iH);
+  axisLabel(g, 'Density', true, iW, iH);
+
+  densities.forEach(grp => {
+    g.append('path').datum(grp.kde)
+      .attr('d', d3.area().x(d => xSc(d.x)).y0(iH).y1(d => ySc(d.y)).curve(d3.curveBasis))
+      .attr('fill', grp.color).attr('opacity', p.fillAlpha);
+    g.append('path').datum(grp.kde)
+      .attr('d', d3.line().x(d => xSc(d.x)).y(d => ySc(d.y)).curve(d3.curveBasis))
+      .attr('fill', 'none').attr('stroke', grp.color).attr('stroke-width', 2);
+    if (p.showRug) {
+      grp.pts.forEach(pt => {
+        g.append('line').attr('x1', xSc(pt)).attr('x2', xSc(pt))
+          .attr('y1', iH).attr('y2', iH - 6)
+          .attr('stroke', grp.color).attr('opacity', 0.4);
+      });
+    }
+  });
+
+  const lg = g.append('g').attr('transform', `translate(${iW + 12},0)`);
+  DENSITY_DATA.forEach((grp, i) => {
+    const row = lg.append('g').attr('transform', `translate(0,${i * 22})`);
+    row.append('rect').attr('width', 12).attr('height', 3).attr('y', 5).attr('fill', grp.color).attr('rx', 1);
+    row.append('text').attr('x', 16).attr('y', 11).attr('fill', '#a1a1a6').style('font-size', '10px').text(grp.grp);
+  });
+}
+
+// ─────────────────────────────────────────────
+// D3：热力图
+// ─────────────────────────────────────────────
+function renderHeatmap(container, p) {
+  const W = 540, H = 380, M = { top: 20, right: 80, bottom: 60, left: 70 };
+  const { g, iW, iH } = baseSVG(container, W, H, M);
+
+  const genes = HEATMAP_DATA.map(d => d.gene);
+  const conds = HEATMAP_DATA[0].values.map(v => v.cond);
+  const xSc = d3.scaleBand().domain(conds).range([0, iW]).padding(0.04);
+  const ySc = d3.scaleBand().domain(genes).range([0, iH]).padding(0.04);
+  const allVals = HEATMAP_DATA.flatMap(d => d.values.map(v => v.val));
+  const absMax = d3.max(allVals.map(Math.abs));
+
+  const colorScales = {
+    rdbu:    d3.scaleDiverging(d3.interpolateRdBu).domain([absMax, 0, -absMax]),
+    viridis: d3.scaleSequential(d3.interpolateViridis).domain([-absMax, absMax]),
+    plasma:  d3.scaleSequential(d3.interpolatePlasma).domain([-absMax, absMax]),
+  };
+  const colorSc = colorScales[p.colorScheme] || colorScales.rdbu;
+
+  g.append('g').attr('transform', `translate(0,${iH})`).call(d3.axisBottom(xSc))
+    .call(ax => {
+      ax.select('.domain').attr('stroke', '#424245');
+      ax.selectAll('.tick line').remove();
+      ax.selectAll('text').attr('fill', '#a1a1a6').style('font-size', '10px');
+    });
+  g.append('g').call(d3.axisLeft(ySc))
+    .call(ax => {
+      ax.select('.domain').attr('stroke', '#424245');
+      ax.selectAll('.tick line').remove();
+      ax.selectAll('text').attr('fill', '#a1a1a6').style('font-size', '10px').attr('font-style', 'italic');
+    });
+
+  HEATMAP_DATA.forEach(row => {
+    row.values.forEach(cell => {
+      g.append('rect').attr('x', xSc(cell.cond)).attr('y', ySc(row.gene))
+        .attr('width', xSc.bandwidth()).attr('height', ySc.bandwidth())
+        .attr('fill', colorSc(cell.val)).attr('rx', 3);
+      if (p.showValues) {
+        g.append('text')
+          .attr('x', xSc(cell.cond) + xSc.bandwidth() / 2)
+          .attr('y', ySc(row.gene) + ySc.bandwidth() / 2 + 4)
+          .attr('text-anchor', 'middle')
+          .attr('fill', Math.abs(cell.val) > absMax * 0.5 ? '#fff' : '#444')
+          .style('font-size', '9px').style('font-family', 'monospace')
+          .text(cell.val.toFixed(1));
+      }
+    });
+  });
+
+  // 色条
+  const cbH = iH, cbW = 14;
+  const cbGrad = g.append('defs').append('linearGradient')
+    .attr('id', 'p7-hm-grad').attr('x1', 0).attr('y1', 1).attr('x2', 0).attr('y2', 0);
+  [0, 0.25, 0.5, 0.75, 1].forEach(t => {
+    cbGrad.append('stop').attr('offset', `${t * 100}%`)
+      .attr('stop-color', colorSc(-absMax + t * 2 * absMax));
+  });
+  g.append('rect').attr('x', iW + 20).attr('y', 0)
+    .attr('width', cbW).attr('height', cbH).attr('fill', 'url(#p7-hm-grad)').attr('rx', 3);
+  const cbSc = d3.scaleLinear().domain([-absMax, absMax]).range([cbH, 0]);
+  g.append('g').attr('transform', `translate(${iW + 20 + cbW},0)`)
+    .call(d3.axisRight(cbSc).ticks(4).tickFormat(d3.format('.1f')))
+    .call(ax => {
+      ax.select('.domain').remove();
+      ax.selectAll('.tick line').attr('stroke', '#424245');
+      ax.selectAll('text').attr('fill', '#a1a1a6').style('font-size', '9px');
+    });
+}
+
+// ─────────────────────────────────────────────
+// D3：面积图
+// ─────────────────────────────────────────────
+function renderArea(container, p) {
+  const W = 540, H = 380, M = { top: 25, right: 110, bottom: 55, left: 55 };
+  const { g, iW, iH } = baseSVG(container, W, H, M);
+
+  const wk = ['W0', 'W1', 'W2', 'W3', 'W4'];
+  const xSc = d3.scalePoint().domain(wk).range([0, iW]).padding(0.2);
+  const stackData = wk.map((w, i) => {
+    const o = { w };
+    LINE_DATA.forEach(grp => { o[grp.grp] = grp.pts[i].val; });
+    return o;
+  });
+  const grpKeys = LINE_DATA.map(d => d.grp);
+  const grpColors = LINE_DATA.map(d => d.color);
+
+  const areaFn = (layer, yScl) =>
+    d3.area().x((_, i) => xSc(wk[i])).y0(d => yScl(d[0])).y1(d => yScl(d[1])).curve(d3.curveMonotoneX);
+  const lineFn = (layer, yScl) =>
+    d3.line().x((_, i) => xSc(wk[i])).y(d => yScl(d[1])).curve(d3.curveMonotoneX);
+
+  let ySc;
+  if (p.arrangement === 'proportional') {
+    const stack = d3.stack().keys(grpKeys).offset(d3.stackOffsetExpand)(stackData);
+    ySc = d3.scaleLinear().domain([0, 1]).range([iH, 0]);
+    g.append('g').call(d3.axisLeft(ySc).ticks(5).tickSize(-iW).tickFormat('')).call(gridStyle);
+    g.append('g').attr('transform', `translate(0,${iH})`).call(d3.axisBottom(xSc)).call(axisStyle);
+    g.append('g').call(d3.axisLeft(ySc).ticks(5).tickFormat(d3.format('.0%'))).call(axisStyle);
+    axisLabel(g, 'Week', false, iW, iH);
+    axisLabel(g, 'Proportion', true, iW, iH);
+    stack.forEach((layer, li) => {
+      g.append('path').datum(layer).attr('d', areaFn(layer, ySc))
+        .attr('fill', grpColors[li]).attr('opacity', p.fillAlpha);
+      if (p.showLines) {
+        g.append('path').datum(layer).attr('d', lineFn(layer, ySc))
+          .attr('fill', 'none').attr('stroke', grpColors[li]).attr('stroke-width', 1.5).attr('opacity', 0.8);
+      }
+    });
+  } else {
+    const stack = d3.stack().keys(grpKeys)(stackData);
+    const maxY = d3.max(stack[stack.length - 1], d => d[1]);
+    ySc = d3.scaleLinear().domain([0, maxY * 1.05]).range([iH, 0]);
+    g.append('g').call(d3.axisLeft(ySc).ticks(5).tickSize(-iW).tickFormat('')).call(gridStyle);
+    g.append('g').attr('transform', `translate(0,${iH})`).call(d3.axisBottom(xSc)).call(axisStyle);
+    g.append('g').call(d3.axisLeft(ySc).ticks(5)).call(axisStyle);
+    axisLabel(g, 'Week', false, iW, iH);
+    axisLabel(g, 'Response', true, iW, iH);
+    stack.forEach((layer, li) => {
+      g.append('path').datum(layer).attr('d', areaFn(layer, ySc))
+        .attr('fill', grpColors[li]).attr('opacity', p.fillAlpha);
+      if (p.showLines) {
+        g.append('path').datum(layer).attr('d', lineFn(layer, ySc))
+          .attr('fill', 'none').attr('stroke', grpColors[li]).attr('stroke-width', 1.5).attr('opacity', 0.8);
+      }
+    });
+  }
+
+  const lg = g.append('g').attr('transform', `translate(${iW + 12},0)`);
+  LINE_DATA.forEach((grp, i) => {
+    const row = lg.append('g').attr('transform', `translate(0,${i * 22})`);
+    row.append('rect').attr('width', 12).attr('height', 12)
+      .attr('fill', grp.color).attr('opacity', p.fillAlpha).attr('rx', 2);
+    row.append('text').attr('x', 16).attr('y', 11)
+      .attr('fill', '#a1a1a6').style('font-size', '10px').text(grp.grp);
+  });
+}
+
+// ─────────────────────────────────────────────
+// D3：误差线图
+// ─────────────────────────────────────────────
+function renderErrorbar(container, p) {
+  const W = 540, H = 380, M = { top: 25, right: 30, bottom: 65, left: 55 };
+  const { g, iW, iH } = baseSVG(container, W, H, M);
+
+  const errKey = p.errorType === 'se' ? 'se' : p.errorType === 'sd' ? 'sd' : 'ci95';
+  const maxY = d3.max(ERRORBAR_DATA, d => d.mean + d[errKey]);
+  const minY = Math.max(0, d3.min(ERRORBAR_DATA, d => d.mean - d[errKey]));
+  const xSc = d3.scaleBand().domain(ERRORBAR_DATA.map(d => d.grp)).range([0, iW]).padding(0.5);
+  const ySc = d3.scaleLinear().domain([minY * 0.85, maxY * 1.15]).range([iH, 0]);
+
+  g.append('g').call(d3.axisLeft(ySc).ticks(5).tickSize(-iW).tickFormat('')).call(gridStyle);
+  g.append('g').attr('transform', `translate(0,${iH})`).call(d3.axisBottom(xSc)).call(axisStyle)
+    .selectAll('text').attr('transform', 'rotate(-30)').attr('text-anchor', 'end').attr('dy', '0.4em');
+  g.append('g').call(d3.axisLeft(ySc).ticks(5)).call(axisStyle);
+  axisLabel(g, 'Mean Value', true, iW, iH);
+
+  ERRORBAR_DATA.forEach((d, i) => {
+    const cx = xSc(d.grp) + xSc.bandwidth() / 2;
+    const err = d[errKey];
+    const col = i < 3 ? '#7EC8E3' : '#F0B27A';
+    const capW = p.capWidth * xSc.bandwidth();
+
+    g.append('line').attr('x1', cx).attr('x2', cx)
+      .attr('y1', ySc(d.mean + err)).attr('y2', ySc(d.mean - err))
+      .attr('stroke', col).attr('stroke-width', p.lineWidth);
+    [-err, err].forEach(off => {
+      g.append('line').attr('x1', cx - capW).attr('x2', cx + capW)
+        .attr('y1', ySc(d.mean + off)).attr('y2', ySc(d.mean + off))
+        .attr('stroke', col).attr('stroke-width', p.lineWidth);
+    });
+    g.append('circle').attr('cx', cx).attr('cy', ySc(d.mean))
+      .attr('r', p.dotSize / 2).attr('fill', col).attr('stroke', CHART_BG).attr('stroke-width', 1.5);
+  });
+
+  const errLabels = { se: 'Error bars: ±SE', sd: 'Error bars: ±SD', ci95: 'Error bars: 95% CI' };
+  g.append('text').attr('x', iW).attr('y', 14).attr('text-anchor', 'end')
+    .attr('fill', '#a1a1a6').style('font-size', '10px').text(errLabels[p.errorType]);
+}
+
+// ─────────────────────────────────────────────
+// D3：棒棒糖图
+// ─────────────────────────────────────────────
+function renderLollipop(container, p) {
+  const bM = p.horizontal ? 55 : 100;
+  const W = 540, H = 380, M = { top: 25, right: 30, bottom: bM, left: p.horizontal ? 80 : 55 };
+  const { g, iW, iH } = baseSVG(container, W, H, M);
+
+  let data = [...LOLLIPOP_DATA];
+  if (p.sortBy === 'asc')  data.sort((a, b) => a.val - b.val);
+  if (p.sortBy === 'desc') data.sort((a, b) => b.val - a.val);
+
+  const maxAbs = d3.max(data, d => Math.abs(d.val)) * 1.15;
+
+  if (p.horizontal) {
+    const ySc = d3.scaleBand().domain(data.map(d => d.gene)).range([0, iH]).padding(0.4);
+    const xSc = d3.scaleLinear().domain([-maxAbs, maxAbs]).range([0, iW]);
+    const zero = xSc(0);
+
+    g.append('g').call(d3.axisLeft(ySc).ticks(0).tickSize(-iW).tickFormat('')).call(gridStyle);
+    g.append('g').call(d3.axisBottom(xSc).ticks(5).tickSize(-iH).tickFormat('')).call(gridStyle);
+    g.append('g').call(d3.axisLeft(ySc))
+      .call(ax => { ax.select('.domain').attr('stroke', '#424245'); ax.selectAll('.tick line').remove();
+        ax.selectAll('text').attr('fill', '#a1a1a6').style('font-size', '10px').attr('font-style', 'italic'); });
+    g.append('g').attr('transform', `translate(0,${iH})`).call(d3.axisBottom(xSc).ticks(5)).call(axisStyle);
+    g.append('line').attr('x1', zero).attr('x2', zero).attr('y1', 0).attr('y2', iH)
+      .attr('stroke', 'rgba(255,255,255,0.15)').attr('stroke-width', 1);
+    axisLabel(g, 'log2 Fold Change', false, iW, iH);
+
+    data.forEach(d => {
+      const cy = ySc(d.gene) + ySc.bandwidth() / 2;
+      const col = d.val > 0 ? '#F0B27A' : '#7EC8E3';
+      g.append('line').attr('x1', zero).attr('x2', xSc(d.val)).attr('y1', cy).attr('y2', cy)
+        .attr('stroke', col).attr('stroke-width', p.lineWidth).attr('opacity', 0.7);
+      g.append('circle').attr('cx', xSc(d.val)).attr('cy', cy)
+        .attr('r', p.dotSize / 2).attr('fill', col);
+    });
+  } else {
+    const xSc = d3.scaleBand().domain(data.map(d => d.gene)).range([0, iW]).padding(0.4);
+    const ySc = d3.scaleLinear().domain([-maxAbs, maxAbs]).range([iH, 0]);
+    const zero = ySc(0);
+
+    g.append('g').call(d3.axisLeft(ySc).ticks(5).tickSize(-iW).tickFormat('')).call(gridStyle);
+    g.append('g').attr('transform', `translate(0,${iH})`).call(d3.axisBottom(xSc)).call(axisStyle)
+      .selectAll('text').attr('transform', 'rotate(-35)').attr('text-anchor', 'end').attr('dy', '0.4em').attr('font-style', 'italic');
+    g.append('g').call(d3.axisLeft(ySc).ticks(5)).call(axisStyle);
+    g.append('line').attr('x1', 0).attr('x2', iW).attr('y1', zero).attr('y2', zero)
+      .attr('stroke', 'rgba(255,255,255,0.15)').attr('stroke-width', 1);
+    axisLabel(g, 'Gene', false, iW, iH);
+    axisLabel(g, 'log2 FC', true, iW, iH);
+
+    data.forEach(d => {
+      const cx = xSc(d.gene) + xSc.bandwidth() / 2;
+      const col = d.val > 0 ? '#F0B27A' : '#7EC8E3';
+      g.append('line').attr('x1', cx).attr('x2', cx).attr('y1', zero).attr('y2', ySc(d.val))
+        .attr('stroke', col).attr('stroke-width', p.lineWidth).attr('opacity', 0.7);
+      g.append('circle').attr('cx', cx).attr('cy', ySc(d.val))
+        .attr('r', p.dotSize / 2).attr('fill', col);
+    });
+  }
+}
+
+// ─────────────────────────────────────────────
+// D3：山脊图
+// ─────────────────────────────────────────────
+function renderRidgeline(container, p) {
+  const W = 540, H = 380, M = { top: 30, right: 20, bottom: 50, left: 90 };
+  const { g, iW, iH } = baseSVG(container, W, H, M);
+
+  const allPts = RIDGELINE_DATA.flatMap(d => d.pts);
+  const xMin = d3.min(allPts) - 5, xMax = d3.max(allPts) + 5;
+  const xSc = d3.scaleLinear().domain([xMin, xMax]).range([0, iW]);
+  const kernel = kdeGaussian(p.bw * 5);
+  const thr = d3.range(xMin, xMax, (xMax - xMin) / 100);
+
+  const n = RIDGELINE_DATA.length;
+  const slotH = iH / (n + 0.5);
+  const densities = RIDGELINE_DATA.map(grp => computeKDE(grp.pts, kernel, thr));
+  const maxDens = d3.max(densities, kde => d3.max(kde, k => k.y));
+  const peakH = slotH * (1 + p.overlap);
+
+  const ridgeColors = ['#7EC8E3', '#F0B27A', '#95D5B2', '#B8B8E8'];
+  g.append('g').attr('transform', `translate(0,${iH})`).call(d3.axisBottom(xSc).ticks(6)).call(axisStyle);
+  axisLabel(g, 'Value', false, iW, iH);
+
+  RIDGELINE_DATA.forEach((grp, i) => {
+    const kde = densities[i];
+    const baseY = iH - i * slotH;
+    const col = ridgeColors[i % ridgeColors.length];
+    const ySc = d3.scaleLinear().domain([0, maxDens]).range([0, -peakH]);
+
+    const rowG = g.append('g').attr('transform', `translate(0,${baseY})`);
+    rowG.append('path').datum(kde)
+      .attr('d', d3.area().x(pt => xSc(pt.x)).y0(0).y1(pt => ySc(pt.y)).curve(d3.curveBasis))
+      .attr('fill', col).attr('opacity', p.fillAlpha);
+    rowG.append('line').attr('x1', 0).attr('x2', iW).attr('y1', 0).attr('y2', 0)
+      .attr('stroke', 'rgba(255,255,255,0.1)').attr('stroke-width', 1);
+    rowG.append('path').datum(kde)
+      .attr('d', d3.line().x(pt => xSc(pt.x)).y(pt => ySc(pt.y)).curve(d3.curveBasis))
+      .attr('fill', 'none').attr('stroke', col).attr('stroke-width', 2);
+    rowG.append('text').attr('x', -8).attr('y', 0).attr('text-anchor', 'end')
+      .attr('fill', '#a1a1a6').style('font-size', '10px').attr('dominant-baseline', 'middle')
+      .text(grp.tp);
+  });
+}
+
+const CHART_FNS = {
+  scatter: renderScatter, bar: renderBar, line: renderLine, boxplot: renderBoxplot,
+  violin: renderViolin, histogram: renderHistogram, density: renderDensity,
+  heatmap: renderHeatmap, area: renderArea, errorbar: renderErrorbar,
+  lollipop: renderLollipop, ridgeline: renderRidgeline,
+};
 
 // ─────────────────────────────────────────────
 // 缩略图渲染
@@ -616,7 +1178,213 @@ function thumbBoxplot(container) {
   });
 }
 
-const THUMB_FNS = { scatter: thumbScatter, bar: thumbBar, line: thumbLine, boxplot: thumbBoxplot };
+function thumbViolin(container) {
+  const svg = makeThumbnail(container);
+  const M = { t: 8, r: 8, b: 14, l: 14 };
+  const gr = svg.append('g').attr('transform', `translate(${M.l},${M.t})`);
+  const iW = 150 - M.l - M.r, iH = 95 - M.t - M.b;
+  const allPts = VIOLIN_DATA.flatMap(d => d.pts);
+  const xMin = d3.min(allPts), xMax = d3.max(allPts);
+  const thr = d3.range(xMin - 3, xMax + 3, (xMax - xMin + 6) / 50);
+  const kernel = kdeGaussian(5);
+  const xSc = d3.scaleBand().domain(VIOLIN_DATA.map(d => d.name)).range([0, iW]).padding(0.25);
+  const ySc = d3.scaleLinear().domain([xMin - 3, xMax + 3]).range([iH, 0]);
+  const halfBW = xSc.bandwidth() / 2;
+  const densities = VIOLIN_DATA.map(d => computeKDE(d.pts, kernel, thr));
+  const maxD = d3.max(densities, kde => d3.max(kde, k => k.y));
+  const wSc = d3.scaleLinear().domain([0, maxD]).range([0, halfBW * 0.88]);
+  VIOLIN_DATA.forEach((d, i) => {
+    const cx = xSc(d.name) + halfBW;
+    const kde = densities[i];
+    gr.append('path').datum(kde)
+      .attr('d', d3.area().x0(pt => cx - wSc(pt.y)).x1(pt => cx + wSc(pt.y)).y(pt => ySc(pt.x)).curve(d3.curveCatmullRom))
+      .attr('fill', BOX_COLORS[i]).attr('opacity', 0.75);
+  });
+  gr.append('g').attr('transform', `translate(0,${iH})`).call(d3.axisBottom(xSc))
+    .call(ax => { ax.select('.domain').attr('stroke', '#424245'); ax.selectAll('.tick line').remove(); ax.selectAll('text').attr('fill', '#555').style('font-size', '6px'); });
+}
+
+function thumbHistogram(container) {
+  const svg = makeThumbnail(container);
+  const M = { t: 8, r: 8, b: 14, l: 14 };
+  const gr = svg.append('g').attr('transform', `translate(${M.l},${M.t})`);
+  const iW = 150 - M.l - M.r, iH = 95 - M.t - M.b;
+  const xMin = d3.min(HIST_DATA) - 2, xMax = d3.max(HIST_DATA) + 2;
+  const xSc = d3.scaleLinear().domain([xMin, xMax]).range([0, iW]);
+  const bins = d3.bin().domain([xMin, xMax]).thresholds(15)(HIST_DATA);
+  const yS = d3.scaleLinear().domain([0, d3.max(bins, d => d.length) * 1.1]).range([iH, 0]);
+  gr.append('g').attr('transform', `translate(0,${iH})`).call(d3.axisBottom(xSc).ticks(4))
+    .call(ax => { ax.select('.domain').attr('stroke', '#424245'); ax.selectAll('.tick line').remove(); ax.selectAll('text').attr('fill', '#555').style('font-size', '7px'); });
+  gr.selectAll('rect').data(bins).enter().append('rect')
+    .attr('x', d => xSc(d.x0) + 0.5).attr('y', d => yS(d.length))
+    .attr('width', d => Math.max(0, xSc(d.x1) - xSc(d.x0) - 0.5))
+    .attr('height', d => iH - yS(d.length))
+    .attr('fill', '#7EC8E3').attr('opacity', 0.85).attr('rx', 1);
+}
+
+function thumbDensity(container) {
+  const svg = makeThumbnail(container);
+  const M = { t: 8, r: 8, b: 14, l: 14 };
+  const gr = svg.append('g').attr('transform', `translate(${M.l},${M.t})`);
+  const iW = 150 - M.l - M.r, iH = 95 - M.t - M.b;
+  const allPts = DENSITY_DATA.flatMap(d => d.pts);
+  const xMin = d3.min(allPts) - 3, xMax = d3.max(allPts) + 3;
+  const xSc = d3.scaleLinear().domain([xMin, xMax]).range([0, iW]);
+  const thr = d3.range(xMin, xMax, (xMax - xMin) / 60);
+  const kernel = kdeGaussian(5);
+  const densities = DENSITY_DATA.map(d => computeKDE(d.pts, kernel, thr));
+  const maxY = d3.max(densities, kde => d3.max(kde, k => k.y));
+  const ySc = d3.scaleLinear().domain([0, maxY * 1.1]).range([iH, 0]);
+  gr.append('g').attr('transform', `translate(0,${iH})`).call(d3.axisBottom(xSc).ticks(3))
+    .call(ax => { ax.select('.domain').attr('stroke', '#424245'); ax.selectAll('.tick line').remove(); ax.selectAll('text').attr('fill', '#555').style('font-size', '7px'); });
+  DENSITY_DATA.forEach((grp, i) => {
+    gr.append('path').datum(densities[i])
+      .attr('d', d3.area().x(d => xSc(d.x)).y0(iH).y1(d => ySc(d.y)).curve(d3.curveBasis))
+      .attr('fill', grp.color).attr('opacity', 0.3);
+    gr.append('path').datum(densities[i])
+      .attr('d', d3.line().x(d => xSc(d.x)).y(d => ySc(d.y)).curve(d3.curveBasis))
+      .attr('fill', 'none').attr('stroke', grp.color).attr('stroke-width', 1.5);
+  });
+}
+
+function thumbHeatmap(container) {
+  const svg = makeThumbnail(container);
+  const M = { t: 6, r: 6, b: 16, l: 30 };
+  const gr = svg.append('g').attr('transform', `translate(${M.l},${M.t})`);
+  const iW = 150 - M.l - M.r, iH = 95 - M.t - M.b;
+  const genes = HEATMAP_DATA.map(d => d.gene);
+  const conds = HEATMAP_DATA[0].values.map(v => v.cond);
+  const xSc = d3.scaleBand().domain(conds).range([0, iW]).padding(0.04);
+  const ySc = d3.scaleBand().domain(genes).range([0, iH]).padding(0.04);
+  const allVals = HEATMAP_DATA.flatMap(d => d.values.map(v => v.val));
+  const absMax = d3.max(allVals.map(Math.abs));
+  const colorSc = d3.scaleDiverging(d3.interpolateRdBu).domain([absMax, 0, -absMax]);
+  HEATMAP_DATA.forEach(row => {
+    row.values.forEach(cell => {
+      gr.append('rect').attr('x', xSc(cell.cond)).attr('y', ySc(row.gene))
+        .attr('width', xSc.bandwidth()).attr('height', ySc.bandwidth())
+        .attr('fill', colorSc(cell.val)).attr('rx', 1);
+    });
+  });
+  gr.append('g').attr('transform', `translate(0,${iH})`).call(d3.axisBottom(xSc))
+    .call(ax => { ax.select('.domain').attr('stroke', '#424245'); ax.selectAll('.tick line').remove(); ax.selectAll('text').attr('fill', '#555').style('font-size', '5px'); });
+  gr.append('g').call(d3.axisLeft(ySc))
+    .call(ax => { ax.select('.domain').attr('stroke', '#424245'); ax.selectAll('.tick line').remove(); ax.selectAll('text').attr('fill', '#555').style('font-size', '5px').attr('font-style', 'italic'); });
+}
+
+function thumbArea(container) {
+  const svg = makeThumbnail(container);
+  const M = { t: 8, r: 8, b: 14, l: 14 };
+  const gr = svg.append('g').attr('transform', `translate(${M.l},${M.t})`);
+  const iW = 150 - M.l - M.r, iH = 95 - M.t - M.b;
+  const wk = ['W0', 'W1', 'W2', 'W3', 'W4'];
+  const xSc = d3.scalePoint().domain(wk).range([0, iW]).padding(0.2);
+  const stackData = wk.map((w, i) => {
+    const o = { w };
+    LINE_DATA.forEach(grp => { o[grp.grp] = grp.pts[i].val; });
+    return o;
+  });
+  const stack = d3.stack().keys(LINE_DATA.map(d => d.grp))(stackData);
+  const maxY = d3.max(stack[stack.length - 1], d => d[1]);
+  const ySc = d3.scaleLinear().domain([0, maxY * 1.05]).range([iH, 0]);
+  stack.forEach((layer, li) => {
+    gr.append('path').datum(layer)
+      .attr('d', d3.area().x((_, i) => xSc(wk[i])).y0(d => ySc(d[0])).y1(d => ySc(d[1])).curve(d3.curveMonotoneX))
+      .attr('fill', LINE_DATA[li].color).attr('opacity', 0.7);
+  });
+  gr.append('g').attr('transform', `translate(0,${iH})`).call(d3.axisBottom(xSc))
+    .call(ax => { ax.select('.domain').attr('stroke', '#424245'); ax.selectAll('.tick line').remove(); ax.selectAll('text').attr('fill', '#555').style('font-size', '7px'); });
+}
+
+function thumbErrorbar(container) {
+  const svg = makeThumbnail(container);
+  const M = { t: 8, r: 8, b: 20, l: 14 };
+  const gr = svg.append('g').attr('transform', `translate(${M.l},${M.t})`);
+  const iW = 150 - M.l - M.r, iH = 95 - M.t - M.b;
+  const xSc = d3.scaleBand().domain(ERRORBAR_DATA.map(d => d.grp)).range([0, iW]).padding(0.5);
+  const maxY = d3.max(ERRORBAR_DATA, d => d.mean + d.se);
+  const minY = Math.max(0, d3.min(ERRORBAR_DATA, d => d.mean - d.se));
+  const ySc = d3.scaleLinear().domain([minY * 0.85, maxY * 1.15]).range([iH, 0]);
+  gr.append('g').attr('transform', `translate(0,${iH})`).call(d3.axisBottom(xSc))
+    .call(ax => { ax.select('.domain').attr('stroke', '#424245'); ax.selectAll('.tick line').remove(); ax.selectAll('text').attr('fill', '#555').style('font-size', '5.5px').attr('transform', 'rotate(-30)').attr('text-anchor', 'end'); });
+  ERRORBAR_DATA.forEach((d, i) => {
+    const cx = xSc(d.grp) + xSc.bandwidth() / 2;
+    const col = i < 3 ? '#7EC8E3' : '#F0B27A';
+    const capW = xSc.bandwidth() * 0.3;
+    gr.append('line').attr('x1', cx).attr('x2', cx).attr('y1', ySc(d.mean + d.se)).attr('y2', ySc(d.mean - d.se))
+      .attr('stroke', col).attr('stroke-width', 1);
+    [-d.se, d.se].forEach(off => {
+      gr.append('line').attr('x1', cx - capW).attr('x2', cx + capW)
+        .attr('y1', ySc(d.mean + off)).attr('y2', ySc(d.mean + off)).attr('stroke', col).attr('stroke-width', 1);
+    });
+    gr.append('circle').attr('cx', cx).attr('cy', ySc(d.mean)).attr('r', 2.5).attr('fill', col);
+  });
+}
+
+function thumbLollipop(container) {
+  const svg = makeThumbnail(container);
+  const M = { t: 8, r: 8, b: 20, l: 14 };
+  const gr = svg.append('g').attr('transform', `translate(${M.l},${M.t})`);
+  const iW = 150 - M.l - M.r, iH = 95 - M.t - M.b;
+  const xSc = d3.scaleBand().domain(LOLLIPOP_DATA.map(d => d.gene)).range([0, iW]).padding(0.4);
+  const maxAbs = d3.max(LOLLIPOP_DATA, d => Math.abs(d.val)) * 1.15;
+  const ySc = d3.scaleLinear().domain([-maxAbs, maxAbs]).range([iH, 0]);
+  const zero = ySc(0);
+  gr.append('g').attr('transform', `translate(0,${iH})`).call(d3.axisBottom(xSc))
+    .call(ax => { ax.select('.domain').attr('stroke', '#424245'); ax.selectAll('.tick line').remove(); ax.selectAll('text').attr('fill', '#555').style('font-size', '5px').attr('font-style', 'italic'); });
+  gr.append('line').attr('x1', 0).attr('x2', iW).attr('y1', zero).attr('y2', zero)
+    .attr('stroke', 'rgba(255,255,255,0.15)');
+  LOLLIPOP_DATA.forEach(d => {
+    const cx = xSc(d.gene) + xSc.bandwidth() / 2;
+    const col = d.val > 0 ? '#F0B27A' : '#7EC8E3';
+    gr.append('line').attr('x1', cx).attr('x2', cx).attr('y1', zero).attr('y2', ySc(d.val))
+      .attr('stroke', col).attr('stroke-width', 1.2).attr('opacity', 0.7);
+    gr.append('circle').attr('cx', cx).attr('cy', ySc(d.val)).attr('r', 3).attr('fill', col);
+  });
+}
+
+function thumbRidgeline(container) {
+  const svg = makeThumbnail(container);
+  const M = { t: 6, r: 6, b: 14, l: 38 };
+  const gr = svg.append('g').attr('transform', `translate(${M.l},${M.t})`);
+  const iW = 150 - M.l - M.r, iH = 95 - M.t - M.b;
+  const allPts = RIDGELINE_DATA.flatMap(d => d.pts);
+  const xMin = d3.min(allPts) - 3, xMax = d3.max(allPts) + 3;
+  const xSc = d3.scaleLinear().domain([xMin, xMax]).range([0, iW]);
+  const kernel = kdeGaussian(5);
+  const thr = d3.range(xMin, xMax, (xMax - xMin) / 60);
+  const n = RIDGELINE_DATA.length;
+  const slotH = iH / (n + 0.5);
+  const densities = RIDGELINE_DATA.map(d => computeKDE(d.pts, kernel, thr));
+  const maxDens = d3.max(densities, kde => d3.max(kde, k => k.y));
+  const peakH = slotH * 1.7;
+  const ridgeColors = ['#7EC8E3', '#F0B27A', '#95D5B2', '#B8B8E8'];
+  RIDGELINE_DATA.forEach((grp, i) => {
+    const kde = densities[i];
+    const baseY = iH - i * slotH;
+    const col = ridgeColors[i];
+    const ySc = d3.scaleLinear().domain([0, maxDens]).range([0, -peakH]);
+    const rowG = gr.append('g').attr('transform', `translate(0,${baseY})`);
+    rowG.append('path').datum(kde)
+      .attr('d', d3.area().x(pt => xSc(pt.x)).y0(0).y1(pt => ySc(pt.y)).curve(d3.curveBasis))
+      .attr('fill', col).attr('opacity', 0.7);
+    rowG.append('path').datum(kde)
+      .attr('d', d3.line().x(pt => xSc(pt.x)).y(pt => ySc(pt.y)).curve(d3.curveBasis))
+      .attr('fill', 'none').attr('stroke', col).attr('stroke-width', 1.5);
+    rowG.append('text').attr('x', -4).attr('y', 0).attr('text-anchor', 'end')
+      .attr('fill', '#555').style('font-size', '6px').attr('dominant-baseline', 'middle')
+      .text(grp.tp.replace('Week ', 'W'));
+  });
+  gr.append('g').attr('transform', `translate(0,${iH})`).call(d3.axisBottom(xSc).ticks(3))
+    .call(ax => { ax.select('.domain').attr('stroke', '#424245'); ax.selectAll('.tick line').remove(); ax.selectAll('text').attr('fill', '#555').style('font-size', '7px'); });
+}
+
+const THUMB_FNS = {
+  scatter: thumbScatter, bar: thumbBar, line: thumbLine, boxplot: thumbBoxplot,
+  violin: thumbViolin, histogram: thumbHistogram, density: thumbDensity,
+  heatmap: thumbHeatmap, area: thumbArea, errorbar: thumbErrorbar,
+  lollipop: thumbLollipop, ridgeline: thumbRidgeline,
+};
 
 // ─────────────────────────────────────────────
 // R 代码生成器
@@ -783,11 +1551,284 @@ ${meanLine}  scale_fill_manual(values = c(
   )`;
 }
 
+function genViolinCode(p) {
+  const boxLine = p.showBoxplot
+    ? `  geom_boxplot(\n    width = 0.12, fill = "white",\n    outlier.shape = NA, linewidth = 0.6\n  ) +\n`
+    : '';
+  const halfNote = p.halfViolin !== 'full'
+    ? `  # 半小提琴图可用：ggdist::stat_halfeye(side = "${p.halfViolin}")\n`
+    : '';
+  return `library(ggplot2)
+
+# data 包含列：group (factor), value
+ggplot(data, aes(
+  x    = group,
+  y    = value,
+  fill = group
+)) +
+  geom_violin(
+    bw    = ${p.bw},
+    alpha = ${p.fillAlpha},
+    trim  = TRUE
+  ) +
+${boxLine}${halfNote}  scale_fill_manual(values = c(
+    "Control" = "#7EC8E3",
+    "Drug A"  = "#F0B27A",
+    "Drug B"  = "#95D5B2"
+  )) +
+  labs(
+    x     = "Group",
+    y     = "Response Value",
+    title = "各组响应值分布（小提琴图）"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    legend.position    = "none",
+    panel.grid.major.x = element_blank()
+  )`;
+}
+
+function genHistogramCode(p) {
+  const densLine = p.densityOverlay
+    ? `  geom_density(\n    aes(y = after_stat(count)),\n    color = "#F0B27A", linewidth = 1\n  ) +\n`
+    : '';
+  return `library(ggplot2)
+
+# data 包含列：value (连续变量)
+ggplot(data, aes(x = value)) +
+  geom_histogram(
+    bins  = ${p.bins},
+    fill  = "#7EC8E3",
+    alpha = ${p.fillAlpha},
+    color = NA
+  ) +
+${densLine}  labs(
+    x     = "Value",
+    y     = "Count",
+    title = "单变量分布直方图"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(panel.grid.minor = element_blank())`;
+}
+
+function genDensityCode(p) {
+  const rugLine = p.showRug
+    ? `  geom_rug(alpha = 0.3, sides = "b") +\n`
+    : '';
+  return `library(ggplot2)
+
+# data 包含列：value, group (factor)
+ggplot(data, aes(
+  x     = value,
+  fill  = group,
+  color = group
+)) +
+  geom_density(
+    bw        = ${p.bw},
+    alpha     = ${p.fillAlpha},
+    linewidth = 0.8
+  ) +
+${rugLine}  scale_fill_manual(values = c(
+    "Control"   = "#7EC8E3",
+    "Low Dose"  = "#F0B27A",
+    "High Dose" = "#95D5B2"
+  )) +
+  scale_color_manual(values = c(
+    "Control"   = "#7EC8E3",
+    "Low Dose"  = "#F0B27A",
+    "High Dose" = "#95D5B2"
+  )) +
+  labs(
+    x     = "Value",
+    y     = "Density",
+    title = "各组密度分布对比"
+  ) +
+  theme_minimal(base_size = 13)`;
+}
+
+function genHeatmapCode(p) {
+  const scaleMap = {
+    rdbu:    'scale_fill_gradient2(\n    low = "#2166AC", mid = "white", high = "#B2182B",\n    midpoint = 0\n  )',
+    viridis: 'scale_fill_viridis_c(option = "viridis")',
+    plasma:  'scale_fill_viridis_c(option = "plasma")',
+  };
+  const labLine = p.showValues
+    ? `  geom_text(\n    aes(label = round(expression, 2)),\n    size = 2.5, color = "white"\n  ) +\n`
+    : '';
+  return `library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+# mat 为基因 × 样本矩阵，转换为长格式
+data_long <- mat |>
+  as.data.frame() |>
+  rownames_to_column("gene") |>
+  pivot_longer(-gene, names_to = "condition",
+               values_to = "expression")
+
+ggplot(data_long, aes(
+  x    = condition,
+  y    = gene,
+  fill = expression
+)) +
+  geom_tile(linewidth = 0.3) +
+${labLine}  ${scaleMap[p.colorScheme] || scaleMap.rdbu} +
+  labs(
+    x     = "Condition",
+    y     = "Gene",
+    fill  = "log2 FC",
+    title = "基因表达热力图"
+  ) +
+  theme_minimal(base_size = 11) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    panel.grid  = element_blank()
+  )`;
+}
+
+function genAreaCode(p) {
+  const posMap = { stacked: 'position_stack()', proportional: 'position_fill()' };
+  const yLab = p.arrangement === 'proportional' ? 'Proportion' : 'Response';
+  const scaleFmt = p.arrangement === 'proportional'
+    ? '\n  scale_y_continuous(labels = scales::percent) +' : '';
+  const lineCode = p.showLines
+    ? `  geom_line(\n    aes(group = group),\n    position = ${posMap[p.arrangement]},\n    linewidth = 0.8, alpha = 0.8\n  ) +\n`
+    : '';
+  return `library(ggplot2)
+
+# data 包含列：week, value, group (factor)
+ggplot(data, aes(
+  x     = week,
+  y     = value,
+  fill  = group,
+  group = group
+)) +
+  geom_area(
+    position = ${posMap[p.arrangement]},
+    alpha    = ${p.fillAlpha}
+  ) +
+${lineCode}  scale_fill_manual(values = c(
+    "Control"   = "#7EC8E3",
+    "Low Dose"  = "#F0B27A",
+    "High Dose" = "#95D5B2"
+  )) +${scaleFmt}
+  labs(
+    x     = "Week",
+    y     = "${yLab}",
+    fill  = "Group",
+    title = "${p.arrangement === 'proportional' ? '比例堆叠面积图' : '堆叠面积图'}"
+  ) +
+  theme_minimal(base_size = 13)`;
+}
+
+function genErrorbarCode(p) {
+  const errMap = {
+    se:   { ymin: 'mean - se',   ymax: 'mean + se',   note: '# se = sd / sqrt(n)' },
+    sd:   { ymin: 'mean - sd',   ymax: 'mean + sd',   note: '# sd = standard deviation' },
+    ci95: { ymin: 'mean - ci95', ymax: 'mean + ci95', note: '# ci95 = 1.96 * se' },
+  };
+  const err = errMap[p.errorType] || errMap.se;
+  return `library(ggplot2)
+
+# data 包含列：group, mean, ${p.errorType}
+${err.note}
+ggplot(data, aes(x = group, y = mean)) +
+  geom_errorbar(
+    aes(ymin = ${err.ymin},
+        ymax = ${err.ymax}),
+    width     = ${p.capWidth},
+    linewidth = ${p.lineWidth},
+    color     = "#7EC8E3"
+  ) +
+  geom_point(
+    size  = ${p.dotSize},
+    color = "#7EC8E3"
+  ) +
+  labs(
+    x     = "Group",
+    y     = "Mean \u00b1 ${p.errorType.toUpperCase()}",
+    title = "均值与误差范围"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    panel.grid.major.x = element_blank(),
+    axis.text.x = element_text(angle = 30, hjust = 1)
+  )`;
+}
+
+function genLollipopCode(p) {
+  const sortCode = p.sortBy !== 'none'
+    ? `  dplyr::mutate(gene = reorder(gene, ${p.sortBy === 'asc' ? '' : '-'}log2fc)) |>\n`
+    : '';
+  const hFlip = p.horizontal ? '  coord_flip() +\n' : '';
+  const angText = p.horizontal ? '' : 'angle = 35, hjust = 1, face = "italic"';
+  return `library(ggplot2)
+library(dplyr)
+
+# data 包含列：gene, log2fc
+data |>
+${sortCode}ggplot(aes(x = gene, y = log2fc,
+         color = ifelse(log2fc > 0, "up", "down"))) +
+  geom_segment(
+    aes(xend = gene, yend = 0),
+    linewidth = ${p.lineWidth},
+    alpha     = 0.7
+  ) +
+  geom_point(size = ${p.dotSize}) +
+${hFlip}  geom_hline(yintercept = 0, linetype = "dashed",
+             color = "grey50", linewidth = 0.5) +
+  scale_color_manual(values = c(
+    "up"   = "#F0B27A",
+    "down" = "#7EC8E3"
+  ), guide = "none") +
+  labs(
+    x     = "Gene",
+    y     = "log2 Fold Change",
+    title = "差异基因 log2FC 棒棒糖图"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    panel.grid.major.${p.horizontal ? 'y' : 'x'} = element_blank(),
+    axis.text.x = element_text(${angText})
+  )`;
+}
+
+function genRidgelineCode(p) {
+  return `library(ggplot2)
+library(ggridges)
+
+# data 包含列：timepoint (factor), value
+ggplot(data, aes(
+  x    = value,
+  y    = timepoint,
+  fill = timepoint
+)) +
+  geom_density_ridges(
+    scale          = ${p.overlap},
+    bandwidth      = ${p.bw},
+    alpha          = ${p.fillAlpha},
+    rel_min_height = 0.01
+  ) +
+  scale_fill_manual(values = c(
+    "Week 0"  = "#7EC8E3",
+    "Week 4"  = "#F0B27A",
+    "Week 8"  = "#95D5B2",
+    "Week 12" = "#B8B8E8"
+  )) +
+  labs(
+    x     = "Value",
+    y     = "Time Point",
+    title = "随时间变化的分布（山脊图）"
+  ) +
+  theme_ridges(font_size = 13) +
+  theme(legend.position = "none")`;
+}
+
 const CODE_GEN = {
-  scatter: genScatterCode,
-  bar:     genBarCode,
-  line:    genLineCode,
-  boxplot: genBoxplotCode,
+  scatter: genScatterCode, bar: genBarCode, line: genLineCode, boxplot: genBoxplotCode,
+  violin: genViolinCode, histogram: genHistogramCode, density: genDensityCode,
+  heatmap: genHeatmapCode, area: genAreaCode, errorbar: genErrorbarCode,
+  lollipop: genLollipopCode, ridgeline: genRidgelineCode,
 };
 
 // ─────────────────────────────────────────────
@@ -808,7 +1849,8 @@ function sliderCtrl(paramKey, min, max, step, val) {
   return `<div class="p7-ctrl-hdr">
     <span class="p7-ctrl-lbl">${
       { size: '点大小', alpha: '透明度', barWidth: '柱宽', lineWidth: '线宽',
-        boxWidth: '箱宽', fillAlpha: '填充透明度' }[paramKey]
+        boxWidth: '箱宽', fillAlpha: '填充透明度', bw: '带宽', bins: '分箱数',
+        capWidth: '线帽宽度', dotSize: '点大小', overlap: '重叠度' }[paramKey]
     }</span>
     <span class="p7-ctrl-val" id="p7-val-${paramKey}">${val}</span>
   </div>
@@ -900,11 +1942,111 @@ function buildBoxplotParams(p) {
     <button class="p7-reset-btn" data-reset="true">↺ 重置参数</button>`;
 }
 
+function buildViolinParams(p) {
+  return `
+    <div class="p7-ctrl-group">${sliderCtrl('bw', 0.2, 2.0, 0.1, p.bw)}</div>
+    <div class="p7-ctrl-group">${sliderCtrl('fillAlpha', 0.1, 1.0, 0.05, p.fillAlpha)}</div>
+    <div class="p7-ctrl-group">
+      <span class="p7-ctrl-lbl">嵌套箱线图</span>
+      ${togBtn(p.showBoxplot, 'showBoxplot')}
+    </div>
+    <div class="p7-ctrl-group">
+      <span class="p7-ctrl-lbl">展示方向</span>
+      ${tabRow([{val:'full',label:'完整'},{val:'left',label:'左半'},{val:'right',label:'右半'}], p.halfViolin, 'halfViolin')}
+    </div>
+    <button class="p7-reset-btn" data-reset="true">↺ 重置参数</button>`;
+}
+
+function buildHistogramParams(p) {
+  return `
+    <div class="p7-ctrl-group">${sliderCtrl('bins', 5, 50, 1, p.bins)}</div>
+    <div class="p7-ctrl-group">${sliderCtrl('fillAlpha', 0.1, 1.0, 0.05, p.fillAlpha)}</div>
+    <div class="p7-ctrl-group">
+      <span class="p7-ctrl-lbl">叠加密度曲线</span>
+      ${togBtn(p.densityOverlay, 'densityOverlay')}
+    </div>
+    <button class="p7-reset-btn" data-reset="true">↺ 重置参数</button>`;
+}
+
+function buildDensityParams(p) {
+  return `
+    <div class="p7-ctrl-group">${sliderCtrl('bw', 0.5, 5.0, 0.1, p.bw)}</div>
+    <div class="p7-ctrl-group">${sliderCtrl('fillAlpha', 0.0, 0.6, 0.05, p.fillAlpha)}</div>
+    <div class="p7-ctrl-group">
+      <span class="p7-ctrl-lbl">显示数据地毯</span>
+      ${togBtn(p.showRug, 'showRug')}
+    </div>
+    <button class="p7-reset-btn" data-reset="true">↺ 重置参数</button>`;
+}
+
+function buildHeatmapParams(p) {
+  return `
+    <div class="p7-ctrl-group">
+      <span class="p7-ctrl-lbl">颜色映射方案</span>
+      ${tabRow([{val:'rdbu',label:'红蓝'},{val:'viridis',label:'Viridis'},{val:'plasma',label:'Plasma'}], p.colorScheme, 'colorScheme')}
+    </div>
+    <div class="p7-ctrl-group">
+      <span class="p7-ctrl-lbl">显示数值标签</span>
+      ${togBtn(p.showValues, 'showValues')}
+    </div>
+    <button class="p7-reset-btn" data-reset="true">↺ 重置参数</button>`;
+}
+
+function buildAreaParams(p) {
+  return `
+    <div class="p7-ctrl-group">
+      <span class="p7-ctrl-lbl">堆叠方式</span>
+      ${tabRow([{val:'stacked',label:'绝对堆叠'},{val:'proportional',label:'比例填充'}], p.arrangement, 'arrangement')}
+    </div>
+    <div class="p7-ctrl-group">${sliderCtrl('fillAlpha', 0.2, 0.95, 0.05, p.fillAlpha)}</div>
+    <div class="p7-ctrl-group">
+      <span class="p7-ctrl-lbl">显示边界线</span>
+      ${togBtn(p.showLines, 'showLines')}
+    </div>
+    <button class="p7-reset-btn" data-reset="true">↺ 重置参数</button>`;
+}
+
+function buildErrorbarParams(p) {
+  return `
+    <div class="p7-ctrl-group">
+      <span class="p7-ctrl-lbl">误差类型</span>
+      ${tabRow([{val:'se',label:'SE'},{val:'sd',label:'SD'},{val:'ci95',label:'95% CI'}], p.errorType, 'errorType')}
+      <div class="p7-ctrl-note">SE：标准误 · SD：标准差 · CI：置信区间</div>
+    </div>
+    <div class="p7-ctrl-group">${sliderCtrl('capWidth', 0.1, 0.5, 0.05, p.capWidth)}</div>
+    <div class="p7-ctrl-group">${sliderCtrl('lineWidth', 0.5, 2.5, 0.25, p.lineWidth)}</div>
+    <div class="p7-ctrl-group">${sliderCtrl('dotSize', 2, 10, 1, p.dotSize)}</div>
+    <button class="p7-reset-btn" data-reset="true">↺ 重置参数</button>`;
+}
+
+function buildLollipopParams(p) {
+  return `
+    <div class="p7-ctrl-group">${sliderCtrl('dotSize', 4, 16, 1, p.dotSize)}</div>
+    <div class="p7-ctrl-group">${sliderCtrl('lineWidth', 0.5, 3.0, 0.25, p.lineWidth)}</div>
+    <div class="p7-ctrl-group">
+      <span class="p7-ctrl-lbl">排序方式</span>
+      ${tabRow([{val:'none',label:'原始'},{val:'asc',label:'升序'},{val:'desc',label:'降序'}], p.sortBy, 'sortBy')}
+    </div>
+    <div class="p7-ctrl-group">
+      <span class="p7-ctrl-lbl">水平方向</span>
+      ${togBtn(p.horizontal, 'horizontal')}
+    </div>
+    <button class="p7-reset-btn" data-reset="true">↺ 重置参数</button>`;
+}
+
+function buildRidgelineParams(p) {
+  return `
+    <div class="p7-ctrl-group">${sliderCtrl('overlap', 0.2, 1.5, 0.1, p.overlap)}</div>
+    <div class="p7-ctrl-group">${sliderCtrl('fillAlpha', 0.2, 1.0, 0.05, p.fillAlpha)}</div>
+    <div class="p7-ctrl-group">${sliderCtrl('bw', 0.5, 5.0, 0.1, p.bw)}</div>
+    <button class="p7-reset-btn" data-reset="true">↺ 重置参数</button>`;
+}
+
 const PARAMS_BUILDERS = {
-  scatter: buildScatterParams,
-  bar:     buildBarParams,
-  line:    buildLineParams,
-  boxplot: buildBoxplotParams,
+  scatter: buildScatterParams, bar: buildBarParams, line: buildLineParams, boxplot: buildBoxplotParams,
+  violin: buildViolinParams, histogram: buildHistogramParams, density: buildDensityParams,
+  heatmap: buildHeatmapParams, area: buildAreaParams, errorbar: buildErrorbarParams,
+  lollipop: buildLollipopParams, ridgeline: buildRidgelineParams,
 };
 
 // ─────────────────────────────────────────────
@@ -1215,7 +2357,7 @@ export function render() {
 
 <!-- Hero -->
 <section class="p7-hero section-hero-full" id="p7-hero">
-  <div class="p7-batch-badge">第一批 · 4 种图表</div>
+  <div class="p7-batch-badge">完整版 · 12 种图表</div>
   <div class="p7-eyebrow">模块一 · 第 7 页</div>
   <h1 class="p7-hero-title">ggplot2<br>图表工作坊</h1>
   <p class="p7-hero-sub">12 种常用图表 · 参数实时调节<br>R 代码即时生成 · 一键导出脚本</p>
@@ -1231,7 +2373,7 @@ export function render() {
   <div class="p7-container">
     <div class="p7-sec-hdr" id="p7-gallery-hdr">
       <div class="p7-eyebrow" style="color:var(--text-on-light-2)">图表类型</div>
-      <h2 class="p7-sec-title">4 种核心图表</h2>
+      <h2 class="p7-sec-title">12 种核心图表</h2>
       <p class="p7-sec-sub">点击任意图表卡片进入工作坊，实时调节参数并同步生成 R 代码。</p>
     </div>
     <div class="p7-chart-grid" id="p7-chart-grid">${galleryCardsHtml}</div>

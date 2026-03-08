@@ -58,7 +58,7 @@
 - [x] m1-p6 ggplot2 图层语法与分面（JS-sticky 逐层叠加 data→aes→geom→scale→theme + 分面 Tab 切换 + 坐标变换 3tab + 自定义坐标轴参数控制器）
       ↳ 含 Bug Fix：CSS sticky → transform:translateY JS 模拟；移动端改为堆叠卡片自然滚动
 - [x] m1-p7 ggplot2 图表工作坊 — 先做 4 种验证（scatter/bar/line/boxplot，WorkshopLayout 三面板 + 移动端手风琴）
-- [ ] m1-p7 ggplot2 图表工作坊 — 剩余 8 种（violin/histogram/density/heatmap/area/errorbar/lollipop/ridgeline）
+- [x] m1-p7 ggplot2 图表工作坊 — 剩余 8 种（violin/histogram/density/heatmap/area/errorbar/lollipop/ridgeline）
 - [ ] m1-p8 R 配色与出版级图表（配色包浏览器列表+预览 + 主题定制器滑块+D3+theme()代码 + ggsave 期刊代码生成器 + patchwork 4 种布局）
 - [ ] m1-p9 Python 可视化与数据叙事（matplotlib 层次图解 + seaborn 10 种图表参数面板 + matplotlib vs ggplot2 对照 + annotate Canvas 拖拽 + 叙事 4 种方法动画）
 - [ ] m1-p10 科研绘图工作流与导出（6 步粘性时间线 + 格式原理动画 + DPI 对比器 BeforeAfter + 分辨率计算器 + 期刊速查）
@@ -110,10 +110,10 @@
 | Phase 1 设计系统 | ✅ 完成 | |
 | Phase 2 组件库 | ✅ 完成 | |
 | Phase 3 首页 | ✅ 完成 | |
-| Phase 4 模块一 | 🔄 7/10 | m1-p1~p7 完成，p8~p10 待开发 |
+| Phase 4 模块一 | 🔄 7/10 | m1-p1~p7（含全部12种图表）完成，p8~p10 待开发 |
 | Phase 5 模块二 | ⏳ 待开始 | |
 | Phase 6 模块三 | ⏳ 待开始 | |
 | Phase 7 模块四 | ⏳ 待开始 | |
 | Phase 8 收尾 | ⏳ 待开始 | |
 
-**下一步**：`commands.md` Step 3 — m1-p7 ggplot2 图表工作坊（第一批 4 种）
+**下一步**：`commands.md` Step 5 — m1-p8 R 配色与出版级图表
