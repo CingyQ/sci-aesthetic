@@ -116,12 +116,57 @@ const CHART_GROUPS = [
 ];
 
 // ─────────────────────────────────────────────
-// 饼图误用案例
+// 图表误用合集数据
 // ─────────────────────────────────────────────
-const PIE_CASES = [
-  { title: '案例一：类别过多', problem: '7 个扇区，最小的几乎看不见，颜色难以区分', solution: '水平条形图：所有类别清晰对齐，差异一目了然' },
-  { title: '案例二：比例极为相近', problem: '33% / 34% / 33%，人眼对角度的感知无法分辨', solution: '柱状图：微小差异通过长度轻松识别' },
-  { title: '案例三：展示时间趋势', problem: '4 个饼图并排，无法感知变化的方向和速率', solution: '折线图：增长趋势直观呈现，无需逐个饼图比较' },
+const MISUSE_CASES = [
+  {
+    id: 'pie-many',
+    tag: '饼图', tagColor: '#E07A7A',
+    title: '饼图：类别过多',
+    problem: '7 个扇区，最小的几乎不可见，颜色无法区分，读者无从比较大小',
+    solution: '水平条形图：按大小排序，长度感知精确，标签空间充足',
+    drawBad: drawMisuse_PieMany_Bad, drawGood: drawMisuse_PieMany_Good,
+  },
+  {
+    id: 'yaxis-truncate',
+    tag: '柱状图', tagColor: '#F0B27A',
+    title: '截断 Y 轴：放大微小差异',
+    problem: 'Y 轴从 95 开始，让仅 2% 的差异看起来像 400%，严重误导读者',
+    solution: 'Y 轴从 0 开始：差异真实呈现，读者可正确评估数据比例',
+    drawBad: drawMisuse_Truncate_Bad, drawGood: drawMisuse_Truncate_Good,
+  },
+  {
+    id: 'dual-axis',
+    tag: '双Y轴', tagColor: '#B8B8E8',
+    title: '双 Y 轴：制造虚假相关',
+    problem: '两个无关变量共享 X 轴，走势"完美重合"，暗示因果关系却可能完全偶然',
+    solution: '拆成两张独立图表，各自用完整的 Y 轴，不强加视觉关联',
+    drawBad: drawMisuse_DualAxis_Bad, drawGood: drawMisuse_DualAxis_Good,
+  },
+  {
+    id: 'scatter-line',
+    tag: '散点图', tagColor: '#7EC8E3',
+    title: '散点图强行连线',
+    problem: '将离散测量点用折线连接，暗示两点之间存在连续数据，实际并不存在',
+    solution: '保留散点，叠加回归线：诚实表达数据的稀疏性和不确定区间',
+    drawBad: drawMisuse_ScatterLine_Bad, drawGood: drawMisuse_ScatterLine_Good,
+  },
+  {
+    id: '3d-pie',
+    tag: '3D图表', tagColor: '#95D5B2',
+    title: '3D 图表：透视扭曲感知',
+    problem: '3D 透视使前方扇区看起来比实际更大，视觉占比与真实占比严重不符',
+    solution: '平面 2D 圆环图：面积分配客观，减少类别时才考虑使用',
+    drawBad: drawMisuse_3DPie_Bad, drawGood: drawMisuse_3DPie_Good,
+  },
+  {
+    id: 'line-category',
+    tag: '折线图', tagColor: '#F0D264',
+    title: '折线图连接无序类别',
+    problem: '用折线连接"北京、上海、广州..."等无时间顺序的城市，暗示不存在的趋势',
+    solution: '柱状图：无序类别之间没有"中间值"，折线的斜率无意义',
+    drawBad: drawMisuse_LineCat_Bad, drawGood: drawMisuse_LineCat_Good,
+  },
 ];
 
 // ─────────────────────────────────────────────
@@ -317,28 +362,37 @@ export function render() {
 .p5-pv-label { font-size:0.7rem; font-family:var(--font-code); color:var(--accent); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:4px; }
 .p5-pv-text { font-size:0.85rem; color:var(--text-on-dark-2); line-height:1.5; }
 
-/* ── 饼图误用 ── */
-.p5-pie-section {
+/* ── 误用合集 ── */
+.p5-misuse-section {
   background:var(--bg-light-alt); color:var(--text-on-light);
   padding:var(--space-3xl) var(--space-lg);
 }
-.p5-pie-section .p5-sec-desc { color:var(--text-on-light-2); }
-.p5-pie-wrap { max-width:var(--w-content); margin:0 auto; }
-.p5-pie-warn {
-  background:#fff8e1; border:2px solid #f0b27a; border-radius:var(--radius-lg);
+.p5-misuse-section .p5-sec-desc { color:var(--text-on-light-2); }
+.p5-misuse-wrap { max-width:var(--w-full); margin:0 auto; }
+.p5-misuse-intro {
+  background:#fff; border:1px solid var(--border-light); border-radius:var(--radius-lg);
   padding:var(--space-md) var(--space-lg); display:flex; gap:var(--space-md);
   align-items:flex-start; margin-bottom:var(--space-xl);
+  box-shadow:var(--shadow-sm);
 }
-.p5-pie-warn-icon { font-size:1.8rem; flex-shrink:0; margin-top:2px; }
-.p5-pie-warn-text { font-size:0.96rem; line-height:1.7; color:#7a4a00; }
-.p5-pie-warn-text strong { font-weight:700; }
-.p5-pie-cases { display:flex; flex-direction:column; gap:var(--space-xl); }
+.p5-misuse-intro-icon { font-size:1.6rem; flex-shrink:0; margin-top:2px; }
+.p5-misuse-intro-text { font-size:0.95rem; line-height:1.7; color:var(--text-on-light-2); }
+.p5-misuse-intro-text strong { color:var(--text-on-light); font-weight:700; }
+.p5-misuse-grid { display:flex; flex-direction:column; gap:var(--space-xl); }
 .p5-case {
   background:white; border-radius:var(--radius-lg); overflow:hidden;
   border:1px solid var(--border-light); box-shadow:var(--shadow-md);
 }
-.p5-case-hdr { padding:16px 24px; border-bottom:1px solid var(--border-light); }
-.p5-case-title { font-family:var(--font-display); font-size:1.15rem; font-weight:700; }
+.p5-case-hdr {
+  padding:14px 24px; border-bottom:1px solid var(--border-light);
+  display:flex; align-items:center; gap:12px;
+}
+.p5-case-tag {
+  padding:3px 10px; border-radius:var(--radius-full);
+  font-size:0.72rem; font-weight:700; letter-spacing:0.05em; flex-shrink:0;
+  color:white;
+}
+.p5-case-title { font-family:var(--font-display); font-size:1.1rem; font-weight:700; }
 .p5-case-body { display:flex; }
 .p5-case-side { flex:1; padding:var(--space-md); display:flex; flex-direction:column; gap:10px; }
 .p5-case-side:first-child { border-right:1px solid var(--border-light); }
@@ -384,7 +438,7 @@ export function render() {
   .p5-preview-sticky { position:static; }
 }
 @media (max-width:768px) {
-  .p5-dt-section,.p5-gallery-section,.p5-pie-section,.p5-footer { padding:var(--space-xl) var(--space-sm); }
+  .p5-dt-section,.p5-gallery-section,.p5-misuse-section,.p5-footer { padding:var(--space-xl) var(--space-sm); }
   .p5-opts { flex-direction:column; align-items:stretch; }
   .p5-opt-btn { width:100%; justify-content:center; }
   .p5-case-body { flex-direction:column; }
@@ -406,7 +460,7 @@ export function render() {
   <nav class="hero-quicknav" id="p5-quicknav" style="opacity:0;">
     <button class="hero-quicknav__item" data-target="#p5-decision">交互式决策树</button>
     <button class="hero-quicknav__item" data-target="#p5-gallery">图表类型全览</button>
-    <button class="hero-quicknav__item" data-target="#p5-pie">饼图误用专题</button>
+    <button class="hero-quicknav__item" data-target="#p5-misuse">误用案例合集</button>
   </nav>
   <p class="p5-scroll-hint">↓ 向下探索</p>
 </section>
@@ -452,21 +506,22 @@ export function render() {
   </div>
 </section>
 
-<!-- 饼图误用 -->
-<section id="p5-pie" class="p5-pie-section" style="scroll-margin-top:56px;">
-  <div class="p5-pie-wrap">
-    <div class="p5-sec-hdr" id="p5-pie-hdr">
-      <h2 class="p5-sec-title">我应该用饼图吗？</h2>
-      <p class="p5-sec-desc">饼图是科研图表中最常被误用的类型。了解何时应该避免它。</p>
+<!-- 误用合集 -->
+<section id="p5-misuse" class="p5-misuse-section" style="scroll-margin-top:56px;">
+  <div class="p5-misuse-wrap">
+    <div class="p5-sec-hdr" id="p5-misuse-hdr">
+      <h2 class="p5-sec-title">图表误用合集</h2>
+      <p class="p5-sec-desc">6 种科研图表中最高频的误用模式，每个附有 D3 对比演示与修正建议。</p>
     </div>
-    <div class="p5-pie-warn" id="p5-pie-warn">
-      <div class="p5-pie-warn-icon">⚠️</div>
-      <div class="p5-pie-warn-text">
-        <strong>饼图的核心限制：</strong>人眼对角度的判断精度远低于对长度的判断。当类别超过 4 个、比例接近、或需要展示趋势时，
-        <strong>条形图几乎始终是更好的选择</strong>。大多数顶刊图表评审也会将多余的饼图视为设计缺陷。
+    <div class="p5-misuse-intro" id="p5-misuse-intro">
+      <div class="p5-misuse-intro-icon">🔍</div>
+      <div class="p5-misuse-intro-text">
+        <strong>图表误用的核心问题</strong>不是图表本身，而是图表与数据、意图不匹配。
+        同一种图表，在一个场景里是最佳选择，在另一个场景里就会严重误导读者。
+        识别这些模式，能让你的图表既诚实又有说服力。
       </div>
     </div>
-    <div class="p5-pie-cases" id="p5-pie-cases"></div>
+    <div class="p5-misuse-grid" id="p5-misuse-grid"></div>
   </div>
 </section>
 
@@ -508,14 +563,14 @@ export function init() {
   // 滚动入场
   fadeIn('#p5-dt-hdr', { y:40, stagger:0 });
   fadeIn('#p5-gallery-hdr', { y:40, stagger:0 });
-  fadeIn('#p5-pie-hdr', { y:40, stagger:0 });
+  fadeIn('#p5-misuse-hdr', { y:40, stagger:0 });
   fadeIn('#p5-footer-title', { y:30, stagger:0 });
   fadeIn('#p5-footer-desc', { y:20, stagger:0 });
-  fadeIn('#p5-pie-warn', { y:30, stagger:0 });
+  fadeIn('#p5-misuse-intro', { y:30, stagger:0 });
 
   initDecisionTree();
   initGallery();
-  initPieCases();
+  initMisuseCases();
 }
 
 // ─────────────────────────────────────────────
@@ -723,17 +778,20 @@ function renderPreview(chart, color) {
 }
 
 // ─────────────────────────────────────────────
-// 饼图误用案例
+// 图表误用合集
 // ─────────────────────────────────────────────
-function initPieCases() {
-  const container = document.getElementById('p5-pie-cases');
+function initMisuseCases() {
+  const container = document.getElementById('p5-misuse-grid');
   if (!container) return;
-  container.innerHTML = PIE_CASES.map((c, idx) => `
+  container.innerHTML = MISUSE_CASES.map((c, idx) => `
     <div class="p5-case" id="p5-case-${idx}">
-      <div class="p5-case-hdr"><div class="p5-case-title">${c.title}</div></div>
+      <div class="p5-case-hdr">
+        <span class="p5-case-tag" style="background:${c.tagColor}">${c.tag}</span>
+        <div class="p5-case-title">${c.title}</div>
+      </div>
       <div class="p5-case-body">
         <div class="p5-case-side">
-          <div class="p5-badge p5-badge-bad">✗ 错误用法</div>
+          <div class="p5-badge p5-badge-bad">✗ 误用示例</div>
           <svg id="pc-bad-${idx}" viewBox="0 0 280 200"></svg>
           <div class="p5-case-note p5-case-note-bad">⚠ ${c.problem}</div>
         </div>
@@ -744,8 +802,11 @@ function initPieCases() {
         </div>
       </div>
     </div>`).join('');
-  drawPieCase0(); drawPieCase1(); drawPieCase2();
-  PIE_CASES.forEach((_, idx) => fadeIn(`#p5-case-${idx}`, { y:40, stagger:0 }));
+  MISUSE_CASES.forEach((c, idx) => {
+    c.drawBad(d3.select(`#pc-bad-${idx}`));
+    c.drawGood(d3.select(`#pc-good-${idx}`));
+    fadeIn(`#p5-case-${idx}`, { y:40, stagger:0 });
+  });
 }
 
 // ─────────────────────────────────────────────
@@ -1089,94 +1150,241 @@ function drawStep(svg, color) {
 }
 
 // ─────────────────────────────────────────────
-// 饼图误用案例绘制
+// 误用案例绘图函数（Bad / Good 各 6 对）
 // ─────────────────────────────────────────────
-function drawPieCase0() {
+
+// ── 案例1：饼图类别过多 ──
+function drawMisuse_PieMany_Bad(svg) {
   const data=[{l:'方法A',v:28},{l:'方法B',v:22},{l:'方法C',v:18},{l:'方法D',v:14},{l:'方法E',v:10},{l:'方法F',v:5},{l:'其他',v:3}];
-  const cls7=['#e03030','#f08030','#c8b820','#50c050','#3090d0','#8050d0','#d050a0'];
-
-  // 坏：饼图
-  const bs=d3.select('#pc-bad-0');
-  bs.append('rect').attr('width',280).attr('height',200).attr('fill','#fafafa');
+  const cls=['#e03030','#f08030','#c8b820','#50c050','#3090d0','#8050d0','#d050a0'];
+  svg.append('rect').attr('width',280).attr('height',200).attr('fill','#fafafa');
   const pie=d3.pie().value(d=>d.v).sort(null);
-  const arc=d3.arc().innerRadius(0).outerRadius(70);
-  const g=bs.append('g').attr('transform','translate(100,100)');
-  pie(data).forEach((d,i)=>g.append('path').datum(d).attr('fill',cls7[i]).attr('d',arc).attr('stroke','#fff').attr('stroke-width',1));
-  bs.append('text').attr('x',100).attr('y',182).attr('text-anchor','middle').attr('fill','#c53030').attr('font-size','10px').attr('font-family','var(--font-heading)').text('7个扇区，颜色难以区分');
-
-  // 好：水平条形图
-  const gs=d3.select('#pc-good-0');
-  gs.append('rect').attr('width',280).attr('height',200).attr('fill','#fafafa');
+  const arc=d3.arc().innerRadius(0).outerRadius(68);
+  const g=svg.append('g').attr('transform','translate(100,100)');
+  pie(data).forEach((d,i)=>g.append('path').datum(d).attr('fill',cls[i]).attr('d',arc).attr('stroke','#fff').attr('stroke-width',1));
+  svg.append('text').attr('x',100).attr('y',185).attr('text-anchor','middle').attr('fill','#c53030').attr('font-size','10px').attr('font-family','var(--font-heading)').text('7个扇区，颜色无法区分');
+}
+function drawMisuse_PieMany_Good(svg) {
+  const data=[{l:'方法A',v:28},{l:'方法B',v:22},{l:'方法C',v:18},{l:'方法D',v:14},{l:'方法E',v:10},{l:'方法F',v:5},{l:'其他',v:3}];
+  svg.append('rect').attr('width',280).attr('height',200).attr('fill','#fafafa');
   const sorted=[...data].sort((a,b)=>b.v-a.v);
   const y=d3.scaleBand().domain(sorted.map(d=>d.l)).range([12,188]).padding(0.22);
   const x=d3.scaleLinear().domain([0,30]).range([58,265]);
   sorted.forEach(d=>{
-    gs.append('rect').attr('x',58).attr('y',y(d.l)).attr('height',y.bandwidth()).attr('width',x(d.v)-58).attr('fill','#7EC8E3').attr('opacity',0.85).attr('rx',3);
-    gs.append('text').attr('x',54).attr('y',y(d.l)+y.bandwidth()/2).attr('text-anchor','end').attr('dominant-baseline','middle').attr('fill','#444').attr('font-size','9.5px').attr('font-family','var(--font-heading)').text(d.l);
-    gs.append('text').attr('x',x(d.v)+3).attr('y',y(d.l)+y.bandwidth()/2).attr('dominant-baseline','middle').attr('fill','#444').attr('font-size','9px').text(d.v+'%');
+    svg.append('rect').attr('x',58).attr('y',y(d.l)).attr('height',y.bandwidth()).attr('width',x(d.v)-58).attr('fill','#7EC8E3').attr('opacity',0.85).attr('rx',3);
+    svg.append('text').attr('x',54).attr('y',y(d.l)+y.bandwidth()/2).attr('text-anchor','end').attr('dominant-baseline','middle').attr('fill','#444').attr('font-size','9px').attr('font-family','var(--font-heading)').text(d.l);
+    svg.append('text').attr('x',x(d.v)+3).attr('y',y(d.l)+y.bandwidth()/2).attr('dominant-baseline','middle').attr('fill','#444').attr('font-size','9px').text(d.v+'%');
   });
+  svg.append('text').attr('x',160).attr('y',197).attr('text-anchor','middle').attr('fill','#276749').attr('font-size','10px').attr('font-family','var(--font-heading)').text('水平条形图：大小一目了然');
 }
 
-function drawPieCase1() {
-  const data=[{l:'A',v:33},{l:'B',v:34},{l:'C',v:33}];
-  const cls=['#e03030','#f08030','#3090d0'];
-
-  const bs=d3.select('#pc-bad-1');
-  bs.append('rect').attr('width',280).attr('height',200).attr('fill','#fafafa');
-  const pie=d3.pie().value(d=>d.v).sort(null);
-  const arc=d3.arc().innerRadius(0).outerRadius(70);
-  const g=bs.append('g').attr('transform','translate(140,100)');
-  pie(data).forEach((d,i)=>{
-    g.append('path').datum(d).attr('fill',cls[i]).attr('d',arc).attr('stroke','#fff').attr('stroke-width',2);
-    const c=arc.centroid(d);
-    g.append('text').attr('x',c[0]).attr('y',c[1]).attr('text-anchor','middle').attr('dominant-baseline','middle').attr('fill','#fff').attr('font-size','11px').attr('font-weight','700').text(d.data.v+'%');
-  });
-  bs.append('text').attr('x',140).attr('y',185).attr('text-anchor','middle').attr('fill','#c53030').attr('font-size','10px').attr('font-family','var(--font-heading)').text('33%/34%/33%：肉眼无法区分');
-
-  const gs=d3.select('#pc-good-1');
-  gs.append('rect').attr('width',280).attr('height',200).attr('fill','#fafafa');
-  const x=d3.scaleBand().domain(data.map(d=>d.l)).range([36,244]).padding(0.35);
-  const y=d3.scaleLinear().domain([30,36]).range([158,28]);
-  const gg=gs.append('g');
-  data.forEach((d,i)=>{
-    gg.append('rect').attr('x',x(d.l)).attr('width',x.bandwidth()).attr('y',y(d.v)).attr('height',158-y(d.v)).attr('fill',cls[i]).attr('opacity',0.85).attr('rx',3);
-    gg.append('text').attr('x',x(d.l)+x.bandwidth()/2).attr('y',y(d.v)-6).attr('text-anchor','middle').attr('fill','#333').attr('font-size','12px').attr('font-weight','700').text(d.v+'%');
-    gg.append('text').attr('x',x(d.l)+x.bandwidth()/2).attr('y',172).attr('text-anchor','middle').attr('fill','#555').attr('font-size','12px').text(d.l);
-  });
-  gs.append('text').attr('x',140).attr('y',192).attr('text-anchor','middle').attr('fill','#276749').attr('font-size','10px').attr('font-family','var(--font-heading)').text('柱状图：B最高，差异清晰可辨');
+// ── 案例2：截断 Y 轴 ──
+function drawMisuse_Truncate_Bad(svg) {
+  const data=[{l:'A组',v:96.2},{l:'B组',v:97.1},{l:'C组',v:98.4},{l:'D组',v:96.8}];
+  svg.append('rect').attr('width',280).attr('height',200).attr('fill','#fafafa');
+  const m={t:22,r:20,b:32,l:48};
+  const W=280-m.l-m.r,H=200-m.t-m.b;
+  const g=svg.append('g').attr('transform',`translate(${m.l},${m.t})`);
+  const x=d3.scaleBand().domain(data.map(d=>d.l)).range([0,W]).padding(0.35);
+  const y=d3.scaleLinear().domain([95.5,99]).range([H,0]);
+  g.append('g').attr('transform',`translate(0,${H})`).call(d3.axisBottom(x).tickSize(0)).call(g=>{g.select('.domain').attr('stroke','#ccc');g.selectAll('text').attr('fill','#555').attr('font-size','10px');});
+  g.append('g').call(d3.axisLeft(y).ticks(4)).call(g=>{g.select('.domain').attr('stroke','#ccc');g.selectAll('text').attr('fill','#555').attr('font-size','9px');});
+  g.selectAll('rect').data(data).join('rect')
+    .attr('x',d=>x(d.l)).attr('width',x.bandwidth()).attr('y',d=>y(d.v)).attr('height',d=>H-y(d.v))
+    .attr('fill','#E07A7A').attr('opacity',0.85).attr('rx',3);
+  // 截断标记
+  g.append('text').attr('x',-10).attr('y',H+2).attr('text-anchor','middle').attr('fill','#c53030').attr('font-size','9px').attr('font-weight','700').text('≠0');
+  svg.append('text').attr('x',140).attr('y',196).attr('text-anchor','middle').attr('fill','#c53030').attr('font-size','10px').attr('font-family','var(--font-heading)').text('Y轴从95.5开始，差异被放大10×');
+}
+function drawMisuse_Truncate_Good(svg) {
+  const data=[{l:'A组',v:96.2},{l:'B组',v:97.1},{l:'C组',v:98.4},{l:'D组',v:96.8}];
+  svg.append('rect').attr('width',280).attr('height',200).attr('fill','#fafafa');
+  const m={t:22,r:20,b:32,l:48};
+  const W=280-m.l-m.r,H=200-m.t-m.b;
+  const g=svg.append('g').attr('transform',`translate(${m.l},${m.t})`);
+  const x=d3.scaleBand().domain(data.map(d=>d.l)).range([0,W]).padding(0.35);
+  const y=d3.scaleLinear().domain([0,100]).range([H,0]);
+  g.append('g').attr('transform',`translate(0,${H})`).call(d3.axisBottom(x).tickSize(0)).call(g=>{g.select('.domain').attr('stroke','#ccc');g.selectAll('text').attr('fill','#555').attr('font-size','10px');});
+  g.append('g').call(d3.axisLeft(y).ticks(5)).call(g=>{g.select('.domain').attr('stroke','#ccc');g.selectAll('text').attr('fill','#555').attr('font-size','9px');});
+  g.selectAll('rect').data(data).join('rect')
+    .attr('x',d=>x(d.l)).attr('width',x.bandwidth()).attr('y',d=>y(d.v)).attr('height',d=>H-y(d.v))
+    .attr('fill','#7EC8E3').attr('opacity',0.85).attr('rx',3);
+  svg.append('text').attr('x',140).attr('y',196).attr('text-anchor','middle').attr('fill','#276749').attr('font-size','10px').attr('font-family','var(--font-heading)').text('Y轴从0开始：差异真实呈现');
 }
 
-function drawPieCase2() {
-  const years=[2020,2021,2022,2023];
-  const vals=[32,41,58,73];
+// ── 案例3：双 Y 轴误导 ──
+function drawMisuse_DualAxis_Bad(svg) {
+  svg.append('rect').attr('width',280).attr('height',200).attr('fill','#fafafa');
+  const m={t:22,r:44,b:32,l:44};
+  const W=280-m.l-m.r,H=200-m.t-m.b;
+  const g=svg.append('g').attr('transform',`translate(${m.l},${m.t})`);
+  const months=['1月','3月','5月','7月','9月','11月'];
+  const iceCreams=[120,180,310,420,380,150];
+  const drownings=[3,4,6,8,7,3];
+  const xSc=d3.scaleBand().domain(months).range([0,W]).padding(0.1);
+  const y1=d3.scaleLinear().domain([0,500]).range([H,0]);
+  const y2=d3.scaleLinear().domain([0,10]).range([H,0]);
+  // 两轴
+  g.append('g').attr('transform',`translate(0,${H})`).call(d3.axisBottom(xSc).tickSize(0)).call(gg=>{gg.select('.domain').attr('stroke','#ccc');gg.selectAll('text').attr('fill','#555').attr('font-size','8.5px');});
+  g.append('g').call(d3.axisLeft(y1).ticks(4)).call(gg=>{gg.select('.domain').attr('stroke','#E07A7A');gg.selectAll('text').attr('fill','#E07A7A').attr('font-size','8.5px');});
+  g.append('g').attr('transform',`translate(${W},0)`).call(d3.axisRight(y2).ticks(4)).call(gg=>{gg.select('.domain').attr('stroke','#B8B8E8');gg.selectAll('text').attr('fill','#B8B8E8').attr('font-size','8.5px');});
+  // 折线1
+  const l1=d3.line().x((_,i)=>xSc(months[i])+xSc.bandwidth()/2).y(d=>y1(d));
+  g.append('path').datum(iceCreams).attr('fill','none').attr('stroke','#E07A7A').attr('stroke-width',2.5).attr('d',l1);
+  // 折线2
+  const l2=d3.line().x((_,i)=>xSc(months[i])+xSc.bandwidth()/2).y(d=>y2(d));
+  g.append('path').datum(drownings).attr('fill','none').attr('stroke','#B8B8E8').attr('stroke-width',2.5).attr('d',l2);
+  svg.append('text').attr('x',140).attr('y',196).attr('text-anchor','middle').attr('fill','#c53030').attr('font-size','10px').attr('font-family','var(--font-heading)').text('双轴：冰淇淋与溺水？错觉相关！');
+}
+function drawMisuse_DualAxis_Good(svg) {
+  svg.append('rect').attr('width',280).attr('height',200).attr('fill','#fafafa');
+  const months=['1月','3月','5月','7月','9月','11月'];
+  const iceCreams=[120,180,310,420,380,150];
+  const drownings=[3,4,6,8,7,3];
+  // 上半图：冰淇淋
+  const g1=svg.append('g').attr('transform','translate(44,10)');
+  const W=192,H1=72;
+  const xSc=d3.scaleBand().domain(months).range([0,W]).padding(0.1);
+  const y1=d3.scaleLinear().domain([0,500]).range([H1,0]);
+  g1.append('g').attr('transform',`translate(0,${H1})`).call(d3.axisBottom(xSc).tickSize(0)).call(g=>{g.select('.domain').remove();g.selectAll('text').attr('fill','#888').attr('font-size','7.5px');});
+  g1.append('g').call(d3.axisLeft(y1).ticks(3)).call(g=>{g.select('.domain').remove();g.selectAll('text').attr('fill','#888').attr('font-size','7.5px');});
+  const l1=d3.line().x((_,i)=>xSc(months[i])+xSc.bandwidth()/2).y(d=>y1(d)).curve(d3.curveCatmullRom);
+  g1.append('path').datum(iceCreams).attr('fill','none').attr('stroke','#E07A7A').attr('stroke-width',2).attr('d',l1);
+  svg.append('text').attr('x',44).attr('y',90).attr('fill','#666').attr('font-size','9px').attr('font-family','var(--font-heading)').text('冰淇淋销量（万支）');
+  // 分隔线
+  svg.append('line').attr('x1',44).attr('y1',96).attr('x2',236).attr('y2',96).attr('stroke','#e0e0e0').attr('stroke-width',1).attr('stroke-dasharray','3,2');
+  // 下半图：溺水
+  const g2=svg.append('g').attr('transform','translate(44,100)');
+  const H2=62;
+  const y2=d3.scaleLinear().domain([0,10]).range([H2,0]);
+  g2.append('g').attr('transform',`translate(0,${H2})`).call(d3.axisBottom(xSc).tickSize(0)).call(g=>{g.select('.domain').remove();g.selectAll('text').attr('fill','#888').attr('font-size','7.5px');});
+  g2.append('g').call(d3.axisLeft(y2).ticks(3)).call(g=>{g.select('.domain').remove();g.selectAll('text').attr('fill','#888').attr('font-size','7.5px');});
+  const l2=d3.line().x((_,i)=>xSc(months[i])+xSc.bandwidth()/2).y(d=>y2(d)).curve(d3.curveCatmullRom);
+  g2.append('path').datum(drownings).attr('fill','none').attr('stroke','#B8B8E8').attr('stroke-width',2).attr('d',l2);
+  svg.append('text').attr('x',44).attr('y',170).attr('fill','#666').attr('font-size','9px').attr('font-family','var(--font-heading)').text('溺水人数（起）');
+  svg.append('text').attr('x',140).attr('y',196).attr('text-anchor','middle').attr('fill','#276749').attr('font-size','10px').attr('font-family','var(--font-heading)').text('独立图表：各变量诚实呈现');
+}
 
-  const bs=d3.select('#pc-bad-2');
-  bs.append('rect').attr('width',280).attr('height',200).attr('fill','#fafafa');
+// ── 案例4：散点图强行连线 ──
+function drawMisuse_ScatterLine_Bad(svg) {
+  let s=7;const r=()=>{s=(s*9301+49297)%233280;return s/233280;};
+  const data=Array.from({length:10},(_,i)=>({x:i*10+5+r()*6-3,y:i*5+20+r()*25-12}));
+  data.sort((a,b)=>a.x-b.x);
+  svg.append('rect').attr('width',280).attr('height',200).attr('fill','#fafafa');
+  const m={t:20,r:20,b:32,l:40};
+  const W=280-m.l-m.r,H=200-m.t-m.b;
+  const g=svg.append('g').attr('transform',`translate(${m.l},${m.t})`);
+  const x=d3.scaleLinear().domain([0,100]).range([0,W]);
+  const y=d3.scaleLinear().domain([0,80]).range([H,0]);
+  g.append('g').attr('transform',`translate(0,${H})`).call(d3.axisBottom(x).ticks(5)).call(gg=>{gg.select('.domain').attr('stroke','#ccc');gg.selectAll('text').attr('fill','#555').attr('font-size','8.5px');});
+  g.append('g').call(d3.axisLeft(y).ticks(4)).call(gg=>{gg.select('.domain').attr('stroke','#ccc');gg.selectAll('text').attr('fill','#555').attr('font-size','8.5px');});
+  // 连线（误用）
+  const ln=d3.line().x(d=>x(d.x)).y(d=>y(d.y));
+  g.append('path').datum(data).attr('fill','none').attr('stroke','#E07A7A').attr('stroke-width',1.5).attr('d',ln);
+  g.selectAll('circle').data(data).join('circle').attr('cx',d=>x(d.x)).attr('cy',d=>y(d.y)).attr('r',5).attr('fill','#E07A7A').attr('stroke','#fff').attr('stroke-width',1.5);
+  svg.append('text').attr('x',140).attr('y',196).attr('text-anchor','middle').attr('fill','#c53030').attr('font-size','10px').attr('font-family','var(--font-heading)').text('连线暗示两点间存在数据');
+}
+function drawMisuse_ScatterLine_Good(svg) {
+  let s=7;const r=()=>{s=(s*9301+49297)%233280;return s/233280;};
+  const data=Array.from({length:10},(_,i)=>({x:i*10+5+r()*6-3,y:i*5+20+r()*25-12}));
+  svg.append('rect').attr('width',280).attr('height',200).attr('fill','#fafafa');
+  const m={t:20,r:20,b:32,l:40};
+  const W=280-m.l-m.r,H=200-m.t-m.b;
+  const g=svg.append('g').attr('transform',`translate(${m.l},${m.t})`);
+  const x=d3.scaleLinear().domain([0,100]).range([0,W]);
+  const y=d3.scaleLinear().domain([0,80]).range([H,0]);
+  g.append('g').attr('transform',`translate(0,${H})`).call(d3.axisBottom(x).ticks(5)).call(gg=>{gg.select('.domain').attr('stroke','#ccc');gg.selectAll('text').attr('fill','#555').attr('font-size','8.5px');});
+  g.append('g').call(d3.axisLeft(y).ticks(4)).call(gg=>{gg.select('.domain').attr('stroke','#ccc');gg.selectAll('text').attr('fill','#555').attr('font-size','8.5px');});
+  // 回归线
+  g.append('line').attr('x1',x(0)).attr('y1',y(20)).attr('x2',x(100)).attr('y2',y(70)).attr('stroke','#7EC8E3').attr('stroke-width',2).attr('opacity',0.6).attr('stroke-dasharray','5,3');
+  g.selectAll('circle').data(data).join('circle').attr('cx',d=>x(d.x)).attr('cy',d=>y(d.y)).attr('r',5).attr('fill','#7EC8E3').attr('stroke','#fff').attr('stroke-width',1.5);
+  svg.append('text').attr('x',140).attr('y',196).attr('text-anchor','middle').attr('fill','#276749').attr('font-size','10px').attr('font-family','var(--font-heading)').text('散点+回归线：诚实展示数据');
+}
+
+// ── 案例5：3D 图表透视扭曲 ──
+function drawMisuse_3DPie_Bad(svg) {
+  svg.append('rect').attr('width',280).attr('height',200).attr('fill','#fafafa');
+  // 模拟3D饼图：用椭圆+扇形+侧面营造3D效果
+  const slices=[
+    {startAngle:-Math.PI/2,endAngle:-Math.PI/2+2*Math.PI*0.35,color:'#E07A7A',label:'35%'},
+    {startAngle:-Math.PI/2+2*Math.PI*0.35,endAngle:-Math.PI/2+2*Math.PI*0.65,color:'#7EC8E3',label:'30%'},
+    {startAngle:-Math.PI/2+2*Math.PI*0.65,endAngle:-Math.PI/2+2*Math.PI*0.85,color:'#95D5B2',label:'20%'},
+    {startAngle:-Math.PI/2+2*Math.PI*0.85,endAngle:3*Math.PI/2,color:'#F0B27A',label:'15%'},
+  ];
+  const cx=120,cy=95,rx=80,ry=38,depth=30;
+  // 侧面（前半部分）
+  slices.forEach(s=>{
+    const mA=(s.startAngle+s.endAngle)/2;
+    if(Math.sin(mA)>-0.2){
+      const x1=cx+rx*Math.cos(s.startAngle),y1=cy+ry*Math.sin(s.startAngle);
+      const x2=cx+rx*Math.cos(s.endAngle),y2=cy+ry*Math.sin(s.endAngle);
+      const large=s.endAngle-s.startAngle>Math.PI?1:0;
+      svg.append('path').attr('d',`M${x1},${y1} L${x1},${y1+depth} A${rx},${ry} 0 ${large} 1 ${x2},${y2+depth} L${x2},${y2} A${rx},${ry} 0 ${large} 0 ${x1},${y1}`)
+        .attr('fill',s.color).attr('opacity',0.6);
+    }
+  });
+  // 顶面
+  slices.forEach(s=>{
+    const large=s.endAngle-s.startAngle>Math.PI?1:0;
+    const x1=cx+rx*Math.cos(s.startAngle),y1=cy+ry*Math.sin(s.startAngle);
+    const x2=cx+rx*Math.cos(s.endAngle),y2=cy+ry*Math.sin(s.endAngle);
+    svg.append('path').attr('d',`M${cx},${cy} L${x1},${y1} A${rx},${ry} 0 ${large} 1 ${x2},${y2} Z`)
+      .attr('fill',s.color).attr('opacity',0.92).attr('stroke','#fff').attr('stroke-width',1);
+    // 标注
+    const midA=(s.startAngle+s.endAngle)/2;
+    svg.append('text').attr('x',cx+rx*0.65*Math.cos(midA)).attr('y',cy+ry*0.65*Math.sin(midA))
+      .attr('text-anchor','middle').attr('dominant-baseline','middle').attr('fill','#fff').attr('font-size','10px').attr('font-weight','700').text(s.label);
+  });
+  svg.append('text').attr('x',140).attr('y',190).attr('text-anchor','middle').attr('fill','#c53030').attr('font-size','9.5px').attr('font-family','var(--font-heading)').text('3D透视：前方扇区面积被高估');
+}
+function drawMisuse_3DPie_Good(svg) {
+  svg.append('rect').attr('width',280).attr('height',200).attr('fill','#fafafa');
+  const data=[35,30,20,15];
+  const cls=['#E07A7A','#7EC8E3','#95D5B2','#F0B27A'];
+  const labels=['35%','30%','20%','15%'];
   const pie=d3.pie().value(d=>d).sort(null);
-  const arc=d3.arc().innerRadius(0).outerRadius(23);
-  years.forEach((yr,yi)=>{
-    const v=vals[yi];
-    const g=bs.append('g').attr('transform',`translate(${35+yi*62},78)`);
-    pie([v,100-v]).forEach((d,i)=>g.append('path').datum(d).attr('fill',i===0?'#e03030':'#ddd').attr('d',arc));
-    bs.append('text').attr('x',35+yi*62).attr('y',112).attr('text-anchor','middle').attr('fill','#555').attr('font-size','9.5px').text(yr);
+  const arc=d3.arc().innerRadius(42).outerRadius(78);
+  const g=svg.append('g').attr('transform','translate(120,98)');
+  pie(data).forEach((d,i)=>{
+    g.append('path').datum(d).attr('fill',cls[i]).attr('opacity',0.88).attr('d',arc).attr('stroke','#fafafa').attr('stroke-width',2);
+    const c=arc.centroid(d);
+    g.append('text').attr('x',c[0]).attr('y',c[1]).attr('text-anchor','middle').attr('dominant-baseline','middle').attr('fill','#fff').attr('font-size','9.5px').attr('font-weight','700').text(labels[i]);
   });
-  bs.append('text').attr('x',140).attr('y',135).attr('text-anchor','middle').attr('fill','#c53030').attr('font-size','10px').attr('font-family','var(--font-heading)').text('4个饼图：无法感知增长趋势');
+  svg.append('text').attr('x',140).attr('y',190).attr('text-anchor','middle').attr('fill','#276749').attr('font-size','9.5px').attr('font-family','var(--font-heading)').text('平面圆环：面积感知客观');
+}
 
-  const gs=d3.select('#pc-good-2');
-  gs.append('rect').attr('width',280).attr('height',200).attr('fill','#fafafa');
-  const m={t:18,r:18,b:36,l:38},W=280-m.l-m.r,H=200-m.t-m.b;
-  const xsc=d3.scaleLinear().domain([2020,2023]).range([0,W]);
-  const ysc=d3.scaleLinear().domain([20,80]).range([H,0]);
-  const gLine=gs.append('g').attr('transform',`translate(${m.l},${m.t})`);
-  gLine.append('g').attr('transform',`translate(0,${H})`).call(d3.axisBottom(xsc).ticks(4).tickFormat(d3.format('d')).tickSize(0)).call(g=>{g.select('.domain').remove();g.selectAll('text').attr('fill','#555').attr('font-size','9.5px');});
-  gLine.append('g').call(d3.axisLeft(ysc).ticks(4).tickSize(0)).call(g=>{g.select('.domain').remove();g.selectAll('text').attr('fill','#555').attr('font-size','9.5px');});
-  const pts=years.map((yr,i)=>({x:yr,y:vals[i]}));
-  gLine.append('path').datum(pts).attr('fill','#7EC8E3').attr('opacity',0.2).attr('d',d3.area().x(d=>xsc(d.x)).y0(H).y1(d=>ysc(d.y)).curve(d3.curveCatmullRom));
-  const lp=gLine.append('path').datum(pts).attr('fill','none').attr('stroke','#7EC8E3').attr('stroke-width',2.5).attr('d',d3.line().x(d=>xsc(d.x)).y(d=>ysc(d.y)).curve(d3.curveCatmullRom));
-  const tl=lp.node().getTotalLength();
-  lp.attr('stroke-dasharray',tl).attr('stroke-dashoffset',tl).transition().duration(900).attr('stroke-dashoffset',0);
-  pts.forEach(p=>gLine.append('circle').attr('cx',xsc(p.x)).attr('cy',ysc(p.y)).attr('r',4).attr('fill','#7EC8E3'));
-  gs.append('text').attr('x',140).attr('y',192).attr('text-anchor','middle').attr('fill','#276749').attr('font-size','10px').attr('font-family','var(--font-heading)').text('折线图：增长趋势一目了然');
+// ── 案例6：折线连接无序类别 ──
+function drawMisuse_LineCat_Bad(svg) {
+  const cities=['北京','上海','广州','成都','武汉','西安'];
+  const vals=[82,91,78,65,74,68];
+  svg.append('rect').attr('width',280).attr('height',200).attr('fill','#fafafa');
+  const m={t:20,r:20,b:36,l:42};
+  const W=280-m.l-m.r,H=200-m.t-m.b;
+  const g=svg.append('g').attr('transform',`translate(${m.l},${m.t})`);
+  const x=d3.scalePoint().domain(cities).range([0,W]).padding(0.3);
+  const y=d3.scaleLinear().domain([50,100]).range([H,0]);
+  g.append('g').attr('transform',`translate(0,${H})`).call(d3.axisBottom(x).tickSize(0)).call(gg=>{gg.select('.domain').attr('stroke','#ccc');gg.selectAll('text').attr('fill','#555').attr('font-size','8px').attr('transform','rotate(-20)').attr('text-anchor','end');});
+  g.append('g').call(d3.axisLeft(y).ticks(4)).call(gg=>{gg.select('.domain').attr('stroke','#ccc');gg.selectAll('text').attr('fill','#555').attr('font-size','8.5px');});
+  const ln=d3.line().x((_,i)=>x(cities[i])).y((_,i)=>y(vals[i]));
+  g.append('path').datum(vals).attr('fill','none').attr('stroke','#E07A7A').attr('stroke-width',2.5).attr('d',ln);
+  g.selectAll('circle').data(vals).join('circle').attr('cx',(_,i)=>x(cities[i])).attr('cy',d=>y(d)).attr('r',4.5).attr('fill','#E07A7A');
+  svg.append('text').attr('x',140).attr('y',196).attr('text-anchor','middle').attr('fill','#c53030').attr('font-size','9.5px').attr('font-family','var(--font-heading)').text('折线暗示城市间存在顺序关系');
+}
+function drawMisuse_LineCat_Good(svg) {
+  const cities=['上海','北京','广州','武汉','西安','成都'];
+  const vals=[91,82,78,74,68,65];
+  svg.append('rect').attr('width',280).attr('height',200).attr('fill','#fafafa');
+  const m={t:20,r:20,b:36,l:42};
+  const W=280-m.l-m.r,H=200-m.t-m.b;
+  const g=svg.append('g').attr('transform',`translate(${m.l},${m.t})`);
+  const x=d3.scaleBand().domain(cities).range([0,W]).padding(0.35);
+  const y=d3.scaleLinear().domain([50,100]).range([H,0]);
+  g.append('g').attr('transform',`translate(0,${H})`).call(d3.axisBottom(x).tickSize(0)).call(gg=>{gg.select('.domain').attr('stroke','#ccc');gg.selectAll('text').attr('fill','#555').attr('font-size','8px').attr('transform','rotate(-20)').attr('text-anchor','end');});
+  g.append('g').call(d3.axisLeft(y).ticks(4)).call(gg=>{gg.select('.domain').attr('stroke','#ccc');gg.selectAll('text').attr('fill','#555').attr('font-size','8.5px');});
+  cities.forEach((c,i)=>{
+    g.append('rect').attr('x',x(c)).attr('width',x.bandwidth()).attr('y',y(vals[i])).attr('height',H-y(vals[i])).attr('fill','#7EC8E3').attr('opacity',0.85).attr('rx',3);
+  });
+  svg.append('text').attr('x',140).attr('y',196).attr('text-anchor','middle').attr('fill','#276749').attr('font-size','9.5px').attr('font-family','var(--font-heading)').text('柱状图：无序类别无连线误导');
 }
 
 // ─────────────────────────────────────────────
