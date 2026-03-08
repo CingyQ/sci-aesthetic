@@ -268,25 +268,16 @@ function buildTopBar() {
   if (!topBar) return;
 
   topBar.innerHTML = `
-    <button class="mobile-back-btn" id="mobile-back-btn" aria-label="返回">
-      ${ICONS.back}
+    <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="打开菜单">
+      ${ICONS.hamburger}
     </button>
     <span class="mobile-page-title" id="mobile-page-title"></span>
     <span class="mobile-page-index" id="mobile-page-index"></span>
   `;
 
-  // 返回按钮：回到模块首页或首页
-  document.getElementById('mobile-back-btn').addEventListener('click', () => {
-    const route = getCurrentRoute();
-    // 如果在模块内页，返回模块第一页（tab 已经选中该模块）
-    // 如果在首页/ref，无需返回
-    if (route === 'home' || route === 'ref') {
-      return;
-    }
-    // 获取模块前缀
-    const modulePrefix = route.split('-p')[0]; // m1, m2, m3, m4
-    // 返回首页
-    navigateTo('home');
+  // 菜单按钮：打开侧边栏
+  document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+    openSidebar();
   });
 }
 

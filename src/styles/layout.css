@@ -256,10 +256,10 @@
   }
 }
 
-/* Mobile：也显示汉堡按钮，让用户可以打开侧边栏导航 */
+/* Mobile：汉堡按钮合并到顶部栏内，不再独立浮动 */
 @media (max-width: 768px) {
   .hamburger-btn {
-    display: flex;
+    display: none;
   }
 }
 
