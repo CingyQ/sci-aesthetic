@@ -54,47 +54,47 @@
 - [x] m1-p2 色彩和谐与科研配色（5 种方案 + 60-30-10 + deltaE + 配色方案库浏览器 + 图表预览）
 - [x] m1-p3 配色生成器与数据配色（生成+微调+导出 + 连续/发散/定性 + 错误对比）
 - [x] m1-p4 色彩无障碍（WCAG 检测 + 色盲模拟 Brettel/Machado + 修复建议）
-- [ ] m1-p5 图表选择指南（D3 决策树 + 20+ 图表全览 + 误用专题）
-- [ ] m1-p6 ggplot2 图层语法与分面（粘性滚动逐层叠加 + 分面 Tab 切换 + CodeMirror + D3 预览）
-- [ ] m1-p7 ggplot2 图表工作坊 — 先做 4 种验证（scatter/bar/line/boxplot）
-- [ ] m1-p7 ggplot2 图表工作坊 — 剩余 8 种 + 移动端手风琴面板验证
-- [ ] m1-p8 R 配色与出版级图表（包浏览器 + 主题定制器 + ggsave + patchwork）
-- [ ] m1-p9 Python 可视化与数据叙事（matplotlib/seaborn + annotate 交互 + 叙事结构）
-- [ ] m1-p10 科研绘图工作流与导出（时间线 + Nature 案例 + DPI 对比 + 期刊速查）
+- [x] m1-p5 图表选择指南（D3 交互式决策树 + 20+ 图表全览按 5 组分类 + 列表+预览浏览器布局 + 饼图误用专题）
+- [ ] m1-p6 ggplot2 图层语法与分面（粘性滚动逐层叠加 data→aes→geom→scale→theme + 分面 Tab 切换 + 坐标变换 3tab + 自定义坐标轴参数控制器）
+- [ ] m1-p7 ggplot2 图表工作坊 — 先做 4 种验证（scatter/bar/line/boxplot，WorkshopLayout 三面板 + 移动端手风琴）
+- [ ] m1-p7 ggplot2 图表工作坊 — 剩余 8 种（violin/histogram/density/heatmap/area/errorbar/lollipop/ridgeline）
+- [ ] m1-p8 R 配色与出版级图表（配色包浏览器列表+预览 + 主题定制器滑块+D3+theme()代码 + ggsave 期刊代码生成器 + patchwork 4 种布局）
+- [ ] m1-p9 Python 可视化与数据叙事（matplotlib 层次图解 + seaborn 10 种图表参数面板 + matplotlib vs ggplot2 对照 + annotate Canvas 拖拽 + 叙事 4 种方法动画）
+- [ ] m1-p10 科研绘图工作流与导出（6 步粘性时间线 + 格式原理动画 + DPI 对比器 BeforeAfter + 分辨率计算器 + 期刊速查）
 
 ## Phase 5: 模块二 — AI 辅助科研绘图（m2-p1 ~ m2-p6）
-- [ ] m2-p1 AI 工具全景（D3 决策树 + 工具矩阵 + 时间对比动画）
-- [ ] m2-p2 Prompt 工程（评分器 + 效果对比 + 模板库）
-- [ ] m2-p3 AI 矢量化（Trace 参数模拟器 + 兼容矩阵 + 陷阱）
-- [ ] m2-p4 AI 伦理版权（期刊政策交互表 + 情景判断练习）
-- [ ] m2-p5 AI 辅助科研流程图（工作流演示 + Prompt 模板 + 3 个完整案例）
-- [ ] m2-p6 AI 绘图实战案例集（3 个端到端案例 + Before/After）
+- [ ] m2-p1 AI 工具全景（D3 决策树选工具 + 工具矩阵可排序筛选 + 传统vsAI 时间对比动画 + 5 个合理应用场景）
+- [ ] m2-p2 Prompt 工程（质量评分器 0-100 四维分析 + 3 组好差对比 + Prompt 模板库按场景分类 CopyButton）
+- [ ] m2-p3 AI 矢量化（Image Trace 4 滑块参数模拟器 + BeforeAfter 对比 + 格式兼容矩阵 + 3 个陷阱解决方案）
+- [ ] m2-p4 AI 伦理版权（期刊政策对比表可排序 + 情景判断练习交互反馈 + AI 声明模板生成器 CopyButton）
+- [ ] m2-p5 AI 辅助科研流程图（5 步粘性滚动工作流 + 5 种流程图类型 Prompt 模板 + 3 个完整案例 BeforeAfter）
+- [ ] m2-p6 AI 绘图实战案例集（3 个端到端案例：Graphical Abstract/实验示意图/综述概念图 + StickySteps + BeforeAfter）
 
 ## Phase 6: 模块三 — 矢量绘图与设计（m3-p1 ~ m3-p7）
-- [ ] m3-p1 矢量 vs 位图（缩放对比 + 格式决策树）
-- [ ] m3-p2 Illustrator 工具（12 工具 SVG 动画）
-- [ ] m3-p3 贝塞尔曲线（Canvas 编辑器 + 练习模式 + 移动端全屏适配）
-- [ ] m3-p4 图表美化（8 组 Before/After + 5 步粘性滚动演示）
-- [ ] m3-p5 SVG 编辑与优化（CodeMirror SVG 编辑器 + 实时渲染 + 优化策略）
-- [ ] m3-p6 多面板 Figure 组合（拖拽排列 + 标注规范 + R/Python 代码）
-- [ ] m3-p7 素材资源站（资源卡片 + 需求筛选 + 推荐器 + 许可证）
+- [ ] m3-p1 矢量 vs 位图（Canvas+SVG 缩放对比到 800% + D3 格式选择决策树 + 文件大小vs质量权衡）
+- [ ] m3-p2 Illustrator 工具（12 工具列表+预览布局 + SVG 动画演示操作过程 + 快捷键 + 3 个工具链工作流）
+- [ ] m3-p3 贝塞尔曲线（InteractiveCanvas 编辑器拖拽锚点/手柄 + 挑战模式匹配度 + 移动端全屏+44px 触控点）
+- [ ] m3-p4 图表美化（8 组 BeforeAfter 对比 + 5 步 StickySteps 渐进美化 + SVG 逐步变化 + R/Python 代码同步）
+- [ ] m3-p5 SVG 编辑与优化（CodeMirror SVG 编辑+实时渲染预览 + 基础语法教学可编辑示例 + 优化前后文件大小对比）
+- [ ] m3-p6 多面板 Figure 组合（SortableJS 拖拽排列面板 + Nature 标注规范 + R patchwork + Python subplot 双版本代码）
+- [ ] m3-p7 素材资源站（资源卡片按类别分组+筛选 + 3 步问答推荐器 + 许可证类型说明）
 
 ## Phase 7: 模块四 — 学术演示设计（m4-p1 ~ m4-p8）
-- [ ] m4-p1 PPT 设计原则（格式塔 SVG + 视觉层次 + 信噪比）
-- [ ] m4-p2 排版字体（Canvas 拖拽布局 + 字体推荐 + 行距演示 + 移动端预设模板）
-- [ ] m4-p3 注意力与视觉流（热力图 + F/Z 模式）
-- [ ] m4-p4 PPT 改造案例（8 组 Before/After + 粘性步骤演示 + 互动评分）
-- [ ] m4-p5 学术海报（布局模板 + 打印规范 + CMYK）
-- [ ] m4-p6 Graphical Abstract（案例分析 + 元素库拖拽组合 + 期刊尺寸）
-- [ ] m4-p7 科研信息图（4 种叙事模板 + 数据简化 + 社交媒体适配）
-- [ ] m4-p8 科研动画（关键帧编辑器 + gganimate + PPT 动画）
+- [ ] m4-p1 PPT 设计原则（格式塔 5 组 SVG 拖拽交互 + 视觉层次 4 维滑块/移动端预设 + 信噪比 5 级渐进简化）
+- [ ] m4-p2 排版字体（InteractiveCanvas 拖拽布局+网格吸附+对齐辅助线 + 字体搭配推荐器 + 行距字距实时调参 + 移动端预设模板）
+- [ ] m4-p3 注意力与视觉流（Canvas 注意力热力图+评分 + F/Z 型 SVG 动画路径 + 视觉焦点 4 种控制技巧）
+- [ ] m4-p4 PPT 改造案例（8 组 BeforeAfter 列表+预览 + StickySteps 3-5 步讲解 + Canvas 互动拖拽评分）
+- [ ] m4-p5 学术海报（3-4 种布局模板列表+全屏预览 + 海报 vs PPT 差异 + CMYK vs RGB 色差演示 + 打印规范）
+- [ ] m4-p6 Graphical Abstract（5 例分析 D3 雷达图评分 + 元素库拖拽组合画布 + 期刊尺寸速查）
+- [ ] m4-p7 科研信息图（4 种叙事结构 SVG 模板可交互预览 + 数据简化技巧 + 社交媒体多平台裁切预览）
+- [ ] m4-p8 科研动画（Canvas 关键帧编辑器+拖动+实时预览 + gganimate CodeMirror+逐帧 SVG 模拟 + PPT 动画技巧）
 
 ## Phase 8: 速查手册 + 打磨
-- [ ] ref 速查手册（图表/配色/导出/快捷键/期刊 5 类速查卡，可复制/下载 PDF）
-- [ ] Vite 构建优化（code splitting + 按模块懒加载 + 压缩）
-- [ ] 字体加载优化（font-display: swap + 子集化）
-- [ ] GitHub Actions 部署
-- [ ] SEO / Open Graph
-- [ ] 移动端全面测试（iPhone SE / iPhone 14 / iPad / Android）
-- [ ] 性能审计（Lighthouse 90+，移动端和桌面端分别测试）
-- [ ] 触摸交互回归测试
+- [ ] ref 速查手册（TabSwitcher 5 类速查卡 + CopyButton 一键复制 + @media print PDF 导出 + 全局导航可访问）
+- [ ] Vite 构建优化（按模块 code splitting m1/m2/m3/m4 懒加载 + CSS/JS minify + 图片优化）
+- [ ] 字体加载优化（font-display: swap + 中文字体子集化 Noto Sans SC/Noto Serif SC）
+- [ ] GitHub Actions 自动部署（push main → build → gh-pages）
+- [ ] SEO / Open Graph（meta title/description + og:title/og:description/og:image）
+- [ ] 响应式逐页检查（375px/390px/768px/1024px/1440px 五级断点全页面验证）
+- [ ] 性能审计（Lighthouse 桌面端 90+ / 移动端 85+ + 修复问题）
+- [ ] 交互组件回归测试（Canvas 触摸/BeforeAfter 滑动/CodeMirror 只读+编辑/手风琴/Tab 横滚/滑块触控≥44px）
