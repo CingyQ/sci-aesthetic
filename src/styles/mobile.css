@@ -258,3 +258,19 @@
     font-size: var(--text-body);
   }
 }
+
+/* ========================================================
+   Scroll hints：移动端向上偏移，避免被底部 Tab Bar（56px）遮挡
+   ======================================================== */
+
+@media (max-width: 768px) {
+  .m1p1-scroll-hint,
+  .m1p2-scroll-hint,
+  .p3-scroll-hint,
+  .p4-scroll-hint,
+  .p5-scroll-hint,
+  .p6-scroll-hint,
+  .p7-scroll-hint {
+    bottom: 72px !important;
+  }
+}

@@ -2415,9 +2415,12 @@ export function render() {
 .p7-chart-card {
   background:var(--bg-light-elevated); border:1.5px solid var(--border-light);
   border-radius:var(--radius-md); overflow:hidden; cursor:pointer;
-  transition:all .3s var(--ease-apple); display:flex; flex-direction:column;
+  transition:opacity 0.5s ease, transform 0.5s ease, border-color .3s var(--ease-apple), box-shadow .3s var(--ease-apple);
+  display:flex; flex-direction:column;
+  opacity:0; transform:translateY(20px);
 }
-.p7-chart-card:hover {
+.p7-chart-card.p7-card-vis { opacity:1; transform:translateY(0); }
+.p7-chart-card.p7-card-vis:hover {
   border-color:var(--accent); transform:translateY(-4px); box-shadow:var(--shadow-hover);
 }
 .p7-chart-card.active {
@@ -2600,30 +2603,72 @@ export function render() {
   .p7-code-panel { grid-area:code; }
   .p7-chart-grid { grid-template-columns:repeat(2,1fr); }
 }
+
+/* ── Mobile tab bar (hidden on desktop) ── */
+.p7-mobile-tabs {
+  display:none; border-radius:var(--radius-md) var(--radius-md) 0 0;
+  overflow:hidden; border:1px solid var(--border-dark); border-bottom:none;
+}
+.p7-mob-tab {
+  flex:1; padding:13px 4px; background:var(--bg-dark-elevated);
+  border:none; border-right:1px solid var(--border-dark);
+  color:var(--text-on-dark-3); font-size:.78rem; cursor:pointer;
+  min-height:48px; transition:background .2s,color .2s;
+  font-weight:500; line-height:1.3; white-space:nowrap;
+}
+.p7-mob-tab:last-child { border-right:none; }
+.p7-mob-tab.active { background:var(--accent); color:#0a0a0a; font-weight:700; }
+
 /* ── Mobile ── */
 @media (max-width:768px) {
-  .p7-gallery-section,.p7-workshop-section { padding:var(--space-xl) var(--space-sm); }
+  /* Gallery & workshop sections */
+  .p7-gallery-section,.p7-workshop-section { padding:var(--space-lg) var(--space-sm); }
   .p7-chart-grid { grid-template-columns:repeat(2,1fr); gap:12px; }
   .p7-card-desc { display:none; }
-  .p7-ws-head { flex-direction:column; }
-  .p7-chart-tabs { overflow-x:auto; scrollbar-width:none; }
+
+  /* Scroll hint: lift above mobile tab bar (56px) */
+  .p7-scroll-hint { bottom:72px; }
+
+  /* Workshop head */
+  .p7-ws-head { flex-direction:column; gap:var(--space-sm); }
+  .p7-chart-tabs { overflow-x:auto; scrollbar-width:none; width:100%; }
   .p7-chart-tabs::-webkit-scrollbar { display:none; }
-  .p7-chart-tab { padding:8px 14px; font-size:.82rem; }
-  .p7-ws-layout { display:flex; flex-direction:column; gap:0; }
-  .p7-panel { border-radius:0; border-left:none; border-right:none; border-top:none; }
-  .p7-panel:first-child { border-top:1px solid var(--border-dark); border-radius:var(--radius-md) var(--radius-md) 0 0; border-left:1px solid var(--border-dark); border-right:1px solid var(--border-dark); }
-  .p7-panel:last-child { border-radius:0 0 var(--radius-md) var(--radius-md); border-left:1px solid var(--border-dark); border-right:1px solid var(--border-dark); border-bottom:1px solid var(--border-dark); }
-  .p7-panel-hdr { cursor:pointer; }
-  .p7-panel-body { overflow:hidden; transition:max-height .35s var(--ease-apple); }
-  .p7-panel-body.p7-collapsed { max-height:0 !important; padding:0 !important; }
-  .p7-panel-body.p7-expanded { max-height:800px; }
+  .p7-chart-tab { padding:8px 14px; font-size:.8rem; min-height:40px; }
+
+  /* Show mobile tab bar */
+  .p7-mobile-tabs { display:flex; }
+
+  /* Workshop: single-panel tab view */
+  .p7-ws-layout { display:block; }
+  .p7-panel { display:none; border-radius:0 0 var(--radius-md) var(--radius-md); border:1px solid var(--border-dark); border-top:none; }
+  .p7-panel.mob-active { display:flex; flex-direction:column; }
+  .p7-panel-hdr { display:none; } /* replaced by mobile tab bar */
+
+  /* Params panel: scrollable, compact */
+  #p7-params-body { max-height:62vh; overflow-y:auto; padding:14px; }
+  .p7-ctrl-group { margin-bottom:16px; }
+  .p7-opt-row { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
+  .p7-opt-btn { padding:9px 4px; font-size:.8rem; min-height:40px; }
+  .p7-shape-btn { padding:9px 4px; font-size:1rem; min-height:40px; }
+  /* Shape buttons: 4 in a row */
+  .p7-ctrl-group .p7-opt-row:has(.p7-shape-btn) { grid-template-columns:repeat(4,1fr); }
   .p7-slider::-webkit-slider-thumb { width:24px; height:24px; }
   .p7-slider::-moz-range-thumb { width:24px; height:24px; }
   .p7-slider { min-height:32px; }
+
+  /* Preview panel */
+  #p7-preview-body { padding:10px; }
+
+  /* Code panel: limited height + scroll */
+  #p7-code-body { display:flex; flex-direction:column; max-height:65vh; }
+  #p7-code-editor { flex:1; min-height:0; overflow:auto; max-height:50vh; }
+  .p7-code-actions { padding:10px 12px; flex-shrink:0; }
+
+  /* Footer */
   .p7-footer-links { flex-direction:column; align-items:center; }
 }
 @media (max-width:480px) {
-  .p7-chart-grid { grid-template-columns:1fr 1fr; gap:10px; }
+  .p7-chart-grid { gap:10px; }
 }
 @media (max-width:400px) {
   .p7-chart-grid { grid-template-columns:1fr; }
@@ -2666,6 +2711,12 @@ export function render() {
         <h2 class="p7-ws-title" id="p7-ws-title">散点图</h2>
       </div>
       <div class="p7-chart-tabs" id="p7-chart-tabs">${chartTabsHtml}</div>
+    </div>
+    <!-- 移动端三栏切换 Tab -->
+    <div class="p7-mobile-tabs" id="p7-mobile-tabs">
+      <button class="p7-mob-tab" data-panel="params">⚙ 参数控制</button>
+      <button class="p7-mob-tab active" data-panel="preview">📊 实时预览</button>
+      <button class="p7-mob-tab" data-panel="code">{ } R 代码</button>
     </div>
     <div class="p7-ws-layout" id="p7-ws-layout">
 
@@ -2846,10 +2897,7 @@ function initAnimations() {
     scrollTrigger: { trigger: '#p7-gallery', start: 'top 85%' },
     opacity: 0, y: 50, duration: 0.8, ease: 'power3.out',
   });
-  gsap.from('.p7-chart-card', {
-    scrollTrigger: { trigger: '#p7-chart-grid', start: 'top 85%' },
-    opacity: 0, y: 40, stagger: 0.1, duration: 0.6, ease: 'power3.out',
-  });
+  // 图表卡片由 IntersectionObserver 在 init() 中控制淡入
   gsap.from('#p7-ws-layout', {
     scrollTrigger: { trigger: '#p7-workshop', start: 'top 80%' },
     opacity: 0, y: 30, duration: 0.8, ease: 'power3.out',
@@ -2865,6 +2913,41 @@ function initAnimations() {
 // ─────────────────────────────────────────────
 export function init() {
   // 缩略图已嵌入 HTML（CHART_ICONS），无需 D3 渲染
+
+  // 图库卡片：IntersectionObserver 淡入（替代 GSAP ScrollTrigger，更可靠）
+  const galleryCards = document.querySelectorAll('.p7-chart-card');
+  if (galleryCards.length) {
+    const cardObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('p7-card-vis');
+          cardObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.05, rootMargin: '0px 0px -10px 0px' });
+    galleryCards.forEach(c => cardObs.observe(c));
+    state.cleanups.push(() => cardObs.disconnect());
+  }
+
+  // 移动端面板 Tab 切换
+  const mTabs = document.getElementById('p7-mobile-tabs');
+  if (mTabs) {
+    const panelIds = { params: 'p7-params-panel', preview: 'p7-preview-panel', code: 'p7-code-panel' };
+    const setMobTab = key => {
+      mTabs.querySelectorAll('.p7-mob-tab').forEach(t =>
+        t.classList.toggle('active', t.dataset.panel === key));
+      Object.entries(panelIds).forEach(([k, id]) =>
+        document.getElementById(id)?.classList.toggle('mob-active', k === key));
+      if (key === 'preview') redrawChart(); // 切到预览时重绘
+    };
+    if (window.innerWidth <= 768) setMobTab('preview');
+    const onMobTabClick = e => {
+      const tab = e.target.closest('[data-panel]');
+      if (tab) { e.preventDefault(); setMobTab(tab.dataset.panel); }
+    };
+    mTabs.addEventListener('click', onMobTabClick);
+    state.cleanups.push(() => mTabs.removeEventListener('click', onMobTabClick));
+  }
 
   // 初始化 CodeMirror
   const codeContainer = document.getElementById('p7-code-editor');

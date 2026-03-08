@@ -128,7 +128,7 @@ export function render() {
   line-height: 1.4; text-align: center;
 }
 .p4-scroll-hint {
-  position: absolute; bottom: 32px; left: 50%;
+  position: absolute; bottom: 28px; left: 50%;
   transform: translateX(-50%);
   font-size: var(--text-caption); color: var(--text-on-dark-3);
   animation: p4-float 2s ease-in-out infinite;
@@ -531,7 +531,7 @@ export function render() {
       <button class="hero-quicknav__item" data-target=".p4-check-section">设计检查清单</button>
     </nav>
   </div>
-  <div class="p4-scroll-hint" style="position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-size:var(--text-caption);color:var(--text-on-dark-3);">↓ 向下探索</div>
+  <div class="p4-scroll-hint" style="position:absolute;left:50%;transform:translateX(-50%);font-size:var(--text-caption);color:var(--text-on-dark-3);">↓ 向下探索</div>
 </section>
 
 <!-- ════════════════════════════════════════════

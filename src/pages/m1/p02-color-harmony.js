@@ -158,6 +158,12 @@ export function render() {
         pointer-events: none;
         animation: m1p2-glow-b 13s ease-in-out infinite;
       }
+      .m1p2-scroll-hint {
+        position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
+        font-size: var(--text-caption); color: var(--text-on-dark-3);
+        animation: m1p2-float 2s ease-in-out infinite; white-space: nowrap;
+      }
+      @keyframes m1p2-float { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
     </style>
     <div class="page-scroll">
 
@@ -176,7 +182,7 @@ export function render() {
             <button class="hero-quicknav__item" data-target="#m1p2-palette-browser">配色方案库</button>
           </nav>
         </div>
-        <div style="position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-size:var(--text-caption);color:var(--text-on-dark-3);">↓ 向下探索</div>
+        <div class="m1p2-scroll-hint" style="position:absolute;left:50%;font-size:var(--text-caption);color:var(--text-on-dark-3);">↓ 向下探索</div>
       </section>
 
       <!-- ====== Section 2: Harmony Types ====== -->
