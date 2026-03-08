@@ -116,11 +116,23 @@ let state = {
 
 export function render() {
   return `
+    <style id="m1p2-styles">
+      .m1p2-hero-section { position: relative; overflow: hidden; }
+      .m1p2-hero-section::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(ellipse 50% 40% at 35% 45%, rgba(126,200,227,0.10) 0%, transparent 70%),
+          radial-gradient(ellipse 35% 35% at 65% 55%, rgba(149,213,178,0.06) 0%, transparent 70%);
+        pointer-events: none;
+      }
+    </style>
     <div class="page-scroll">
 
       <!-- ====== Section 1: Hero ====== -->
-      <section class="section-dark" style="align-items:center;">
-        <div class="content-wrapper" style="text-align:center;">
+      <section class="section-dark m1p2-hero-section" style="align-items:center;">
+        <div class="content-wrapper" style="text-align:center;position:relative;z-index:1;">
           <p class="page-hero-sub" style="color:var(--module-1);opacity:0.8;font-size:var(--text-small);font-weight:500;letter-spacing:0.1em;text-transform:uppercase;margin:0 auto var(--space-sm);">Module 01 · 科研数据可视化</p>
           <h1 class="page-hero-title" style="color:var(--text-on-dark);">色彩和谐与科研配色</h1>
           <p class="page-hero-sub" style="color:var(--text-on-dark-2);font-family:var(--font-heading);font-weight:300;">Color Harmony & Scientific Palettes</p>
@@ -1325,6 +1337,9 @@ function initScrollAnimations() {
 
 export function destroy() {
   killAll();
+
+  const styleTag = document.getElementById('m1p2-styles');
+  if (styleTag) styleTag.remove();
 
   if (state.harmonyTabSwitcher) state.harmonyTabSwitcher.destroy();
   if (state.paletteTabSwitcher) state.paletteTabSwitcher.destroy();

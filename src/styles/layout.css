@@ -256,10 +256,10 @@
   }
 }
 
-/* Mobile 隐藏汉堡按钮（用底部 Tab Bar） */
+/* Mobile：也显示汉堡按钮，让用户可以打开侧边栏导航 */
 @media (max-width: 768px) {
   .hamburger-btn {
-    display: none;
+    display: flex;
   }
 }
 
@@ -300,10 +300,17 @@
   }
 }
 
-/* Mobile：隐藏侧边栏 */
+/* Mobile：侧边栏滑入覆盖层（与 tablet 相同行为） */
 @media (max-width: 768px) {
   #sidebar {
-    display: none;
+    transform: translateX(-100%);
+    width: min(280px, 85vw);
+  }
+  #sidebar.open {
+    transform: translateX(0);
+  }
+  .sidebar-close-btn {
+    display: flex;
   }
   #main-content {
     margin-left: 0;

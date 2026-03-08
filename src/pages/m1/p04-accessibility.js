@@ -986,26 +986,63 @@ export function render() {
   .p4-sim-header {
     flex-direction: column;
     align-items: flex-start;
+    padding: var(--space-sm);
   }
   .p4-sim-actions {
     flex-wrap: wrap;
+    width: 100%;
   }
   .p4-hero-swatch {
     width: 22px;
     height: 22px;
   }
+  /* All sections padding */
+  .p4-hero { min-height: 60vh; padding: var(--space-xl) var(--space-sm); }
+  .p4-contrast-section { padding: var(--space-lg) var(--space-sm); }
+  .p4-cvd-section { padding: var(--space-lg) var(--space-sm); }
+  .p4-sim-section { padding: var(--space-lg) var(--space-sm); }
+  .p4-tips-section { padding: var(--space-lg) var(--space-sm); }
+  .p4-footer-section { padding: var(--space-lg) var(--space-sm); }
+
+  /* Color input area compact */
+  .p4-color-input-area { padding: var(--space-sm); }
+  .p4-color-row { gap: 6px; }
+  .p4-color-item { padding: 4px 6px; }
+  .p4-color-item-swatch { width: 24px; height: 24px; }
+  .p4-color-item-hex { width: 60px; font-size: 11px; }
+
+  /* Simulator grid */
+  .p4-sim-grid-wrap { padding: var(--space-sm); overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .p4-sim-grid { min-width: 460px; gap: 10px; }
+
+  /* Safety table scroll */
+  .p4-safety-wrap { padding: var(--space-sm); overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .p4-safety-table { min-width: 420px; font-size: 12px; }
+  .p4-safety-table th { font-size: 9px; padding: 4px 6px; }
+  .p4-safety-table td { padding: 6px; }
+
+  /* Contrast section */
+  .p4-contrast-card { border-radius: var(--radius-md); }
+  .p4-contrast-ratio { font-size: clamp(2rem, 8vw, 3.5rem); }
+  .p4-contrast-badges { gap: 6px; }
+  .p4-contrast-badge { padding: 4px 10px; font-size: 11px; }
+
+  /* CVD cards */
+  .p4-cvd-cards { gap: var(--space-sm); }
 }
+
 @media (max-width: 480px) {
-  .p4-hero {
-    padding: var(--space-lg) var(--space-sm);
-    min-height: 70vh;
-  }
-  .p4-hero-mini {
-    gap: 10px;
-  }
-  .p4-sim-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .p4-hero { padding: var(--space-lg) var(--space-sm); min-height: 55vh; }
+  .p4-hero-mini { gap: 8px; }
+  .p4-hero-mini-col { gap: 3px; }
+  .p4-hero-swatch { width: 18px; height: 18px; }
+
+  /* Simulator: 2-column grid for very narrow */
+  .p4-sim-grid { grid-template-columns: repeat(2, 1fr); min-width: 0; }
+
+  .p4-btn { padding: 6px 12px; font-size: 11px; }
+  .p4-nav-links { flex-direction: column; align-items: stretch; }
+  .p4-nav-link { justify-content: center; }
 }
 </style>
 

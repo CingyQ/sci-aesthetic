@@ -36,6 +36,12 @@ body {
   }
 }
 
+/* ========== Page scroll wrapper ========== */
+.page-scroll {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 /* ========== Typography ========== */
 
 /* Hero/Display: 700, line-height 1.1, letter-spacing -0.02em */

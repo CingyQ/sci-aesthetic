@@ -171,18 +171,20 @@
   min-height: 44px;
 }
 
-/* 滑块 thumb 放大 */
+/* 滑块 thumb 放大（仅对非页面自定义的默认滑块生效） */
 @media (max-width: 768px) {
   input[type="range"]::-webkit-slider-thumb {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
   }
   input[type="range"]::-moz-range-thumb {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
   }
+  /* 不设全局 height:44px，因为它会与页面自定义滑块冲突 */
+  /* 改为 min-height 确保触摸区域足够，但不撑高自定义样式 */
   input[type="range"] {
-    height: 44px;
+    min-height: 36px;
   }
 }
 

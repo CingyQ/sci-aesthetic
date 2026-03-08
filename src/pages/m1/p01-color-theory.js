@@ -223,6 +223,20 @@ export function render() {
 </div>
 
 <style>
+  /* ====== Hero glow ====== */
+  .m1p1-hero {
+    position: relative;
+    overflow: hidden;
+  }
+  .m1p1-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 50% 40% at 35% 45%, rgba(126,200,227,0.10) 0%, transparent 70%),
+      radial-gradient(ellipse 35% 35% at 65% 55%, rgba(149,213,178,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
   /* ====== 色轮区域布局 ====== */
   .m1p1-wheel-layout {
     display: flex;
