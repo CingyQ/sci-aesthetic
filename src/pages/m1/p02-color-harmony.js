@@ -67,9 +67,9 @@ const HARMONY_DESCRIPTIONS = {
 // 60-30-10 预设配色
 const PRESET_603010 = [
   { primary: '#f5f5f7', secondary: '#3C5488', accent: '#E64B35' },
-  { primary: '#1d1d1f', secondary: '#4DBBD5', accent: '#F39B7F' },
-  { primary: '#fafafa', secondary: '#00A087', accent: '#DC0000' },
-  { primary: '#f0f0f0', secondary: '#631879', accent: '#E69F00' },
+  { primary: '#0a1628', secondary: '#4DBBD5', accent: '#F39B7F' },
+  { primary: '#f0faf6', secondary: '#00A087', accent: '#DC0000' },
+  { primary: '#2d1b4e', secondary: '#B8B8E8', accent: '#E69F00' },
 ];
 
 // ═══════════════════════════════════════════════════
@@ -174,7 +174,7 @@ export function render() {
           </p>
 
           <!-- 比例条 -->
-          <div id="m1p2-proportion-bar" style="max-width:600px;margin:0 auto var(--space-lg);position:relative;height:64px;border-radius:var(--radius-md);overflow:hidden;cursor:col-resize;user-select:none;-webkit-user-select:none;touch-action:none;">
+          <div id="m1p2-proportion-bar" style="max-width:600px;margin:0 auto var(--space-lg);position:relative;height:64px;border-radius:var(--radius-md);overflow:hidden;cursor:col-resize;user-select:none;-webkit-user-select:none;touch-action:none;border:1.5px solid rgba(255,255,255,0.12);">
           </div>
 
           <!-- 比例数值 -->

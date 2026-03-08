@@ -197,7 +197,7 @@ export function render() {
         <div class="m1p1-mixing-panel">
           <h3 style="font-family:var(--font-heading);font-size:var(--text-body);font-weight:600;color:var(--text-on-dark);text-align:center;margin-bottom:var(--space-sm);">减色混色 <span style="font-weight:300;color:var(--text-on-dark-3);">Subtractive (CMY)</span></h3>
           <p style="color:var(--text-on-dark-3);font-size:var(--text-small);text-align:center;margin-bottom:var(--space-md);">拖动圆圈观察颜料的叠加</p>
-          <div class="m1p1-mixing-canvas-wrap">
+          <div class="m1p1-mixing-canvas-wrap subtractive-bg">
             <canvas id="m1p1-subtractive-canvas"></canvas>
           </div>
         </div>
@@ -228,7 +228,7 @@ export function render() {
     display: flex;
     gap: var(--space-xl);
     align-items: flex-start;
-    max-width: 900px;
+    max-width: 780px;
     margin: 0 auto;
   }
   .m1p1-wheel-col {
@@ -367,7 +367,7 @@ export function render() {
 
   /* ====== HSL 三维度 ====== */
   .m1p1-hsl-dims {
-    max-width: 680px;
+    max-width: 780px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -413,12 +413,14 @@ export function render() {
   .m1p1-mixing-layout {
     display: flex;
     gap: var(--space-lg);
-    max-width: 900px;
+    max-width: 780px;
     margin: 0 auto;
+    justify-content: center;
   }
   .m1p1-mixing-panel {
     flex: 1;
     min-width: 0;
+    max-width: 360px;
   }
   .m1p1-mixing-canvas-wrap {
     position: relative;
@@ -426,8 +428,14 @@ export function render() {
     aspect-ratio: 1 / 1;
     border-radius: var(--radius-md);
     overflow: hidden;
+    background: #111;
+  }
+  .m1p1-mixing-canvas-wrap.subtractive-bg {
+    background: #f5f5f7;
   }
   .m1p1-mixing-canvas-wrap canvas {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     cursor: grab;
@@ -465,11 +473,12 @@ export function render() {
     }
     .m1p1-mixing-layout {
       flex-direction: column;
-      gap: var(--space-md);
+      align-items: center;
+      gap: var(--space-lg);
     }
-    .m1p1-mixing-canvas-wrap {
-      max-width: 360px;
-      margin: 0 auto;
+    .m1p1-mixing-panel {
+      max-width: 320px;
+      width: 100%;
     }
   }
 </style>
@@ -895,8 +904,26 @@ function updateHslDimensions() {
 // 混色 Canvas
 // ============================================================
 function initMixingCanvases() {
-  initAdditiveCanvas();
-  initSubtractiveCanvas();
+  // 延迟初始化，等待 flex 布局完成后获取正确尺寸
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      initAdditiveCanvas();
+      initSubtractiveCanvas();
+    });
+  });
+}
+
+function setupMixingCanvas(canvas) {
+  canvas.style.touchAction = 'none';
+  const wrap = canvas.parentElement;
+  let size = wrap.clientWidth || wrap.offsetWidth;
+  if (size < 10) size = 300; // fallback
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = size * dpr;
+  canvas.height = size * dpr;
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  return { ctx, size, wrap };
 }
 
 function initAdditiveCanvas() {
@@ -904,15 +931,8 @@ function initAdditiveCanvas() {
   if (!canvas) return;
 
   state.additiveCanvas = canvas;
-  canvas.style.touchAction = 'none';
-
-  const wrap = canvas.parentElement;
-  const size = wrap.clientWidth;
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = size * dpr;
-  canvas.height = size * dpr;
-  state.additiveCtx = canvas.getContext('2d');
-  state.additiveCtx.scale(dpr, dpr);
+  const { ctx, size, wrap } = setupMixingCanvas(canvas);
+  state.additiveCtx = ctx;
 
   drawAdditive(size);
 
@@ -1008,15 +1028,8 @@ function initSubtractiveCanvas() {
   if (!canvas) return;
 
   state.subtractiveCanvas = canvas;
-  canvas.style.touchAction = 'none';
-
-  const wrap = canvas.parentElement;
-  const size = wrap.clientWidth;
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = size * dpr;
-  canvas.height = size * dpr;
-  state.subtractiveCtx = canvas.getContext('2d');
-  state.subtractiveCtx.scale(dpr, dpr);
+  const { ctx, size, wrap } = setupMixingCanvas(canvas);
+  state.subtractiveCtx = ctx;
 
   drawSubtractive(size);
 
