@@ -152,13 +152,15 @@ function drawBarChart(container, colors) {
   if (!el) return;
   el.innerHTML = '';
 
-  const totalW = el.clientWidth || 480;
-  const margin = { top: 20, right: 20, bottom: 36, left: 44 };
-  const width = Math.max(totalW - margin.left - margin.right, 100);
-  const height = 200 - margin.top - margin.bottom;
+  const W = 520, H = 240;
+  const margin = { top: 20, right: 20, bottom: 36, left: 48 };
+  const width = W - margin.left - margin.right;
+  const height = H - margin.top - margin.bottom;
 
   const svg = d3.select(el).append('svg')
-    .attr('width', totalW).attr('height', 200)
+    .attr('viewBox', `0 0 ${W} ${H}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet')
+    .style('width', '100%').style('height', 'auto').style('display', 'block')
     .style('background', '#fff');
 
   const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
@@ -172,7 +174,7 @@ function drawBarChart(container, colors) {
   }));
 
   const x = d3.scaleBand().domain(data.map(d => d.name)).range([0, width]).padding(0.35);
-  const y = d3.scaleLinear().domain([0, d3.max(data, d => d.value) * 1.25]).range([height, 0]);
+  const y = d3.scaleLinear().domain([0, d3.max(data, d => d.value) * 1.25]).nice().range([height, 0]);
 
   g.selectAll('.grid').data(y.ticks(4)).enter().append('line')
     .attr('x1', 0).attr('x2', width).attr('y1', d => y(d)).attr('y2', d => y(d))
@@ -189,6 +191,7 @@ function drawBarChart(container, colors) {
 
   g.append('g').call(d3.axisLeft(y).ticks(4))
     .call(ax => ax.select('.domain').attr('stroke', '#d2d2d7'))
+    .call(ax => ax.selectAll('.tick line').remove())
     .selectAll('text').style('fill', '#6e6e73').style('font-size', '11px');
 }
 
@@ -197,54 +200,62 @@ function drawLineChart(container, colors) {
   if (!el) return;
   el.innerHTML = '';
 
-  const totalW = el.clientWidth || 480;
-  const margin = { top: 20, right: 20, bottom: 36, left: 44 };
-  const width = Math.max(totalW - margin.left - margin.right, 100);
-  const height = 200 - margin.top - margin.bottom;
+  const W = 520, H = 240;
+  const margin = { top: 24, right: 24, bottom: 36, left: 48 };
+  const width = W - margin.left - margin.right;
+  const height = H - margin.top - margin.bottom;
 
   const svg = d3.select(el).append('svg')
-    .attr('width', totalW).attr('height', 200)
+    .attr('viewBox', `0 0 ${W} ${H}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet')
+    .style('width', '100%').style('height', 'auto').style('display', 'block')
     .style('background', '#fff');
 
   const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
+  // Stock-style data: trending lines with up/down fluctuations
   const nLines = Math.min(colors.length, 5);
-  const nPoints = 8;
-  const seeds = [7, 13, 3, 17, 5];
-  const linesData = colors.slice(0, nLines).map((color, li) => {
-    const seed = seeds[li % seeds.length];
-    const points = Array.from({ length: nPoints }, (_, i) => ({
-      x: i,
-      y: 15 + li * 10 + i * (4 + seed % 3) + ((seed * (i + 1)) % 7) - 3
-    }));
-    return { color, points };
-  });
+  const nPoints = 7;
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul'];
+  const stockData = [
+    [22, 28, 25, 35, 32, 40, 45],
+    [30, 26, 33, 38, 42, 39, 50],
+    [45, 48, 43, 52, 55, 58, 62],
+    [18, 22, 27, 24, 30, 35, 38],
+    [55, 52, 58, 60, 56, 65, 70],
+  ];
 
-  const x = d3.scaleLinear().domain([0, nPoints - 1]).range([0, width]);
+  const linesData = colors.slice(0, nLines).map((color, li) => ({
+    color,
+    points: stockData[li % stockData.length].slice(0, nPoints).map((y, i) => ({ x: i, y }))
+  }));
+
+  const x = d3.scalePoint().domain(d3.range(nPoints)).range([0, width]).padding(0.1);
   const allY = linesData.flatMap(d => d.points.map(p => p.y));
-  const y = d3.scaleLinear().domain([0, d3.max(allY) * 1.2]).range([height, 0]);
+  const y = d3.scaleLinear().domain([0, d3.max(allY) * 1.15]).nice().range([height, 0]);
 
   g.selectAll('.grid').data(y.ticks(4)).enter().append('line')
     .attr('x1', 0).attr('x2', width).attr('y1', d => y(d)).attr('y2', d => y(d))
     .attr('stroke', '#e8e8ed').attr('stroke-width', 1);
 
-  const lineGen = d3.line().x(d => x(d.x)).y(d => y(d.y)).curve(d3.curveCatmullRom.alpha(0.5));
+  const lineGen = d3.line().x(d => x(d.x)).y(d => y(d.y)).curve(d3.curveLinear);
   linesData.forEach(({ color, points }) => {
     g.append('path').datum(points)
-      .attr('fill', 'none').attr('stroke', color).attr('stroke-width', 2.5).attr('d', lineGen);
+      .attr('fill', 'none').attr('stroke', color).attr('stroke-width', 2).attr('d', lineGen);
     g.selectAll(null).data(points).enter().append('circle')
       .attr('cx', d => x(d.x)).attr('cy', d => y(d.y))
       .attr('r', 3.5).attr('fill', color).attr('stroke', '#fff').attr('stroke-width', 1.5);
   });
 
-  const months = ['1月','2月','3月','4月','5月','6月','7月','8月'];
   g.append('g').attr('transform', `translate(0,${height})`)
-    .call(d3.axisBottom(x).ticks(nPoints - 1).tickFormat(i => months[i]))
+    .call(d3.axisBottom(x).tickFormat(i => months[i]))
     .call(ax => ax.select('.domain').attr('stroke', '#d2d2d7'))
+    .call(ax => ax.selectAll('.tick line').remove())
     .selectAll('text').style('fill', '#6e6e73').style('font-size', '11px');
 
   g.append('g').call(d3.axisLeft(y).ticks(4))
     .call(ax => ax.select('.domain').attr('stroke', '#d2d2d7'))
+    .call(ax => ax.selectAll('.tick line').remove())
     .selectAll('text').style('fill', '#6e6e73').style('font-size', '11px');
 }
 
@@ -253,18 +264,19 @@ function drawHeatmap(container, colors) {
   if (!el) return;
   el.innerHTML = '';
 
-  const totalW = el.clientWidth || 480;
   const rows = 6, cols = 6;
-  const size = Math.min(totalW - 16, 260);
-  const cellW = size / cols;
-  const cellH = cellW;
-  const svgH = rows * cellH + 10;
+  const cellSize = 40, gap = 3;
+  const size = cols * cellSize;
+  const W = size + 20, H = rows * cellSize + 20;
 
   const svg = d3.select(el).append('svg')
-    .attr('width', totalW).attr('height', svgH)
+    .attr('viewBox', `0 0 ${W} ${H}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet')
+    .style('width', '100%').style('max-width', `${W}px`)
+    .style('height', 'auto').style('display', 'block').style('margin', '0 auto')
     .style('background', '#fff');
 
-  const g = svg.append('g').attr('transform', `translate(${(totalW - size) / 2}, 5)`);
+  const g = svg.append('g').attr('transform', `translate(${(W - size) / 2}, ${(H - rows * cellSize) / 2})`);
 
   const nColors = colors.length;
   const getColor = val => {
@@ -276,8 +288,8 @@ function drawHeatmap(container, colors) {
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
       g.append('rect')
-        .attr('x', c * cellW).attr('y', r * cellH)
-        .attr('width', cellW - 2).attr('height', cellH - 2)
+        .attr('x', c * cellSize).attr('y', r * cellSize)
+        .attr('width', cellSize - gap).attr('height', cellSize - gap)
         .attr('fill', getColor(r * cols + c)).attr('rx', 3);
     }
   }
@@ -288,17 +300,19 @@ function drawCorrelationMatrix(container, colors) {
   if (!el) return;
   el.innerHTML = '';
 
-  const totalW = el.clientWidth || 480;
   const n = 6;
-  const size = Math.min(totalW - 40, 240);
-  const cell = size / n;
-  const svgH = size + 20;
+  const cell = 38, gap = 2, labelW = 28;
+  const size = n * cell;
+  const W = size + labelW + 10, H = size + labelW + 10;
 
   const svg = d3.select(el).append('svg')
-    .attr('width', totalW).attr('height', svgH)
+    .attr('viewBox', `0 0 ${W} ${H}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet')
+    .style('width', '100%').style('max-width', `${W}px`)
+    .style('height', 'auto').style('display', 'block').style('margin', '0 auto')
     .style('background', '#fff');
 
-  const g = svg.append('g').attr('transform', `translate(${(totalW - size) / 2 + 10}, 14)`);
+  const g = svg.append('g').attr('transform', `translate(${labelW + 4}, ${labelW})`);
 
   const labels = ['V1','V2','V3','V4','V5','V6'];
   const corr = Array.from({ length: n }, (_, i) =>
@@ -318,17 +332,17 @@ function drawCorrelationMatrix(container, colors) {
     for (let c = 0; c < n; c++) {
       g.append('rect')
         .attr('x', c * cell).attr('y', r * cell)
-        .attr('width', cell - 2).attr('height', cell - 2)
+        .attr('width', cell - gap).attr('height', cell - gap)
         .attr('fill', getColor(corr[r][c])).attr('rx', 2);
     }
   }
 
   g.selectAll('.xlabel').data(labels).enter().append('text')
-    .attr('x', (_, i) => i * cell + cell / 2).attr('y', -3)
+    .attr('x', (_, i) => i * cell + (cell - gap) / 2).attr('y', -5)
     .attr('text-anchor', 'middle').style('font-size', '10px').style('fill', '#6e6e73').text(d => d);
 
   g.selectAll('.ylabel').data(labels).enter().append('text')
-    .attr('x', -4).attr('y', (_, i) => i * cell + cell / 2 + 4)
+    .attr('x', -6).attr('y', (_, i) => i * cell + (cell - gap) / 2 + 4)
     .attr('text-anchor', 'end').style('font-size', '10px').style('fill', '#6e6e73').text(d => d);
 }
 
@@ -337,51 +351,81 @@ function drawScatterPlot(container, colors) {
   if (!el) return;
   el.innerHTML = '';
 
-  const totalW = el.clientWidth || 480;
-  const margin = { top: 20, right: 20, bottom: 36, left: 44 };
-  const width = Math.max(totalW - margin.left - margin.right, 100);
-  const height = 200 - margin.top - margin.bottom;
+  const W = 520, H = 280;
+  const margin = { top: 20, right: 24, bottom: 40, left: 48 };
+  const width = W - margin.left - margin.right;
+  const height = H - margin.top - margin.bottom;
 
   const svg = d3.select(el).append('svg')
-    .attr('width', totalW).attr('height', 200)
+    .attr('viewBox', `0 0 ${W} ${H}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet')
+    .style('width', '100%').style('height', 'auto').style('display', 'block')
     .style('background', '#fff');
 
   const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
+  // Well-separated cluster data with clear group structure
   const nGroups = Math.min(colors.length, 5);
-  const seeds2 = [31, 17, 53, 7, 41];
+  const clusterCenters = [
+    { cx: 25, cy: 70 }, { cx: 55, cy: 30 }, { cx: 80, cy: 65 },
+    { cx: 40, cy: 50 }, { cx: 70, cy: 85 },
+  ];
   const allPoints = [];
   for (let gi = 0; gi < nGroups; gi++) {
-    const sx = seeds2[gi] % 80 + 10;
-    const sy = seeds2[gi] % 60 + 20;
-    for (let pi = 0; pi < 14; pi++) {
+    const center = clusterCenters[gi % clusterCenters.length];
+    for (let pi = 0; pi < 10; pi++) {
+      // Deterministic scatter using modular arithmetic
+      const dx = ((gi * 7 + pi * 13) % 17) - 8;
+      const dy = ((gi * 11 + pi * 7) % 15) - 7;
       allPoints.push({
-        x: sx + (((gi * 97 + pi * 37) % 50) - 25),
-        y: sy + (((gi * 53 + pi * 71) % 50) - 25),
-        color: colors[gi]
+        x: Math.max(2, Math.min(98, center.cx + dx)),
+        y: Math.max(2, Math.min(98, center.cy + dy)),
+        color: colors[gi],
+        group: gi
       });
     }
   }
 
-  const x = d3.scaleLinear().domain([0, 130]).range([0, width]);
-  const y = d3.scaleLinear().domain([0, 130]).range([height, 0]);
+  const x = d3.scaleLinear().domain([0, 100]).nice().range([0, width]);
+  const y = d3.scaleLinear().domain([0, 100]).nice().range([height, 0]);
 
-  g.selectAll('.grid').data(y.ticks(4)).enter().append('line')
+  // Grid lines
+  g.selectAll('.gridh').data(y.ticks(5)).enter().append('line')
     .attr('x1', 0).attr('x2', width).attr('y1', d => y(d)).attr('y2', d => y(d))
     .attr('stroke', '#e8e8ed').attr('stroke-width', 1);
+  g.selectAll('.gridv').data(x.ticks(5)).enter().append('line')
+    .attr('x1', d => x(d)).attr('x2', d => x(d)).attr('y1', 0).attr('y2', height)
+    .attr('stroke', '#e8e8ed').attr('stroke-width', 1);
 
+  // Points
   g.selectAll('.dot').data(allPoints).enter().append('circle')
     .attr('cx', d => x(d.x)).attr('cy', d => y(d.y))
-    .attr('r', 5).attr('fill', d => d.color).attr('opacity', 0.78)
+    .attr('r', 5).attr('fill', d => d.color).attr('opacity', 0.82)
     .attr('stroke', '#fff').attr('stroke-width', 1.2);
 
-  g.append('g').attr('transform', `translate(0,${height})`).call(d3.axisBottom(x).ticks(4))
+  // Axes — ticks aligned to nice values
+  g.append('g').attr('transform', `translate(0,${height})`)
+    .call(d3.axisBottom(x).ticks(5))
     .call(ax => ax.select('.domain').attr('stroke', '#d2d2d7'))
+    .call(ax => ax.selectAll('.tick line').attr('stroke', '#d2d2d7'))
     .selectAll('text').style('fill', '#6e6e73').style('font-size', '11px');
 
-  g.append('g').call(d3.axisLeft(y).ticks(4))
+  g.append('g')
+    .call(d3.axisLeft(y).ticks(5))
     .call(ax => ax.select('.domain').attr('stroke', '#d2d2d7'))
+    .call(ax => ax.selectAll('.tick line').attr('stroke', '#d2d2d7'))
     .selectAll('text').style('fill', '#6e6e73').style('font-size', '11px');
+
+  // Legend
+  const legendG = svg.append('g').attr('transform', `translate(${margin.left + 8}, ${H - 14})`);
+  const groupLabels = ['组A','组B','组C','组D','组E'];
+  let lx = 0;
+  for (let gi = 0; gi < nGroups; gi++) {
+    legendG.append('circle').attr('cx', lx).attr('cy', 0).attr('r', 4).attr('fill', colors[gi]);
+    legendG.append('text').attr('x', lx + 7).attr('y', 4)
+      .style('font-size', '10px').style('fill', '#6e6e73').text(groupLabels[gi]);
+    lx += 48;
+  }
 }
 
 // ═══════════════════════════════════════════════════
@@ -663,20 +707,38 @@ export function render() {
   box-shadow: var(--shadow-md);
   overflow: hidden;
 }
-.p3-chart-area { width: 100%; min-height: 200px; background: #fff; border-radius: 10px; overflow: hidden; }
+.p3-chart-area { width: 100%; background: #fff; border-radius: 10px; overflow: hidden; }
 
-/* HSL panel */
+/* HSL panel — collapsible */
 .p3-hsl-panel {
   background: var(--bg-dark-elevated);
   border: 1px solid var(--border-dark);
   border-radius: var(--radius-md);
-  padding: 20px;
+  overflow: hidden;
 }
+.p3-hsl-toggle {
+  display: flex; align-items: center; justify-content: space-between;
+  width: 100%; padding: 16px 20px;
+  background: none; border: none; cursor: pointer;
+  color: var(--text-on-dark-2); transition: color 0.2s;
+}
+.p3-hsl-toggle:hover { color: var(--text-on-dark); }
 .p3-hsl-title {
   font-family: var(--font-heading);
   font-size: 0.78rem; font-weight: 600;
   letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--text-on-dark-2); margin-bottom: 16px;
+}
+.p3-hsl-arrow {
+  width: 18px; height: 18px; transition: transform 0.3s var(--ease-apple);
+}
+.p3-hsl-panel.open .p3-hsl-arrow { transform: rotate(180deg); }
+.p3-hsl-body {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s var(--ease-apple), padding 0.3s;
+  padding: 0 20px;
+}
+.p3-hsl-panel.open .p3-hsl-body {
+  max-height: 600px; padding: 0 20px 20px;
 }
 .p3-hsl-rows { display: flex; flex-direction: column; gap: 10px; }
 .p3-hsl-row { display: flex; align-items: center; gap: 8px; }
@@ -767,7 +829,7 @@ export function render() {
   border-radius: var(--radius-md); padding: 4px;
   box-shadow: var(--shadow-sm); overflow: hidden;
 }
-.p3-data-chart-area { width: 100%; min-height: 200px; background: #fff; border-radius: 10px; overflow: hidden; }
+.p3-data-chart-area { width: 100%; background: #fff; border-radius: 10px; overflow: hidden; }
 
 /* Tab overrides for light section */
 .p3-datatypes-section .tab-switcher {
@@ -913,9 +975,14 @@ export function render() {
           </div>
         </div>
 
-        <div class="p3-hsl-panel">
-          <div class="p3-hsl-title">HSL 精细调整</div>
-          <div class="p3-hsl-rows" id="p3-hsl-rows"></div>
+        <div class="p3-hsl-panel" id="p3-hsl-panel">
+          <button class="p3-hsl-toggle" id="p3-hsl-toggle" type="button">
+            <span class="p3-hsl-title">HSL 精细调整</span>
+            <svg class="p3-hsl-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="p3-hsl-body">
+            <div class="p3-hsl-rows" id="p3-hsl-rows"></div>
+          </div>
         </div>
 
         <div class="p3-export-panel">
@@ -985,6 +1052,13 @@ export function init() {
   fadeIn('#p3-dt-header', { y: 40 });
   fadeIn('#p3-errors-inner', { y: 30 });
   fadeIn('#p3-footer', { y: 30 });
+
+  // HSL panel toggle
+  const hslToggle = document.getElementById('p3-hsl-toggle');
+  const hslPanel = document.getElementById('p3-hsl-panel');
+  if (hslToggle && hslPanel) {
+    hslToggle.addEventListener('click', () => { hslPanel.classList.toggle('open'); });
+  }
 
   // Setup
   setupGeneratorControls();

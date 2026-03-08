@@ -1172,7 +1172,7 @@ function renderBrowserChart() {
         x: i,
         y: Math.min(95, Math.max(5, base + slope * i + noise[i % noise.length])),
       }));
-      const line = d3.line().x(d => x(d.x)).y(d => y(d.y)).curve(d3.curveMonotoneX);
+      const line = d3.line().x(d => x(d.x)).y(d => y(d.y)).curve(d3.curveLinear);
 
       // 线条动画：用 stroke-dashoffset
       const path = g.append('path').datum(lineData)
