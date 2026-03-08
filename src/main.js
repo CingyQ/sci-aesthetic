@@ -1,6 +1,7 @@
-// 主入口 — 注册路由 + 启动
+// 主入口 — 注册路由 + 导航 + 启动
 
 import { registerRoute, initRouter } from './utils/router.js';
+import { initNavigation } from './components/Navigation.js';
 
 // 首页
 registerRoute('home', () => import('./pages/home.js'));
@@ -47,5 +48,6 @@ registerRoute('m4-p8', () => import('./pages/m4/p08-animation.js'));
 // 速查手册
 registerRoute('ref', () => import('./pages/ref.js'));
 
-// 启动路由
+// 初始化导航 + 启动路由
+initNavigation();
 initRouter();

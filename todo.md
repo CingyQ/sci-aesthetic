@@ -16,10 +16,10 @@
 - [x] layout.css — sidebar + main + section-light/dark
 - [x] mobile.css — 底部 tab bar + 顶部导航栏 + 移动端覆盖样式
 - [ ] animations.js — GSAP ScrollTrigger 封装（fadeIn/stickySteps/countUp/parallax/scaleReveal + matchMedia 移动端适配）
-- [ ] 桌面端侧边栏导航（4 模块分组 + 页面列表 + 进度标记）
-- [ ] 移动端底部 Tab Bar（5 tabs：首页/M1/M2/M3/M4）
-- [ ] 移动端顶部页面导航栏（返回 + 标题 + 页码）
-- [ ] Tablet 汉堡菜单 + 侧边栏覆盖层
+- [x] 桌面端侧边栏导航（4 模块分组 + 页面列表 + 进度标记）
+- [x] 移动端底部 Tab Bar（5 tabs：首页/M1/M2/M3/M4）
+- [x] 移动端顶部页面导航栏（返回 + 标题 + 页码）
+- [x] Tablet 汉堡菜单 + 侧边栏覆盖层
 - [ ] 横屏提示 Toast 组件
 - [x] 样式展示页：所有组件 + 明暗交替 + 移动端布局验证
 

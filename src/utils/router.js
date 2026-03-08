@@ -3,6 +3,7 @@
 
 const routes = new Map();
 let currentDestroy = null;
+let routeChangeCallbacks = [];
 
 // 注册路由
 export function registerRoute(hash, loader) {
@@ -18,6 +19,11 @@ export function getCurrentRoute() {
 // 导航到指定路由
 export function navigateTo(hash) {
   window.location.hash = hash;
+}
+
+// 注册路由变化回调
+export function onRouteChange(callback) {
+  routeChangeCallbacks.push(callback);
 }
 
 // 路由变化处理
@@ -48,6 +54,9 @@ async function handleRouteChange() {
       if (pageModule.destroy) {
         currentDestroy = pageModule.destroy;
       }
+
+      // 通知路由变化
+      routeChangeCallbacks.forEach(cb => cb(hash));
     } catch (err) {
       console.error(`路由加载失败: ${hash}`, err);
       mainContent.innerHTML = `

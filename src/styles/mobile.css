@@ -88,7 +88,10 @@
   .mobile-top-bar {
     display: flex;
   }
-  #main-content {
+  .mobile-top-bar.top-bar-hidden {
+    display: none;
+  }
+  #main-content.has-top-bar {
     padding-top: calc(48px + env(safe-area-inset-top));
   }
 }

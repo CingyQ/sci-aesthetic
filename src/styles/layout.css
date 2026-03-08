@@ -20,6 +20,16 @@
   z-index: 100;
   overflow-y: auto;
   transition: transform var(--t-base);
+  overscroll-behavior: contain;
+}
+
+#sidebar::-webkit-scrollbar {
+  width: 4px;
+}
+
+#sidebar::-webkit-scrollbar-thumb {
+  background: var(--border-light);
+  border-radius: 2px;
 }
 
 .sidebar-overlay {
@@ -37,9 +47,39 @@
   pointer-events: auto;
 }
 
+/* 侧边栏头部 */
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.sidebar-logo {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-on-light);
+  letter-spacing: -0.01em;
+}
+
+.sidebar-close-btn {
+  display: none;
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+  .sidebar-close-btn {
+    display: flex;
+  }
+  .sidebar-header {
+    padding-left: 56px; /* 给汉堡按钮留空间 */
+  }
+}
+
 /* 侧边栏导航项 */
 .nav-module-group {
-  padding: var(--space-sm) 0;
+  padding: var(--space-xs) 0;
   border-bottom: 1px solid var(--border-light);
 }
 
@@ -48,17 +88,115 @@
   font-weight: 600;
   color: var(--text-on-light-2);
   padding: var(--space-xs) var(--space-sm);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  text-transform: none;
+  letter-spacing: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: color var(--t-fast);
+  user-select: none;
+}
+
+.nav-module-title:hover {
+  color: var(--text-on-light);
+}
+
+.nav-module-color {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.nav-module-label {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-module-progress-badge {
+  font-size: var(--text-caption);
+  color: var(--text-on-light-3);
+  font-weight: 400;
+}
+
+.nav-module-chevron {
+  display: flex;
+  align-items: center;
+  transition: transform var(--t-fast);
+  color: var(--text-on-light-3);
+}
+
+.nav-module-group.expanded .nav-module-chevron {
+  transform: rotate(180deg);
+}
+
+/* 页面列表（折叠） */
+.nav-page-list {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--t-base);
+}
+
+.nav-module-group.expanded .nav-page-list {
+  max-height: 600px;
+}
+
+.nav-page-item {
+  display: flex !important;
+  align-items: center;
+  gap: 8px;
+  padding: 8px var(--space-sm) 8px 28px !important;
+  font-size: 0.85rem !important;
+  text-decoration: none;
+}
+
+.nav-page-num {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--bg-light-alt);
+  font-size: var(--text-caption);
+  color: var(--text-on-light-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.nav-page-item.active .nav-page-num {
+  background: var(--accent);
+  color: #fff;
+}
+
+.nav-page-title {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nav-check {
+  color: var(--semantic-success);
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
 }
 
 .nav-item {
-  padding: 10px var(--space-sm) 10px 24px;
+  padding: 10px var(--space-sm) 10px 16px;
   font-size: 0.9rem;
   color: var(--text-on-light-2);
   cursor: pointer;
   transition: all var(--t-fast);
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
 }
 
 .nav-item.active {
@@ -70,6 +208,61 @@
 .nav-item:hover {
   color: var(--text-on-light);
   background: var(--bg-light-alt);
+}
+
+.nav-item-icon {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  color: inherit;
+}
+
+.nav-item-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* 汉堡菜单按钮（Tablet） */
+.hamburger-btn {
+  display: none;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 101;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  background: rgba(250, 250, 250, 0.9);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--text-on-light);
+  transition: background var(--t-fast);
+}
+
+.hamburger-btn:active {
+  background: var(--bg-light-alt);
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+  .hamburger-btn {
+    display: flex;
+  }
+}
+
+/* Mobile 隐藏汉堡按钮（用底部 Tab Bar） */
+@media (max-width: 768px) {
+  .hamburger-btn {
+    display: none;
+  }
+}
+
+/* 顶部栏隐藏状态（首页/ref 不需要） */
+.top-bar-hidden {
+  display: none !important;
 }
 
 /* ========================================================
