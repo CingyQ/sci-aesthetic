@@ -1,0 +1,115 @@
+/* ============================================
+   全局 CSS 变量 — 映射 design-spec.md
+   ============================================ */
+
+:root {
+  /* ---------- 浅色表面 ---------- */
+  --bg-light:          #fafafa;
+  --bg-light-alt:      #f5f5f7;
+  --bg-light-elevated: #ffffff;
+  --text-on-light:     #1d1d1f;
+  --text-on-light-2:   #6e6e73;
+  --text-on-light-3:   #86868b;
+  --border-light:      #d2d2d7;
+
+  /* ---------- 深色表面 ---------- */
+  --bg-dark:           #1d1d1f;
+  --bg-dark-deep:      #000000;
+  --bg-dark-elevated:  #2d2d2f;
+  --text-on-dark:      #f5f5f7;
+  --text-on-dark-2:    #a1a1a6;
+  --text-on-dark-3:    #6e6e73;
+  --border-dark:       #424245;
+
+  /* ---------- 强调色 ---------- */
+  --accent:            #7EC8E3;
+  --accent-hover:      #5BA3C9;
+  --accent-subtle:     rgba(126, 200, 227, 0.1);
+  --accent-glow:       rgba(126, 200, 227, 0.25);
+
+  /* ---------- 模块标识色 ---------- */
+  --module-1:  #7EC8E3;  /* 数据可视化 — 天蓝 */
+  --module-2:  #B8B8E8;  /* AI 辅助 — 淡紫 */
+  --module-3:  #95D5B2;  /* 矢量设计 — 薄荷绿 */
+  --module-4:  #F0B27A;  /* 演示设计 — 暖橙 */
+
+  /* ---------- 数据色 ---------- */
+  --data-blue:     #7EC8E3;
+  --data-green:    #95D5B2;
+  --data-purple:   #B8B8E8;
+  --data-orange:   #F0B27A;
+  --data-red:      #E07A7A;
+  --data-yellow:   #F0D264;
+  --data-pink:     #E8A0BF;
+  --data-teal:     #6BC5D2;
+
+  /* ---------- 字体 ---------- */
+  --font-display:  'Playfair Display', 'Noto Serif SC', Georgia, serif;
+  --font-heading:  'Inter', 'Noto Sans SC', -apple-system, sans-serif;
+  --font-body:     'Noto Sans SC', 'Inter', -apple-system, sans-serif;
+  --font-code:     'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+
+  /* ---------- 字号（流体） ---------- */
+  --text-hero:     clamp(3rem, 6vw, 5rem);
+  --text-display:  clamp(2.5rem, 5vw, 4.5rem);
+  --text-title:    clamp(1.75rem, 3vw, 2.5rem);
+  --text-heading:  clamp(1.25rem, 2vw, 1.75rem);
+  --text-body:     clamp(1rem, 1.2vw, 1.25rem);
+  --text-small:    0.875rem;
+  --text-caption:  0.75rem;
+  --text-stat:     clamp(3rem, 8vw, 7rem);
+
+  /* ---------- 内容宽度 ---------- */
+  --w-reading:  680px;
+  --w-content:  960px;
+  --w-full:     1200px;
+
+  /* ---------- 间距 ---------- */
+  --space-xs:   8px;
+  --space-sm:   16px;
+  --space-md:   24px;
+  --space-lg:   48px;
+  --space-xl:   80px;
+  --space-2xl:  120px;
+  --space-3xl:  200px;
+
+  /* ---------- 圆角 ---------- */
+  --radius-sm:    8px;
+  --radius-md:    16px;
+  --radius-lg:    24px;
+  --radius-full:  9999px;
+
+  /* ---------- 阴影（浅色背景） ---------- */
+  --shadow-sm:    0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md:    0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg:    0 12px 40px rgba(0,0,0,0.12);
+  --shadow-hover: 0 20px 60px rgba(0,0,0,0.15);
+  --shadow-glow:  0 4px 24px var(--accent-glow);
+
+  /* ---------- 阴影（深色背景） ---------- */
+  --shadow-dark:  0 4px 16px rgba(0,0,0,0.4);
+
+  /* ---------- 过渡 ---------- */
+  --ease-apple:  cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --t-fast:      0.2s var(--ease-apple);
+  --t-base:      0.35s var(--ease-apple);
+  --t-slow:      0.6s var(--ease-apple);
+}
+
+/* ---------- 移动端间距覆盖 ---------- */
+@media (max-width: 768px) {
+  :root {
+    --space-xl:  48px;
+    --space-2xl: 64px;
+    --space-3xl: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --space-xl:  32px;
+    --space-2xl: 48px;
+    --space-3xl: 56px;
+  }
+}

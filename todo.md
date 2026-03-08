@@ -1,121 +1,100 @@
-# TODO - 科研绘图指南网站改版
+# TODO - 科研绘图指南（首页 + 4 模块架构）
 
-## Step 1: 配色系统更新 ✅
-- [x] 替换 CSS :root 变量（rose->天蓝, mint->薄荷绿, 新背景色）
-- [x] 更新所有内联颜色引用（SVG stroke/fill, style属性中的硬编码颜色）
-- [x] 更新背景 blob 颜色
-- [x] 更新滚动条、按钮渐变、active 状态
-- [x] 更新 design-spec.md
+## Phase 0: 项目骨架
+- [x] 初始化 Vite 项目（vanilla JS）
+- [x] 创建目录结构（src/styles, components, pages/m1-m4, utils）
+- [x] 安装依赖：GSAP, D3.js, CodeMirror 6, SortableJS, Prism.js
+- [x] vite.config.js（GitHub Pages base path）
+- [x] CSS 变量系统（映射 design-spec.md 完整变量表）
+- [x] hash 路由（#home / #m1-p1 ~ #m4-p8 / #ref）
+- [x] npm run dev 可运行
 
-## Step 2: 图表工作坊改造 ✅
-- [x] p18 添加全屏模态框 HTML + CSS
-- [x] 为每种图表类型实现独立的参数控制面板（12种图表）
-- [x] 实现模态框内的 SVG 实时预览 + R 代码显示
-- [ ] p19 改为"图表定制进阶"
+## Phase 1: 设计系统 + 导航
+- [ ] variables.css — 浅色/深色/强调色/模块标识色/数据色/字号/间距/阴影/圆角/过渡
+- [ ] base.css — reset + typography（clamp 流体字号）+ scrollbar
+- [ ] components.css — Button / Tag / Code / Input / Table
+- [ ] layout.css — sidebar + main + section-light/dark
+- [ ] mobile.css — 底部 tab bar + 顶部导航栏 + 移动端覆盖样式
+- [ ] animations.js — GSAP ScrollTrigger 封装（fadeIn/stickySteps/countUp/parallax/scaleReveal + matchMedia 移动端适配）
+- [ ] 桌面端侧边栏导航（4 模块分组 + 页面列表 + 进度标记）
+- [ ] 移动端底部 Tab Bar（5 tabs：首页/M1/M2/M3/M4）
+- [ ] 移动端顶部页面导航栏（返回 + 标题 + 页码）
+- [ ] Tablet 汉堡菜单 + 侧边栏覆盖层
+- [ ] 横屏提示 Toast 组件
+- [ ] 样式展示页：所有组件 + 明暗交替 + 移动端布局验证
 
-## Step 3: 图表美化增强 (Page 10) ✅
-- [x] 保留4个 before/after 对比
-- [x] 实现5步渐进式美化演示（原始->配色->字体->布局->细节）
+## Phase 2: 通用组件库
+- [ ] ScrollAnimations.js — GSAP 封装 + matchMedia 移动端适配
+- [ ] CodeEditor.js — CodeMirror 6 封装（R/Python 双语言，深色主题，onChange，移动端只读模式）
+- [ ] ChartPreview.js — D3 SVG 画布封装（深色画布 + 坐标轴 + 响应式 viewBox）
+- [ ] InteractiveCanvas.js — Canvas API 封装（HiDPI + Pointer Events + touchAction + 双指缩放）
+- [ ] TabSwitcher.js — 带滑动指示器
+- [ ] Modal.js — 全屏模态（ESC + 触摸关闭 + 过渡 + GSAP 入场）
+- [ ] Accordion.js — 平滑展开（移动端工作坊面板）
+- [ ] BeforeAfter.js — 拖拽/滑动对比（Pointer Events 触摸支持）
+- [ ] Toast.js — 消息提示（含横屏提示）
+- [ ] StickySteps.js — 粘性滚动步骤教学（移动端降级为普通滚动 + 固定标题）
+- [ ] ColorInput.js — 颜色选择器（HEX/RGB/HSL 切换 + 精确输入 + 移动端全屏模态）
+- [ ] CopyButton.js — 一键复制 + 反馈动画
+- [ ] WorkshopLayout.js — 三面板布局（桌面网格 / 移动端手风琴）
+- [ ] 组件 demo 页验证（桌面端 + 移动端）
 
-## Step 4: 薄弱页面充实 ✅
-- [x] p11: 快捷键测试小游戏（按键判断对错+计分）
-- [ ] p13: 子步骤展开 + 案例流程动画（待补）
-- [x] p22: 拖拽式幻灯片布局编辑器
-- [x] p23: 注意力热力图互动（点击+理想热力图对比）
+## Phase 3: 首页 + 全局功能
+- [ ] home Hero（深色背景 + 大标题动画 + 粒子/几何背景）
+- [ ] 4 模块导航卡片（模块标识色 + 图标 + 简介 + 进度百分比）
+- [ ] 学习路径推荐（按身份选择 → 推荐模块顺序）
+- [ ] 统计 count-up（章节数/交互组件数/配色方案数/图表类型数）
+- [ ] 全局搜索 Cmd+K（模态 + 模糊匹配 + 键盘导航）
+- [ ] 学习进度系统（localStorage + 侧边栏/Tab Bar 进度标记）
+- [ ] 页面过渡动画
+- [ ] 移动端首页布局验证
 
-## Step 5: 新增交互组件 ✅
-- [x] 图表模态编辑器组件（12种图表全屏工作坊）
-- [x] 渐进式美化演示器（5步从丑到美）
-- [x] 快捷键测试游戏
-- [x] 拖拽布局编辑器
-- [x] 注意力热力图
+## Phase 4: 模块一 — 科研数据可视化（m1-p1 ~ m1-p10）
+- [ ] m1-p1 色彩理论基础（Canvas 色轮 + HSL 控制 + 色彩空间对比）
+- [ ] m1-p2 色彩和谐与科研配色（5 种方案 + 60-30-10 + deltaE + 配色方案库浏览器 + 图表预览）
+- [ ] m1-p3 配色生成器与数据配色（生成+微调+导出 + 连续/发散/定性 + 错误对比）
+- [ ] m1-p4 色彩无障碍（WCAG 检测 + 色盲模拟 + 修复建议）
+- [ ] m1-p5 图表选择指南（D3 决策树 + 20+ 图表全览 + 误用专题）
+- [ ] m1-p6 ggplot2 图层语法与分面（粘性滚动逐层叠加 + 分面 Tab 切换 + CodeMirror + D3 预览）
+- [ ] m1-p7 ggplot2 图表工作坊 — 先做 4 种验证（scatter/bar/line/boxplot）
+- [ ] m1-p7 ggplot2 图表工作坊 — 剩余 8 种 + 移动端手风琴面板验证
+- [ ] m1-p8 R 配色与出版级图表（包浏览器 + 主题定制器 + ggsave + patchwork）
+- [ ] m1-p9 Python 可视化与数据叙事（matplotlib/seaborn + annotate 交互 + 叙事结构）
+- [ ] m1-p10 科研绘图工作流与导出（时间线 + Nature 案例 + DPI 对比 + 期刊速查）
 
-## Step 6: 细节打磨
-- [x] 页面切换动画（fadeInUp）
-- [x] 导航active状态高亮
-- [x] 交互动画反馈（hover/transition已内置）
-- [ ] 移动端进一步优化（待测试）
+## Phase 5: 模块二 — AI 辅助科研绘图（m2-p1 ~ m2-p6）
+- [ ] m2-p1 AI 工具全景（D3 决策树 + 工具矩阵 + 时间对比动画）
+- [ ] m2-p2 Prompt 工程（评分器 + 效果对比 + 模板库）
+- [ ] m2-p3 AI 矢量化（Trace 参数模拟器 + 兼容矩阵 + 陷阱）
+- [ ] m2-p4 AI 伦理版权（期刊政策交互表 + 情景判断练习）
+- [ ] m2-p5 AI 辅助科研流程图（工作流演示 + Prompt 模板 + 3 个完整案例）
+- [ ] m2-p6 AI 绘图实战案例集（3 个端到端案例 + Before/After）
 
-## Step 7: 清理 ✅
-- [x] 删除 insert_js.py, insert_pages.py, p17.html
+## Phase 6: 模块三 — 矢量绘图与设计（m3-p1 ~ m3-p7）
+- [ ] m3-p1 矢量 vs 位图（缩放对比 + 格式决策树）
+- [ ] m3-p2 Illustrator 工具（12 工具 SVG 动画）
+- [ ] m3-p3 贝塞尔曲线（Canvas 编辑器 + 练习模式 + 移动端全屏适配）
+- [ ] m3-p4 图表美化（8 组 Before/After + 5 步粘性滚动教学）
+- [ ] m3-p5 SVG 编辑与优化（CodeMirror SVG 编辑器 + 实时渲染 + 优化策略）
+- [ ] m3-p6 多面板 Figure 组合（拖拽排列 + 标注规范 + R/Python 代码）
+- [ ] m3-p7 素材资源站（资源卡片 + 需求筛选 + 推荐器 + 许可证）
 
-## Step 8: 第三轮完善 ✅
-- [x] p11: 12个工具卡片点击展示SVG动画效果演示（选择框选、锚点拖动、钢笔描线、打字机等）
-- [x] p16: 8个震撼级SVG预设（DNA双螺旋、神经网络、细胞超微结构、化学反应、数据流程图、心脏解剖、弦图、科技装饰）
-- [x] p17: ggplot2多图表类型tab切换（散点/柱状/折线/箱线/小提琴/直方/密度/热力/面积 9种）
-- [x] p19: 代码实验室扩展至10种图表（+boxplot/violin/histogram/density/heatmap/area/errorbar）
+## Phase 7: 模块四 — 学术演示设计（m4-p1 ~ m4-p8）
+- [ ] m4-p1 PPT 设计原则（格式塔 SVG + 视觉层次 + 信噪比）
+- [ ] m4-p2 排版字体（Canvas 拖拽布局 + 字体推荐 + 行距演示 + 移动端预设模板）
+- [ ] m4-p3 注意力与视觉流（热力图 + F/Z 模式）
+- [ ] m4-p4 PPT 改造案例（8 组 Before/After + 粘性步骤讲解 + 用户练习打分）
+- [ ] m4-p5 学术海报（布局模板 + 打印规范 + CMYK）
+- [ ] m4-p6 Graphical Abstract（案例分析 + 元素库拖拽组合 + 期刊尺寸）
+- [ ] m4-p7 科研信息图（4 种叙事模板 + 数据简化 + 社交媒体适配）
+- [ ] m4-p8 科研动画（关键帧编辑器 + gganimate + PPT 动画）
 
-## Step 9: 第四轮深度增强
-
-### Phase 1: Bug修复与稳定性 ✅
-- [x] 修复已知交互组件的初始化问题
-- [x] 修复懒加载相关的页面切换bug
-- [x] 清理控制台错误和警告
-- [x] 确保所有SVG动画在页面切换后正确重置
-
-### Phase 2A: AI工作流页面深度充实 (p13-16) ✅
-- [x] p13: AI决策树 + 传统vsAI时间对比 + 3案例手风琴 + 质量检查清单
-- [x] p14: Prompt工程理论 + 交互式质量评分器 + 3真实案例对比 + 版权伦理
-- [x] p15: Image Trace参数模拟器 + 矢量格式兼容性矩阵 + 3常见陷阱
-- [x] p16: SVG Path命令速查(交互演示) + 性能优化提示 + 坐标系统可视化
-
-### Phase 2B: 色彩理论深度 (p4,5,8) ✅
-- [x] p4: 和谐模式适用场景(3个SVG示例) + 色距理论
-- [x] p5: Rainbow陷阱vsViridis对比 + 顶刊配色规范表 + Wong色盲安全配色
-- [x] p8: 色觉缺陷统计SVG + WCAG 2.1对比度标准表 + 自定义配色色盲模拟器
-
-### Phase 2C: R可视化高级 (p17,19,21) ✅
-- [x] p17: Faceting分面演示(none/wrap/grid) + 坐标变换(cartesian/flip/polar) + 图层叠加示例
-- [x] p19: 完整R脚本导出(含数据生成/绑图/导出)
-- [x] p21: 期刊投稿图片规格表 + ggsave代码生成器 + patchwork多面板布局(4种)
-
-### Phase 3: 中等优先级页面 ✅
-- [x] p1: 快速资源推荐器（3步问答引导）
-- [x] p2: Nature论文Figure制作全流程案例（6步SVG流程图 + 陷阱/技巧/清单）
-- [x] p23: 格式塔视觉原则（接近性/相似性/连续性/闭合性 4个SVG演示）
-- [ ] p9,11: 贝塞尔练习模式 + 工具工作流指引（留待下轮）
-
-### Phase 4: 文档同步
-- [x] 更新 design-spec.md 配色系统与组件规格
-- [x] 更新 CLAUDE.md 页面描述与交互组件列表
-- [x] 更新 todo.md 进度追踪
-
-## Step 10: 第五轮完善 - 图表专属参数 & 内容深化 ✅
-
-### Phase 1: P19 代码实验室 - 图表专属参数面板 ✅
-- [x] 10种图表各自添加专属控件（scatter:形状/抖动, bar:排列/柱宽, line:线型/数据点, boxplot:抖动/缺口/均值, violin:trim/箱线/带宽, histogram:bins/密度, density:带宽/填充, heatmap:配色/边框/标签, area:堆叠模式, errorbar:样式/帽宽）
-- [x] SVG预览根据专属参数调整渲染
-- [x] R代码同步包含专属参数
-- [x] 完整R脚本导出包含专属参数
-
-### Phase 2: P17 ggplot2 - 图表专属参数面板 ✅
-- [x] 9种图表各自添加专属控件（同P19模式）
-- [x] SVG预览和R代码同步更新
-
-### Phase 3: P7 数据配色 - 内容大幅扩充 ✅
-- [x] 3类×5种子配色选择器（连续:viridis/plasma/inferno/magma/cividis, 发散:RdBu/PiYG/PRGn/BrBG/RdYlBu, 定性:Set1/Set2/Dark2/Paired/NPG）
-- [x] 4种图表预览（热力图/柱状图/散点图/折线图）
-- [x] 颜色数量滑块(3-9)
-- [x] 连续vs离散映射说明卡
-
-### Phase 4: P12 导出设置 - 交互增强 ✅
-- [x] 格式特性对比卡片（SVG/PDF/PNG/TIFF 含优劣势/场景/R代码）
-- [x] DPI效果对比（72/150/300/600 可视化）
-- [x] 文件大小估算器
-
-### Phase 5: 文档同步 ✅
-- [x] 更新 todo.md
-- [x] 更新 CLAUDE.md
-
-## Step 11: 第六轮 - P10/P18/P24 各增加4个案例 ✅
-- [x] P10 图表美化: 新增4个before/after（箱线图/饼图/误差线图/密度图）共8个
-- [x] P18 图表类型: 新增4种图表卡片+chartDefs+renderModalChart（雷达图/棒棒糖图/森林图/瀑布图）共16种
-- [x] P24 PPT改造: 新增4个before/after（表格页/结论页/时间线/图片页）共8个
-- [x] 文档同步: todo.md + CLAUDE.md
-
----
-
-## Future Iterations
-- [ ] 移动端优化：响应式布局完善、触摸手势支持、底部导航栏适配
-- [ ] 多语言支持：英文界面切换、术语双语对照表
-- [ ] 打印样式表：添加 @media print 样式，支持导出为可打印教程
+## Phase 8: 速查手册 + 打磨
+- [ ] ref 速查手册（图表/配色/导出/快捷键/期刊 5 类速查卡，可复制/下载 PDF）
+- [ ] Vite 构建优化（code splitting + 按模块懒加载 + 压缩）
+- [ ] 字体加载优化（font-display: swap + 子集化）
+- [ ] GitHub Actions 部署
+- [ ] SEO / Open Graph
+- [ ] 移动端全面测试（iPhone SE / iPhone 14 / iPad / Android）
+- [ ] 性能审计（Lighthouse 90+，移动端和桌面端分别测试）
+- [ ] 触摸交互回归测试

@@ -1,397 +1,871 @@
-# Scientific Graphics Guide - Design Specification
-
-## Aesthetic Direction: "Clean Academic"
-
-A refined, light-themed editorial aesthetic inspired by premium scientific publications and modern design systems. The metaphor: a well-organized research studio where clarity meets visual elegance. Every element emphasizes readability through generous whitespace, cool blue tones, and precise typography.
-
-**Memorable differentiator**: Clean sky-blue accents against near-white backgrounds, frosted glass panels with subtle depth, and mint-green secondary highlights. Feels like a modern interactive textbook for researchers.
+# 设计规范 - Apple-Inspired Academic
 
 ---
 
-## Color System
+## 色彩系统
 
-### Primary Palette (Sky Blue)
-```
---primary:       #7EC8E3    /* Sky Blue - primary accent */
---primary-light: #D0EDF7    /* Light sky */
---primary-dark:  #5BA3C9    /* Deep sky */
-```
-
-### Secondary Palette (Mint Green)
-```
---secondary:       #95D5B2    /* Mint Green - secondary accent */
---secondary-light: #D8F3DC    /* Light mint */
---secondary-dark:  #74C69D    /* Deep mint */
-```
-
-### Tertiary Palette (Lavender)
-```
---tertiary:       #B8B8E8    /* Lavender - tertiary accent */
---tertiary-light: #E0E0F5    /* Light lavender */
---tertiary-dark:  #8A8AC8    /* Deep lavender */
-```
-
-### Neutral Palette
-```
---bg-primary:    #FAFCFD    /* Cool white - main background */
---bg-secondary:  #F3F7F9    /* Light cool gray - card backgrounds */
---bg-tertiary:   #EBF0F3    /* Medium cool gray */
---text-primary:  #2C3E50    /* Deep blue-gray */
---text-secondary:#5D6D7E    /* Medium blue-gray */
---text-muted:    #95A5A6    /* Light blue-gray */
---border:        #E0E8ED    /* Subtle cool border */
-```
-
-### Shadow System
-```
---shadow-sm:  0 2px 8px rgba(44, 62, 80, 0.06)
---shadow-md:  0 4px 24px rgba(44, 62, 80, 0.08)
---shadow-lg:  0 12px 48px rgba(44, 62, 80, 0.12)
---shadow-accent: 0 4px 16px rgba(126, 200, 227, 0.3)   /* Sky blue glow */
---shadow-hover:  0 12px 48px rgba(126, 200, 227, 0.15)  /* Hover glow */
-```
-
-### Gradient Definitions
-```
---grad-rose:     linear-gradient(135deg, #D0EDF7, #7EC8E3)       /* Primary gradient */
---grad-mint:     linear-gradient(135deg, #D8F3DC, #95D5B2)       /* Secondary gradient */
---grad-lavender: linear-gradient(135deg, #E0E0F5, #B8B8E8)       /* Tertiary gradient */
---grad-glass:    linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.4))
---grad-hero:     linear-gradient(135deg, #FAFCFD 0%, #D0EDF7 30%, #D8F3DC 70%, #E0E0F5 100%)
-```
-
----
-
-## Typography
-
-### Font Stack
-- **Display**: `'Playfair Display', Georgia, serif` - Elegant serif for major headings
-- **Heading**: `'Raleway', 'Helvetica Neue', sans-serif` - Clean geometric sans for subheadings
-- **Body**: `'Noto Sans SC', 'Source Han Sans SC', sans-serif` - Premium Chinese + Latin body text
-- **Code**: `'JetBrains Mono', 'Fira Code', monospace` - Refined monospace
-
-### Type Scale (base: 16px, ratio: 1.333 Perfect Fourth)
-```
---text-4xl:  3.157rem  (50.5px) - Hero title
---text-3xl:  2.369rem  (37.9px) - Section title
---text-2xl:  1.777rem  (28.4px) - Card title
---text-xl:   1.333rem  (21.3px) - Subtitle
---text-base: 1rem      (16px)   - Body
---text-sm:   0.75rem   (12px)   - Caption
---text-xs:   0.563rem  (9px)    - Label
-```
-
-### Font Weights
-- Display headings: 700 (Bold)
-- Section titles: 600 (Semibold)
-- Body text: 400 (Regular)
-- Emphasis: 500 (Medium)
-- Captions: 300 (Light)
-
-### Line Heights
-- Headings: 1.2
-- Body: 1.75
-- Code: 1.6
-- Tight (labels): 1.3
-
-### Letter Spacing
-- Display: 0.02em
-- Section titles: 0.08em
-- Body: 0.01em
-- All-caps labels: 0.15em
-
----
-
-## Spatial System
-
-### Spacing Scale
-```
---space-1:  4px
---space-2:  8px
---space-3:  12px
---space-4:  16px
---space-5:  24px
---space-6:  32px
---space-7:  48px
---space-8:  64px
---space-9:  96px
---space-10: 128px
-```
-
-### Container
-- Max width: 1200px
-- Page padding: 64px horizontal, 48px vertical
-- Mobile padding: 24px
-
-### Border Radius
-```
---radius-sm:  8px   - buttons, tags
---radius-md:  16px  - cards
---radius-lg:  24px  - panels, modals
---radius-xl:  32px  - hero sections
---radius-full: 9999px - pills, avatars
-```
-
----
-
-## Component Styles
-
-### Glass Cards (Primary Container)
+### 浅色表面
 ```css
-.card {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: 16px;
-  padding: 32px;
-  box-shadow:
-    0 4px 24px rgba(44, 62, 80, 0.04),
-    0 1px 4px rgba(44, 62, 80, 0.02);
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+--bg-light:          #fafafa;
+--bg-light-alt:      #f5f5f7;
+--bg-light-elevated: #ffffff;
+--text-on-light:     #1d1d1f;
+--text-on-light-2:   #6e6e73;
+--text-on-light-3:   #86868b;
+--border-light:      #d2d2d7;
+```
+
+### 深色表面
+```css
+--bg-dark:           #1d1d1f;
+--bg-dark-deep:      #000000;
+--bg-dark-elevated:  #2d2d2f;
+--text-on-dark:      #f5f5f7;
+--text-on-dark-2:    #a1a1a6;
+--text-on-dark-3:    #6e6e73;
+--border-dark:       #424245;
+```
+
+### 强调色
+```css
+--accent:          #7EC8E3;
+--accent-hover:    #5BA3C9;
+--accent-subtle:   rgba(126, 200, 227, 0.1);
+--accent-glow:     rgba(126, 200, 227, 0.25);
+```
+
+### 模块标识色（仅用于模块图标、导航高亮、模块入口卡片边框）
+```css
+--module-1:  #7EC8E3;  /* 数据可视化 — 天蓝 */
+--module-2:  #B8B8E8;  /* AI 辅助 — 淡紫 */
+--module-3:  #95D5B2;  /* 矢量设计 — 薄荷绿 */
+--module-4:  #F0B27A;  /* 演示设计 — 暖橙 */
+```
+
+### 数据色（仅用在图表/配色演示区域）
+```css
+--data-blue:     #7EC8E3;
+--data-green:    #95D5B2;
+--data-purple:   #B8B8E8;
+--data-orange:   #F0B27A;
+--data-red:      #E07A7A;
+--data-yellow:   #F0D264;
+--data-pink:     #E8A0BF;
+--data-teal:     #6BC5D2;
+```
+
+---
+
+## 字体系统
+
+```css
+--font-display:  'Playfair Display', 'Noto Serif SC', Georgia, serif;
+--font-heading:  'Inter', 'Noto Sans SC', -apple-system, sans-serif;
+--font-body:     'Noto Sans SC', 'Inter', -apple-system, sans-serif;
+--font-code:     'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+```
+
+### 字号
+```css
+--text-hero:     clamp(3rem, 6vw, 5rem);
+--text-display:  clamp(2.5rem, 5vw, 4.5rem);
+--text-title:    clamp(1.75rem, 3vw, 2.5rem);
+--text-heading:  clamp(1.25rem, 2vw, 1.75rem);
+--text-body:     clamp(1rem, 1.2vw, 1.25rem);
+--text-small:    0.875rem;
+--text-caption:  0.75rem;
+--text-stat:     clamp(3rem, 8vw, 7rem);
+```
+
+### 字重与行高
+```
+Hero/Display: 700, line-height 1.1, letter-spacing -0.02em
+引言/副标题: 300, line-height 1.4（苹果标志性的轻细风格）
+正文: 400, line-height 1.8（移动端 1.6）
+代码: 400, line-height 1.6
+```
+
+### 内容宽度
+```css
+--w-reading:  680px;   /* 正文阅读 */
+--w-content:  960px;   /* 宽内容 */
+--w-full:     1200px;  /* 最大宽度 */
+```
+
+---
+
+## 间距
+
+```css
+--space-xs:   8px;
+--space-sm:   16px;
+--space-md:   24px;
+--space-lg:   48px;
+--space-xl:   80px;
+--space-2xl:  120px;
+--space-3xl:  200px;
+```
+
+```css
+--radius-sm:    8px;
+--radius-md:    16px;
+--radius-lg:    24px;
+--radius-full:  9999px;
+```
+
+---
+
+## 阴影
+
+```css
+/* 浅色背景 */
+--shadow-sm:    0 1px 3px rgba(0,0,0,0.08);
+--shadow-md:    0 4px 16px rgba(0,0,0,0.08);
+--shadow-lg:    0 12px 40px rgba(0,0,0,0.12);
+--shadow-hover: 0 20px 60px rgba(0,0,0,0.15);
+--shadow-glow:  0 4px 24px var(--accent-glow);
+
+/* 深色背景 */
+--shadow-dark:  0 4px 16px rgba(0,0,0,0.4);
+```
+
+---
+
+## 过渡
+
+```css
+--ease-apple:  cubic-bezier(0.25, 0.46, 0.45, 0.94);
+--ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+--t-fast:      0.2s var(--ease-apple);
+--t-base:      0.35s var(--ease-apple);
+--t-slow:      0.6s var(--ease-apple);
+```
+
+---
+
+## 组件样式
+
+### Section
+```css
+.section-light {
+  background: var(--bg-light);
+  color: var(--text-on-light);
+  padding: var(--space-3xl) var(--space-lg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow:
-    0 12px 48px rgba(126, 200, 227, 0.12),
-    0 4px 16px rgba(44, 62, 80, 0.06);
+.section-dark {
+  background: var(--bg-dark);
+  color: var(--text-on-dark);
+  padding: var(--space-3xl) var(--space-lg);
+  min-height: 100vh;
+}
+
+/* 移动端 section 间距缩小 */
+@media (max-width: 768px) {
+  .section-light,
+  .section-dark {
+    padding: var(--space-xl) var(--space-sm);
+    min-height: auto;  /* 移动端不强制 100vh，内容决定高度 */
+  }
 }
 ```
 
-### Buttons
+### 页面标题（居中，苹果风格）
+```css
+.page-hero-title {
+  font-family: var(--font-display);
+  font-size: var(--text-display);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+.page-hero-sub {
+  font-family: var(--font-heading);
+  font-size: var(--text-title);
+  font-weight: 300;
+  text-align: center;
+  opacity: 0.5;
+  max-width: 600px;
+  margin: var(--space-md) auto 0;
+}
+```
+
+### 按钮
 ```css
 .btn-primary {
-  background: var(--grad-rose);  /* linear-gradient(135deg, #D0EDF7, #7EC8E3) */
-  color: white;
+  padding: 14px 32px;
+  background: var(--accent);
+  color: #fff;
   border: none;
-  padding: 12px 32px;
-  border-radius: 9999px;
-  font-family: 'Raleway';
-  font-weight: 600;
-  font-size: 14px;
-  letter-spacing: 0.05em;
-  box-shadow: 0 4px 16px rgba(126, 200, 227, 0.3);
-  transition: all 0.3s ease;
-}
-.btn-secondary {
-  background: transparent;
-  color: var(--text-primary);   /* #2C3E50 */
-  border: 1.5px solid var(--border);  /* #E0E8ED */
-  /* same padding/radius */
-}
-```
-
-### Tags/Badges
-```css
-.tag {
-  display: inline-block;
-  padding: 4px 14px;
-  border-radius: 9999px;
-  font-size: 12px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-heading);
+  font-size: 1rem;
   font-weight: 500;
-  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all var(--t-base);
+  box-shadow: 0 2px 12px var(--accent-glow);
+  /* 移动端最小触控尺寸 */
+  min-height: 44px;
+  min-width: 44px;
 }
-/* Variants: sky-blue, mint, lavender backgrounds with matching darker text */
+.btn-primary:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 24px var(--accent-glow);
+}
+.btn-primary:active {
+  transform: scale(0.97);
+}
+.btn-ghost {
+  padding: 14px 32px;
+  background: transparent;
+  color: var(--accent);
+  border: 1.5px solid var(--accent);
+  border-radius: var(--radius-full);
+  transition: all var(--t-base);
+  min-height: 44px;
+}
+.btn-ghost:hover { background: var(--accent-subtle); }
+.btn-ghost:active { background: var(--accent-subtle); transform: scale(0.97); }
 ```
 
-### Navigation Sidebar
-- Background: rgba(255, 255, 255, 0.85) with backdrop blur
-- Width: 280px
-- Thin right border in var(--border) (#E0E8ED)
-- Active item: primary-light (#D0EDF7) background, primary (#7EC8E3) left border (3px)
-- Hover: gentle bg transition to bg-secondary (#F3F7F9)
-- Section headers: uppercase, letter-spaced, text-muted (#95A5A6)
-- Logo: Playfair Display, primary colored (#7EC8E3)
-
-### Section Titles
+### 桌面端侧边栏
 ```css
-.section-title {
-  font-family: 'Playfair Display', serif;
-  font-size: var(--text-3xl);
-  font-weight: 700;
-  color: var(--text-primary);   /* #2C3E50 */
-  letter-spacing: 0.02em;
-  margin-bottom: 8px;
+#sidebar {
+  position: fixed;
+  left: 0; top: 0;
+  width: 260px;
+  height: 100vh;
+  background: rgba(250,250,250,0.85);
+  backdrop-filter: blur(20px);
+  border-right: 1px solid var(--border-light);
+  z-index: 100;
+  overflow-y: auto;
 }
-.section-title::after {
-  content: '';
-  display: block;
-  width: 48px;
-  height: 3px;
-  background: var(--grad-rose);  /* linear-gradient(135deg, #D0EDF7, #7EC8E3) */
-  border-radius: 2px;
-  margin-top: 16px;
+.nav-module-group {
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--border-light);
+}
+.nav-module-title {
+  font-size: var(--text-small);
+  font-weight: 600;
+  color: var(--text-on-light-2);
+  padding: var(--space-xs) var(--space-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.nav-item {
+  padding: 10px var(--space-sm) 10px 24px;
+  font-size: 0.9rem;
+  color: var(--text-on-light-2);
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+.nav-item.active {
+  color: var(--accent);
+  border-left: 3px solid var(--accent);
+  font-weight: 500;
+}
+.nav-item:hover {
+  color: var(--text-on-light);
+  background: var(--bg-light-alt);
+}
+
+/* Tablet：汉堡菜单 */
+@media (max-width: 1024px) and (min-width: 769px) {
+  #sidebar {
+    transform: translateX(-100%);
+    transition: transform var(--t-base);
+  }
+  #sidebar.open {
+    transform: translateX(0);
+  }
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 99;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--t-base);
+  }
+  .sidebar-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+/* Mobile：隐藏侧边栏 */
+@media (max-width: 768px) {
+  #sidebar { display: none; }
 }
 ```
 
-### Chart Workshop Modal
-- Full-screen overlay with backdrop-filter blur
-- Background: rgba(44, 62, 80, 0.5) overlay
-- Modal body: white (#FFFFFF) with border-radius 24px
-- Contains: parameter control panel (left), SVG live preview (center), R code display (right)
-- Close button: top-right, circular, border in --border
-- Supports 12 chart types with independent parameter controls
-- Tab navigation within modal for chart type switching
-
-### Tool Demo Animation Area
-- Container with bg-secondary (#F3F7F9) background
-- Border: 1px solid var(--border)
-- Animated SVG demonstrations for 12 Illustrator tools
-- Each tool card: white background, hover lifts with shadow-accent
-- Active tool highlighted with primary-light (#D0EDF7) border
-
-### Prompt Quality Scorer
-- Interactive scoring widget with progress bar
-- Score display: large number in primary color (#7EC8E3)
-- Progress bar fill: gradient from primary-light to primary
-- Checklist items: checkmark in secondary (#95D5B2) for pass, text-muted (#95A5A6) for fail
-- Container: card style with subtle shadow
-
-### Decision Tree Interactive Component
-- Flowchart-style layout with connected nodes
-- Node backgrounds: primary-light (#D0EDF7), secondary-light (#D8F3DC), tertiary-light (#E0E0F5)
-- Connecting lines: 2px solid var(--border) (#E0E8ED)
-- Active/selected node: primary (#7EC8E3) border with shadow-accent
-- Terminal nodes: rounded pill shape with gradient backgrounds
-
-### Resource Recommender Quiz
-- Step-by-step question flow (3 questions)
-- Button group for each question option
-- Result panel: bg mint-light (#D8F3DC), text mint-dark (#74C69D)
-- Reset button: btn-secondary style
-
-### Colorblind Simulator Input
-- 5 color input fields (type="color") in a controls-row
-- 4-column grid output: Normal / Protanopia / Deuteranopia / Tritanopia
-- Verdict panel: green (safe) or red (warning) background with icon
-
-### Facet & Coordinate Demo
-- Split into two cards with button group toggle
-- SVG preview area: white background, border in --border
-- Code display: pre block with font-size 11px
-- Active button highlighted with .active class
-
-### Journal Specs Table
-- Standard table styling with <th> headers
-- Color-coded cells: success (#95D5B2), warning (#FFB347), error (#E64B35)
-- Compact font-size (13px) for dense data
-
-### ggsave Code Generator
-- 3 select dropdowns: journal, column width, format
-- Generated code in pre block, auto-updates on change
-- Copy button: btn-secondary
-
-### Patchwork Layout Preview
-- 4 layout options as button group
-- SVG preview: colored rect panels labeled A/B/C/D
-- Code block with syntax reference
-
-### Accordion Items
-- Border-bottom: 1px solid var(--border) (#E0E8ED)
-- Header: font-weight 600, text-primary (#2C3E50)
-- Expand icon: rotates 180deg on open, color primary (#7EC8E3)
-- Content area: padding 16px 0, text-secondary (#5D6D7E)
-- Open state: subtle bg-secondary (#F3F7F9) background
-- Transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1)
-
 ---
 
-## Backgrounds & Textures
+## 📱 移动端导航组件
 
-### Main Background
-- Cool white (#FAFCFD) base
-- Subtle grain texture overlay (CSS noise via SVG filter, opacity 0.03)
-- Gradient mesh accent blobs positioned in corners (large, blurred, low opacity)
-  - Top-right: sky-blue wash blob (#7EC8E3 at 5% opacity)
-  - Bottom-left: mint wash blob (#95D5B2 at 5% opacity)
-  - Center: lavender wash blob (#B8B8E8, very subtle)
-
-### Hero Background
-- Full gradient mesh with soft cool-tone color blobs
-- Animated floating circles (CSS only) in sky-blue, mint, lavender at 3-5% opacity
-- Grain overlay
-
-### Page Backgrounds
-- Alternate between subtle gradient washes per section
-- Color theory section: sky-blue-tinted
-- R visualization section: mint-tinted
-- AI workflow section: lavender-tinted
-- PPT design section: light tertiary-tinted
-
----
-
-## Motion & Animation
-
-### Page Transitions
+### 底部 Tab Bar（移动端 <768px）
 ```css
-.page-enter {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+.tab-bar {
+  display: none;   /* 桌面端隐藏 */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  padding-bottom: env(safe-area-inset-bottom);
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border-light);
+  z-index: 200;
+  justify-content: space-around;
+  align-items: center;
 }
-.page-active {
-  opacity: 1;
-  transform: translateY(0);
+
+@media (max-width: 768px) {
+  .tab-bar { display: flex; }
+  /* 给 main 内容区留出底部空间 */
+  #main-content { padding-bottom: calc(56px + env(safe-area-inset-bottom)); }
+}
+
+.tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 0;
+  min-width: 56px;
+  color: var(--text-on-light-3);
+  font-size: 10px;
+  font-family: var(--font-heading);
+  transition: color var(--t-fast);
+  -webkit-tap-highlight-color: transparent;
+  /* 无障碍：最小触控区域 */
+  min-height: 44px;
+  justify-content: center;
+}
+.tab-item.active {
+  color: var(--accent);
+}
+.tab-item svg {
+  width: 22px;
+  height: 22px;
 }
 ```
 
-### Scroll Reveals
-- Staggered fade-up with 80ms delay between siblings
-- Distance: 24px translateY
-- Duration: 0.6s
-- Easing: cubic-bezier(0.16, 1, 0.3, 1)
+### 移动端顶部导航栏（模块内页）
+```css
+.mobile-top-bar {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  padding-top: env(safe-area-inset-top);
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-light);
+  z-index: 150;
+  align-items: center;
+  padding-left: var(--space-sm);
+  padding-right: var(--space-sm);
+  gap: var(--space-sm);
+}
 
-### Hover Micro-interactions
-- Cards: lift 4px + shadow expansion (sky-blue glow)
-- Buttons: subtle scale(1.02) + shadow glow (rgba(126, 200, 227, 0.3))
-- Tags: background color darkens 10%
-- Links: primary-color underline slides in from left
+@media (max-width: 768px) {
+  .mobile-top-bar { display: flex; }
+  #main-content { padding-top: calc(48px + env(safe-area-inset-top)); }
+}
 
-### Background Animations
-- Floating gradient blobs: slow rotation + scale breathing (20s cycle)
-- Grain texture: static (no animation needed)
+.mobile-back-btn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+.mobile-page-title {
+  flex: 1;
+  font-size: 0.9rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mobile-page-progress {
+  font-size: var(--text-caption);
+  color: var(--text-on-light-3);
+  white-space: nowrap;
+}
+```
 
 ---
 
-## Interactive Widget Styling
+## 📱 移动端触摸交互规范
 
-### Color Wheel / Pickers
-- White container with subtle shadow
-- Round border-radius
-- Selected color preview as a large rounded pill shape
-- Color value labels in elegant monospace
+### 触控目标尺寸
+```css
+/* 所有可交互元素的最小尺寸 */
+.touchable {
+  min-width: 44px;
+  min-height: 44px;
+}
 
-### Code Blocks
-- Background: #F3F7F9 (cool off-white, matches bg-secondary)
-- Border: 1px solid var(--border) (#E0E8ED)
-- Border-radius: 12px
-- Syntax colors: sky-blue (#7EC8E3) for keywords, mint (#95D5B2) for strings, lavender (#B8B8E8) for functions, primary-dark (#5BA3C9) for numbers
-- Line numbers in text-muted (#95A5A6)
+/* 滑块 thumb 放大 */
+@media (max-width: 768px) {
+  input[type="range"]::-webkit-slider-thumb {
+    width: 28px;
+    height: 28px;
+  }
+  input[type="range"] {
+    height: 44px;  /* 增大触摸区域 */
+  }
+}
+```
 
-### Before/After Sliders
-- Handle: white circle with primary (#7EC8E3) border and shadow
-- Divider line: 2px primary (#7EC8E3)
-- Rounded corners on container
+### Canvas 触摸事件模板
+```js
+// 统一使用 Pointer Events API
+canvas.addEventListener('pointerdown', onPointerDown);
+canvas.addEventListener('pointermove', onPointerMove);
+canvas.addEventListener('pointerup', onPointerUp);
+canvas.addEventListener('pointercancel', onPointerUp);
 
-### Charts/SVG
-- Use sky-blue / mint / lavender palette for data colors
-- Axis lines in text-muted (#95A5A6)
-- Grid lines in border color (#E0E8ED, very subtle)
-- Labels in text-secondary (#5D6D7E)
-- White background inside chart area
+// 移动端：禁止 canvas 区域的页面滚动
+canvas.style.touchAction = 'none';
+
+// 坐标转换（兼容 mouse 和 touch）
+function getPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: e.clientX - rect.left,
+    y: e.clientY - rect.top
+  };
+}
+```
+
+### 手势识别辅助
+```js
+// 双指缩放检测（用于 Canvas/D3 图表）
+let initialPinchDistance = null;
+canvas.addEventListener('touchstart', (e) => {
+  if (e.touches.length === 2) {
+    initialPinchDistance = getDistance(e.touches[0], e.touches[1]);
+  }
+});
+canvas.addEventListener('touchmove', (e) => {
+  if (e.touches.length === 2 && initialPinchDistance) {
+    const currentDistance = getDistance(e.touches[0], e.touches[1]);
+    const scale = currentDistance / initialPinchDistance;
+    // 应用缩放...
+  }
+});
+```
+
+### 横屏提示组件
+```css
+.landscape-hint {
+  display: none;
+  position: fixed;
+  bottom: calc(56px + env(safe-area-inset-bottom) + 16px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-dark-elevated);
+  color: var(--text-on-dark);
+  padding: 12px 24px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-small);
+  z-index: 300;
+  white-space: nowrap;
+  box-shadow: var(--shadow-dark);
+  animation: slideUp 0.3s var(--ease-out);
+}
+
+@media (orientation: portrait) and (max-width: 768px) {
+  .page-interactive-heavy .landscape-hint {
+    display: block;
+  }
+}
+
+@keyframes slideUp {
+  from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+  to   { transform: translateX(-50%) translateY(0); opacity: 1; }
+}
+```
 
 ---
 
-## Iconography
-- Style: Thin line icons (1.5px stroke)
-- Color: inherit from text or accent
-- Size: 20px for inline, 28px for cards, 48px for hero features
-- Consistent rounded corners on icon strokes
+## 📱 移动端响应式组件变体
+
+### 工作坊三面板布局
+```css
+.workshop-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr 360px;
+  gap: var(--space-md);
+  height: calc(100vh - 120px);
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .workshop-layout {
+    grid-template-columns: 240px 1fr;
+    /* 代码面板折叠到底部 */
+  }
+  .workshop-code-panel {
+    grid-column: 1 / -1;
+    max-height: 300px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .workshop-layout {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    gap: 0;
+  }
+  .workshop-panel {
+    border-bottom: 1px solid var(--border-dark);
+  }
+  .workshop-panel-header {
+    padding: var(--space-sm);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    min-height: 44px;
+  }
+  .workshop-panel-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--t-base);
+  }
+  .workshop-panel.expanded .workshop-panel-content {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+}
+```
+
+### Before/After 对比组件
+```css
+.before-after {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  cursor: col-resize;
+  /* 移动端：支持触摸滑动 */
+  touch-action: pan-y;
+}
+
+@media (max-width: 768px) {
+  .before-after {
+    cursor: default;
+    /* 触摸区域提示 */
+  }
+  .before-after .slider-handle {
+    width: 40px;
+    /* 放大拖动手柄 */
+  }
+}
+```
+
+### CodeMirror 移动端适配
+```css
+@media (max-width: 768px) {
+  .code-editor-wrapper {
+    position: relative;
+  }
+  .code-editor-wrapper .cm-editor {
+    font-size: 13px;
+  }
+  /* 只读遮罩，显示"点击编辑"按钮 */
+  .code-editor-readonly-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.3);
+    z-index: 10;
+  }
+  .code-editor-readonly-overlay .edit-btn {
+    padding: 10px 20px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: var(--radius-full);
+    font-size: var(--text-small);
+  }
+}
+```
 
 ---
 
-## Responsive Strategy
-- Desktop (>1200px): Full sidebar + content
-- Laptop (1024-1200px): Narrower sidebar (240px)
-- Tablet (768-1024px): Collapsible sidebar overlay
-- Mobile (<768px): Bottom navigation tab bar, stacked layouts, 24px padding
+## GSAP ScrollTrigger 标准模式
+
+每个页面初始化时使用以下封装函数：
+
+```js
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+gsap.registerPlugin(ScrollTrigger);
+
+// 基础渐入（所有 section 内元素的默认入场方式）
+export function fadeIn(elements, { stagger = 0.15, y = 60, start = 'top 85%' } = {}) {
+  return gsap.from(elements, {
+    scrollTrigger: {
+      trigger: elements[0] || elements,
+      start,
+      toggleActions: 'play none none reverse'
+    },
+    opacity: 0, y, duration: 0.8, stagger,
+    ease: 'power3.out'
+  });
+}
+
+// 粘性步骤教学（左侧固定标题/描述，右侧内容随滚动切换）
+export function stickySteps(container, pinned) {
+  return ScrollTrigger.create({
+    trigger: container,
+    start: 'top top',
+    end: 'bottom bottom',
+    pin: pinned,
+    pinSpacing: false
+  });
+}
+
+// 数字递增（统计数字、count-up）
+export function countUp(el, target, duration = 2) {
+  return gsap.to(el, {
+    scrollTrigger: { trigger: el, start: 'top 80%' },
+    textContent: target,
+    duration,
+    snap: { textContent: 1 },
+    ease: 'power2.out'
+  });
+}
+
+// 视差（背景装饰慢速移动）
+export function parallax(el, speed = 0.3) {
+  return gsap.to(el, {
+    scrollTrigger: { trigger: el, scrub: true },
+    y: `${speed * 100}%`,
+    ease: 'none'
+  });
+}
+
+// 缩放揭示（交互组件入场）
+export function scaleReveal(el, { scale = 0.9, start = 'top 80%' } = {}) {
+  return gsap.from(el, {
+    scrollTrigger: { trigger: el, start, toggleActions: 'play none none reverse' },
+    opacity: 0, scale, duration: 1,
+    ease: 'power3.out'
+  });
+}
+
+// 页面离开时必须调用
+export function killAll() {
+  ScrollTrigger.getAll().forEach(t => t.kill());
+}
+```
+
+### 移动端 GSAP 适配
+```js
+// 使用 matchMedia 为移动端设置不同动画参数
+ScrollTrigger.matchMedia({
+  // 桌面端
+  '(min-width: 769px)': function() {
+    // 完整动画：视差、长距离 pin、复杂时间线
+    stickySteps(container, pinned);
+    parallax(decorEl, 0.3);
+  },
+  // 移动端
+  '(max-width: 768px)': function() {
+    // 简化动画：减少视差、缩短 pin 距离、减少 stagger
+    fadeIn(elements, { y: 30, stagger: 0.08 });
+    // 不使用 pin（移动端粘性滚动体验不佳）
+    // 改为普通的 fadeIn + 固定标题
+  }
+});
+```
+
+---
+
+## CodeMirror 6 标准配置
+
+用于代码实验室、图表工作坊等需要用户编辑代码的场景：
+
+```js
+import { EditorView, basicSetup } from 'codemirror';
+import { r } from 'codemirror-lang-r';        // R 语言支持
+import { python } from '@codemirror/lang-python';
+import { oneDark } from '@codemirror/theme-one-dark';
+
+export function createEditor(container, { code = '', language = 'r', onChange, readOnly = false }) {
+  const extensions = [
+    basicSetup,
+    oneDark,                    // 始终深色主题
+    language === 'r' ? r() : python(),
+    EditorView.updateListener.of(update => {
+      if (update.docChanged && onChange) {
+        onChange(update.state.doc.toString());
+      }
+    }),
+    EditorView.theme({
+      '&': { fontSize: '14px', borderRadius: '12px' },
+      '.cm-content': { fontFamily: 'var(--font-code)', padding: '16px' },
+      '.cm-gutters': { borderRight: 'none' },
+    })
+  ];
+
+  // 移动端默认只读
+  if (readOnly || window.innerWidth < 768) {
+    extensions.push(EditorView.editable.of(false));
+  }
+
+  return new EditorView({
+    doc: code,
+    extensions,
+    parent: container
+  });
+}
+```
+
+---
+
+## D3.js 图表预览标准
+
+用于图表参数面板的实时 SVG 预览：
+
+```js
+// 标准 SVG 画布初始化
+export function createChartSVG(container, { width = 600, height = 400, margin = { top: 40, right: 40, bottom: 60, left: 60 } } = {}) {
+  const svg = d3.select(container)
+    .append('svg')
+    .attr('viewBox', `0 0 ${width} ${height}`)
+    .attr('class', 'chart-svg')
+    .attr('preserveAspectRatio', 'xMidYMid meet');  // 移动端自适应
+
+  // 深色画布背景
+  svg.append('rect')
+    .attr('width', width)
+    .attr('height', height)
+    .attr('fill', '#1a1a2e')
+    .attr('rx', 12);
+
+  const g = svg.append('g')
+    .attr('transform', `translate(${margin.left},${margin.top})`);
+
+  return { svg, g, innerWidth: width - margin.left - margin.right, innerHeight: height - margin.top - margin.bottom };
+}
+```
+
+---
+
+## Canvas 交互标准
+
+用于贝塞尔编辑器、热力图、布局编辑器等：
+
+```js
+export function createInteractiveCanvas(container, { width = 800, height = 600 } = {}) {
+  const canvas = document.createElement('canvas');
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = width * dpr;
+  canvas.height = height * dpr;
+  canvas.style.width = width + 'px';
+  canvas.style.height = height + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  container.appendChild(canvas);
+
+  // 禁止 canvas 区域的页面滚动（移动端）
+  canvas.style.touchAction = 'none';
+
+  // 统一的指针坐标转换（兼容 mouse 和 touch）
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  }
+
+  return { canvas, ctx, getPos };
+}
+```
+
+---
+
+## 响应式断点
+
+```
+Desktop  (>1200px)  : 侧边栏 260px + 全宽内容
+Laptop   (1024-1200): 侧边栏 220px
+Tablet   (768-1024) : 汉堡菜单覆盖层
+Mobile   (480-768)  : 底部 tab bar + 单列布局 + padding 16px
+Small    (<480px)   : 同 Mobile，字号用 clamp 下限，间距进一步压缩
+```
+
+### 移动端关键 CSS 覆盖
+```css
+@media (max-width: 768px) {
+  /* 排版 */
+  body { font-size: 16px; line-height: 1.6; }
+  h1 { font-size: clamp(1.75rem, 6vw, 2.5rem); }
+  h2 { font-size: clamp(1.25rem, 4vw, 1.75rem); }
+
+  /* 布局 */
+  .content-wrapper { padding: 0 var(--space-sm); }
+  .two-column { flex-direction: column; }
+  .side-by-side { flex-direction: column; gap: var(--space-md); }
+
+  /* 表格 */
+  .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+
+  /* 代码块 */
+  pre, .cm-editor { font-size: 13px; overflow-x: auto; }
+
+  /* 图片 */
+  img, svg.chart-svg { max-width: 100%; height: auto; }
+
+  /* 间距压缩 */
+  --space-xl: 48px;
+  --space-2xl: 64px;
+  --space-3xl: 80px;
+}
+
+@media (max-width: 480px) {
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 56px;
+}
+```
+
+---
+
+## 禁止清单
+
+❌ 卡片网格平铺布局
+❌ gradient blob 背景装饰
+❌ backdrop-filter 毛玻璃卡片满屏
+❌ 全页面只有一种背景色
+❌ CSS-only IntersectionObserver 做滚动动画
+❌ 交互组件挤在小卡片里
+❌ 非数据区域大面积彩色
+❌ 3D transform 旋转
+❌ 只读 `<pre>` 充当代码编辑器（需要编辑功能的地方必须用 CodeMirror）
+❌ 静态截图替代交互演示
+❌ 移动端忽略触摸交互适配
+❌ 移动端使用 hover-only 的信息展示
+❌ 可交互元素小于 44×44px
