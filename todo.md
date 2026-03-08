@@ -15,7 +15,7 @@
 - [x] components.css — Button / Tag / Code / Input / Table
 - [x] layout.css — sidebar + main + section-light/dark
 - [x] mobile.css — 底部 tab bar + 顶部导航栏 + 移动端覆盖样式
-- [ ] animations.js — GSAP ScrollTrigger 封装（fadeIn/stickySteps/countUp/parallax/scaleReveal + matchMedia 移动端适配）
+- [x] animations.js — GSAP ScrollTrigger 封装（fadeIn/stickySteps/countUp/parallax/scaleReveal + matchMedia 移动端适配）
 - [x] 桌面端侧边栏导航（4 模块分组 + 页面列表 + 进度标记）
 - [x] 移动端底部 Tab Bar（5 tabs：首页/M1/M2/M3/M4）
 - [x] 移动端顶部页面导航栏（返回 + 标题 + 页码）
@@ -24,10 +24,10 @@
 - [x] 样式展示页：所有组件 + 明暗交替 + 移动端布局验证
 
 ## Phase 2: 通用组件库
-- [ ] ScrollAnimations.js — GSAP 封装 + matchMedia 移动端适配
-- [ ] CodeEditor.js — CodeMirror 6 封装（R/Python 双语言，深色主题，onChange，移动端只读模式）
-- [ ] ChartPreview.js — D3 SVG 画布封装（深色画布 + 坐标轴 + 响应式 viewBox）
-- [ ] InteractiveCanvas.js — Canvas API 封装（HiDPI + Pointer Events + touchAction + 双指缩放）
+- [x] ScrollAnimations.js — GSAP 封装 + matchMedia 移动端适配
+- [x] CodeEditor.js — CodeMirror 6 封装（R/Python 双语言，深色主题，onChange，移动端只读模式）
+- [x] ChartPreview.js — D3 SVG 画布封装（深色画布 + 坐标轴 + 响应式 viewBox）
+- [x] InteractiveCanvas.js — Canvas API 封装（HiDPI + Pointer Events + touchAction + 双指缩放）
 - [ ] TabSwitcher.js — 带滑动指示器
 - [ ] Modal.js — 全屏模态（ESC + 触摸关闭 + 过渡 + GSAP 入场）
 - [ ] Accordion.js — 平滑展开（移动端工作坊面板）
@@ -35,9 +35,9 @@
 - [ ] Toast.js — 消息提示（含横屏提示）
 - [ ] StickySteps.js — 粘性滚动步骤教学（移动端降级为普通滚动 + 固定标题）
 - [ ] ColorInput.js — 颜色选择器（HEX/RGB/HSL 切换 + 精确输入 + 移动端全屏模态）
-- [ ] CopyButton.js — 一键复制 + 反馈动画
+- [x] CopyButton.js — 一键复制 + 反馈动画
 - [ ] WorkshopLayout.js — 三面板布局（桌面网格 / 移动端手风琴）
-- [ ] 组件 demo 页验证（桌面端 + 移动端）
+- [x] 组件 demo 页验证（桌面端 + 移动端）
 
 ## Phase 3: 首页 + 全局功能
 - [ ] home Hero（深色背景 + 大标题动画 + 粒子/几何背景）

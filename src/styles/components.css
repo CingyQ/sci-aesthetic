@@ -460,3 +460,117 @@ tr:hover td {
   min-width: 44px;
   min-height: 44px;
 }
+
+/* ========================================================
+   复制按钮（CopyButton.js）
+   ======================================================== */
+
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: var(--text-small);
+  font-family: var(--font-heading);
+  font-weight: 500;
+  color: var(--text-on-dark-2);
+  background: var(--bg-dark-elevated);
+  border: 1px solid var(--border-dark);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--t-fast);
+  min-height: 36px;
+  white-space: nowrap;
+}
+
+.copy-btn:hover {
+  color: var(--text-on-dark);
+  border-color: var(--accent);
+  background: rgba(126, 200, 227, 0.1);
+}
+
+.copy-btn:active {
+  transform: scale(0.95);
+}
+
+.copy-btn.copy-success {
+  color: var(--color-success, #34c759);
+  border-color: var(--color-success, #34c759);
+  background: rgba(52, 199, 89, 0.1);
+}
+
+.copy-btn.copy-error {
+  color: var(--color-error, #ff3b30);
+  border-color: var(--color-error, #ff3b30);
+  background: rgba(255, 59, 48, 0.1);
+}
+
+/* 浅色区域复制按钮 */
+.section-light .copy-btn {
+  color: var(--text-on-light-2);
+  background: var(--bg-light-elevated);
+  border-color: var(--border-light);
+}
+
+.section-light .copy-btn:hover {
+  color: var(--text-on-light);
+  border-color: var(--accent);
+  background: var(--accent-subtle);
+}
+
+/* CodeEditor 移动端只读遮罩 */
+.code-editor-wrapper {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.code-editor-readonly-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  backdrop-filter: blur(2px);
+}
+
+.code-editor-readonly-overlay .edit-btn {
+  padding: 10px 24px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius-full);
+  font-size: var(--text-small);
+  font-family: var(--font-heading);
+  font-weight: 500;
+  cursor: pointer;
+  min-height: 44px;
+  transition: all var(--t-fast);
+}
+
+.code-editor-readonly-overlay .edit-btn:active {
+  transform: scale(0.95);
+}
+
+/* ChartPreview 画布 */
+.chart-preview-wrapper {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.chart-svg {
+  display: block;
+}
+
+/* 语言切换按钮选中态 */
+.lang-switch.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.lang-switch.active:hover {
+  background: var(--accent-hover);
+}

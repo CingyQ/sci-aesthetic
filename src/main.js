@@ -48,6 +48,9 @@ registerRoute('m4-p8', () => import('./pages/m4/p08-animation.js'));
 // 速查手册
 registerRoute('ref', () => import('./pages/ref.js'));
 
+// 组件 demo 页
+registerRoute('component-demo', () => import('./pages/component-demo.js'));
+
 // 初始化导航 + 启动路由
 initNavigation();
 initRouter();
