@@ -1,8 +1,12 @@
 /* ============================================
    移动端专用覆盖样式
+   完整映射 design-spec.md "移动端关键 CSS 覆盖"
    ============================================ */
 
-/* --- 底部 Tab Bar（移动端 <768px） --- */
+/* ========================================================
+   底部 Tab Bar（移动端 <768px）
+   ======================================================== */
+
 .tab-bar {
   display: none;
   position: fixed;
@@ -57,7 +61,10 @@
   height: 22px;
 }
 
-/* --- 移动端顶部导航栏（模块内页） --- */
+/* ========================================================
+   移动端顶部导航栏（模块内页）
+   ======================================================== */
+
 .mobile-top-bar {
   display: none;
   position: fixed;
@@ -113,20 +120,121 @@
   white-space: nowrap;
 }
 
-/* --- 移动端排版覆盖 --- */
+/* ========================================================
+   移动端关键 CSS 覆盖（design-spec.md 完整映射）
+   ======================================================== */
+
 @media (max-width: 768px) {
+  /* --- 排版 --- */
+  body {
+    font-size: 16px;
+    line-height: 1.6;
+  }
   h1 { font-size: clamp(1.75rem, 6vw, 2.5rem); }
   h2 { font-size: clamp(1.25rem, 4vw, 1.75rem); }
 
+  /* --- 布局 --- */
+  .content-wrapper { padding: 0 var(--space-sm); }
   .two-column { flex-direction: column; }
   .side-by-side { flex-direction: column; gap: var(--space-md); }
 
-  img, svg.chart-svg { max-width: 100%; height: auto; }
+  /* --- 表格 --- */
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* --- 代码块 --- */
+  pre,
+  .cm-editor {
+    font-size: 13px;
+    overflow-x: auto;
+  }
+
+  /* --- 图片 --- */
+  img,
+  svg.chart-svg {
+    max-width: 100%;
+    height: auto;
+  }
 }
 
-/* --- 触控目标最小尺寸 --- */
+/* ========================================================
+   触控目标最小尺寸
+   ======================================================== */
+
+.touchable {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+/* 滑块 thumb 放大 */
 @media (max-width: 768px) {
+  input[type="range"]::-webkit-slider-thumb {
+    width: 28px;
+    height: 28px;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+  }
   input[type="range"] {
     height: 44px;
+  }
+}
+
+/* ========================================================
+   移动端：禁止 hover-only 信息展示
+   用 :active 替代 :hover
+   ======================================================== */
+
+@media (max-width: 768px) {
+  /* 取消 hover 效果（移动端用 :active 替代） */
+  .btn-primary:hover {
+    transform: none;
+    box-shadow: 0 2px 12px var(--accent-glow);
+  }
+  .btn-primary:active {
+    transform: scale(0.97);
+    background: var(--accent-hover);
+  }
+
+  .btn-ghost:hover {
+    background: transparent;
+  }
+  .btn-ghost:active {
+    background: var(--accent-subtle);
+  }
+
+  .btn-icon:hover {
+    background: transparent;
+  }
+  .btn-icon:active {
+    background: var(--bg-light-alt);
+  }
+
+  .nav-item:hover {
+    background: transparent;
+    color: var(--text-on-light-2);
+  }
+  .nav-item:active {
+    background: var(--bg-light-alt);
+    color: var(--text-on-light);
+  }
+
+  tr:hover td {
+    background: transparent;
+  }
+}
+
+/* ========================================================
+   Small screen（<480px）额外压缩
+   ======================================================== */
+
+@media (max-width: 480px) {
+  /* 间距已在 variables.css :root 覆盖 */
+
+  .page-hero-sub {
+    font-size: var(--text-body);
   }
 }

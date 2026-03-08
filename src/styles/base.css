@@ -2,7 +2,7 @@
    Reset + Typography + Scrollbar
    ============================================ */
 
-/* --- Reset --- */
+/* ========== Reset ========== */
 *,
 *::before,
 *::after {
@@ -36,7 +36,9 @@ body {
   }
 }
 
-/* --- Typography --- */
+/* ========== Typography ========== */
+
+/* Hero/Display: 700, line-height 1.1, letter-spacing -0.02em */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   font-weight: 700;
@@ -47,9 +49,38 @@ h1, h2, h3, h4, h5, h6 {
 h1 { font-size: var(--text-display); }
 h2 { font-size: var(--text-title); }
 h3 { font-size: var(--text-heading); }
+h4 { font-size: var(--text-body); font-weight: 600; }
+h5 { font-size: var(--text-small); font-weight: 600; }
+h6 { font-size: var(--text-caption); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* 引言/副标题: 300, line-height 1.4 */
+.subtitle {
+  font-family: var(--font-heading);
+  font-weight: 300;
+  line-height: 1.4;
+  color: var(--text-on-light-2);
+}
+
+.section-dark .subtitle {
+  color: var(--text-on-dark-2);
+}
+
+/* 统计数字 */
+.stat-number {
+  font-family: var(--font-display);
+  font-size: var(--text-stat);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
 
 p {
   max-width: var(--w-reading);
+}
+
+/* 深色区域内段落继承颜色 */
+.section-dark p {
+  color: var(--text-on-dark-2);
 }
 
 a {
@@ -60,6 +91,10 @@ a {
 
 a:hover {
   color: var(--accent-hover);
+}
+
+strong {
+  font-weight: 600;
 }
 
 img, svg {
@@ -84,7 +119,18 @@ input, textarea, select {
   font-size: inherit;
 }
 
-/* --- Scrollbar（桌面端） --- */
+hr {
+  border: none;
+  height: 1px;
+  background: var(--border-light);
+  margin: var(--space-lg) 0;
+}
+
+.section-dark hr {
+  background: var(--border-dark);
+}
+
+/* ========== Scrollbar（桌面端） ========== */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -103,8 +149,12 @@ input, textarea, select {
   background: var(--text-on-light-2);
 }
 
-/* --- 选中文字样式 --- */
+/* ========== 选中文字样式 ========== */
 ::selection {
-  background: var(--accent-subtle);
+  background: rgba(126, 200, 227, 0.3);
   color: var(--text-on-light);
+}
+
+.section-dark ::selection {
+  color: var(--text-on-dark);
 }

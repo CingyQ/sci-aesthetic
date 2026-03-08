@@ -10,18 +10,18 @@
 - [x] npm run dev 可运行
 
 ## Phase 1: 设计系统 + 导航
-- [ ] variables.css — 浅色/深色/强调色/模块标识色/数据色/字号/间距/阴影/圆角/过渡
-- [ ] base.css — reset + typography（clamp 流体字号）+ scrollbar
-- [ ] components.css — Button / Tag / Code / Input / Table
-- [ ] layout.css — sidebar + main + section-light/dark
-- [ ] mobile.css — 底部 tab bar + 顶部导航栏 + 移动端覆盖样式
+- [x] variables.css — 浅色/深色/强调色/模块标识色/数据色/字号/间距/阴影/圆角/过渡
+- [x] base.css — reset + typography（clamp 流体字号）+ scrollbar
+- [x] components.css — Button / Tag / Code / Input / Table
+- [x] layout.css — sidebar + main + section-light/dark
+- [x] mobile.css — 底部 tab bar + 顶部导航栏 + 移动端覆盖样式
 - [ ] animations.js — GSAP ScrollTrigger 封装（fadeIn/stickySteps/countUp/parallax/scaleReveal + matchMedia 移动端适配）
 - [ ] 桌面端侧边栏导航（4 模块分组 + 页面列表 + 进度标记）
 - [ ] 移动端底部 Tab Bar（5 tabs：首页/M1/M2/M3/M4）
 - [ ] 移动端顶部页面导航栏（返回 + 标题 + 页码）
 - [ ] Tablet 汉堡菜单 + 侧边栏覆盖层
 - [ ] 横屏提示 Toast 组件
-- [ ] 样式展示页：所有组件 + 明暗交替 + 移动端布局验证
+- [x] 样式展示页：所有组件 + 明暗交替 + 移动端布局验证
 
 ## Phase 2: 通用组件库
 - [ ] ScrollAnimations.js — GSAP 封装 + matchMedia 移动端适配

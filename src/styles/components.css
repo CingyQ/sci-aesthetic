@@ -1,12 +1,17 @@
 /* ============================================
    组件样式 — 按钮 / 标签 / 代码 / 输入框 / 表格
+   在 .section-dark 内自动切换深色变体
    ============================================ */
 
-/* --- 按钮 --- */
+/* ========================================================
+   按钮
+   ======================================================== */
+
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: var(--space-xs);
   padding: 14px 32px;
   background: var(--accent);
   color: #fff;
@@ -25,6 +30,7 @@
 .btn-primary:hover {
   transform: scale(1.03);
   box-shadow: 0 6px 24px var(--accent-glow);
+  background: var(--accent-hover);
 }
 
 .btn-primary:active {
@@ -35,6 +41,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: var(--space-xs);
   padding: 14px 32px;
   background: transparent;
   color: var(--accent);
@@ -46,6 +53,7 @@
   cursor: pointer;
   transition: all var(--t-base);
   min-height: 44px;
+  min-width: 44px;
 }
 
 .btn-ghost:hover {
@@ -57,7 +65,52 @@
   transform: scale(0.97);
 }
 
-/* --- 标签 --- */
+/* 小尺寸按钮 */
+.btn-small {
+  padding: 8px 20px;
+  font-size: var(--text-small);
+  min-height: 36px;
+}
+
+/* 图标按钮 */
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: var(--radius-sm);
+  color: var(--text-on-light-2);
+  transition: all var(--t-fast);
+}
+
+.btn-icon:hover {
+  background: var(--bg-light-alt);
+  color: var(--text-on-light);
+}
+
+.section-dark .btn-icon {
+  color: var(--text-on-dark-2);
+}
+
+.section-dark .btn-icon:hover {
+  background: var(--bg-dark-elevated);
+  color: var(--text-on-dark);
+}
+
+/* 禁用态 */
+.btn-primary:disabled,
+.btn-ghost:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ========================================================
+   标签（Tag）
+   ======================================================== */
+
 .tag {
   display: inline-block;
   padding: 4px 12px;
@@ -66,17 +119,32 @@
   border-radius: var(--radius-full);
   background: var(--accent-subtle);
   color: var(--accent);
+  line-height: 1.4;
 }
 
-/* --- 代码（只读块） --- */
+/* 模块标识色标签 */
+.tag-m1 { background: rgba(126, 200, 227, 0.15); color: var(--module-1); }
+.tag-m2 { background: rgba(184, 184, 232, 0.15); color: var(--module-2); }
+.tag-m3 { background: rgba(149, 213, 178, 0.15); color: var(--module-3); }
+.tag-m4 { background: rgba(240, 178, 122, 0.15); color: var(--module-4); }
+
+/* 语义标签 */
+.tag-success { background: rgba(52, 199, 89, 0.12); color: var(--color-success); }
+.tag-warning { background: rgba(255, 149, 0, 0.12); color: var(--color-warning); }
+.tag-error   { background: rgba(255, 59, 48, 0.12); color: var(--color-error); }
+
+/* ========================================================
+   代码（只读块）
+   ======================================================== */
+
 pre {
   font-family: var(--font-code);
   font-size: 14px;
   line-height: 1.6;
   background: var(--bg-dark);
   color: var(--text-on-dark);
-  padding: var(--space-sm);
-  border-radius: var(--radius-sm);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -96,21 +164,39 @@ pre code {
   padding: 0;
 }
 
+/* 深色区域内的 inline code */
+.section-dark code {
+  background: rgba(126, 200, 227, 0.15);
+  color: var(--accent);
+}
+
+.section-dark pre code {
+  background: none;
+  color: inherit;
+}
+
 @media (max-width: 768px) {
-  pre {
+  pre,
+  .cm-editor {
     font-size: 13px;
+    overflow-x: auto;
   }
 }
 
-/* --- 输入框 --- */
+/* ========================================================
+   输入框
+   ======================================================== */
+
 .input {
+  display: block;
+  width: 100%;
   padding: 10px 16px;
   font-size: 1rem;
   border: 1.5px solid var(--border-light);
   border-radius: var(--radius-sm);
   background: var(--bg-light-elevated);
   color: var(--text-on-light);
-  transition: border-color var(--t-fast);
+  transition: border-color var(--t-fast), box-shadow var(--t-fast);
   min-height: 44px;
 }
 
@@ -120,11 +206,152 @@ pre code {
   box-shadow: 0 0 0 3px var(--accent-subtle);
 }
 
-/* --- 表格 --- */
+.input::placeholder {
+  color: var(--text-on-light-3);
+}
+
+/* 深色区域输入框 */
+.section-dark .input {
+  background: var(--bg-dark-elevated);
+  border-color: var(--border-dark);
+  color: var(--text-on-dark);
+}
+
+.section-dark .input::placeholder {
+  color: var(--text-on-dark-3);
+}
+
+.section-dark .input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+/* 文本域 */
+textarea.input {
+  min-height: 120px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+/* 数字输入（移动端） */
+.input-number {
+  -moz-appearance: textfield;
+}
+
+.input-number::-webkit-outer-spin-button,
+.input-number::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* ========================================================
+   Select 下拉框
+   ======================================================== */
+
+.select {
+  display: block;
+  width: 100%;
+  padding: 10px 40px 10px 16px;
+  font-size: 1rem;
+  border: 1.5px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  background: var(--bg-light-elevated) url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%2386868b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 16px center;
+  color: var(--text-on-light);
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color var(--t-fast);
+  min-height: 44px;
+}
+
+.select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+.section-dark .select {
+  background-color: var(--bg-dark-elevated);
+  border-color: var(--border-dark);
+  color: var(--text-on-dark);
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%236e6e73' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* ========================================================
+   Range 滑块
+   ======================================================== */
+
+.range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: var(--border-light);
+  border-radius: var(--radius-full);
+  outline: none;
+  cursor: pointer;
+  min-height: 44px;
+  /* 垂直居中滑轨 */
+  background-clip: content-box;
+  padding: 20px 0;
+}
+
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: var(--accent);
+  border-radius: 50%;
+  border: none;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: transform var(--t-fast), box-shadow var(--t-fast);
+}
+
+.range::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  box-shadow: 0 2px 8px var(--accent-glow);
+}
+
+.range::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: var(--accent);
+  border-radius: 50%;
+  border: none;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+
+.section-dark .range {
+  background-color: var(--border-dark);
+}
+
+@media (max-width: 768px) {
+  .range::-webkit-slider-thumb {
+    width: 28px;
+    height: 28px;
+  }
+  .range::-moz-range-thumb {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+/* ========================================================
+   表格
+   ======================================================== */
+
 .table-wrapper {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+}
+
+.section-dark .table-wrapper {
+  border-color: var(--border-dark);
 }
 
 table {
@@ -145,8 +372,91 @@ th {
   font-size: var(--text-caption);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+  background: var(--bg-light-alt);
 }
 
 tr:last-child td {
   border-bottom: none;
+}
+
+tr:hover td {
+  background: var(--bg-light-alt);
+}
+
+/* 深色区域表格 */
+.section-dark th {
+  color: var(--text-on-dark-2);
+  background: var(--bg-dark-elevated);
+  border-bottom-color: var(--border-dark);
+}
+
+.section-dark td {
+  color: var(--text-on-dark);
+  border-bottom-color: var(--border-dark);
+}
+
+.section-dark tr:hover td {
+  background: var(--bg-dark-elevated);
+}
+
+/* ========================================================
+   分隔线
+   ======================================================== */
+
+.divider {
+  height: 1px;
+  background: var(--border-light);
+  margin: var(--space-lg) 0;
+  border: none;
+}
+
+.section-dark .divider {
+  background: var(--border-dark);
+}
+
+/* ========================================================
+   徽章（Badge）
+   ======================================================== */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent);
+  border-radius: var(--radius-full);
+  line-height: 1;
+}
+
+/* ========================================================
+   色块展示
+   ======================================================== */
+
+.color-swatch {
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(0,0,0,0.1);
+  flex-shrink: 0;
+}
+
+.color-swatch-lg {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-md);
+}
+
+/* ========================================================
+   触控通用类
+   ======================================================== */
+
+.touchable {
+  min-width: 44px;
+  min-height: 44px;
 }

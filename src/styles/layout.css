@@ -1,8 +1,12 @@
 /* ============================================
    布局 — 侧边栏 + 主内容区 + Section 明暗交替
+   + 工作坊布局 + Before/After + CodeMirror 容器
    ============================================ */
 
-/* --- 侧边栏（桌面端） --- */
+/* ========================================================
+   侧边栏（桌面端）
+   ======================================================== */
+
 #sidebar {
   position: fixed;
   left: 0;
@@ -68,7 +72,10 @@
   background: var(--bg-light-alt);
 }
 
-/* --- 主内容区 --- */
+/* ========================================================
+   主内容区
+   ======================================================== */
+
 #main-content {
   margin-left: 260px;
   min-height: 100vh;
@@ -107,7 +114,10 @@
   }
 }
 
-/* --- Section 明暗交替 --- */
+/* ========================================================
+   Section 明暗交替
+   ======================================================== */
+
 .section-light {
   background: var(--bg-light);
   color: var(--text-on-light);
@@ -128,15 +138,47 @@
   justify-content: center;
 }
 
+/* 深黑段（纯黑背景） */
+.section-dark-deep {
+  background: var(--bg-dark-deep);
+  color: var(--text-on-dark);
+  padding: var(--space-3xl) var(--space-lg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* 浅色交替段 */
+.section-light-alt {
+  background: var(--bg-light-alt);
+  color: var(--text-on-light);
+  padding: var(--space-3xl) var(--space-lg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* 不强制 100vh 的段 */
+.section-auto {
+  min-height: auto;
+}
+
 @media (max-width: 768px) {
   .section-light,
-  .section-dark {
+  .section-dark,
+  .section-dark-deep,
+  .section-light-alt {
     padding: var(--space-xl) var(--space-sm);
     min-height: auto;
   }
 }
 
-/* --- 页面标题（居中，苹果风格） --- */
+/* ========================================================
+   页面标题（居中，苹果风格）
+   ======================================================== */
+
 .page-hero-title {
   font-family: var(--font-display);
   font-size: var(--text-display);
@@ -150,13 +192,26 @@
   font-family: var(--font-heading);
   font-size: var(--text-title);
   font-weight: 300;
+  line-height: 1.4;
   text-align: center;
   opacity: 0.5;
   max-width: 600px;
   margin: var(--space-md) auto 0;
 }
 
-/* --- 内容容器 --- */
+/* Hero 级别标题 */
+.text-hero {
+  font-family: var(--font-display);
+  font-size: var(--text-hero);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+/* ========================================================
+   内容容器
+   ======================================================== */
+
 .content-wrapper {
   max-width: var(--w-content);
   margin: 0 auto;
@@ -169,8 +224,204 @@
   width: 100%;
 }
 
+.full-wrapper {
+  max-width: var(--w-full);
+  margin: 0 auto;
+  width: 100%;
+}
+
 @media (max-width: 768px) {
-  .content-wrapper {
+  .content-wrapper,
+  .reading-wrapper,
+  .full-wrapper {
     padding: 0 var(--space-sm);
+  }
+}
+
+/* ========================================================
+   Flex / Grid 布局工具类
+   ======================================================== */
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-col-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gap-xs  { gap: var(--space-xs); }
+.gap-sm  { gap: var(--space-sm); }
+.gap-md  { gap: var(--space-md); }
+.gap-lg  { gap: var(--space-lg); }
+
+/* 交错图文：图左文右 / 图右文左 */
+.stagger-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xl);
+}
+
+.stagger-row.reverse {
+  flex-direction: row-reverse;
+}
+
+.stagger-row > * {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .stagger-row,
+  .stagger-row.reverse {
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+}
+
+/* 两列布局 */
+.two-column {
+  display: flex;
+  gap: var(--space-lg);
+}
+
+.two-column > * {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .two-column {
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+}
+
+/* 并排布局 */
+.side-by-side {
+  display: flex;
+  gap: var(--space-md);
+  align-items: flex-start;
+}
+
+@media (max-width: 768px) {
+  .side-by-side {
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+}
+
+/* ========================================================
+   工作坊三面板布局
+   ======================================================== */
+
+.workshop-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr 360px;
+  gap: var(--space-md);
+  height: calc(100vh - 120px);
+}
+
+@media (max-width: 1024px) {
+  .workshop-layout {
+    grid-template-columns: 240px 1fr;
+  }
+  .workshop-code-panel {
+    grid-column: 1 / -1;
+    max-height: 300px;
+  }
+}
+
+@media (max-width: 768px) {
+  .workshop-layout {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    gap: 0;
+  }
+  .workshop-panel {
+    border-bottom: 1px solid var(--border-dark);
+  }
+  .workshop-panel-header {
+    padding: var(--space-sm);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    min-height: 44px;
+  }
+  .workshop-panel-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--t-base);
+  }
+  .workshop-panel.expanded .workshop-panel-content {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+}
+
+/* ========================================================
+   Before/After 对比组件
+   ======================================================== */
+
+.before-after {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  cursor: col-resize;
+  touch-action: pan-y;
+}
+
+@media (max-width: 768px) {
+  .before-after {
+    cursor: default;
+  }
+  .before-after .slider-handle {
+    width: 40px;
+  }
+}
+
+/* ========================================================
+   CodeMirror 编辑器容器
+   ======================================================== */
+
+.code-editor-wrapper {
+  position: relative;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .code-editor-wrapper .cm-editor {
+    font-size: 13px;
+  }
+  .code-editor-readonly-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.3);
+    z-index: 10;
+  }
+  .code-editor-readonly-overlay .edit-btn {
+    padding: 10px 20px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: var(--radius-full);
+    font-size: var(--text-small);
+    min-height: 44px;
   }
 }
