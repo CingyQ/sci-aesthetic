@@ -2387,11 +2387,11 @@ export function render() {
 .p7-hero-sub { /* styling via global .page-hero-sub */ }
 .p7-hero-tagline { /* styling via inline styles */ }
 .p7-scroll-hint {
-  position:absolute; bottom:28px; left:50%; transform:translateX(-50%);
   font-size:var(--text-caption); color:var(--text-on-dark-3);
   animation:p7-float 2s ease-in-out infinite;
+  margin-top:var(--space-sm);
 }
-@keyframes p7-float{0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)}}
+@keyframes p7-float{0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)}}
 .p7-container { max-width:960px; margin:0 auto; }
 .p7-container-wide { max-width:1440px; margin:0 auto; }
 
@@ -2626,9 +2626,6 @@ export function render() {
   .p7-chart-grid { grid-template-columns:repeat(2,1fr); gap:12px; }
   .p7-card-desc { display:none; }
 
-  /* Scroll hint: lift above mobile tab bar (56px) */
-  .p7-scroll-hint { bottom:72px; }
-
   /* Workshop head */
   .p7-ws-head { flex-direction:column; gap:var(--space-sm); }
   .p7-chart-tabs { overflow-x:auto; scrollbar-width:none; width:100%; }
@@ -2686,8 +2683,8 @@ export function render() {
       <button class="hero-quicknav__item" data-target="#p7-gallery">图表类型库</button>
       <button class="hero-quicknav__item" data-target="#p7-workshop">交互工作坊</button>
     </div>
+    <div class="p7-scroll-hint">↓ 向下探索</div>
   </div>
-  <div class="p7-scroll-hint">↓ 向下探索</div>
 </section>
 
 <!-- Gallery -->

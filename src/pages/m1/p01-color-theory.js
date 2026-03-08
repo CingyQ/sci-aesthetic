@@ -64,8 +64,8 @@ export function render() {
         <button class="hero-quicknav__item" data-target=".m1p1-hsl-section">HSL 三维度</button>
         <button class="hero-quicknav__item" data-target=".m1p1-mixing-section">加色与减色</button>
       </nav>
+      <div class="m1p1-scroll-hint">↓ 向下探索</div>
     </div>
-    <div class="m1p1-scroll-hint">↓ 向下探索</div>
   </section>
 
   <!-- ====== Section 2: Interactive Color Wheel ====== -->
@@ -236,12 +236,11 @@ export function render() {
     overflow: hidden;
   }
   .m1p1-scroll-hint {
-    position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
     font-size: var(--text-caption); color: var(--text-on-dark-3);
     animation: m1p1-float 2s ease-in-out infinite;
-    white-space: nowrap;
+    white-space: nowrap; margin-top: var(--space-sm);
   }
-  @keyframes m1p1-float { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+  @keyframes m1p1-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
   .m1p1-hero::before {
     content: '';
     position: absolute;

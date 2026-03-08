@@ -128,12 +128,11 @@ export function render() {
   line-height: 1.4; text-align: center;
 }
 .p4-scroll-hint {
-  position: absolute; bottom: 28px; left: 50%;
-  transform: translateX(-50%);
   font-size: var(--text-caption); color: var(--text-on-dark-3);
   animation: p4-float 2s ease-in-out infinite;
+  margin-top: var(--space-sm);
 }
-@keyframes p4-float { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(6px); } }
+@keyframes p4-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
 
 /* ── 通用 section ── */
 .p4-section-header { text-align: center; margin-bottom: var(--space-xl); }
@@ -530,8 +529,8 @@ export function render() {
       <button class="hero-quicknav__item" data-target=".p4-font-section">字体与可读性</button>
       <button class="hero-quicknav__item" data-target=".p4-check-section">设计检查清单</button>
     </nav>
+    <div class="p4-scroll-hint">↓ 向下探索</div>
   </div>
-  <div class="p4-scroll-hint" style="position:absolute;left:50%;transform:translateX(-50%);font-size:var(--text-caption);color:var(--text-on-dark-3);">↓ 向下探索</div>
 </section>
 
 <!-- ════════════════════════════════════════════

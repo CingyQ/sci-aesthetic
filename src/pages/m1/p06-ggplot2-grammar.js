@@ -253,11 +253,11 @@ export function render() {
   margin:var(--space-sm) auto 0; text-align:center;
 }
 .p6-scroll-hint {
-  position:absolute; bottom:32px; left:50%; transform:translateX(-50%);
   font-size:var(--text-caption); color:var(--text-on-dark-3);
   animation:p6-float 2.2s ease-in-out infinite;
+  margin-top:var(--space-sm);
 }
-@keyframes p6-float { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(7px)} }
+@keyframes p6-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(7px)} }
 
 /* Section headers */
 .p6-sec-hdr { text-align:center; margin-bottom:var(--space-xl); }
@@ -555,8 +555,8 @@ export function render() {
       <button class="hero-quicknav__item" data-target="#p6-coord">坐标变换</button>
       <button class="hero-quicknav__item" data-target="#p6-axis">自定义坐标轴</button>
     </nav>
+    <div class="p6-scroll-hint">↓ 向下探索</div>
   </div>
-  <div class="p6-scroll-hint">↓ 向下探索</div>
 </section>
 
 <!-- Section 1: 图层叠加 -->

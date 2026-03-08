@@ -533,29 +533,11 @@ export function render() {
   text-align: center;
 }
 .p3-scroll-hint {
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  color: var(--text-on-dark-3);
-  font-size: 0.7rem;
-  letter-spacing: 0.12em;
+  font-size: var(--text-caption); color: var(--text-on-dark-3);
+  animation: p3-float 2.2s ease-in-out infinite;
+  margin-top: var(--space-sm);
 }
-.p3-scroll-arrow {
-  width: 18px; height: 18px;
-  border-right: 1.5px solid currentColor;
-  border-bottom: 1.5px solid currentColor;
-  transform: rotate(45deg);
-  animation: p3ArrowBounce 1.6s ease-in-out infinite;
-}
-@keyframes p3ArrowBounce {
-  0%,100% { transform: rotate(45deg) translateY(0); }
-  50% { transform: rotate(45deg) translateY(5px); }
-}
+@keyframes p3-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(7px)} }
 
 /* ── Section labels ── */
 .p3-section-label {
@@ -1070,8 +1052,8 @@ export function render() {
         <button class="hero-quicknav__item" data-target="#p3-datatypes-section">数据配色类型</button>
         <button class="hero-quicknav__item" data-target="#p3-errors-section">常见错误</button>
       </nav>
+      <div class="p3-scroll-hint" id="p3-scroll-hint" style="opacity:0;">↓ 向下探索</div>
     </div>
-    <div class="p3-scroll-hint" id="p3-scroll-hint" style="opacity:0;">↓ 向下探索</div>
   </section>
 
   <!-- ══ Section 2: Generator ══ -->

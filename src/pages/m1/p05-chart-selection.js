@@ -232,11 +232,11 @@ export function render() {
   margin-top:var(--space-sm); text-align:center;
 }
 .p5-scroll-hint {
-  position:absolute; bottom:32px; left:50%; transform:translateX(-50%);
   font-size:var(--text-caption); color:var(--text-on-dark-3);
   animation:p5-float 2s ease-in-out infinite;
+  margin-top:var(--space-sm);
 }
-@keyframes p5-float { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+@keyframes p5-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
 
 /* Section headers */
 .p5-sec-hdr { text-align:center; margin-bottom:var(--space-xl); }
@@ -483,8 +483,8 @@ export function render() {
       <button class="hero-quicknav__item" data-target="#p5-gallery">图表类型全览</button>
       <button class="hero-quicknav__item" data-target="#p5-misuse">误用案例合集</button>
     </nav>
+    <p class="p5-scroll-hint">↓ 向下探索</p>
   </div>
-  <p class="p5-scroll-hint">↓ 向下探索</p>
 </section>
 
 <!-- 决策树 -->
