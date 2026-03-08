@@ -231,7 +231,7 @@
   position: fixed;
   top: 12px;
   left: 12px;
-  z-index: 101;
+  z-index: 200;
   width: 44px;
   height: 44px;
   align-items: center;
@@ -375,6 +375,11 @@
   .section-light-alt {
     padding: var(--space-xl) var(--space-sm);
     min-height: auto;
+  }
+  /* Hero 段落在移动端仍占满视口 */
+  .section-hero-full {
+    min-height: 100vh;
+    min-height: 100dvh;
   }
 }
 

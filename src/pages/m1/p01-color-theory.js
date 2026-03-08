@@ -52,12 +52,18 @@ export function render() {
 <div class="page-scroll">
 
   <!-- ====== Section 1: Hero ====== -->
-  <section class="section-dark m1p1-hero" style="align-items:center;">
+  <section class="section-dark section-hero-full m1p1-hero" style="align-items:center;">
     <div class="flex-col-center" style="gap:var(--space-md);text-align:center;">
       <p class="m1p1-hero-eyebrow" style="font-family:var(--font-code);font-size:var(--text-small);color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;opacity:0;">Module 01 / Page 01</p>
       <h1 class="page-hero-title m1p1-hero-title" style="color:var(--text-on-dark);opacity:0;">色彩理论基础</h1>
       <p class="page-hero-sub m1p1-hero-sub" style="opacity:0;">Color Theory Fundamentals</p>
       <p class="m1p1-hero-tagline" style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;margin-top:var(--space-sm);opacity:0;">理解光与色彩的物理与感知基础，为科研配色建立系统认知</p>
+      <!-- 快捷导航 -->
+      <nav class="hero-quicknav m1p1-hero-nav" style="opacity:0;" id="m1p1-hero-nav">
+        <button class="hero-quicknav__item" data-target=".m1p1-wheel-section">交互色轮</button>
+        <button class="hero-quicknav__item" data-target=".m1p1-hsl-section">HSL 三维度</button>
+        <button class="hero-quicknav__item" data-target=".m1p1-mixing-section">加色与减色</button>
+      </nav>
     </div>
   </section>
 
@@ -466,6 +472,9 @@ export function render() {
 
   /* ====== 移动端适配 ====== */
   @media (max-width: 768px) {
+    .m1p1-range { height: auto; min-height: 32px; }
+    .m1p1-range::-webkit-slider-thumb { width: 24px; height: 24px; }
+    .m1p1-range::-moz-range-thumb { width: 24px; height: 24px; }
     .m1p1-wheel-layout {
       flex-direction: column;
       align-items: center;
@@ -565,8 +574,27 @@ function initHeroAnimations() {
   tl.fromTo('.m1p1-hero-title', { y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.15);
   tl.fromTo('.m1p1-hero-sub', { y: 20 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
   tl.fromTo('.m1p1-hero-tagline', { y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
+  tl.fromTo('.m1p1-hero-nav', { y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
+  // 快捷导航点击
+  initHeroQuickNav();
 }
 
+
+// ============================================================
+// 快捷导航
+// ============================================================
+function initHeroQuickNav() {
+  document.querySelectorAll('.m1p1-hero-nav .hero-quicknav__item').forEach(btn => {
+    const handler = () => {
+      const target = document.querySelector(btn.dataset.target);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+    btn.addEventListener('click', handler);
+    state.pointerHandlers.push({ el: btn, event: 'click', handler });
+  });
+}
 
 // ============================================================
 // 滚动动画

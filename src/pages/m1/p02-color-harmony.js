@@ -118,6 +118,20 @@ export function render() {
   return `
     <style id="m1p2-styles">
       .m1p2-hero-section { position: relative; overflow: hidden; }
+      /* 滑块移动端适配 */
+      @media (max-width: 768px) {
+        #m1p2-hue-slider {
+          min-height: 32px;
+        }
+        #m1p2-hue-slider::-webkit-slider-thumb {
+          width: 24px;
+          height: 24px;
+        }
+        #m1p2-hue-slider::-moz-range-thumb {
+          width: 24px;
+          height: 24px;
+        }
+      }
       .m1p2-hero-section::before {
         content: '';
         position: absolute;
@@ -131,7 +145,7 @@ export function render() {
     <div class="page-scroll">
 
       <!-- ====== Section 1: Hero ====== -->
-      <section class="section-dark m1p2-hero-section" style="align-items:center;">
+      <section class="section-dark section-hero-full m1p2-hero-section" style="align-items:center;">
         <div class="content-wrapper" style="text-align:center;position:relative;z-index:1;">
           <p class="page-hero-sub" style="color:var(--module-1);opacity:0.8;font-size:var(--text-small);font-weight:500;letter-spacing:0.1em;text-transform:uppercase;margin:0 auto var(--space-sm);">Module 01 · 科研数据可视化</p>
           <h1 class="page-hero-title" style="color:var(--text-on-dark);">色彩和谐与科研配色</h1>
@@ -139,6 +153,13 @@ export function render() {
           <p style="color:var(--text-on-dark-3);font-size:var(--text-body);margin-top:var(--space-lg);max-width:560px;margin-left:auto;margin-right:auto;line-height:1.8;">
             掌握经典配色方案，获取可直接用于论文的专业配色
           </p>
+          <!-- 快捷导航 -->
+          <nav class="hero-quicknav" id="m1p2-hero-nav">
+            <button class="hero-quicknav__item" data-target="#m1p2-harmony">五种配色方案</button>
+            <button class="hero-quicknav__item" data-target="#m1p2-rule603010">60-30-10 法则</button>
+            <button class="hero-quicknav__item" data-target="#m1p2-deltae">ΔE 色差计算</button>
+            <button class="hero-quicknav__item" data-target="#m1p2-palette-browser">配色方案库</button>
+          </nav>
         </div>
       </section>
 
@@ -347,6 +368,18 @@ export function init() {
   initDeltaESection();
   initPaletteBrowser();
   initScrollAnimations();
+  initHeroQuickNav();
+}
+
+function initHeroQuickNav() {
+  document.querySelectorAll('#m1p2-hero-nav .hero-quicknav__item').forEach(btn => {
+    const handler = () => {
+      const target = document.querySelector(btn.dataset.target);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    btn.addEventListener('click', handler);
+    state.cleanupFns.push(() => btn.removeEventListener('click', handler));
+  });
 }
 
 // ═══════════════════════════════════════════════════
@@ -1023,12 +1056,28 @@ function injectBrowserLayoutCSS() {
         flex: none;
         width: 100%;
         max-height: 400px;
+        padding-right: 0;
       }
       .m1p2-browser-right {
         width: 100%;
       }
       .m1p2-browser-right > div {
         position: static !important;
+      }
+    }
+    @media (max-width: 768px) {
+      .m1p2-browser-layout {
+        gap: var(--space-md);
+      }
+      .m1p2-browser-left {
+        max-height: 320px;
+      }
+      /* 配色卡片紧凑 */
+      .m1p2-palette-card {
+        padding: var(--space-sm) !important;
+      }
+      .m1p2-palette-card [style*="font-size:10px"] {
+        font-size: 9px !important;
       }
     }
   `;

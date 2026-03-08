@@ -152,7 +152,8 @@ export function render() {
 
 /* ── Hero ── */
 .p4-hero {
-  min-height: 80vh;
+  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -997,7 +998,7 @@ export function render() {
     height: 22px;
   }
   /* All sections padding */
-  .p4-hero { min-height: 60vh; padding: var(--space-xl) var(--space-sm); }
+  .p4-hero { padding: var(--space-xl) var(--space-sm); }
   .p4-contrast-section { padding: var(--space-lg) var(--space-sm); }
   .p4-cvd-section { padding: var(--space-lg) var(--space-sm); }
   .p4-sim-section { padding: var(--space-lg) var(--space-sm); }
@@ -1032,7 +1033,7 @@ export function render() {
 }
 
 @media (max-width: 480px) {
-  .p4-hero { padding: var(--space-lg) var(--space-sm); min-height: 55vh; }
+  .p4-hero { padding: var(--space-lg) var(--space-sm); }
   .p4-hero-mini { gap: 8px; }
   .p4-hero-mini-col { gap: 3px; }
   .p4-hero-swatch { width: 18px; height: 18px; }
@@ -1049,7 +1050,7 @@ export function render() {
 <!-- ════════════════════════════════════════════
      Section 1: Hero
      ════════════════════════════════════════════ -->
-<section class="p4-hero">
+<section class="p4-hero section-hero-full">
   <p class="p4-eyebrow p4-anim-0">Module 01 / Page 04</p>
   <h1 class="p4-hero-title p4-anim-1">色彩无障碍</h1>
   <p class="p4-hero-sub p4-anim-2">
@@ -1059,6 +1060,13 @@ export function render() {
   <div class="p4-hero-mini p4-anim-3">
     ${heroMiniDemo}
   </div>
+  <!-- 快捷导航 -->
+  <nav class="hero-quicknav p4-anim-4" id="p4-hero-nav">
+    <button class="hero-quicknav__item" data-target=".p4-contrast-section">WCAG 对比度</button>
+    <button class="hero-quicknav__item" data-target=".p4-cvd-section">色觉障碍类型</button>
+    <button class="hero-quicknav__item" data-target=".p4-sim-section">色盲模拟器</button>
+    <button class="hero-quicknav__item" data-target=".p4-tips-section">设计建议</button>
+  </nav>
 </section>
 
 <!-- ════════════════════════════════════════════
@@ -1328,6 +1336,14 @@ export function init() {
   gsap.from('.p4-hero-title', { opacity: 0, y: 40, duration: 0.9, ease: 'power3.out', delay: 0.3 });
   gsap.from('.p4-hero-sub',   { opacity: 0, y: 30, duration: 0.8, ease: 'power3.out', delay: 0.5 });
   gsap.from('.p4-hero-mini',  { opacity: 0, y: 20, duration: 0.7, ease: 'power3.out', delay: 0.7 });
+  gsap.from('.p4-anim-4',    { opacity: 0, y: 20, duration: 0.8, ease: 'power3.out', delay: 0.9 });
+  // 快捷导航
+  document.querySelectorAll('#p4-hero-nav .hero-quicknav__item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.querySelector(btn.dataset.target);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
 
   // Scroll-triggered section animations
   fadeIn('.p4-contrast-section .p4-section-header', { start: 'top 88%' });

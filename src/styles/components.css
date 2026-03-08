@@ -285,15 +285,11 @@ textarea.input {
   -webkit-appearance: none;
   appearance: none;
   width: 100%;
-  height: 4px;
+  height: 6px;
   background: var(--border-light);
   border-radius: var(--radius-full);
   outline: none;
   cursor: pointer;
-  min-height: 44px;
-  /* 垂直居中滑轨 */
-  background-clip: content-box;
-  padding: 20px 0;
 }
 
 .range::-webkit-slider-thumb {
@@ -329,13 +325,17 @@ textarea.input {
 }
 
 @media (max-width: 768px) {
+  .range {
+    height: 6px;
+    min-height: 32px;
+  }
   .range::-webkit-slider-thumb {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
   }
   .range::-moz-range-thumb {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
   }
 }
 
@@ -656,6 +656,25 @@ tr:hover td {
   border-radius: var(--radius-full);
   top: 4px;
   bottom: 4px;
+}
+
+/* 移动端 Tab 允许横向滚动 */
+@media (max-width: 768px) {
+  .tab-switcher {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    max-width: 100%;
+  }
+  .tab-switcher::-webkit-scrollbar { display: none; }
+  .tab-switcher__tab {
+    flex-shrink: 0;
+    padding: 8px 14px;
+    font-size: 0.8rem;
+  }
+  .tab-switcher--pill .tab-switcher__tab {
+    padding: 8px 16px;
+  }
 }
 
 /* ========================================================
@@ -1474,5 +1493,64 @@ tr:hover td {
     max-height: none;
     padding: var(--space-md);
     overflow-y: auto;
+  }
+}
+
+/* ========================================================
+   Hero 快捷导航（每页 hero 内的模块跳转）
+   ======================================================== */
+
+.hero-quicknav {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: var(--space-lg);
+}
+
+.hero-quicknav__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 22px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-full);
+  color: var(--text-on-dark-2);
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  white-space: nowrap;
+}
+
+.hero-quicknav__item:hover {
+  background: rgba(126, 200, 227, 0.12);
+  border-color: var(--accent);
+  color: var(--text-on-dark);
+  transform: translateY(-2px);
+}
+
+.hero-quicknav__item:active {
+  transform: translateY(0);
+  background: rgba(126, 200, 227, 0.18);
+}
+
+@media (max-width: 768px) {
+  .hero-quicknav {
+    gap: 8px;
+    margin-top: var(--space-md);
+  }
+  .hero-quicknav__item {
+    padding: 8px 16px;
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .hero-quicknav {
+    flex-direction: column;
+    align-items: center;
   }
 }

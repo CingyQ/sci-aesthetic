@@ -472,7 +472,8 @@ export function render() {
 <style id="p3-styles">
 /* ── Hero ── */
 .p3-hero {
-  min-height: 80vh;
+  min-height: 100vh;
+  min-height: 100dvh;
   background: var(--bg-dark);
   display: flex;
   align-items: center;
@@ -830,15 +831,27 @@ export function render() {
 }
 .p3-data-chart-area { width: 100%; background: #fff; border-radius: 10px; overflow: hidden; }
 
-/* Tab overrides for light section */
+/* Tab overrides for light section — underline style */
 .p3-datatypes-section .tab-switcher {
   background: transparent;
+  border: none;
   border-bottom: 1.5px solid var(--border-light);
+  border-radius: 0;
   margin-bottom: 28px;
+  padding: 0;
+  display: flex;
+  width: 100%;
 }
-.p3-datatypes-section .tab-switcher__tab { color: var(--text-on-light-2); }
-.p3-datatypes-section .tab-switcher__tab.active { color: var(--text-on-light); }
-.p3-datatypes-section .tab-switcher__indicator { background: var(--accent); bottom: 0; top: auto; height: 2px; }
+.p3-datatypes-section .tab-switcher__tab {
+  color: var(--text-on-light-2);
+  flex: 1;
+  text-align: center;
+  padding: 12px 16px;
+  border-radius: 0;
+  font-size: 0.9rem;
+}
+.p3-datatypes-section .tab-switcher__tab.active { color: var(--text-on-light); font-weight: 600; }
+.p3-datatypes-section .tab-switcher__indicator { background: var(--accent); bottom: 0; top: auto; height: 2.5px; border-radius: 2px 2px 0 0; }
 
 /* ── Section 4: Errors ── */
 .p3-errors-section { background: var(--bg-dark); padding: var(--space-xl) var(--space-lg); }
@@ -915,7 +928,8 @@ export function render() {
   .p3-generator-section, .p3-datatypes-section, .p3-errors-section, .p3-footer-section {
     padding: var(--space-lg) var(--space-sm);
   }
-  .p3-hero { min-height: 60vh; padding: 80px var(--space-sm) 48px; }
+  .p3-hero { padding: 80px var(--space-sm) 48px; }
+  .p3-datatypes-section .tab-switcher__tab { font-size: 0.78rem; padding: 10px 8px; }
 
   /* Left panel compact */
   .p3-left-panel { padding: 20px; gap: 16px; }
@@ -983,11 +997,17 @@ export function render() {
 <div class="page-scroll">
 
   <!-- ══ Section 1: Hero ══ -->
-  <section class="p3-hero section-dark">
+  <section class="p3-hero section-dark section-hero-full">
     <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;">
       <p class="p3-hero-eyebrow" id="p3-eyebrow">Module 01 / Page 03</p>
       <h1 class="p3-hero-title" id="p3-hero-title">配色生成器</h1>
       <p class="p3-hero-sub" id="p3-hero-sub">从一个基色出发，生成专业的科研配色方案</p>
+      <!-- 快捷导航 -->
+      <nav class="hero-quicknav" id="p3-hero-nav" style="opacity:0;">
+        <button class="hero-quicknav__item" data-target="#p3-generator-section">自定义配色</button>
+        <button class="hero-quicknav__item" data-target="#p3-datatypes-section">数据配色类型</button>
+        <button class="hero-quicknav__item" data-target="#p3-errors-section">常见错误</button>
+      </nav>
     </div>
     <div class="p3-scroll-hint" id="p3-scroll-hint">
       <span>SCROLL</span>
@@ -1114,6 +1134,7 @@ export function init() {
   gsap.fromTo('#p3-eyebrow',    { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.1, ease: 'power3.out' });
   gsap.fromTo('#p3-hero-title', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.9, delay: 0.25, ease: 'power3.out' });
   gsap.fromTo('#p3-hero-sub',   { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.45, ease: 'power3.out' });
+  gsap.fromTo('#p3-hero-nav',   { opacity: 0, y: 20 },  { opacity: 1, y: 0, duration: 0.8, delay: 0.6, ease: 'power3.out' });
   gsap.fromTo('#p3-scroll-hint',{ opacity: 0 },        { opacity: 1, duration: 0.6, delay: 1, ease: 'power2.out' });
 
   // Scroll animations
@@ -1138,6 +1159,13 @@ export function init() {
   setupDataTypeTabs();
   setupErrorCards();
   setupNavButtons();
+  // 快捷导航
+  document.querySelectorAll('#p3-hero-nav .hero-quicknav__item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.querySelector(btn.dataset.target);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
 
   // Initial generation
   state.generatedColors = generatePalette(state.baseHex, state.algorithm, state.colorCount);
@@ -1383,9 +1411,9 @@ function setupDataTypeTabs() {
 
   const tab = createTabSwitcher(tabContainer, {
     tabs: [
-      { id: 'sequential',  label: '连续型（Sequential）' },
-      { id: 'diverging',   label: '发散型（Diverging）' },
-      { id: 'qualitative', label: '定性型（Qualitative）' },
+      { id: 'sequential',  label: '连续型 Sequential' },
+      { id: 'diverging',   label: '发散型 Diverging' },
+      { id: 'qualitative', label: '定性型 Qualitative' },
     ],
     activeId: 'sequential',
     variant: 'default',
