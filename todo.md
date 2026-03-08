@@ -54,9 +54,10 @@
 - [x] m1-p2 色彩和谐与科研配色（5 种方案 + 60-30-10 + deltaE + 配色方案库浏览器 + 图表预览）
 - [x] m1-p3 配色生成器与数据配色（生成+微调+导出 + 连续/发散/定性 + 错误对比）
 - [x] m1-p4 色彩无障碍（WCAG 检测 + 色盲模拟 Brettel/Machado + 修复建议）
-- [x] m1-p5 图表选择指南（D3 交互式决策树 + 20+ 图表全览按 5 组分类 + 列表+预览浏览器布局 + 饼图误用专题）
-- [x] m1-p6 ggplot2 图层语法与分面（粘性滚动逐层叠加 data→aes→geom→scale→theme + 分面 Tab 切换 + 坐标变换 3tab + 自定义坐标轴参数控制器）
-- [ ] m1-p7 ggplot2 图表工作坊 — 先做 4 种验证（scatter/bar/line/boxplot，WorkshopLayout 三面板 + 移动端手风琴）
+- [x] m1-p5 图表选择指南（D3 交互式决策树 + 20+ 图表全览按 5 组分类 + 列表+预览浏览器布局 + 6 类饼图误用专题）
+- [x] m1-p6 ggplot2 图层语法与分面（JS-sticky 逐层叠加 data→aes→geom→scale→theme + 分面 Tab 切换 + 坐标变换 3tab + 自定义坐标轴参数控制器）
+      ↳ 含 Bug Fix：CSS sticky → transform:translateY JS 模拟；移动端改为堆叠卡片自然滚动
+- [x] m1-p7 ggplot2 图表工作坊 — 先做 4 种验证（scatter/bar/line/boxplot，WorkshopLayout 三面板 + 移动端手风琴）
 - [ ] m1-p7 ggplot2 图表工作坊 — 剩余 8 种（violin/histogram/density/heatmap/area/errorbar/lollipop/ridgeline）
 - [ ] m1-p8 R 配色与出版级图表（配色包浏览器列表+预览 + 主题定制器滑块+D3+theme()代码 + ggsave 期刊代码生成器 + patchwork 4 种布局）
 - [ ] m1-p9 Python 可视化与数据叙事（matplotlib 层次图解 + seaborn 10 种图表参数面板 + matplotlib vs ggplot2 对照 + annotate Canvas 拖拽 + 叙事 4 种方法动画）
@@ -98,3 +99,21 @@
 - [ ] 响应式逐页检查（375px/390px/768px/1024px/1440px 五级断点全页面验证）
 - [ ] 性能审计（Lighthouse 桌面端 90+ / 移动端 85+ + 修复问题）
 - [ ] 交互组件回归测试（Canvas 触摸/BeforeAfter 滑动/CodeMirror 只读+编辑/手风琴/Tab 横滚/滑块触控≥44px）
+
+---
+
+## 进度总览
+
+| 阶段 | 状态 | 备注 |
+|------|------|------|
+| Phase 0 项目骨架 | ✅ 完成 | |
+| Phase 1 设计系统 | ✅ 完成 | |
+| Phase 2 组件库 | ✅ 完成 | |
+| Phase 3 首页 | ✅ 完成 | |
+| Phase 4 模块一 | 🔄 7/10 | m1-p1~p7 完成，p8~p10 待开发 |
+| Phase 5 模块二 | ⏳ 待开始 | |
+| Phase 6 模块三 | ⏳ 待开始 | |
+| Phase 7 模块四 | ⏳ 待开始 | |
+| Phase 8 收尾 | ⏳ 待开始 | |
+
+**下一步**：`commands.md` Step 3 — m1-p7 ggplot2 图表工作坊（第一批 4 种）
