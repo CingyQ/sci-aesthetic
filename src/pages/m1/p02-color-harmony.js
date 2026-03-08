@@ -164,7 +164,7 @@ export function render() {
       <!-- ====== Section 1: Hero ====== -->
       <section class="section-dark section-hero-full m1p2-hero-section" style="align-items:center;">
         <div class="flex-col-center" style="gap:var(--space-md);text-align:center;position:relative;z-index:1;">
-          <p class="m1p2-eyebrow" style="font-family:var(--font-code);font-size:var(--text-small);color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;opacity:0;">Module 01 / Page 02</p>
+          <p class="hero-eyebrow m1p2-eyebrow" style="opacity:0;">Module 01 / Page 02</p>
           <h1 class="page-hero-title m1p2-hero-title" style="color:var(--text-on-dark);opacity:0;">色彩和谐与科研配色</h1>
           <p class="page-hero-sub m1p2-hero-sub" style="opacity:0;">Color Harmony & Scientific Palettes</p>
           <p class="m1p2-hero-tagline" style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;opacity:0;">掌握经典配色方案，获取可直接用于论文的专业配色</p>

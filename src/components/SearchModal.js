@@ -7,7 +7,7 @@ const SEARCH_DATA = [
   { id: 'm1-p1', title: '色彩理论基础', keywords: ['色彩', '色轮', 'HSL', 'RGB', 'CMYK', '色彩空间', 'color theory'] },
   { id: 'm1-p2', title: '色彩和谐与科研配色', keywords: ['配色', '互补', '类似', '三角', 'deltaE', '色温', 'harmony', 'palette'] },
   { id: 'm1-p3', title: '配色生成器与数据配色', keywords: ['生成器', '连续', '发散', '定性', 'sequential', 'diverging', 'qualitative'] },
-  { id: 'm1-p4', title: '色彩无障碍', keywords: ['无障碍', 'WCAG', '色盲', '对比度', 'accessibility', 'colorblind'] },
+  { id: 'm1-p4', title: '色彩与阅读无障碍', keywords: ['无障碍', 'WCAG', '对比度', 'accessibility', '字体', '排版', '可读性', '字号'] },
   { id: 'm1-p5', title: '图表选择指南', keywords: ['图表', '选择', '决策树', '散点图', '柱状图', '折线图', 'chart'] },
   { id: 'm1-p6', title: 'ggplot2 图层语法与分面', keywords: ['ggplot2', 'R', '图层', 'geom', 'facet', '分面', '语法'] },
   { id: 'm1-p7', title: 'ggplot2 图表工作坊', keywords: ['工作坊', 'workshop', 'scatter', 'bar', 'boxplot', 'violin'] },

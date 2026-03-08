@@ -508,12 +508,7 @@ export function render() {
   animation: p3-glow-b 14s ease-in-out infinite;
 }
 .p3-hero-eyebrow {
-  font-family: var(--font-code);
-  font-size: 0.75rem;
-  color: var(--accent);
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  margin-bottom: var(--space-sm);
+  /* 使用全局 .hero-eyebrow 基础样式，此处无需重复 */
 }
 .p3-hero-title {
   color: var(--text-on-dark);
@@ -1065,7 +1060,7 @@ export function render() {
   <!-- ══ Section 1: Hero ══ -->
   <section class="p3-hero section-dark section-hero-full">
     <div class="flex-col-center" style="gap:var(--space-md);text-align:center;position:relative;z-index:1;">
-      <p class="p3-hero-eyebrow" id="p3-eyebrow" style="opacity:0;">Module 01 / Page 03</p>
+      <p class="hero-eyebrow p3-hero-eyebrow" id="p3-eyebrow" style="opacity:0;">Module 01 / Page 03</p>
       <h1 class="page-hero-title p3-hero-title" id="p3-hero-title" style="color:var(--text-on-dark);opacity:0;">配色生成器</h1>
       <p class="page-hero-sub p3-hero-sub" id="p3-hero-sub" style="opacity:0;">Color Palette Generator</p>
       <p class="p3-hero-tagline" id="p3-hero-tagline" style="opacity:0;">从一个基色出发，生成专业的科研配色方案</p>

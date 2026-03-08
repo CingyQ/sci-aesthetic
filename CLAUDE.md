@@ -178,6 +178,7 @@ src/
 - 深色段：#1d1d1f 背景，#f5f5f7 文字
 - **交互组件放在深色段**，让彩色内容更醒目
 - 代码编辑器始终深色主题
+- 代码块（`pre`）必须使用 `white-space: pre-wrap`，禁止 `white-space: pre`（会撑破容器）
 
 #### 5. 极简配色
 - 主体黑白灰
@@ -268,7 +269,7 @@ src/
 - 内容 padding: 16-20px
 - 单列布局，禁止水平滚动
 - 图片最大宽度 100%，高度自适应
-- 代码块水平可滚动（overflow-x: auto），字号 13px
+- 代码块必须换行（white-space: pre-wrap + word-wrap: break-word），字号 13px，禁止 white-space: pre
 - 表格水平可滚动，固定首列
 ```
 

@@ -18,7 +18,7 @@ const NAV_DATA = {
         { id: 'm1-p1', title: '色彩理论基础' },
         { id: 'm1-p2', title: '色彩和谐与科研配色' },
         { id: 'm1-p3', title: '配色生成器与数据配色' },
-        { id: 'm1-p4', title: '色彩无障碍' },
+        { id: 'm1-p4', title: '色彩与阅读无障碍' },
         { id: 'm1-p5', title: '图表选择指南' },
         { id: 'm1-p6', title: 'ggplot2 图层语法与分面' },
         { id: 'm1-p7', title: 'ggplot2 图表工作坊' },

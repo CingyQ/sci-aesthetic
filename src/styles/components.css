@@ -147,6 +147,10 @@ pre {
   border-radius: var(--radius-md);
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 code {
@@ -180,6 +184,9 @@ pre code {
   .cm-editor {
     font-size: 13px;
     overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 }
 

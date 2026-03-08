@@ -545,7 +545,7 @@ export function render() {
 <!-- Hero -->
 <section class="p6-hero section-dark section-hero-full" id="p6-hero">
   <div class="p6-hero-inner">
-    <p class="p6-eyebrow" style="opacity:0;">Module 01 / Page 06</p>
+    <p class="hero-eyebrow p6-eyebrow" style="opacity:0;">Module 01 / Page 06</p>
     <h1 class="page-hero-title p6-hero-title" style="color:var(--text-on-dark);opacity:0;">ggplot2<br>图层语法与分面</h1>
     <p class="page-hero-sub p6-hero-sub" style="opacity:0;">ggplot2 Grammar of Graphics</p>
     <p class="p6-hero-tagline" style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;opacity:0;">理解图形语法的核心设计哲学——每一层都是一次对数据的诠释。<br>从空白画布到出版级图表，五步完成。</p>

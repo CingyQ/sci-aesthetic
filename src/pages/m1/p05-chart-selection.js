@@ -215,9 +215,7 @@ export function render() {
   animation:p5-glow-b 16s ease-in-out infinite;
 }
 .p5-eyebrow {
-  font-family:var(--font-code); font-size:var(--text-small);
-  color:var(--accent); letter-spacing:0.15em; text-transform:uppercase;
-  margin-bottom:var(--space-sm);
+  /* 使用全局 .hero-eyebrow 基础样式 */
 }
 .p5-hero-title {
   font-family:var(--font-display); font-size:clamp(2.5rem,5vw,4.5rem);
@@ -474,7 +472,7 @@ export function render() {
 <!-- HERO -->
 <section id="p5-hero" class="p5-hero section-dark section-hero-full" style="scroll-margin-top:56px;">
   <div class="flex-col-center" style="gap:var(--space-md);text-align:center;position:relative;z-index:1;">
-    <p class="p5-eyebrow" id="p5-eyebrow" style="opacity:0;">Module 01 / Page 05</p>
+    <p class="hero-eyebrow p5-eyebrow" id="p5-eyebrow" style="opacity:0;">Module 01 / Page 05</p>
     <h1 class="page-hero-title p5-hero-title" id="p5-hero-title" style="color:var(--text-on-dark);opacity:0;">图表选择指南</h1>
     <p class="page-hero-sub p5-hero-sub" id="p5-hero-sub" style="opacity:0;">Chart Selection Guide</p>
     <p class="p5-hero-tagline" id="p5-hero-tagline" style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;opacity:0;">

@@ -407,6 +407,15 @@
   margin: var(--space-md) auto 0;
 }
 
+/* Hero eyebrow：Module 0X / Page 0X 标记 */
+.hero-eyebrow {
+  font-family: var(--font-code);
+  font-size: var(--text-small);
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
 /* Hero 级别标题 */
 .text-hero {
   font-family: var(--font-display);

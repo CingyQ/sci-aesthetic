@@ -116,8 +116,7 @@ export function render() {
   line-height: 1.8; text-align: center;
 }
 .p4-eyebrow {
-  font-family: var(--font-code); font-size: var(--text-small);
-  color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase;
+  /* 使用全局 .hero-eyebrow 基础样式 */
 }
 .p4-hero-title {
   font-family: var(--font-display); font-size: clamp(2.5rem, 5vw, 4.5rem);
@@ -518,7 +517,7 @@ export function render() {
      ════════════════════════════════════════════ -->
 <section class="p4-hero section-dark section-hero-full">
   <div class="flex-col-center" style="gap:var(--space-md);text-align:center;position:relative;z-index:1;">
-    <p class="p4-eyebrow p4-anim-0">Module 01 / Page 04</p>
+    <p class="hero-eyebrow p4-eyebrow p4-anim-0">Module 01 / Page 04</p>
     <h1 class="page-hero-title p4-hero-title p4-anim-1" style="color:var(--text-on-dark);">色彩与阅读无障碍</h1>
     <p class="page-hero-sub p4-hero-sub p4-anim-2">Color Accessibility</p>
     <p class="p4-hero-tagline p4-anim-3">

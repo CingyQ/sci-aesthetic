@@ -225,6 +225,183 @@ const CHART_TYPES = [
 ];
 
 // ─────────────────────────────────────────────
+// 图表类型 SVG 图标（嵌入式，无需 D3）
+// ─────────────────────────────────────────────
+const CHART_ICONS = {
+  scatter: `<svg viewBox="0 0 150 95" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+<rect width="150" height="95" fill="#0f1117"/>
+<line x1="18" y1="8" x2="18" y2="81" stroke="#1e2030" stroke-width="0.8"/>
+<line x1="18" y1="81" x2="142" y2="81" stroke="#1e2030" stroke-width="0.8"/>
+<line x1="18" y1="57" x2="142" y2="57" stroke="#1e2030" stroke-width="0.35"/>
+<line x1="18" y1="33" x2="142" y2="33" stroke="#1e2030" stroke-width="0.35"/>
+<line x1="56" y1="81" x2="56" y2="8" stroke="#1e2030" stroke-width="0.35"/>
+<line x1="96" y1="81" x2="96" y2="8" stroke="#1e2030" stroke-width="0.35"/>
+<circle cx="26" cy="74" r="3" fill="#7EC8E3" opacity="0.9"/><circle cx="32" cy="70" r="3" fill="#7EC8E3" opacity="0.85"/><circle cx="29" cy="65" r="3" fill="#7EC8E3" opacity="0.9"/><circle cx="38" cy="72" r="3" fill="#7EC8E3" opacity="0.85"/><circle cx="36" cy="63" r="3" fill="#7EC8E3" opacity="0.9"/><circle cx="24" cy="61" r="3" fill="#7EC8E3" opacity="0.85"/><circle cx="42" cy="68" r="3" fill="#7EC8E3" opacity="0.9"/><circle cx="31" cy="57" r="3" fill="#7EC8E3" opacity="0.8"/>
+<circle cx="62" cy="52" r="3" fill="#F0B27A" opacity="0.9"/><circle cx="71" cy="45" r="3" fill="#F0B27A" opacity="0.85"/><circle cx="66" cy="40" r="3" fill="#F0B27A" opacity="0.9"/><circle cx="78" cy="50" r="3" fill="#F0B27A" opacity="0.85"/><circle cx="82" cy="43" r="3" fill="#F0B27A" opacity="0.9"/><circle cx="57" cy="44" r="3" fill="#F0B27A" opacity="0.85"/><circle cx="74" cy="36" r="3" fill="#F0B27A" opacity="0.9"/><circle cx="69" cy="55" r="3" fill="#F0B27A" opacity="0.8"/>
+<circle cx="102" cy="30" r="3" fill="#95D5B2" opacity="0.9"/><circle cx="110" cy="23" r="3" fill="#95D5B2" opacity="0.85"/><circle cx="117" cy="17" r="3" fill="#95D5B2" opacity="0.9"/><circle cx="107" cy="20" r="3" fill="#95D5B2" opacity="0.85"/><circle cx="114" cy="31" r="3" fill="#95D5B2" opacity="0.9"/><circle cx="122" cy="14" r="3" fill="#95D5B2" opacity="0.85"/><circle cx="120" cy="25" r="3" fill="#95D5B2" opacity="0.9"/><circle cx="96" cy="34" r="3" fill="#95D5B2" opacity="0.8"/>
+<line x1="20" y1="78" x2="138" y2="11" stroke="#7EC8E3" stroke-width="0.8" stroke-dasharray="3,2" opacity="0.3"/>
+</svg>`,
+
+  bar: `<svg viewBox="0 0 150 95" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+<rect width="150" height="95" fill="#0f1117"/>
+<line x1="18" y1="8" x2="18" y2="81" stroke="#1e2030" stroke-width="0.8"/>
+<line x1="18" y1="81" x2="142" y2="81" stroke="#1e2030" stroke-width="0.8"/>
+<line x1="18" y1="55" x2="142" y2="55" stroke="#1e2030" stroke-width="0.35" stroke-dasharray="2,3"/>
+<line x1="18" y1="30" x2="142" y2="30" stroke="#1e2030" stroke-width="0.35" stroke-dasharray="2,3"/>
+<rect x="22" y="57" width="11" height="24" fill="#7EC8E3" rx="1.5" opacity="0.9"/>
+<rect x="33" y="40" width="11" height="41" fill="#F0B27A" rx="1.5" opacity="0.9"/>
+<rect x="54" y="62" width="11" height="19" fill="#7EC8E3" rx="1.5" opacity="0.9"/>
+<rect x="65" y="27" width="11" height="54" fill="#F0B27A" rx="1.5" opacity="0.9"/>
+<rect x="86" y="51" width="11" height="30" fill="#7EC8E3" rx="1.5" opacity="0.9"/>
+<rect x="97" y="18" width="11" height="63" fill="#F0B27A" rx="1.5" opacity="0.9"/>
+<rect x="118" y="59" width="11" height="22" fill="#7EC8E3" rx="1.5" opacity="0.9"/>
+<rect x="129" y="36" width="11" height="45" fill="#F0B27A" rx="1.5" opacity="0.9"/>
+</svg>`,
+
+  line: `<svg viewBox="0 0 150 95" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+<rect width="150" height="95" fill="#0f1117"/>
+<line x1="18" y1="8" x2="18" y2="81" stroke="#1e2030" stroke-width="0.8"/>
+<line x1="18" y1="81" x2="142" y2="81" stroke="#1e2030" stroke-width="0.8"/>
+<line x1="18" y1="57" x2="142" y2="57" stroke="#1e2030" stroke-width="0.35"/>
+<line x1="18" y1="33" x2="142" y2="33" stroke="#1e2030" stroke-width="0.35"/>
+<path d="M22,73 L52,71 L82,69 L112,67 L138,65" fill="none" stroke="#7EC8E3" stroke-width="2" stroke-linejoin="round" opacity="0.9"/>
+<circle cx="22" cy="73" r="2.5" fill="#7EC8E3"/><circle cx="52" cy="71" r="2.5" fill="#7EC8E3"/><circle cx="82" cy="69" r="2.5" fill="#7EC8E3"/><circle cx="112" cy="67" r="2.5" fill="#7EC8E3"/><circle cx="138" cy="65" r="2.5" fill="#7EC8E3"/>
+<path d="M22,71 L52,59 L82,47 L112,36 L138,26" fill="none" stroke="#F0B27A" stroke-width="2" stroke-linejoin="round" opacity="0.9"/>
+<circle cx="22" cy="71" r="2.5" fill="#F0B27A"/><circle cx="52" cy="59" r="2.5" fill="#F0B27A"/><circle cx="82" cy="47" r="2.5" fill="#F0B27A"/><circle cx="112" cy="36" r="2.5" fill="#F0B27A"/><circle cx="138" cy="26" r="2.5" fill="#F0B27A"/>
+<path d="M22,69 L52,48 L82,29 L112,15 L138,11" fill="none" stroke="#95D5B2" stroke-width="2" stroke-linejoin="round" opacity="0.9"/>
+<circle cx="22" cy="69" r="2.5" fill="#95D5B2"/><circle cx="52" cy="48" r="2.5" fill="#95D5B2"/><circle cx="82" cy="29" r="2.5" fill="#95D5B2"/><circle cx="112" cy="15" r="2.5" fill="#95D5B2"/><circle cx="138" cy="11" r="2.5" fill="#95D5B2"/>
+</svg>`,
+
+  boxplot: `<svg viewBox="0 0 150 95" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+<rect width="150" height="95" fill="#0f1117"/>
+<line x1="18" y1="8" x2="18" y2="81" stroke="#1e2030" stroke-width="0.8"/>
+<line x1="18" y1="81" x2="142" y2="81" stroke="#1e2030" stroke-width="0.8"/>
+<line x1="18" y1="55" x2="142" y2="55" stroke="#1e2030" stroke-width="0.35" stroke-dasharray="2,3"/>
+<line x1="18" y1="30" x2="142" y2="30" stroke="#1e2030" stroke-width="0.35" stroke-dasharray="2,3"/>
+<line x1="38" y1="74" x2="38" y2="65" stroke="#7EC8E3" stroke-width="1.2"/><line x1="32" y1="74" x2="44" y2="74" stroke="#7EC8E3" stroke-width="1.2"/>
+<rect x="27" y="58" width="22" height="18" fill="rgba(126,200,227,0.15)" stroke="#7EC8E3" stroke-width="1.5" rx="1"/>
+<line x1="27" y1="64" x2="49" y2="64" stroke="#7EC8E3" stroke-width="2.5"/>
+<line x1="38" y1="40" x2="38" y2="58" stroke="#7EC8E3" stroke-width="1.2"/><line x1="32" y1="40" x2="44" y2="40" stroke="#7EC8E3" stroke-width="1.2"/>
+<circle cx="38" cy="34" r="2" fill="none" stroke="#7EC8E3" stroke-width="1.2"/>
+<line x1="80" y1="68" x2="80" y2="58" stroke="#F0B27A" stroke-width="1.2"/><line x1="74" y1="68" x2="86" y2="68" stroke="#F0B27A" stroke-width="1.2"/>
+<rect x="69" y="38" width="22" height="30" fill="rgba(240,178,122,0.15)" stroke="#F0B27A" stroke-width="1.5" rx="1"/>
+<line x1="69" y1="48" x2="91" y2="48" stroke="#F0B27A" stroke-width="2.5"/>
+<line x1="80" y1="20" x2="80" y2="38" stroke="#F0B27A" stroke-width="1.2"/><line x1="74" y1="20" x2="86" y2="20" stroke="#F0B27A" stroke-width="1.2"/>
+<circle cx="80" cy="14" r="2" fill="none" stroke="#F0B27A" stroke-width="1.2"/>
+<line x1="122" y1="58" x2="122" y2="46" stroke="#95D5B2" stroke-width="1.2"/><line x1="116" y1="58" x2="128" y2="58" stroke="#95D5B2" stroke-width="1.2"/>
+<rect x="111" y="22" width="22" height="34" fill="rgba(149,213,178,0.15)" stroke="#95D5B2" stroke-width="1.5" rx="1"/>
+<line x1="111" y1="36" x2="133" y2="36" stroke="#95D5B2" stroke-width="2.5"/>
+<line x1="122" y1="11" x2="122" y2="22" stroke="#95D5B2" stroke-width="1.2"/><line x1="116" y1="11" x2="128" y2="11" stroke="#95D5B2" stroke-width="1.2"/>
+</svg>`,
+
+  violin: `<svg viewBox="0 0 150 95" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+<rect width="150" height="95" fill="#0f1117"/>
+<line x1="18" y1="8" x2="18" y2="81" stroke="#1e2030" stroke-width="0.8"/>
+<line x1="18" y1="81" x2="142" y2="81" stroke="#1e2030" stroke-width="0.8"/>
+<path d="M38,79 C35,73 32,63 35,55 C38,47 41,44 38,38 C35,32 33,27 38,22 C43,27 41,32 38,38 C35,44 38,47 41,55 C44,63 41,73 38,79 Z" fill="#7EC8E3" opacity="0.35"/>
+<path d="M38,79 C35,73 32,63 35,55 C38,47 41,44 38,38 C35,32 33,27 38,22 C43,27 41,32 38,38 C35,44 38,47 41,55 C44,63 41,73 38,79 Z" fill="none" stroke="#7EC8E3" stroke-width="1.5"/>
+<line x1="33" y1="54" x2="43" y2="54" stroke="#7EC8E3" stroke-width="2"/>
+<path d="M80,78 C74,71 69,58 72,46 C75,34 82,30 80,21 C78,30 85,34 88,46 C91,58 86,71 80,78 Z" fill="#F0B27A" opacity="0.35"/>
+<path d="M80,78 C74,71 69,58 72,46 C75,34 82,30 80,21 C78,30 85,34 88,46 C91,58 86,71 80,78 Z" fill="none" stroke="#F0B27A" stroke-width="1.5"/>
+<line x1="73" y1="43" x2="87" y2="43" stroke="#F0B27A" stroke-width="2"/>
+<path d="M122,76 C114,67 108,50 112,34 C116,18 124,12 122,9 C120,12 128,18 132,34 C136,50 130,67 122,76 Z" fill="#95D5B2" opacity="0.35"/>
+<path d="M122,76 C114,67 108,50 112,34 C116,18 124,12 122,9 C120,12 128,18 132,34 C136,50 130,67 122,76 Z" fill="none" stroke="#95D5B2" stroke-width="1.5"/>
+<line x1="113" y1="30" x2="131" y2="30" stroke="#95D5B2" stroke-width="2"/>
+</svg>`,
+
+  histogram: `<svg viewBox="0 0 150 95" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+<rect width="150" height="95" fill="#0f1117"/>
+<line x1="18" y1="8" x2="18" y2="81" stroke="#1e2030" stroke-width="0.8"/>
+<line x1="18" y1="81" x2="142" y2="81" stroke="#1e2030" stroke-width="0.8"/>
+<line x1="18" y1="55" x2="142" y2="55" stroke="#1e2030" stroke-width="0.35" stroke-dasharray="2,3"/>
+<rect x="20" y="76" width="11" height="5" fill="#7EC8E3" rx="1" opacity="0.8"/>
+<rect x="31" y="68" width="11" height="13" fill="#7EC8E3" rx="1" opacity="0.85"/>
+<rect x="42" y="55" width="11" height="26" fill="#7EC8E3" rx="1" opacity="0.9"/>
+<rect x="53" y="38" width="11" height="43" fill="#7EC8E3" rx="1" opacity="0.95"/>
+<rect x="64" y="22" width="11" height="59" fill="#7EC8E3" rx="1" opacity="1"/>
+<rect x="75" y="19" width="11" height="62" fill="#7EC8E3" rx="1" opacity="1"/>
+<rect x="86" y="32" width="11" height="49" fill="#7EC8E3" rx="1" opacity="0.95"/>
+<rect x="97" y="48" width="11" height="33" fill="#7EC8E3" rx="1" opacity="0.9"/>
+<rect x="108" y="64" width="11" height="17" fill="#7EC8E3" rx="1" opacity="0.85"/>
+<rect x="119" y="75" width="11" height="6" fill="#7EC8E3" rx="1" opacity="0.8"/>
+<path d="M20,77 C30,77 40,60 54,38 C62,24 68,18 80,18 C92,18 98,24 106,38 C120,60 130,77 140,77" fill="none" stroke="#F0B27A" stroke-width="1.5" opacity="0.75"/>
+</svg>`,
+
+  density: `<svg viewBox="0 0 150 95" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+<rect width="150" height="95" fill="#0f1117"/>
+<line x1="18" y1="8" x2="18" y2="81" stroke="#1e2030" stroke-width="0.8"/>
+<line x1="18" y1="81" x2="142" y2="81" stroke="#1e2030" stroke-width="0.8"/>
+<path d="M18,81 C24,81 32,80 42,64 C48,50 50,40 54,37 C58,40 60,50 66,64 C76,80 84,81 92,81 Z" fill="#7EC8E3" opacity="0.2"/>
+<path d="M18,81 C24,81 32,80 42,64 C48,50 50,40 54,37 C58,40 60,50 66,64 C76,80 84,81 92,81" fill="none" stroke="#7EC8E3" stroke-width="2" opacity="0.9"/>
+<path d="M32,81 C42,81 52,80 64,58 C70,46 74,34 80,30 C86,34 90,46 96,58 C108,80 118,81 128,81 Z" fill="#F0B27A" opacity="0.18"/>
+<path d="M32,81 C42,81 52,80 64,58 C70,46 74,34 80,30 C86,34 90,46 96,58 C108,80 118,81 128,81" fill="none" stroke="#F0B27A" stroke-width="2" opacity="0.9"/>
+<path d="M62,81 C72,81 84,80 96,62 C104,48 108,36 114,32 C120,36 124,48 132,62 C144,80 150,81 150,81 Z" fill="#95D5B2" opacity="0.18"/>
+<path d="M62,81 C72,81 84,80 96,62 C104,48 108,36 114,32 C120,36 124,48 132,62 C144,80 148,81" fill="none" stroke="#95D5B2" stroke-width="2" opacity="0.9"/>
+</svg>`,
+
+  heatmap: `<svg viewBox="0 0 150 95" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+<rect width="150" height="95" fill="#0f1117"/>
+<rect x="22" y="10" width="22" height="16" fill="#2c5f8a" rx="1.5"/><rect x="45" y="10" width="22" height="16" fill="#3a7dbf" rx="1.5"/><rect x="68" y="10" width="22" height="16" fill="#7EC8E3" rx="1.5"/><rect x="91" y="10" width="22" height="16" fill="#a8dce8" rx="1.5"/><rect x="114" y="10" width="22" height="16" fill="#d4eef7" rx="1.5"/>
+<rect x="22" y="28" width="22" height="16" fill="#6b3520" rx="1.5"/><rect x="45" y="28" width="22" height="16" fill="#8b4d2a" rx="1.5"/><rect x="68" y="28" width="22" height="16" fill="#c06b38" rx="1.5"/><rect x="91" y="28" width="22" height="16" fill="#dea06e" rx="1.5"/><rect x="114" y="28" width="22" height="16" fill="#F0B27A" rx="1.5"/>
+<rect x="22" y="46" width="22" height="16" fill="#1c5c35" rx="1.5"/><rect x="45" y="46" width="22" height="16" fill="#2e7a4a" rx="1.5"/><rect x="68" y="46" width="22" height="16" fill="#4aab6e" rx="1.5"/><rect x="91" y="46" width="22" height="16" fill="#7dc59a" rx="1.5"/><rect x="114" y="46" width="22" height="16" fill="#95D5B2" rx="1.5"/>
+<rect x="22" y="64" width="22" height="16" fill="#4a1a5c" rx="1.5"/><rect x="45" y="64" width="22" height="16" fill="#6b2f80" rx="1.5"/><rect x="68" y="64" width="22" height="16" fill="#9b5ab0" rx="1.5"/><rect x="91" y="64" width="22" height="16" fill="#c291cf" rx="1.5"/><rect x="114" y="64" width="22" height="16" fill="#d9b8e0" rx="1.5"/>
+</svg>`,
+
+  area: `<svg viewBox="0 0 150 95" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+<rect width="150" height="95" fill="#0f1117"/>
+<line x1="18" y1="8" x2="18" y2="81" stroke="#1e2030" stroke-width="0.8"/>
+<line x1="18" y1="81" x2="142" y2="81" stroke="#1e2030" stroke-width="0.8"/>
+<path d="M18,81 L22,79 L52,71 L82,63 L112,55 L138,48 L138,81 Z" fill="#95D5B2" opacity="0.65"/>
+<path d="M18,81 L22,70 L52,55 L82,42 L112,30 L138,22 L138,48 L112,55 L82,63 L52,71 L22,79 Z" fill="#F0B27A" opacity="0.65"/>
+<path d="M18,81 L22,60 L52,40 L82,23 L112,12 L138,9 L138,22 L112,30 L82,42 L52,55 L22,70 Z" fill="#7EC8E3" opacity="0.65"/>
+<path d="M22,60 L52,40 L82,23 L112,12 L138,9" fill="none" stroke="#7EC8E3" stroke-width="1.5"/>
+<path d="M22,70 L52,55 L82,42 L112,30 L138,22" fill="none" stroke="#F0B27A" stroke-width="1.5"/>
+<path d="M22,79 L52,71 L82,63 L112,55 L138,48" fill="none" stroke="#95D5B2" stroke-width="1.5"/>
+</svg>`,
+
+  errorbar: `<svg viewBox="0 0 150 95" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+<rect width="150" height="95" fill="#0f1117"/>
+<line x1="18" y1="8" x2="18" y2="81" stroke="#1e2030" stroke-width="0.8"/>
+<line x1="18" y1="81" x2="142" y2="81" stroke="#1e2030" stroke-width="0.8"/>
+<line x1="18" y1="55" x2="142" y2="55" stroke="#1e2030" stroke-width="0.35" stroke-dasharray="2,3"/>
+<line x1="18" y1="30" x2="142" y2="30" stroke="#1e2030" stroke-width="0.35" stroke-dasharray="2,3"/>
+<line x1="33" y1="72" x2="33" y2="50" stroke="#7EC8E3" stroke-width="1.5"/><line x1="27" y1="72" x2="39" y2="72" stroke="#7EC8E3" stroke-width="1.5"/><line x1="27" y1="50" x2="39" y2="50" stroke="#7EC8E3" stroke-width="1.5"/>
+<circle cx="33" cy="61" r="4.5" fill="#7EC8E3"/>
+<line x1="62" y1="64" x2="62" y2="38" stroke="#F0B27A" stroke-width="1.5"/><line x1="56" y1="64" x2="68" y2="64" stroke="#F0B27A" stroke-width="1.5"/><line x1="56" y1="38" x2="68" y2="38" stroke="#F0B27A" stroke-width="1.5"/>
+<circle cx="62" cy="51" r="4.5" fill="#F0B27A"/>
+<line x1="91" y1="55" x2="91" y2="24" stroke="#95D5B2" stroke-width="1.5"/><line x1="85" y1="55" x2="97" y2="55" stroke="#95D5B2" stroke-width="1.5"/><line x1="85" y1="24" x2="97" y2="24" stroke="#95D5B2" stroke-width="1.5"/>
+<circle cx="91" cy="40" r="4.5" fill="#95D5B2"/>
+<line x1="120" y1="46" x2="120" y2="17" stroke="#7EC8E3" stroke-width="1.5"/><line x1="114" y1="46" x2="126" y2="46" stroke="#7EC8E3" stroke-width="1.5"/><line x1="114" y1="17" x2="126" y2="17" stroke="#7EC8E3" stroke-width="1.5"/>
+<circle cx="120" cy="32" r="4.5" fill="#7EC8E3"/>
+<path d="M33,61 L62,51 L91,40 L120,32" fill="none" stroke="#555" stroke-width="1" stroke-dasharray="3,2" opacity="0.5"/>
+</svg>`,
+
+  lollipop: `<svg viewBox="0 0 150 95" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+<rect width="150" height="95" fill="#0f1117"/>
+<line x1="28" y1="8" x2="28" y2="86" stroke="#1e2030" stroke-width="0.8"/>
+<line x1="28" y1="57" x2="142" y2="57" stroke="#1e2030" stroke-width="0.35" stroke-dasharray="2,3"/>
+<line x1="28" y1="19" x2="128" y2="19" stroke="#7EC8E3" stroke-width="1.5" opacity="0.8"/><circle cx="128" cy="19" r="5.5" fill="#7EC8E3"/>
+<line x1="28" y1="34" x2="110" y2="34" stroke="#F0B27A" stroke-width="1.5" opacity="0.8"/><circle cx="110" cy="34" r="5.5" fill="#F0B27A"/>
+<line x1="28" y1="49" x2="138" y2="49" stroke="#95D5B2" stroke-width="1.5" opacity="0.8"/><circle cx="138" cy="49" r="5.5" fill="#95D5B2"/>
+<line x1="28" y1="64" x2="88" y2="64" stroke="#7EC8E3" stroke-width="1.5" opacity="0.8"/><circle cx="88" cy="64" r="5.5" fill="#7EC8E3"/>
+<line x1="28" y1="79" x2="118" y2="79" stroke="#F0B27A" stroke-width="1.5" opacity="0.8"/><circle cx="118" cy="79" r="5.5" fill="#F0B27A"/>
+</svg>`,
+
+  ridgeline: `<svg viewBox="0 0 150 95" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+<rect width="150" height="95" fill="#0f1117"/>
+<line x1="18" y1="81" x2="142" y2="81" stroke="#1e2030" stroke-width="0.8"/>
+<path d="M18,85 C25,85 32,84 42,76 C48,68 52,62 58,60 C64,62 68,68 74,76 C84,84 92,85 140,85 Z" fill="#1a3550" opacity="0.95"/>
+<path d="M18,85 C25,85 32,84 42,76 C48,68 52,62 58,60 C64,62 68,68 74,76 C84,84 92,85 140,85" fill="none" stroke="#7EC8E3" stroke-width="1.5" opacity="0.6"/>
+<path d="M18,72 C28,72 38,71 50,61 C58,51 62,43 70,40 C78,43 82,51 90,61 C102,71 112,72 140,72 Z" fill="#162a42" opacity="0.95"/>
+<path d="M18,72 C28,72 38,71 50,61 C58,51 62,43 70,40 C78,43 82,51 90,61 C102,71 112,72 140,72" fill="none" stroke="#7EC8E3" stroke-width="1.5" opacity="0.75"/>
+<path d="M18,56 C30,56 44,55 58,43 C66,31 72,21 80,18 C88,21 94,31 102,43 C116,55 130,56 140,56 Z" fill="#122038" opacity="0.95"/>
+<path d="M18,56 C30,56 44,55 58,43 C66,31 72,21 80,18 C88,21 94,31 102,43 C116,55 130,56 140,56" fill="none" stroke="#7EC8E3" stroke-width="1.5" opacity="0.88"/>
+<path d="M18,40 C32,40 48,39 64,25 C72,13 78,8 86,6 C94,8 100,13 108,25 C124,39 138,40 140,40 Z" fill="#0f1825" opacity="0.95"/>
+<path d="M18,40 C32,40 48,39 64,25 C72,13 78,8 86,6 C94,8 100,13 108,25 C124,39 138,40 140,40" fill="none" stroke="#95D5B2" stroke-width="1.8" opacity="1"/>
+</svg>`,
+};
+
+// ─────────────────────────────────────────────
 // 状态
 // ─────────────────────────────────────────────
 const DEFAULT_PARAMS = {
@@ -2157,7 +2334,7 @@ export function render() {
   const galleryCardsHtml = CHART_TYPES.map(ct => `
     <div class="p7-chart-card" data-chart="${ct.id}" id="p7-card-${ct.id}"
          role="button" tabindex="0" aria-label="打开 ${ct.name} 工作坊">
-      <div class="p7-thumb-wrap" id="p7-thumb-${ct.id}"></div>
+      <div class="p7-thumb-wrap">${CHART_ICONS[ct.id] || ''}</div>
       <div class="p7-card-info">
         <div class="p7-card-name">${ct.name}</div>
         <div class="p7-card-en">${ct.en}</div>
@@ -2246,7 +2423,7 @@ export function render() {
 .p7-chart-card.active {
   border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-glow);
 }
-.p7-thumb-wrap { background:var(--bg-dark); padding:12px 14px; }
+.p7-thumb-wrap { overflow:hidden; line-height:0; }
 .p7-card-info { padding:14px 14px 8px; flex:1; }
 .p7-card-name {
   font-family:var(--font-display); font-size:1.1rem; font-weight:700;
@@ -2456,7 +2633,7 @@ export function render() {
 <!-- Hero -->
 <section class="p7-hero section-dark section-hero-full" id="p7-hero">
   <div class="flex-col-center" style="gap:var(--space-md);text-align:center;position:relative;z-index:1;">
-    <p class="p7-eyebrow" id="p7-hero-eyebrow" style="font-family:var(--font-code);font-size:var(--text-small);color:var(--accent);letter-spacing:.15em;text-transform:uppercase;opacity:0;">Module 01 / Page 07</p>
+    <p class="hero-eyebrow p7-eyebrow" id="p7-hero-eyebrow" style="opacity:0;">Module 01 / Page 07</p>
     <h1 class="page-hero-title p7-hero-title" style="color:var(--text-on-dark);opacity:0;">ggplot2<br>图表工作坊</h1>
     <p class="page-hero-sub p7-hero-sub" style="opacity:0;">ggplot2 Chart Workshop</p>
     <p class="p7-hero-tagline" style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;opacity:0;">12 种常用图表 · 参数实时调节 · R 代码即时生成 · 一键导出脚本</p>
@@ -2687,11 +2864,7 @@ function initAnimations() {
 // init()
 // ─────────────────────────────────────────────
 export function init() {
-  // 绘制缩略图
-  CHART_TYPES.forEach(ct => {
-    const wrap = document.getElementById(`p7-thumb-${ct.id}`);
-    if (wrap) THUMB_FNS[ct.id](wrap);
-  });
+  // 缩略图已嵌入 HTML（CHART_ICONS），无需 D3 渲染
 
   // 初始化 CodeMirror
   const codeContainer = document.getElementById('p7-code-editor');

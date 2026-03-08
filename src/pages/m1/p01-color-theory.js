@@ -54,7 +54,7 @@ export function render() {
   <!-- ====== Section 1: Hero ====== -->
   <section class="section-dark section-hero-full m1p1-hero" style="align-items:center;">
     <div class="flex-col-center" style="gap:var(--space-md);text-align:center;">
-      <p class="m1p1-hero-eyebrow" style="font-family:var(--font-code);font-size:var(--text-small);color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;opacity:0;">Module 01 / Page 01</p>
+      <p class="hero-eyebrow m1p1-hero-eyebrow" style="opacity:0;">Module 01 / Page 01</p>
       <h1 class="page-hero-title m1p1-hero-title" style="color:var(--text-on-dark);opacity:0;">色彩理论基础</h1>
       <p class="page-hero-sub m1p1-hero-sub" style="opacity:0;">Color Theory Fundamentals</p>
       <p class="m1p1-hero-tagline" style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;margin-top:var(--space-sm);opacity:0;">理解光与色彩的物理与感知基础，为科研配色建立系统认知</p>
@@ -65,6 +65,7 @@ export function render() {
         <button class="hero-quicknav__item" data-target=".m1p1-mixing-section">加色与减色</button>
       </nav>
     </div>
+    <div class="m1p1-scroll-hint">↓ 向下探索</div>
   </section>
 
   <!-- ====== Section 2: Interactive Color Wheel ====== -->
@@ -220,7 +221,7 @@ export function render() {
       </div>
       <div style="margin-top:var(--space-lg);display:flex;gap:var(--space-md);flex-wrap:wrap;justify-content:center;">
         <a class="btn-ghost btn-small m1p1-nav-link" data-route="m1-p3">调色板生成器</a>
-        <a class="btn-ghost btn-small m1p1-nav-link" data-route="m1-p4">色彩无障碍</a>
+        <a class="btn-ghost btn-small m1p1-nav-link" data-route="m1-p4">色彩与阅读无障碍</a>
         <a class="btn-ghost btn-small m1p1-nav-link" data-route="m1-p5">图表类型选择</a>
       </div>
     </div>
@@ -234,6 +235,13 @@ export function render() {
     position: relative;
     overflow: hidden;
   }
+  .m1p1-scroll-hint {
+    position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%);
+    font-size: var(--text-caption); color: var(--text-on-dark-3);
+    animation: m1p1-float 2s ease-in-out infinite;
+    white-space: nowrap;
+  }
+  @keyframes m1p1-float { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
   .m1p1-hero::before {
     content: '';
     position: absolute;
