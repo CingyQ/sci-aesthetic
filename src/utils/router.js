@@ -1,9 +1,11 @@
 // hash 路由
 // 路由格式：#home / #m1-p1 ~ #m1-p10 / #m2-p1 ~ #m2-p6 / #m3-p1 ~ #m3-p7 / #m4-p1 ~ #m4-p8 / #ref
+import { markVisited } from './progress.js';
 
 const routes = new Map();
 let currentDestroy = null;
 let routeChangeCallbacks = [];
+let isTransitioning = false;
 
 // 注册路由
 export function registerRoute(hash, loader) {
@@ -26,10 +28,22 @@ export function onRouteChange(callback) {
   routeChangeCallbacks.push(callback);
 }
 
-// 路由变化处理
+// 路由变化处理（带 fade 过渡）
 async function handleRouteChange() {
   const hash = getCurrentRoute();
   const loader = routes.get(hash);
+
+  const mainContent = document.getElementById('main-content');
+  if (!mainContent) return;
+
+  // 如果正在过渡中，跳过动画直接切换
+  if (isTransitioning) {
+    mainContent.style.opacity = '1';
+    mainContent.style.transform = 'none';
+  }
+
+  // 标记学习进度
+  markVisited(hash);
 
   // 销毁当前页面
   if (currentDestroy) {
@@ -37,16 +51,35 @@ async function handleRouteChange() {
     currentDestroy = null;
   }
 
-  const mainContent = document.getElementById('main-content');
-
   if (loader) {
     try {
-      const pageModule = await loader();
-      mainContent.innerHTML = pageModule.render();
-      mainContent.classList.add('page-enter');
+      isTransitioning = true;
 
-      // 移除动画类（下次切换可重新触发）
-      setTimeout(() => mainContent.classList.remove('page-enter'), 500);
+      // Fade out
+      mainContent.style.transition = 'opacity 0.15s ease, transform 0.15s ease';
+      mainContent.style.opacity = '0';
+      mainContent.style.transform = 'translateY(8px)';
+
+      // 加载模块（可与 fade out 并行）
+      const pageModule = await loader();
+
+      // 等 fade out 完成
+      await new Promise(r => setTimeout(r, 150));
+
+      // 渲染新内容
+      mainContent.innerHTML = pageModule.render();
+
+      // Fade in
+      requestAnimationFrame(() => {
+        mainContent.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+        mainContent.style.opacity = '1';
+        mainContent.style.transform = 'translateY(0)';
+      });
+
+      setTimeout(() => {
+        isTransitioning = false;
+        mainContent.style.transition = '';
+      }, 350);
 
       if (pageModule.init) {
         pageModule.init();
@@ -59,6 +92,10 @@ async function handleRouteChange() {
       routeChangeCallbacks.forEach(cb => cb(hash));
     } catch (err) {
       console.error(`路由加载失败: ${hash}`, err);
+      isTransitioning = false;
+      mainContent.style.opacity = '1';
+      mainContent.style.transform = 'none';
+      mainContent.style.transition = '';
       mainContent.innerHTML = `
         <div class="section-light" style="align-items:center;">
           <h2>页面加载失败</h2>

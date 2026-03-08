@@ -1,562 +1,217 @@
-// 首页 — 临时样式展示页
-// 展示所有设计系统组件在明暗背景交替下的效果
+// 首页 — Landing Page
+// 深色 Hero + Canvas 几何动画 + 模块卡片 + 统计 + 学习路径
+import { fadeIn, countUp, scaleReveal, parallax, killAll, gsap, ScrollTrigger } from '../components/ScrollAnimations.js';
+import { getAllProgress } from '../utils/progress.js';
+import { navigateTo } from '../utils/router.js';
+
+// 模块数据
+const MODULES = [
+  {
+    id: 'm1', route: 'm1-p1',
+    title: '科研数据可视化',
+    subtitle: 'Data Visualization',
+    color: '#7EC8E3',
+    pages: 10,
+    desc: '从色彩理论到出版级图表——掌握 R/Python 数据可视化全流程，让你的 Figure 经得起顶刊审稿人的审视。',
+    highlights: ['交互色轮与配色生成器', 'ggplot2 图表工作坊', '期刊导出规格速查'],
+    icon: `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`,
+  },
+  {
+    id: 'm2', route: 'm2-p1',
+    title: 'AI 辅助科研绘图',
+    subtitle: 'AI-Assisted Illustration',
+    color: '#B8B8E8',
+    pages: 6,
+    desc: 'AI 工具如何在科研绘图中扮演恰当的角色——工具选择、Prompt 技巧、矢量化处理，以及不可忽视的伦理边界。',
+    highlights: ['Prompt 质量评分器', 'AI 矢量化模拟器', '期刊 AI 政策对照'],
+    icon: `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 014 4c0 1.95-1.4 3.58-3.25 3.93L12 22l-.75-12.07A4.001 4.001 0 0112 2z"/><circle cx="12" cy="6" r="1"/></svg>`,
+  },
+  {
+    id: 'm3', route: 'm3-p1',
+    title: '矢量绘图与设计',
+    subtitle: 'Vector Graphics & Design',
+    color: '#95D5B2',
+    pages: 7,
+    desc: '将默认图表升级为出版级——贝塞尔曲线编辑器、SVG 手动优化、多面板 Figure 排版，让每张图都精确到像素。',
+    highlights: ['贝塞尔曲线交互编辑器', '8 组 Before/After 美化', 'Figure 布局拖拽编辑器'],
+    icon: `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>`,
+  },
+  {
+    id: 'm4', route: 'm4-p1',
+    title: '学术演示设计',
+    subtitle: 'Academic Presentation Design',
+    color: '#F0B27A',
+    pages: 8,
+    desc: '从一张幻灯片到完整学术传播物料——排版原则、注意力引导、海报设计、Graphical Abstract，全面提升学术表达力。',
+    highlights: ['注意力热力图交互', 'PPT 改造 Before/After', '学术海报布局模板'],
+    icon: `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`,
+  },
+];
+
+// 学习路径推荐
+const ROLES = [
+  {
+    id: 'grad',
+    label: '研究生',
+    desc: '刚接触科研绘图，需要系统学习',
+    path: ['m1', 'm3', 'm4', 'm2'],
+    tip: '从数据可视化基础开始，循序渐进',
+  },
+  {
+    id: 'postdoc',
+    label: '博士后/青年教师',
+    desc: '有基础，想提升图表品质和效率',
+    path: ['m1', 'm2', 'm3', 'm4'],
+    tip: '直接进入高级技巧，善用 AI 提效',
+  },
+  {
+    id: 'pi',
+    label: 'PI / 导师',
+    desc: '指导学生，需要规范和参考',
+    path: ['m4', 'm1', 'm3', 'm2'],
+    tip: '先看演示设计规范，再深入技术细节',
+  },
+  {
+    id: 'designer',
+    label: '科研设计师',
+    desc: '帮课题组做美化，需要专业工具',
+    path: ['m3', 'm1', 'm4', 'm2'],
+    tip: '矢量设计为核心，数据理解为辅助',
+  },
+];
+
+const MODULE_TITLES = { m1: '数据可视化', m2: 'AI 辅助', m3: '矢量设计', m4: '演示设计' };
+const MODULE_COLORS = { m1: '#7EC8E3', m2: '#B8B8E8', m3: '#95D5B2', m4: '#F0B27A' };
 
 export function render() {
+  const progress = getAllProgress();
+
   return `
-    <div class="page-scroll">
+    <div class="page-scroll home-page">
 
-      <!-- ====== Hero（深色） ====== -->
-      <section class="section-dark" style="align-items:center;">
-        <h1 class="text-hero" style="color:var(--text-on-dark);text-align:center;font-family:var(--font-display);letter-spacing:0.02em;">SciAesthetic</h1>
-        <p class="page-hero-sub" style="font-weight:300;opacity:0.5;">样式展示页</p>
-      </section>
-
-      <!-- ====== 色彩系统（浅色） ====== -->
-      <section class="section-light section-auto">
-        <div class="content-wrapper">
-          <h2 style="margin-bottom:var(--space-lg);">色彩系统</h2>
-
-          <h6 style="margin-bottom:var(--space-sm);">浅色表面</h6>
-          <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;margin-bottom:var(--space-lg);">
-            <div style="text-align:center;">
-              <div class="color-swatch-lg" style="background:#fafafa;"></div>
-              <span style="font-size:var(--text-caption);color:var(--text-on-light-3);margin-top:4px;display:block;">bg-light</span>
-            </div>
-            <div style="text-align:center;">
-              <div class="color-swatch-lg" style="background:#f5f5f7;"></div>
-              <span style="font-size:var(--text-caption);color:var(--text-on-light-3);margin-top:4px;display:block;">bg-light-alt</span>
-            </div>
-            <div style="text-align:center;">
-              <div class="color-swatch-lg" style="background:#ffffff;"></div>
-              <span style="font-size:var(--text-caption);color:var(--text-on-light-3);margin-top:4px;display:block;">bg-elevated</span>
-            </div>
-            <div style="text-align:center;">
-              <div class="color-swatch-lg" style="background:#1d1d1f;"></div>
-              <span style="font-size:var(--text-caption);color:var(--text-on-light-3);margin-top:4px;display:block;">text-on-light</span>
-            </div>
-            <div style="text-align:center;">
-              <div class="color-swatch-lg" style="background:#6e6e73;"></div>
-              <span style="font-size:var(--text-caption);color:var(--text-on-light-3);margin-top:4px;display:block;">text-2</span>
-            </div>
-            <div style="text-align:center;">
-              <div class="color-swatch-lg" style="background:#86868b;"></div>
-              <span style="font-size:var(--text-caption);color:var(--text-on-light-3);margin-top:4px;display:block;">text-3</span>
-            </div>
-            <div style="text-align:center;">
-              <div class="color-swatch-lg" style="background:#d2d2d7;"></div>
-              <span style="font-size:var(--text-caption);color:var(--text-on-light-3);margin-top:4px;display:block;">border</span>
-            </div>
+      <!-- ====== Hero（深色，100vh）====== -->
+      <section class="section-dark home-hero" id="home-hero">
+        <canvas id="hero-canvas"></canvas>
+        <div class="home-hero-content">
+          <h1 class="home-hero-title">SciAesthetic</h1>
+          <p class="home-hero-slogan">你的研究值得更好的表达</p>
+          <p class="home-hero-sub">科研视觉传达知识百科——从色彩理论到出版级图表的完整体系</p>
+          <div class="home-hero-actions">
+            <button class="btn-primary home-hero-btn" id="hero-explore-btn">开始探索</button>
+            <button class="btn-ghost home-hero-btn" id="hero-search-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              搜索
+              <kbd class="hero-kbd">⌘K</kbd>
+            </button>
           </div>
-
-          <h6 style="margin-bottom:var(--space-sm);">强调色 + 模块标识色</h6>
-          <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;margin-bottom:var(--space-lg);">
-            <div style="text-align:center;">
-              <div class="color-swatch-lg" style="background:#7EC8E3;"></div>
-              <span style="font-size:var(--text-caption);color:var(--text-on-light-3);margin-top:4px;display:block;">accent</span>
-            </div>
-            <div style="text-align:center;">
-              <div class="color-swatch-lg" style="background:#5BA3C9;"></div>
-              <span style="font-size:var(--text-caption);color:var(--text-on-light-3);margin-top:4px;display:block;">accent-hover</span>
-            </div>
-            <div style="text-align:center;">
-              <div class="color-swatch-lg" style="background:#B8B8E8;"></div>
-              <span style="font-size:var(--text-caption);color:var(--text-on-light-3);margin-top:4px;display:block;">M2 淡紫</span>
-            </div>
-            <div style="text-align:center;">
-              <div class="color-swatch-lg" style="background:#95D5B2;"></div>
-              <span style="font-size:var(--text-caption);color:var(--text-on-light-3);margin-top:4px;display:block;">M3 薄荷绿</span>
-            </div>
-            <div style="text-align:center;">
-              <div class="color-swatch-lg" style="background:#F0B27A;"></div>
-              <span style="font-size:var(--text-caption);color:var(--text-on-light-3);margin-top:4px;display:block;">M4 暖橙</span>
-            </div>
-          </div>
-
-          <h6 style="margin-bottom:var(--space-sm);">数据色</h6>
-          <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;">
-            <div class="color-swatch" style="background:var(--data-blue);"></div>
-            <div class="color-swatch" style="background:var(--data-green);"></div>
-            <div class="color-swatch" style="background:var(--data-purple);"></div>
-            <div class="color-swatch" style="background:var(--data-orange);"></div>
-            <div class="color-swatch" style="background:var(--data-red);"></div>
-            <div class="color-swatch" style="background:var(--data-yellow);"></div>
-            <div class="color-swatch" style="background:var(--data-pink);"></div>
-            <div class="color-swatch" style="background:var(--data-teal);"></div>
-          </div>
+        </div>
+        <div class="home-hero-scroll-hint" id="scroll-hint">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
       </section>
 
-      <!-- ====== 字体排版（深色） ====== -->
-      <section class="section-dark section-auto">
+      <!-- ====== 模块导航（交错排列）====== -->
+      ${MODULES.map((mod, i) => {
+        const isOdd = i % 2 === 1;
+        const bg = isOdd ? 'section-dark' : 'section-light';
+        const p = progress[mod.id] || 0;
+        return `
+      <section class="${bg} home-module-section" id="module-${mod.id}">
         <div class="content-wrapper">
-          <h2 style="margin-bottom:var(--space-lg);">字体排版</h2>
-
-          <div style="margin-bottom:var(--space-xl);">
-            <p style="font-size:var(--text-caption);color:var(--text-on-dark-3);margin-bottom:var(--space-xs);">--text-hero · Playfair Display · 700</p>
-            <span class="text-hero" style="color:var(--text-on-dark);">Science</span>
-          </div>
-
-          <div style="margin-bottom:var(--space-xl);">
-            <p style="font-size:var(--text-caption);color:var(--text-on-dark-3);margin-bottom:var(--space-xs);">--text-display · Playfair Display · 700</p>
-            <span class="page-hero-title" style="color:var(--text-on-dark);text-align:left;font-family:var(--font-display);letter-spacing:0.02em;">SciAesthetic</span>
-          </div>
-
-          <div style="margin-bottom:var(--space-xl);">
-            <p style="font-size:var(--text-caption);color:var(--text-on-dark-3);margin-bottom:var(--space-xs);">--text-title · Inter · 300（引言/副标题）</p>
-            <span style="font-size:var(--text-title);font-weight:300;line-height:1.4;color:var(--text-on-dark-2);">面向科研工作者的交互式知识百科</span>
-          </div>
-
-          <div style="margin-bottom:var(--space-xl);">
-            <p style="font-size:var(--text-caption);color:var(--text-on-dark-3);margin-bottom:var(--space-xs);">--text-heading · Inter · 700</p>
-            <h3>图表选择指南</h3>
-          </div>
-
-          <div style="margin-bottom:var(--space-xl);">
-            <p style="font-size:var(--text-caption);color:var(--text-on-dark-3);margin-bottom:var(--space-xs);">--text-body · Noto Sans SC · 400 · line-height 1.8</p>
-            <p style="color:var(--text-on-dark-2);">在科研论文写作中，数据可视化是传递研究发现的核心手段。一张精心设计的图表不仅能让审稿人快速理解你的数据模式，更能在读者脑中留下深刻印象。好的图表设计遵循「数据墨水比」原则——每一滴墨水都应服务于数据本身。</p>
-          </div>
-
-          <div style="margin-bottom:var(--space-xl);">
-            <p style="font-size:var(--text-caption);color:var(--text-on-dark-3);margin-bottom:var(--space-xs);">--text-code · JetBrains Mono · 400</p>
-            <pre><code>library(ggplot2)
-ggplot(mtcars, aes(x = wt, y = mpg)) +
-  geom_point(color = "#7EC8E3", size = 3) +
-  theme_minimal(base_size = 14)</code></pre>
-          </div>
-
-          <div>
-            <p style="font-size:var(--text-caption);color:var(--text-on-dark-3);margin-bottom:var(--space-xs);">--text-stat · 统计数字</p>
-            <div style="display:flex;gap:var(--space-xl);flex-wrap:wrap;">
-              <div>
-                <span class="stat-number" style="color:var(--accent);">31</span>
-                <p style="font-size:var(--text-small);color:var(--text-on-dark-3);margin-top:var(--space-xs);">知识词条</p>
+          <div class="home-module-card ${isOdd ? 'reverse' : ''}" data-color="${mod.color}">
+            <div class="home-module-visual">
+              <div class="home-module-icon-ring" style="--mod-color: ${mod.color}">
+                <div class="home-module-icon">${mod.icon}</div>
               </div>
-              <div>
-                <span class="stat-number" style="color:var(--accent);">120+</span>
-                <p style="font-size:var(--text-small);color:var(--text-on-dark-3);margin-top:var(--space-xs);">交互组件</p>
+              <div class="home-module-number" style="color: ${mod.color}">${String(i + 1).padStart(2, '0')}</div>
+            </div>
+            <div class="home-module-info">
+              <span class="home-module-subtitle" style="color: ${mod.color}">${mod.subtitle}</span>
+              <h2 class="home-module-title">${mod.title}</h2>
+              <p class="home-module-desc">${mod.desc}</p>
+              <ul class="home-module-highlights">
+                ${mod.highlights.map(h => `<li><span class="highlight-dot" style="background:${mod.color}"></span>${h}</li>`).join('')}
+              </ul>
+              <div class="home-module-footer">
+                <a href="#${mod.route}" class="btn-primary home-module-btn" style="background:${mod.color}" data-route="${mod.route}">
+                  进入模块
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
+                <div class="home-module-progress" data-module="${mod.id}">
+                  <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" style="width:${p}%;background:${mod.color}"></div>
+                  </div>
+                  <span class="progress-label">${p > 0 ? `${p}% 已探索` : `${mod.pages} 个词条`}</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
+      </section>`;
+      }).join('')}
+
+      <!-- ====== 统计数字（深色）====== -->
+      <section class="section-dark-deep home-stats-section" id="home-stats">
+        <div class="content-wrapper">
+          <div class="home-stats-grid">
+            <div class="home-stat-item">
+              <span class="stat-number home-stat-num" id="stat-entries" data-target="31">0</span>
+              <span class="home-stat-label">知识词条</span>
+            </div>
+            <div class="home-stat-item">
+              <span class="stat-number home-stat-num" id="stat-components" data-target="120">0</span>
+              <span class="home-stat-label">交互组件</span>
+            </div>
+            <div class="home-stat-item">
+              <span class="stat-number home-stat-num" id="stat-palettes" data-target="50">0</span>
+              <span class="home-stat-label">配色方案</span>
+            </div>
+            <div class="home-stat-item">
+              <span class="stat-number home-stat-num" id="stat-charts" data-target="20">0</span>
+              <span class="home-stat-label">图表类型</span>
+            </div>
+          </div>
+        </div>
       </section>
 
-      <!-- ====== 按钮（浅色） ====== -->
-      <section class="section-light section-auto">
+      <!-- ====== 学习路径推荐（浅色）====== -->
+      <section class="section-light home-path-section" id="home-path">
         <div class="content-wrapper">
-          <h2 style="margin-bottom:var(--space-lg);">按钮</h2>
-
-          <h6 style="margin-bottom:var(--space-sm);">Primary</h6>
-          <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;align-items:center;margin-bottom:var(--space-lg);">
-            <button class="btn-primary">开始探索</button>
-            <button class="btn-primary btn-small">小按钮</button>
-            <button class="btn-primary" disabled>禁用状态</button>
+          <div class="home-path-header">
+            <h2 class="home-section-title">选择你的角色</h2>
+            <p class="home-section-sub">我们为不同背景的科研工作者推荐最适合的学习路径</p>
           </div>
-
-          <h6 style="margin-bottom:var(--space-sm);">Ghost</h6>
-          <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;align-items:center;margin-bottom:var(--space-lg);">
-            <button class="btn-ghost">查看详情</button>
-            <button class="btn-ghost btn-small">小按钮</button>
-            <button class="btn-ghost" disabled>禁用状态</button>
-          </div>
-
-          <h6 style="margin-bottom:var(--space-sm);">Icon Button</h6>
-          <div style="display:flex;gap:var(--space-sm);align-items:center;">
-            <button class="btn-icon" aria-label="复制">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+          <div class="home-role-selector">
+            ${ROLES.map((role, i) => `
+            <button class="home-role-btn ${i === 0 ? 'active' : ''}" data-role="${role.id}">
+              <span class="home-role-label">${role.label}</span>
+              <span class="home-role-desc">${role.desc}</span>
             </button>
-            <button class="btn-icon" aria-label="下载">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            </button>
-            <button class="btn-icon" aria-label="设置">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-            </button>
+            `).join('')}
           </div>
-        </div>
-      </section>
-
-      <!-- ====== 按钮 - 深色背景 ====== -->
-      <section class="section-dark section-auto">
-        <div class="content-wrapper">
-          <h2 style="margin-bottom:var(--space-lg);">按钮（深色背景）</h2>
-
-          <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;align-items:center;margin-bottom:var(--space-lg);">
-            <button class="btn-primary">开始探索</button>
-            <button class="btn-ghost">查看详情</button>
-            <button class="btn-icon" aria-label="设置">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- ====== 标签（浅色） ====== -->
-      <section class="section-light section-auto">
-        <div class="content-wrapper">
-          <h2 style="margin-bottom:var(--space-lg);">标签（Tags）</h2>
-
-          <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;margin-bottom:var(--space-lg);">
-            <span class="tag">默认标签</span>
-            <span class="tag tag-m1">数据可视化</span>
-            <span class="tag tag-m2">AI 辅助</span>
-            <span class="tag tag-m3">矢量设计</span>
-            <span class="tag tag-m4">演示设计</span>
-          </div>
-
-          <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;">
-            <span class="tag tag-success">通过</span>
-            <span class="tag tag-warning">注意</span>
-            <span class="tag tag-error">错误</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- ====== 输入框 + 下拉 + 滑块（深色） ====== -->
-      <section class="section-dark section-auto">
-        <div class="content-wrapper">
-          <h2 style="margin-bottom:var(--space-lg);">输入控件（深色背景）</h2>
-
-          <div style="max-width:480px;">
-            <div style="margin-bottom:var(--space-md);">
-              <label style="display:block;font-size:var(--text-small);color:var(--text-on-dark-2);margin-bottom:var(--space-xs);">文本输入</label>
-              <input class="input" type="text" placeholder="输入颜色 HEX 值，如 #7EC8E3" />
-            </div>
-
-            <div style="margin-bottom:var(--space-md);">
-              <label style="display:block;font-size:var(--text-small);color:var(--text-on-dark-2);margin-bottom:var(--space-xs);">下拉选择</label>
-              <select class="select">
-                <option>选择图表类型</option>
-                <option>散点图 Scatter</option>
-                <option>柱状图 Bar</option>
-                <option>折线图 Line</option>
-                <option>箱线图 Boxplot</option>
-              </select>
-            </div>
-
-            <div style="margin-bottom:var(--space-md);">
-              <label style="display:block;font-size:var(--text-small);color:var(--text-on-dark-2);margin-bottom:var(--space-xs);">数值输入</label>
-              <input class="input input-number" type="number" inputmode="decimal" placeholder="300" min="72" max="1200" step="1" />
-            </div>
-
-            <div style="margin-bottom:var(--space-md);">
-              <label style="display:block;font-size:var(--text-small);color:var(--text-on-dark-2);margin-bottom:var(--space-xs);">滑块 — DPI: <span id="dpi-value">300</span></label>
-              <input class="range" type="range" min="72" max="600" value="300" id="dpi-slider" />
-            </div>
-
-            <div>
-              <label style="display:block;font-size:var(--text-small);color:var(--text-on-dark-2);margin-bottom:var(--space-xs);">文本域</label>
-              <textarea class="input" rows="3" placeholder="输入 R 代码或描述…"></textarea>
+          <div class="home-path-display" id="path-display">
+            <div class="home-path-tip" id="path-tip">${ROLES[0].tip}</div>
+            <div class="home-path-steps" id="path-steps">
+              ${renderPathSteps(ROLES[0].path)}
             </div>
           </div>
         </div>
       </section>
 
-      <!-- ====== 输入框（浅色） ====== -->
-      <section class="section-light section-auto">
-        <div class="content-wrapper">
-          <h2 style="margin-bottom:var(--space-lg);">输入控件（浅色背景）</h2>
-
-          <div style="max-width:480px;">
-            <div style="margin-bottom:var(--space-md);">
-              <label style="display:block;font-size:var(--text-small);color:var(--text-on-light-2);margin-bottom:var(--space-xs);">文本输入</label>
-              <input class="input" type="text" placeholder="输入期刊名称" />
-            </div>
-
-            <div style="margin-bottom:var(--space-md);">
-              <label style="display:block;font-size:var(--text-small);color:var(--text-on-light-2);margin-bottom:var(--space-xs);">下拉选择</label>
-              <select class="select">
-                <option>选择配色方案</option>
-                <option>viridis</option>
-                <option>RColorBrewer Set2</option>
-                <option>ggsci Nature</option>
-              </select>
-            </div>
-
-            <div>
-              <label style="display:block;font-size:var(--text-small);color:var(--text-on-light-2);margin-bottom:var(--space-xs);">滑块 — 颜色数量: <span id="color-count-value">5</span></label>
-              <input class="range" type="range" min="3" max="12" value="5" id="color-count-slider" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ====== 表格（浅色） ====== -->
-      <section class="section-light section-auto">
-        <div class="content-wrapper">
-          <h2 style="margin-bottom:var(--space-lg);">表格（浅色背景）</h2>
-
-          <div class="table-wrapper">
-            <table>
-              <thead>
-                <tr>
-                  <th>期刊</th>
-                  <th>图片宽度</th>
-                  <th>DPI</th>
-                  <th>格式</th>
-                  <th>色彩模式</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Nature</strong></td>
-                  <td>89 mm（单栏）/ 183 mm（双栏）</td>
-                  <td>300+</td>
-                  <td>TIFF, EPS, PDF</td>
-                  <td>RGB</td>
-                </tr>
-                <tr>
-                  <td><strong>Science</strong></td>
-                  <td>85 mm / 114 mm / 174 mm</td>
-                  <td>300+</td>
-                  <td>EPS, PDF</td>
-                  <td>RGB / CMYK</td>
-                </tr>
-                <tr>
-                  <td><strong>Cell</strong></td>
-                  <td>85 mm / 114 mm / 174 mm</td>
-                  <td>300+</td>
-                  <td>PDF, EPS, TIFF</td>
-                  <td>RGB</td>
-                </tr>
-                <tr>
-                  <td><strong>PNAS</strong></td>
-                  <td>8.7 cm / 11.4 cm / 17.8 cm</td>
-                  <td>300-600</td>
-                  <td>TIFF, EPS</td>
-                  <td>RGB</td>
-                </tr>
-                <tr>
-                  <td><strong>Lancet</strong></td>
-                  <td>89 mm（单栏）</td>
-                  <td>300+</td>
-                  <td>EPS, TIFF</td>
-                  <td>CMYK</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- ====== 表格（深色） ====== -->
-      <section class="section-dark section-auto">
-        <div class="content-wrapper">
-          <h2 style="margin-bottom:var(--space-lg);">表格（深色背景）</h2>
-
-          <div class="table-wrapper">
-            <table>
-              <thead>
-                <tr>
-                  <th>图表类型</th>
-                  <th>适用数据</th>
-                  <th>变量数</th>
-                  <th>推荐场景</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>散点图</td>
-                  <td>连续 × 连续</td>
-                  <td>2-3</td>
-                  <td>相关性、分布</td>
-                </tr>
-                <tr>
-                  <td>柱状图</td>
-                  <td>分类 × 连续</td>
-                  <td>1-2</td>
-                  <td>组间比较</td>
-                </tr>
-                <tr>
-                  <td>箱线图</td>
-                  <td>分类 × 连续</td>
-                  <td>1-2</td>
-                  <td>分布比较</td>
-                </tr>
-                <tr>
-                  <td>热力图</td>
-                  <td>矩阵数据</td>
-                  <td>3+</td>
-                  <td>相关矩阵、基因表达</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- ====== 代码块 + inline code（浅色） ====== -->
-      <section class="section-light section-auto">
-        <div class="content-wrapper">
-          <h2 style="margin-bottom:var(--space-lg);">代码</h2>
-
-          <p style="margin-bottom:var(--space-md);">使用 <code>ggplot2</code> 的 <code>geom_point()</code> 函数可以创建散点图。设置 <code>color</code>、<code>size</code> 和 <code>alpha</code> 参数控制外观。</p>
-
-          <pre><code>import matplotlib.pyplot as plt
-import numpy as np
-
-x = np.random.randn(200)
-y = 2 * x + np.random.randn(200) * 0.5
-
-fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
-ax.scatter(x, y, c='#7EC8E3', s=40, alpha=0.7, edgecolors='none')
-ax.set_xlabel('Variable X', fontsize=12)
-ax.set_ylabel('Variable Y', fontsize=12)
-plt.tight_layout()
-plt.savefig('scatter.pdf', dpi=300, bbox_inches='tight')</code></pre>
-        </div>
-      </section>
-
-      <!-- ====== 间距 + 圆角 + 阴影（深色） ====== -->
-      <section class="section-dark section-auto">
-        <div class="content-wrapper">
-          <h2 style="margin-bottom:var(--space-lg);">间距 · 圆角 · 阴影</h2>
-
-          <h6 style="margin-bottom:var(--space-sm);">间距</h6>
-          <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;align-items:flex-end;margin-bottom:var(--space-xl);">
-            <div style="text-align:center;">
-              <div style="width:var(--space-xs);height:var(--space-xs);background:var(--accent);border-radius:2px;margin:0 auto;"></div>
-              <span style="font-size:var(--text-caption);color:var(--text-on-dark-3);margin-top:4px;display:block;">xs 8</span>
-            </div>
-            <div style="text-align:center;">
-              <div style="width:var(--space-sm);height:var(--space-sm);background:var(--accent);border-radius:2px;margin:0 auto;"></div>
-              <span style="font-size:var(--text-caption);color:var(--text-on-dark-3);margin-top:4px;display:block;">sm 16</span>
-            </div>
-            <div style="text-align:center;">
-              <div style="width:var(--space-md);height:var(--space-md);background:var(--accent);border-radius:2px;margin:0 auto;"></div>
-              <span style="font-size:var(--text-caption);color:var(--text-on-dark-3);margin-top:4px;display:block;">md 24</span>
-            </div>
-            <div style="text-align:center;">
-              <div style="width:var(--space-lg);height:var(--space-lg);background:var(--accent);border-radius:2px;margin:0 auto;"></div>
-              <span style="font-size:var(--text-caption);color:var(--text-on-dark-3);margin-top:4px;display:block;">lg 48</span>
-            </div>
-            <div style="text-align:center;">
-              <div style="width:80px;height:80px;background:var(--accent);border-radius:2px;margin:0 auto;"></div>
-              <span style="font-size:var(--text-caption);color:var(--text-on-dark-3);margin-top:4px;display:block;">xl 80</span>
-            </div>
-          </div>
-
-          <h6 style="margin-bottom:var(--space-sm);">圆角</h6>
-          <div style="display:flex;gap:var(--space-md);flex-wrap:wrap;margin-bottom:var(--space-xl);">
-            <div style="width:80px;height:80px;background:var(--bg-dark-elevated);border:1px solid var(--border-dark);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:var(--text-caption);color:var(--text-on-dark-3);">sm 8</div>
-            <div style="width:80px;height:80px;background:var(--bg-dark-elevated);border:1px solid var(--border-dark);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:var(--text-caption);color:var(--text-on-dark-3);">md 16</div>
-            <div style="width:80px;height:80px;background:var(--bg-dark-elevated);border:1px solid var(--border-dark);border-radius:var(--radius-lg);display:flex;align-items:center;justify-content:center;font-size:var(--text-caption);color:var(--text-on-dark-3);">lg 24</div>
-            <div style="width:80px;height:80px;background:var(--bg-dark-elevated);border:1px solid var(--border-dark);border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:var(--text-caption);color:var(--text-on-dark-3);">full</div>
-          </div>
-
-          <h6 style="margin-bottom:var(--space-sm);">阴影（浅色背景展示）</h6>
-          <div style="display:flex;gap:var(--space-md);flex-wrap:wrap;">
-            <div style="width:120px;height:80px;background:var(--bg-light-elevated);border-radius:var(--radius-md);box-shadow:var(--shadow-sm);display:flex;align-items:center;justify-content:center;font-size:var(--text-caption);color:var(--text-on-light-2);">shadow-sm</div>
-            <div style="width:120px;height:80px;background:var(--bg-light-elevated);border-radius:var(--radius-md);box-shadow:var(--shadow-md);display:flex;align-items:center;justify-content:center;font-size:var(--text-caption);color:var(--text-on-light-2);">shadow-md</div>
-            <div style="width:120px;height:80px;background:var(--bg-light-elevated);border-radius:var(--radius-md);box-shadow:var(--shadow-lg);display:flex;align-items:center;justify-content:center;font-size:var(--text-caption);color:var(--text-on-light-2);">shadow-lg</div>
-            <div style="width:120px;height:80px;background:var(--bg-light-elevated);border-radius:var(--radius-md);box-shadow:var(--shadow-glow);display:flex;align-items:center;justify-content:center;font-size:var(--text-caption);color:var(--text-on-light-2);">shadow-glow</div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ====== 动画类预览（浅色） ====== -->
-      <section class="section-light section-auto">
-        <div class="content-wrapper">
-          <h2 style="margin-bottom:var(--space-lg);">动画 CSS 类</h2>
-          <p style="color:var(--text-on-light-2);margin-bottom:var(--space-lg);">点击按钮触发动画效果。GSAP ScrollTrigger 动画在 Phase 2 的 ScrollAnimations.js 中实现。</p>
-
-          <div style="display:flex;gap:var(--space-md);flex-wrap:wrap;align-items:flex-start;">
-            <div>
-              <button class="btn-ghost btn-small" id="demo-fade">fade-in</button>
-              <div id="demo-fade-target" style="margin-top:var(--space-sm);width:200px;height:60px;background:var(--accent-subtle);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:var(--text-small);color:var(--accent);transition:opacity 0.8s var(--ease-out),transform 0.8s var(--ease-out);">fade-in 目标</div>
-            </div>
-
-            <div>
-              <button class="btn-ghost btn-small" id="demo-scale">scale-reveal</button>
-              <div id="demo-scale-target" style="margin-top:var(--space-sm);width:200px;height:60px;background:var(--accent-subtle);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:var(--text-small);color:var(--accent);transition:opacity 1s var(--ease-out),transform 1s var(--ease-out);">scale-reveal 目标</div>
-            </div>
-
-            <div>
-              <button class="btn-ghost btn-small pulse">pulse 脉冲</button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ====== 布局工具类（深色） ====== -->
-      <section class="section-dark section-auto">
-        <div class="content-wrapper">
-          <h2 style="margin-bottom:var(--space-lg);">布局工具类</h2>
-
-          <h6 style="margin-bottom:var(--space-sm);">交错图文 .stagger-row</h6>
-          <div class="stagger-row" style="margin-bottom:var(--space-xl);">
-            <div style="background:var(--bg-dark-elevated);border-radius:var(--radius-md);height:200px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border-dark);">
-              <span style="color:var(--text-on-dark-3);">图片 / 交互组件</span>
-            </div>
-            <div>
-              <h3 style="margin-bottom:var(--space-sm);">图左文右</h3>
-              <p style="color:var(--text-on-dark-2);">使用 <code>.stagger-row</code> 实现交错图文布局。两个子元素各占 50%，移动端自动堆叠为纵向排列。</p>
-            </div>
-          </div>
-
-          <div class="stagger-row reverse">
-            <div style="background:var(--bg-dark-elevated);border-radius:var(--radius-md);height:200px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border-dark);">
-              <span style="color:var(--text-on-dark-3);">图片 / 交互组件</span>
-            </div>
-            <div>
-              <h3 style="margin-bottom:var(--space-sm);">图右文左</h3>
-              <p style="color:var(--text-on-dark-2);">添加 <code>.reverse</code> 翻转方向。移动端同样纵向堆叠，不受影响。</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ====== 过渡曲线（浅色） ====== -->
-      <section class="section-light section-auto">
-        <div class="content-wrapper">
-          <h2 style="margin-bottom:var(--space-lg);">过渡与缓动</h2>
-
-          <div class="table-wrapper" style="max-width:600px;">
-            <table>
-              <thead>
-                <tr>
-                  <th>变量</th>
-                  <th>值</th>
-                  <th>用途</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><code>--t-fast</code></td>
-                  <td>0.2s ease-apple</td>
-                  <td>hover、focus 等微交互</td>
-                </tr>
-                <tr>
-                  <td><code>--t-base</code></td>
-                  <td>0.35s ease-apple</td>
-                  <td>按钮、输入框、侧边栏</td>
-                </tr>
-                <tr>
-                  <td><code>--t-slow</code></td>
-                  <td>0.6s ease-apple</td>
-                  <td>页面过渡、模态弹窗</td>
-                </tr>
-                <tr>
-                  <td><code>--ease-apple</code></td>
-                  <td>cubic-bezier(0.25, 0.46, 0.45, 0.94)</td>
-                  <td>通用缓动</td>
-                </tr>
-                <tr>
-                  <td><code>--ease-out</code></td>
-                  <td>cubic-bezier(0.16, 1, 0.3, 1)</td>
-                  <td>弹出、展开动画</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+      <!-- ====== 速查手册入口（深色）====== -->
+      <section class="section-dark home-ref-section">
+        <div class="content-wrapper" style="text-align:center;">
+          <h2 class="home-section-title">速查手册</h2>
+          <p class="home-section-sub" style="margin-bottom:var(--space-lg);">图表选择 · 配色方案 · 导出参数 · 快捷键 · 期刊规格<br>随时查阅，一键复制</p>
+          <a href="#ref" class="btn-primary" data-route="ref">打开速查手册</a>
         </div>
       </section>
 
       <!-- ====== Footer CTA ====== -->
-      <section class="section-dark" style="align-items:center;min-height:50vh;">
-        <h2 style="text-align:center;margin-bottom:var(--space-md);">设计系统就绪</h2>
-        <p class="subtitle" style="text-align:center;margin-bottom:var(--space-lg);">所有 CSS 变量、组件样式、明暗交替已验证</p>
-        <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;justify-content:center;">
-          <a href="#m1-p1" class="btn-primary">进入模块一</a>
-          <a href="#ref" class="btn-ghost">速查手册</a>
+      <section class="section-dark-deep home-footer-section">
+        <div class="content-wrapper" style="text-align:center;">
+          <p class="home-footer-brand">SciAesthetic</p>
+          <p class="home-footer-slogan">你的研究值得更好的表达。</p>
         </div>
       </section>
 
@@ -564,48 +219,279 @@ plt.savefig('scatter.pdf', dpi=300, bbox_inches='tight')</code></pre>
   `;
 }
 
+function renderPathSteps(path) {
+  return path.map((mId, i) => `
+    <div class="home-path-step" data-step="${i}">
+      <div class="home-path-step-num" style="background:${MODULE_COLORS[mId]}">${i + 1}</div>
+      <div class="home-path-step-info">
+        <span class="home-path-step-title" style="color:${MODULE_COLORS[mId]}">${MODULE_TITLES[mId]}</span>
+      </div>
+      ${i < path.length - 1 ? '<div class="home-path-connector"></div>' : ''}
+    </div>
+  `).join('');
+}
+
+// ========== Canvas 几何动画 ==========
+
+let animationId = null;
+
+function initHeroCanvas() {
+  const canvas = document.getElementById('hero-canvas');
+  if (!canvas) return;
+
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  let width, height;
+  const isMobile = window.innerWidth < 768;
+
+  // 节点数量：移动端减少
+  const NODE_COUNT = isMobile ? 30 : 60;
+  const CONNECTION_DIST = isMobile ? 120 : 160;
+  const nodes = [];
+
+  function resize() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    width = rect.width;
+    height = rect.height;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function createNodes() {
+    nodes.length = 0;
+    for (let i = 0; i < NODE_COUNT; i++) {
+      nodes.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        r: Math.random() * 2 + 1,
+        opacity: Math.random() * 0.5 + 0.2,
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, width, height);
+
+    // 连线
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < CONNECTION_DIST) {
+          const alpha = (1 - dist / CONNECTION_DIST) * 0.15;
+          ctx.strokeStyle = `rgba(126, 200, 227, ${alpha})`;
+          ctx.lineWidth = 0.5;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+
+    // 节点
+    for (const node of nodes) {
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, node.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(126, 200, 227, ${node.opacity})`;
+      ctx.fill();
+    }
+  }
+
+  function update() {
+    for (const node of nodes) {
+      node.x += node.vx;
+      node.y += node.vy;
+      // 边界反弹
+      if (node.x < 0 || node.x > width) node.vx *= -1;
+      if (node.y < 0 || node.y > height) node.vy *= -1;
+      node.x = Math.max(0, Math.min(width, node.x));
+      node.y = Math.max(0, Math.min(height, node.y));
+    }
+  }
+
+  function loop() {
+    update();
+    draw();
+    animationId = requestAnimationFrame(loop);
+  }
+
+  resize();
+  createNodes();
+  loop();
+
+  // resize 处理
+  window.__heroResizeHandler = () => {
+    resize();
+    // 重新生成节点以适应新尺寸
+    createNodes();
+  };
+  window.addEventListener('resize', window.__heroResizeHandler);
+}
+
+// ========== 初始化 ==========
+
 export function init() {
-  // 滑块实时更新
-  const dpiSlider = document.getElementById('dpi-slider');
-  const dpiValue = document.getElementById('dpi-value');
-  if (dpiSlider && dpiValue) {
-    dpiSlider.addEventListener('input', () => {
-      dpiValue.textContent = dpiSlider.value;
+  // Canvas 动画
+  initHeroCanvas();
+
+  // Hero 按钮
+  const exploreBtn = document.getElementById('hero-explore-btn');
+  if (exploreBtn) {
+    exploreBtn.addEventListener('click', () => {
+      const section = document.getElementById('module-m1');
+      if (section) section.scrollIntoView({ behavior: 'smooth' });
     });
   }
 
-  const colorSlider = document.getElementById('color-count-slider');
-  const colorValue = document.getElementById('color-count-value');
-  if (colorSlider && colorValue) {
-    colorSlider.addEventListener('input', () => {
-      colorValue.textContent = colorSlider.value;
+  const searchBtn = document.getElementById('hero-search-btn');
+  if (searchBtn) {
+    searchBtn.addEventListener('click', () => {
+      // 触发搜索（通过模拟键盘事件或直接调用）
+      import('../components/SearchModal.js').then(m => m.openSearch());
     });
   }
 
-  // 动画 demo 按钮
-  const demoFadeBtn = document.getElementById('demo-fade');
-  const demoFadeTarget = document.getElementById('demo-fade-target');
-  if (demoFadeBtn && demoFadeTarget) {
-    let visible = true;
-    demoFadeBtn.addEventListener('click', () => {
-      visible = !visible;
-      demoFadeTarget.style.opacity = visible ? '1' : '0';
-      demoFadeTarget.style.transform = visible ? 'translateY(0)' : 'translateY(40px)';
+  // 模块按钮点击
+  document.querySelectorAll('.home-module-btn[data-route]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      navigateTo(btn.dataset.route);
+    });
+  });
+
+  // 速查手册按钮
+  document.querySelectorAll('[data-route="ref"]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      navigateTo('ref');
+    });
+  });
+
+  // 滚动动画 — Hero 内容
+  gsap.from('.home-hero-title', {
+    opacity: 0, y: 40, duration: 1, delay: 0.2, ease: 'power3.out'
+  });
+  gsap.from('.home-hero-slogan', {
+    opacity: 0, y: 30, duration: 0.8, delay: 0.5, ease: 'power3.out'
+  });
+  gsap.from('.home-hero-sub', {
+    opacity: 0, y: 20, duration: 0.8, delay: 0.7, ease: 'power3.out'
+  });
+  gsap.from('.home-hero-actions', {
+    opacity: 0, y: 20, duration: 0.8, delay: 0.9, ease: 'power3.out'
+  });
+
+  // 滚动提示隐藏
+  const scrollHint = document.getElementById('scroll-hint');
+  if (scrollHint) {
+    ScrollTrigger.create({
+      trigger: '#home-hero',
+      start: 'top top',
+      end: 'bottom top',
+      onUpdate: (self) => {
+        scrollHint.style.opacity = String(1 - self.progress * 3);
+      }
     });
   }
 
-  const demoScaleBtn = document.getElementById('demo-scale');
-  const demoScaleTarget = document.getElementById('demo-scale-target');
-  if (demoScaleBtn && demoScaleTarget) {
-    let visible = true;
-    demoScaleBtn.addEventListener('click', () => {
-      visible = !visible;
-      demoScaleTarget.style.opacity = visible ? '1' : '0';
-      demoScaleTarget.style.transform = visible ? 'scale(1)' : 'scale(0.9)';
+  // 模块卡片入场动画
+  document.querySelectorAll('.home-module-card').forEach(card => {
+    scaleReveal(card, { scale: 0.95, start: 'top 85%' });
+  });
+
+  // 统计 count-up
+  document.querySelectorAll('.home-stat-num').forEach(el => {
+    const target = parseInt(el.dataset.target, 10);
+    countUp(el, target, 2);
+  });
+
+  // 统计区 fadeIn
+  fadeIn('.home-stat-item', { stagger: 0.2, y: 40 });
+
+  // 学习路径 section fadeIn
+  fadeIn('.home-path-header', { y: 40 });
+  fadeIn('.home-role-selector', { y: 30 });
+  scaleReveal(document.querySelector('.home-path-display'), { scale: 0.95 });
+
+  // 角色选择器交互
+  initRoleSelector();
+
+  // 路径步骤入场动画
+  animatePathSteps();
+
+  // 速查手册 section
+  fadeIn('.home-ref-section .content-wrapper', { y: 40 });
+}
+
+function initRoleSelector() {
+  const roleBtns = document.querySelectorAll('.home-role-btn');
+  roleBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      roleBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const roleId = btn.dataset.role;
+      const role = ROLES.find(r => r.id === roleId);
+      if (!role) return;
+
+      // 更新路径
+      const stepsEl = document.getElementById('path-steps');
+      const tipEl = document.getElementById('path-tip');
+      if (tipEl) tipEl.textContent = role.tip;
+      if (stepsEl) {
+        // 淡出再淡入
+        stepsEl.style.opacity = '0';
+        stepsEl.style.transform = 'translateY(10px)';
+        setTimeout(() => {
+          stepsEl.innerHTML = renderPathSteps(role.path);
+          requestAnimationFrame(() => {
+            stepsEl.style.opacity = '1';
+            stepsEl.style.transform = 'translateY(0)';
+          });
+        }, 200);
+      }
     });
-  }
+  });
+}
+
+function animatePathSteps() {
+  const steps = document.querySelectorAll('.home-path-step');
+  steps.forEach((step, i) => {
+    gsap.from(step, {
+      scrollTrigger: {
+        trigger: step,
+        start: 'top 85%',
+        toggleActions: 'play none none none'
+      },
+      opacity: 0,
+      x: -20,
+      duration: 0.5,
+      delay: i * 0.15,
+      ease: 'power3.out'
+    });
+  });
 }
 
 export function destroy() {
-  // 无需清理（event listeners 随 DOM 销毁）
+  // 停止 Canvas 动画
+  if (animationId) {
+    cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+
+  // 移除 resize 监听
+  if (window.__heroResizeHandler) {
+    window.removeEventListener('resize', window.__heroResizeHandler);
+    delete window.__heroResizeHandler;
+  }
+
+  // 销毁所有 ScrollTrigger
+  killAll();
 }

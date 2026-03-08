@@ -2,6 +2,7 @@
 // 与路由联动：点击导航项切换路由，路由变化更新高亮状态
 
 import { navigateTo, getCurrentRoute, onRouteChange } from '../utils/router.js';
+import { getModuleProgress, isVisited } from '../utils/progress.js';
 
 // ========== 导航数据 ==========
 
@@ -127,22 +128,27 @@ function buildSidebar() {
 
   // 4 个模块分组
   NAV_DATA.modules.forEach((mod) => {
+    const progress = getModuleProgress(mod.id);
     html += `
       <div class="nav-module-group" data-module="${mod.id}">
         <div class="nav-module-title" data-toggle="${mod.id}">
           <span class="nav-module-color" style="background:${mod.color};"></span>
           <span class="nav-module-label">${mod.title}</span>
+          ${progress > 0 ? `<span class="nav-module-progress-badge" style="color:${mod.color}">${progress}%</span>` : ''}
           <span class="nav-module-chevron">${ICONS.chevron}</span>
         </div>
         <div class="nav-page-list" id="nav-pages-${mod.id}">
           ${mod.pages
             .map(
-              (page, i) => `
-            <a class="nav-item nav-page-item" data-route="${page.id}" href="#${page.id}">
-              <span class="nav-page-num">${i + 1}</span>
+              (page, i) => {
+                const visited = isVisited(page.id);
+                return `
+            <a class="nav-item nav-page-item ${visited ? 'visited' : ''}" data-route="${page.id}" href="#${page.id}">
+              <span class="nav-page-num">${visited ? ICONS.check : (i + 1)}</span>
               <span class="nav-page-title">${page.title}</span>
             </a>
-          `
+          `;
+              }
             )
             .join('')}
         </div>
@@ -399,5 +405,12 @@ export function initNavigation() {
     updateNavigation(route);
     // 滚动到顶部
     window.scrollTo(0, 0);
+  });
+
+  // 监听进度更新 — 重建侧边栏以更新进度指示
+  window.addEventListener('progress-update', () => {
+    const currentRoute = getCurrentRoute();
+    buildSidebar();
+    updateSidebar(currentRoute);
   });
 }

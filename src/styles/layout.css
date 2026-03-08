@@ -117,6 +117,12 @@
   text-overflow: ellipsis;
 }
 
+.nav-module-progress-badge {
+  font-size: 10px;
+  font-weight: 600;
+  opacity: 0.7;
+}
+
 .nav-module-chevron {
   display: flex;
   align-items: center;
@@ -162,6 +168,16 @@
 }
 
 .nav-page-item.active .nav-page-num {
+  background: var(--accent);
+  color: #fff;
+}
+
+.nav-page-item.visited .nav-page-num {
+  background: rgba(52, 199, 89, 0.15);
+  color: var(--color-success);
+}
+
+.nav-page-item.visited.active .nav-page-num {
   background: var(--accent);
   color: #fff;
 }

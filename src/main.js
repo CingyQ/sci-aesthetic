@@ -1,7 +1,8 @@
-// 主入口 — 注册路由 + 导航 + 启动
+// 主入口 — 注册路由 + 导航 + 搜索 + 启动
 
 import { registerRoute, initRouter } from './utils/router.js';
 import { initNavigation } from './components/Navigation.js';
+import { initSearch } from './components/SearchModal.js';
 
 // 首页
 registerRoute('home', () => import('./pages/home.js'));
@@ -51,6 +52,7 @@ registerRoute('ref', () => import('./pages/ref.js'));
 // 组件 demo 页
 registerRoute('component-demo', () => import('./pages/component-demo.js'));
 
-// 初始化导航 + 启动路由
+// 初始化
 initNavigation();
+initSearch();
 initRouter();
