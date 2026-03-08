@@ -1,4 +1,4 @@
-// StickySteps.js — 粘性滚动步骤教学组件
+// StickySteps.js — 粘性滚动步骤演示组件
 // 桌面端：GSAP pin 左侧标题，右侧内容随滚动切换
 // 移动端：普通滚动 + CSS sticky 标题
 
@@ -7,7 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 /**
- * 创建粘性步骤教学
+ * 创建粘性步骤演示
  * @param {HTMLElement} container - 容器元素
  * @param {Object} options
  * @param {Array<{title: string, description: string, content: string}>} options.steps - 步骤列表

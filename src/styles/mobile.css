@@ -117,7 +117,7 @@
   text-overflow: ellipsis;
 }
 
-.mobile-page-progress {
+.mobile-page-index {
   font-size: var(--text-caption);
   color: var(--text-on-light-3);
   white-space: nowrap;

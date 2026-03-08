@@ -117,12 +117,6 @@
   text-overflow: ellipsis;
 }
 
-.nav-module-progress-badge {
-  font-size: var(--text-caption);
-  color: var(--text-on-light-3);
-  font-weight: 400;
-}
-
 .nav-module-chevron {
   display: flex;
   align-items: center;
@@ -178,13 +172,6 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.nav-check {
-  color: var(--semantic-success);
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
 }
 
 .nav-item {

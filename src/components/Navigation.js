@@ -2,7 +2,6 @@
 // 与路由联动：点击导航项切换路由，路由变化更新高亮状态
 
 import { navigateTo, getCurrentRoute, onRouteChange } from '../utils/router.js';
-import { isCompleted, getModuleProgress } from '../utils/progress.js';
 
 // ========== 导航数据 ==========
 
@@ -128,13 +127,11 @@ function buildSidebar() {
 
   // 4 个模块分组
   NAV_DATA.modules.forEach((mod) => {
-    const progress = getModuleProgress(mod.id, mod.totalPages);
     html += `
       <div class="nav-module-group" data-module="${mod.id}">
         <div class="nav-module-title" data-toggle="${mod.id}">
           <span class="nav-module-color" style="background:${mod.color};"></span>
           <span class="nav-module-label">${mod.title}</span>
-          <span class="nav-module-progress-badge">${progress > 0 ? progress + '%' : ''}</span>
           <span class="nav-module-chevron">${ICONS.chevron}</span>
         </div>
         <div class="nav-page-list" id="nav-pages-${mod.id}">
@@ -144,7 +141,6 @@ function buildSidebar() {
             <a class="nav-item nav-page-item" data-route="${page.id}" href="#${page.id}">
               <span class="nav-page-num">${i + 1}</span>
               <span class="nav-page-title">${page.title}</span>
-              ${isCompleted(page.id) ? `<span class="nav-check">${ICONS.check}</span>` : ''}
             </a>
           `
             )
@@ -270,7 +266,7 @@ function buildTopBar() {
       ${ICONS.back}
     </button>
     <span class="mobile-page-title" id="mobile-page-title"></span>
-    <span class="mobile-page-progress" id="mobile-page-progress"></span>
+    <span class="mobile-page-index" id="mobile-page-index"></span>
   `;
 
   // 返回按钮：回到模块首页或首页
@@ -317,18 +313,6 @@ function updateSidebar(route) {
     }
   }
 
-  // 更新进度标记
-  NAV_DATA.modules.forEach((mod) => {
-    // 更新进度百分比
-    const group = sidebar.querySelector(`.nav-module-group[data-module="${mod.id}"]`);
-    if (group) {
-      const badge = group.querySelector('.nav-module-progress-badge');
-      if (badge) {
-        const progress = getModuleProgress(mod.id, mod.totalPages);
-        badge.textContent = progress > 0 ? progress + '%' : '';
-      }
-    }
-  });
 }
 
 function updateTabBar(route) {
@@ -364,9 +348,9 @@ function updateTabBar(route) {
 
 function updateTopBar(route) {
   const titleEl = document.getElementById('mobile-page-title');
-  const progressEl = document.getElementById('mobile-page-progress');
+  const indexEl = document.getElementById('mobile-page-index');
   const topBar = document.getElementById('mobile-top-bar');
-  if (!titleEl || !progressEl || !topBar) return;
+  if (!titleEl || !indexEl || !topBar) return;
 
   const mainContent = document.getElementById('main-content');
 
@@ -375,7 +359,7 @@ function updateTopBar(route) {
     topBar.classList.add('top-bar-hidden');
     if (mainContent) mainContent.classList.remove('has-top-bar');
     titleEl.textContent = '';
-    progressEl.textContent = '';
+    indexEl.textContent = '';
     return;
   }
 
@@ -384,19 +368,19 @@ function updateTopBar(route) {
 
   // 查找当前页面信息
   let pageTitle = '';
-  let pageProgress = '';
+  let pageNum = '';
 
   for (const mod of NAV_DATA.modules) {
-    const pageIndex = mod.pages.findIndex((p) => p.id === route);
-    if (pageIndex !== -1) {
-      pageTitle = mod.pages[pageIndex].title;
-      pageProgress = `${pageIndex + 1}/${mod.totalPages}`;
+    const idx = mod.pages.findIndex((p) => p.id === route);
+    if (idx !== -1) {
+      pageTitle = mod.pages[idx].title;
+      pageNum = `${idx + 1}/${mod.totalPages}`;
       break;
     }
   }
 
   titleEl.textContent = pageTitle;
-  progressEl.textContent = pageProgress;
+  indexEl.textContent = pageNum;
 }
 
 // ========== 初始化 ==========

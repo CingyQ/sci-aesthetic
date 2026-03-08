@@ -53,7 +53,7 @@ export function render() {
           <div style="display:flex;gap:var(--space-xl);justify-content:center;flex-wrap:wrap;">
             <div>
               <span class="stat-number count-target" data-target="31" style="color:var(--accent);">0</span>
-              <p style="font-size:var(--text-small);color:var(--text-on-dark-3);margin-top:var(--space-xs);">教学章节</p>
+              <p style="font-size:var(--text-small);color:var(--text-on-dark-3);margin-top:var(--space-xs);">知识词条</p>
             </div>
             <div>
               <span class="stat-number count-target" data-target="120" style="color:var(--accent);">0</span>
@@ -197,7 +197,7 @@ export function render() {
       <section class="section-dark" style="min-height:auto;padding:var(--space-xl) var(--space-lg);">
         <div class="content-wrapper">
           <h2 style="margin-bottom:var(--space-sm);">StickySteps</h2>
-          <p class="subtitle" style="margin-bottom:var(--space-lg);">粘性滚动步骤教学</p>
+          <p class="subtitle" style="margin-bottom:var(--space-lg);">粘性滚动步骤演示</p>
           <div id="sticky-steps-container"></div>
         </div>
       </section>

@@ -61,7 +61,7 @@ export function fadeIn(elements, {
 }
 
 /**
- * 粘性步骤教学 — 左侧固定标题/描述，右侧内容随滚动切换
+ * 粘性步骤演示 — 左侧固定标题/描述，右侧内容随滚动切换
  * 移动端：不使用 pin（粘性体验不佳），改为普通滚动
  */
 export function stickySteps(container, pinned, { endTrigger } = {}) {

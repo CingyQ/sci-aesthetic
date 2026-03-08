@@ -1,4 +1,4 @@
-# TODO - SciAesthetic 科研美学（首页 + 4 模块架构）
+# TODO - SciAesthetic 科研美学（首页 + 4 模块百科架构）
 
 ## Phase 0: 项目骨架
 - [x] 初始化 Vite 项目（vanilla JS）
@@ -16,7 +16,7 @@
 - [x] layout.css — sidebar + main + section-light/dark
 - [x] mobile.css — 底部 tab bar + 顶部导航栏 + 移动端覆盖样式
 - [x] animations.js — GSAP ScrollTrigger 封装（fadeIn/stickySteps/countUp/parallax/scaleReveal + matchMedia 移动端适配）
-- [x] 桌面端侧边栏导航（4 模块分组 + 页面列表 + 进度标记）
+- [x] 桌面端侧边栏导航（4 模块分组 + 页面列表）
 - [x] 移动端底部 Tab Bar（5 tabs：首页/M1/M2/M3/M4）
 - [x] 移动端顶部页面导航栏（返回 + 标题 + 页码）
 - [x] Tablet 汉堡菜单 + 侧边栏覆盖层
@@ -33,19 +33,17 @@
 - [x] Accordion.js — 平滑展开（移动端工作坊面板）
 - [x] BeforeAfter.js — 拖拽/滑动对比（Pointer Events 触摸支持）
 - [x] Toast.js — 消息提示（含横屏提示）
-- [x] StickySteps.js — 粘性滚动步骤教学（移动端降级为普通滚动 + 固定标题）
+- [x] StickySteps.js — 粘性滚动步骤演示（移动端降级为普通滚动 + 固定标题）
 - [x] ColorInput.js — 颜色选择器（HEX/RGB/HSL 切换 + 精确输入 + 移动端全屏模态）
 - [x] CopyButton.js — 一键复制 + 反馈动画
 - [x] WorkshopLayout.js — 三面板布局（桌面网格 / 移动端手风琴）
 - [x] 组件 demo 页验证（桌面端 + 移动端）
 
 ## Phase 3: 首页 + 全局功能
-- [ ] home Hero（深色背景 + 大标题动画 + 粒子/几何背景）
-- [ ] 4 模块导航卡片（模块标识色 + 图标 + 简介 + 进度百分比）
-- [ ] 学习路径推荐（按身份选择 → 推荐模块顺序）
-- [ ] 统计 count-up（章节数/交互组件数/配色方案数/图表类型数）
+- [ ] home Hero（深色背景 + 大标题动画 + 粒子/几何背景，展示标题和标语）
+- [ ] 4 模块导航卡片（模块标识色 + 图标 + 简介）
+- [ ] 统计 count-up（词条数/交互组件数/配色方案数/图表类型数）
 - [ ] 全局搜索 Cmd+K（模态 + 模糊匹配 + 键盘导航）
-- [ ] 学习进度系统（localStorage + 侧边栏/Tab Bar 进度标记）
 - [ ] 页面过渡动画
 - [ ] 移动端首页布局验证
 
@@ -74,7 +72,7 @@
 - [ ] m3-p1 矢量 vs 位图（缩放对比 + 格式决策树）
 - [ ] m3-p2 Illustrator 工具（12 工具 SVG 动画）
 - [ ] m3-p3 贝塞尔曲线（Canvas 编辑器 + 练习模式 + 移动端全屏适配）
-- [ ] m3-p4 图表美化（8 组 Before/After + 5 步粘性滚动教学）
+- [ ] m3-p4 图表美化（8 组 Before/After + 5 步粘性滚动演示）
 - [ ] m3-p5 SVG 编辑与优化（CodeMirror SVG 编辑器 + 实时渲染 + 优化策略）
 - [ ] m3-p6 多面板 Figure 组合（拖拽排列 + 标注规范 + R/Python 代码）
 - [ ] m3-p7 素材资源站（资源卡片 + 需求筛选 + 推荐器 + 许可证）
@@ -83,7 +81,7 @@
 - [ ] m4-p1 PPT 设计原则（格式塔 SVG + 视觉层次 + 信噪比）
 - [ ] m4-p2 排版字体（Canvas 拖拽布局 + 字体推荐 + 行距演示 + 移动端预设模板）
 - [ ] m4-p3 注意力与视觉流（热力图 + F/Z 模式）
-- [ ] m4-p4 PPT 改造案例（8 组 Before/After + 粘性步骤讲解 + 用户练习打分）
+- [ ] m4-p4 PPT 改造案例（8 组 Before/After + 粘性步骤演示 + 互动评分）
 - [ ] m4-p5 学术海报（布局模板 + 打印规范 + CMYK）
 - [ ] m4-p6 Graphical Abstract（案例分析 + 元素库拖拽组合 + 期刊尺寸）
 - [ ] m4-p7 科研信息图（4 种叙事模板 + 数据简化 + 社交媒体适配）

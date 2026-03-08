@@ -103,7 +103,7 @@ export function render() {
 
           <div style="margin-bottom:var(--space-xl);">
             <p style="font-size:var(--text-caption);color:var(--text-on-dark-3);margin-bottom:var(--space-xs);">--text-title · Inter · 300（引言/副标题）</p>
-            <span style="font-size:var(--text-title);font-weight:300;line-height:1.4;color:var(--text-on-dark-2);">面向科研工作者的交互式教学网站</span>
+            <span style="font-size:var(--text-title);font-weight:300;line-height:1.4;color:var(--text-on-dark-2);">面向科研工作者的交互式知识百科</span>
           </div>
 
           <div style="margin-bottom:var(--space-xl);">
@@ -129,7 +129,7 @@ ggplot(mtcars, aes(x = wt, y = mpg)) +
             <div style="display:flex;gap:var(--space-xl);flex-wrap:wrap;">
               <div>
                 <span class="stat-number" style="color:var(--accent);">31</span>
-                <p style="font-size:var(--text-small);color:var(--text-on-dark-3);margin-top:var(--space-xs);">教学章节</p>
+                <p style="font-size:var(--text-small);color:var(--text-on-dark-3);margin-top:var(--space-xs);">知识词条</p>
               </div>
               <div>
                 <span class="stat-number" style="color:var(--accent);">120+</span>
@@ -147,7 +147,7 @@ ggplot(mtcars, aes(x = wt, y = mpg)) +
 
           <h6 style="margin-bottom:var(--space-sm);">Primary</h6>
           <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;align-items:center;margin-bottom:var(--space-lg);">
-            <button class="btn-primary">开始学习</button>
+            <button class="btn-primary">开始探索</button>
             <button class="btn-primary btn-small">小按钮</button>
             <button class="btn-primary" disabled>禁用状态</button>
           </div>
@@ -180,7 +180,7 @@ ggplot(mtcars, aes(x = wt, y = mpg)) +
           <h2 style="margin-bottom:var(--space-lg);">按钮（深色背景）</h2>
 
           <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;align-items:center;margin-bottom:var(--space-lg);">
-            <button class="btn-primary">开始学习</button>
+            <button class="btn-primary">开始探索</button>
             <button class="btn-ghost">查看详情</button>
             <button class="btn-icon" aria-label="设置">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
