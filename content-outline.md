@@ -22,6 +22,18 @@
 > 从色彩原理到出版级图表的完整知识体系。
 > 涵盖：色彩理论、配色实践、图表选择、R/Python 编程、导出发表。
 
+### 通用页面结构
+
+> **以下规范适用于所有模块页面**（不在每个页面中重复）：
+>
+> - **Hero section**：使用 `section-hero-full` class，在所有分辨率下占满 100vh/100dvh
+>   - 包含快捷导航按钮（`.hero-quicknav`），列出本页所有 section，点击平滑滚动
+>   - Hero 背景有微弱径向渐变光晕（`::before` 伪元素）
+> - **滚动偏移**：移动端 `scroll-margin-top: 56px` 防止固定顶部栏遮挡锚点
+> - **D3 图表**：统一使用 `viewBox` SVG（`preserveAspectRatio: xMidYMid meet`）实现响应式
+> - **滑块**：桌面端 thumb 20px，移动端 24px + `min-height: 32px` 保证触摸区域
+> - **Tab 切换器**：移动端启用 `overflow-x: auto` 横向滚动，隐藏滚动条
+
 ### m1-p1 色彩理论基础
 **核心内容**：理解光与色彩的物理/感知基础。
 - 交互色轮（Canvas，拖拽选色，实时显示 HEX/RGB/HSL/CMYK）
