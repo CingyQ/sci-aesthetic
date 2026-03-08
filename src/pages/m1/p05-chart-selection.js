@@ -18,9 +18,9 @@ const DECISION_TREE = {
       desc: '名义 / 有序类别',
       question: '你想表达什么关系？',
       children: [
-        { id: 'cat-compare', label: '比较大小', result: { name: '柱状图 / 条形图', en: 'Bar Chart', icon: '▊', reason: '最直观地比较各类别数值，视觉映射清晰。避免在这里使用饼图。' } },
-        { id: 'cat-compose', label: '展示构成', result: { name: '堆叠柱状图', en: 'Stacked Bar Chart', icon: '▤', reason: '展示部分与整体关系，且可比较多个时间点。优于饼图。' } },
-        { id: 'cat-rank', label: '按大小排列', result: { name: '水平条形图', en: 'Horizontal Bar Chart', icon: '▬', reason: '标签空间充足，长类别名称不会重叠，支持快速视觉排名。' } }
+        { id: 'cat-compare', label: '比较大小', result: { name: '柱状图 / 条形图', en: 'Bar Chart', icon: '▊', chartId: 'bar', reason: '最直观地比较各类别数值，视觉映射清晰。避免在这里使用饼图。' } },
+        { id: 'cat-compose', label: '展示构成', result: { name: '堆叠柱状图', en: 'Stacked Bar Chart', icon: '▤', chartId: 'stacked-bar', reason: '展示部分与整体关系，且可比较多个时间点。优于饼图。' } },
+        { id: 'cat-rank', label: '按大小排列', result: { name: '水平条形图', en: 'Horizontal Bar Chart', icon: '▬', chartId: 'hbar', reason: '标签空间充足，长类别名称不会重叠，支持快速视觉排名。' } }
       ]
     },
     {
@@ -33,12 +33,12 @@ const DECISION_TREE = {
           id: 'one-var', label: '单变量',
           question: '关注分布形态还是组间比较？',
           children: [
-            { id: 'one-dist', label: '分布形态', result: { name: '直方图 / 密度图', en: 'Histogram / Density Plot', icon: '▲', reason: '展示数据分布形状、中心位置和扩散程度。密度图适合叠加多组。' } },
-            { id: 'one-group', label: '组间比较', result: { name: '箱线图 / 小提琴图', en: 'Boxplot / Violin Plot', icon: '⊠', reason: '箱线图简洁展示中位数和异常值；小提琴图还能显示分布形状。' } }
+            { id: 'one-dist', label: '分布形态', result: { name: '直方图 / 密度图', en: 'Histogram / Density Plot', icon: '▲', chartId: 'histogram', reason: '展示数据分布形状、中心位置和扩散程度。密度图适合叠加多组。' } },
+            { id: 'one-group', label: '组间比较', result: { name: '箱线图 / 小提琴图', en: 'Boxplot / Violin Plot', icon: '⊠', chartId: 'boxplot', reason: '箱线图简洁展示中位数和异常值；小提琴图还能显示分布形状。' } }
           ]
         },
-        { id: 'two-var', label: '两个变量', result: { name: '散点图', en: 'Scatter Plot', icon: '⋯', reason: '展示两变量间的相关关系和分布规律，可叠加回归线和置信区间。' } },
-        { id: 'multi-var', label: '多个变量', result: { name: '热力图 / 气泡图', en: 'Heatmap / Bubble Chart', icon: '▦', reason: '热力图适合矩阵型数据（如相关矩阵）；气泡图可同时编码三个维度。' } }
+        { id: 'two-var', label: '两个变量', result: { name: '散点图', en: 'Scatter Plot', icon: '⋯', chartId: 'scatter', reason: '展示两变量间的相关关系和分布规律，可叠加回归线和置信区间。' } },
+        { id: 'multi-var', label: '多个变量', result: { name: '热力图 / 气泡图', en: 'Heatmap / Bubble Chart', icon: '▦', chartId: 'heatmap', reason: '热力图适合矩阵型数据（如相关矩阵）；气泡图可同时编码三个维度。' } }
       ]
     },
     {
@@ -47,8 +47,8 @@ const DECISION_TREE = {
       desc: '随时间变化的数据',
       question: '序列数量是多少？',
       children: [
-        { id: 'ts-single', label: '单条序列', result: { name: '折线图', en: 'Line Chart', icon: '╱', reason: '最清晰地展示单一趋势，强调变化速率。避免使用柱状图表达连续趋势。' } },
-        { id: 'ts-multi', label: '多条序列', result: { name: '多线图 / 面积图', en: 'Multi-line / Area Chart', icon: '⌗', reason: '多线对比趋势；面积图在强调累积量时效果更好（3条以内）。' } }
+        { id: 'ts-single', label: '单条序列', result: { name: '折线图', en: 'Line Chart', icon: '╱', chartId: 'line', reason: '最清晰地展示单一趋势，强调变化速率。避免使用柱状图表达连续趋势。' } },
+        { id: 'ts-multi', label: '多条序列', result: { name: '多线图 / 面积图', en: 'Multi-line / Area Chart', icon: '⌗', chartId: 'area', reason: '多线对比趋势；面积图在强调累积量时效果更好（3条以内）。' } }
       ]
     },
     {
@@ -57,8 +57,8 @@ const DECISION_TREE = {
       desc: '占比 / 百分比',
       question: '类别数量是多少？',
       children: [
-        { id: 'prop-few', label: '2–4 个类别', result: { name: '堆叠条形图（首选）', en: 'Stacked Bar Chart', icon: '▤', reason: '比饼图更易读，尤其当各比例接近时差异更明显。' } },
-        { id: 'prop-many', label: '5+ 个类别', result: { name: '水平条形图', en: 'Horizontal Bar Chart', icon: '▬', reason: '饼图超过 5 个扇区后极难阅读，条形图长度编码更精确。' } }
+        { id: 'prop-few', label: '2–4 个类别', result: { name: '堆叠条形图（首选）', en: 'Stacked Bar Chart', icon: '▤', chartId: 'stacked-bar', reason: '比饼图更易读，尤其当各比例接近时差异更明显。' } },
+        { id: 'prop-many', label: '5+ 个类别', result: { name: '水平条形图', en: 'Horizontal Bar Chart', icon: '▬', chartId: 'hbar', reason: '饼图超过 5 个扇区后极难阅读，条形图长度编码更精确。' } }
       ]
     }
   ]
@@ -613,6 +613,7 @@ function renderQ() {
     });
     document.getElementById('p5-go-gallery')?.addEventListener('click', () => {
       document.getElementById('p5-gallery')?.scrollIntoView({ behavior:'smooth' });
+      if (r.chartId) setTimeout(() => jumpToChart(r.chartId), 600);
     });
   } else {
     area.innerHTML = `
@@ -729,6 +730,25 @@ function getPathLabels() {
 // ─────────────────────────────────────────────
 // 图表全览
 // ─────────────────────────────────────────────
+function jumpToChart(chartId) {
+  const group = CHART_GROUPS.find(g => g.charts.some(c => c.id === chartId));
+  if (!group) return;
+  selectGroup(group.id);
+  // selectGroup 同步渲染列表，直接激活目标卡片
+  const listEl = document.getElementById('p5-chart-list');
+  const item = listEl?.querySelector(`[data-cid="${chartId}"]`);
+  if (!item) return;
+  listEl.querySelectorAll('.p5-ci').forEach(i => i.classList.remove('active'));
+  item.classList.add('active');
+  const chart = group.charts.find(c => c.id === chartId);
+  if (chart) renderPreview(chart, group.color);
+  item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  // 短暂高亮边框，引导视线
+  item.style.transition = 'box-shadow 0.3s';
+  item.style.boxShadow = `0 0 0 3px ${group.color}`;
+  setTimeout(() => { item.style.boxShadow = ''; }, 1600);
+}
+
 function initGallery() {
   document.querySelectorAll('.p5-gtab').forEach(btn => {
     btn.addEventListener('click', () => selectGroup(btn.dataset.group));
