@@ -1164,9 +1164,13 @@ function renderBrowserChart() {
       .selectAll('text').attr('fill', subColor).attr('font-size', '11px');
 
     for (let s = 0; s < n; s++) {
+      // Simple upward trend with small deterministic noise — traditional line chart style
+      const base = 15 + s * 8;
+      const slope = 5 + s * 1.2;
+      const noise = [0, 3, -2, 4, -1, 5, 2, 3];
       const lineData = Array.from({ length: points }, (_, i) => ({
         x: i,
-        y: 30 + Math.sin(i * 0.8 + s * 1.2) * 25 + s * 5 + Math.cos(i * 0.5 + s) * 10,
+        y: Math.min(95, Math.max(5, base + slope * i + noise[i % noise.length])),
       }));
       const line = d3.line().x(d => x(d.x)).y(d => y(d.y)).curve(d3.curveMonotoneX);
 
