@@ -472,18 +472,20 @@ export function render() {
 </style>
 
 <!-- HERO -->
-<section id="p5-hero" class="p5-hero section-hero-full" style="scroll-margin-top:56px;">
-  <p class="p5-eyebrow" id="p5-eyebrow" style="opacity:0;">Module 01 / Page 05</p>
-  <h1 class="p5-hero-title" id="p5-hero-title" style="opacity:0;">图表选择指南</h1>
-  <p class="p5-hero-sub" id="p5-hero-sub" style="opacity:0;">Chart Selection Guide</p>
-  <p class="p5-hero-tagline" id="p5-hero-tagline" style="opacity:0;">
-    面对数据时，如何快速选对图表？<br>从决策树到完整图表库，帮你科学决策。
-  </p>
-  <nav class="hero-quicknav" id="p5-quicknav" style="opacity:0;">
-    <button class="hero-quicknav__item" data-target="#p5-decision">交互式决策树</button>
-    <button class="hero-quicknav__item" data-target="#p5-gallery">图表类型全览</button>
-    <button class="hero-quicknav__item" data-target="#p5-misuse">误用案例合集</button>
-  </nav>
+<section id="p5-hero" class="p5-hero section-dark section-hero-full" style="scroll-margin-top:56px;">
+  <div class="flex-col-center" style="gap:var(--space-md);text-align:center;position:relative;z-index:1;">
+    <p class="p5-eyebrow" id="p5-eyebrow" style="opacity:0;">Module 01 / Page 05</p>
+    <h1 class="page-hero-title p5-hero-title" id="p5-hero-title" style="color:var(--text-on-dark);opacity:0;">图表选择指南</h1>
+    <p class="page-hero-sub p5-hero-sub" id="p5-hero-sub" style="opacity:0;">Chart Selection Guide</p>
+    <p class="p5-hero-tagline" id="p5-hero-tagline" style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;opacity:0;">
+      面对数据时，如何快速选对图表？从决策树到完整图表库，帮你科学决策。
+    </p>
+    <nav class="hero-quicknav" id="p5-quicknav" style="opacity:0;">
+      <button class="hero-quicknav__item" data-target="#p5-decision">交互式决策树</button>
+      <button class="hero-quicknav__item" data-target="#p5-gallery">图表类型全览</button>
+      <button class="hero-quicknav__item" data-target="#p5-misuse">误用案例合集</button>
+    </nav>
+  </div>
   <p class="p5-scroll-hint">↓ 向下探索</p>
 </section>
 
@@ -572,7 +574,7 @@ export function init() {
   // Hero 入场
   gsap.fromTo('#p5-eyebrow',      { opacity:0, y:20 }, { opacity:1, y:0, duration:0.6, delay:0.1,  ease:'power3.out' });
   gsap.fromTo('#p5-hero-title',   { opacity:0, y:30 }, { opacity:1, y:0, duration:0.8, delay:0.25, ease:'power3.out' });
-  gsap.fromTo('#p5-hero-sub',     { opacity:0, y:20 }, { opacity:1, y:0, duration:0.8, delay:0.4,  ease:'power3.out' });
+  gsap.fromTo('#p5-hero-sub',     { opacity:0, y:20 }, { opacity:0.5, y:0, duration:0.8, delay:0.4, ease:'power3.out' });
   gsap.fromTo('#p5-hero-tagline', { opacity:0, y:20 }, { opacity:1, y:0, duration:0.8, delay:0.55, ease:'power3.out' });
   gsap.fromTo('#p5-quicknav',     { opacity:0, y:20 }, { opacity:1, y:0, duration:0.8, delay:0.7,  ease:'power3.out' });
 

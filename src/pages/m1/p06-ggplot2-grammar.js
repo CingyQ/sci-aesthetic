@@ -230,14 +230,17 @@ export function render() {
   background-size:64px 64px;
   pointer-events:none;
 }
-.p6-hero-inner { position:relative; z-index:1; }
+.p6-hero-inner {
+  position:relative; z-index:1;
+  display:flex; flex-direction:column; align-items:center;
+  gap:var(--space-md); text-align:center;
+}
 .p6-eyebrow {
   font-family:var(--font-code); font-size:var(--text-small);
-  color:var(--accent); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:var(--space-sm);
+  color:var(--accent); letter-spacing:0.15em; text-transform:uppercase;
 }
 .p6-hero-title {
-  font-family:var(--font-display); font-size:clamp(2.8rem,6vw,5rem);
-  font-weight:700; letter-spacing:-0.03em; line-height:1.05; color:var(--text-on-dark);
+  color:var(--text-on-dark);
 }
 .p6-hero-sub {
   font-family:var(--font-heading); font-size:clamp(1rem,2vw,1.4rem);
@@ -540,20 +543,20 @@ export function render() {
 </style>
 
 <!-- Hero -->
-<section class="p6-hero section-hero-full" id="p6-hero">
+<section class="p6-hero section-dark section-hero-full" id="p6-hero">
   <div class="p6-hero-inner">
-    <p class="p6-eyebrow">Module 01 / Page 06</p>
-    <h1 class="p6-hero-title">ggplot2<br>图层语法与分面</h1>
-    <p class="p6-hero-sub">ggplot2 Grammar of Graphics</p>
-    <p class="p6-hero-tagline">理解图形语法的核心设计哲学——每一层都是一次对数据的诠释。<br>从空白画布到出版级图表，五步完成。</p>
-    <nav class="hero-quicknav" id="p6-hero-nav">
+    <p class="p6-eyebrow" style="opacity:0;">Module 01 / Page 06</p>
+    <h1 class="page-hero-title p6-hero-title" style="color:var(--text-on-dark);opacity:0;">ggplot2<br>图层语法与分面</h1>
+    <p class="page-hero-sub p6-hero-sub" style="opacity:0;">ggplot2 Grammar of Graphics</p>
+    <p class="p6-hero-tagline" style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;opacity:0;">理解图形语法的核心设计哲学——每一层都是一次对数据的诠释。<br>从空白画布到出版级图表，五步完成。</p>
+    <nav class="hero-quicknav" id="p6-hero-nav" style="opacity:0;">
       <button class="hero-quicknav__item" data-target="#p6-layers">图层叠加</button>
       <button class="hero-quicknav__item" data-target="#p6-facet">分面演示</button>
       <button class="hero-quicknav__item" data-target="#p6-coord">坐标变换</button>
       <button class="hero-quicknav__item" data-target="#p6-axis">自定义坐标轴</button>
     </nav>
   </div>
-  <div class="p6-scroll-hint">↓ 向下滚动</div>
+  <div class="p6-scroll-hint" style="position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-size:var(--text-caption);color:var(--text-on-dark-3);">↓ 向下探索</div>
 </section>
 
 <!-- Section 1: 图层叠加 -->
@@ -1075,12 +1078,12 @@ export function init() {
       if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
-  gsap.fromTo('.p6-hero-inner > *',
-    { opacity: 0, y: 40 },
-    { opacity: 1, y: 0, duration: 0.9, stagger: 0.12, delay: 0.1, ease: 'power3.out' });
-  gsap.fromTo('#p6-hero-nav',
-    { opacity: 0, y: 20 },
-    { opacity: 1, y: 0, duration: 0.8, delay: 0.7, ease: 'power3.out' });
+  const tl6 = gsap.timeline({ delay: 0.1 });
+  tl6.fromTo('.p6-eyebrow',     { opacity: 0, y: 20 }, { opacity: 1,   y: 0, duration: 0.7, ease: 'power3.out' }, 0);
+  tl6.fromTo('.p6-hero-title',  { opacity: 0, y: 40 }, { opacity: 1,   y: 0, duration: 0.9, ease: 'power3.out' }, 0.15);
+  tl6.fromTo('.p6-hero-sub',    { opacity: 0, y: 30 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
+  tl6.fromTo('.p6-hero-tagline',{ opacity: 0, y: 20 }, { opacity: 1,   y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
+  tl6.fromTo('#p6-hero-nav',    { opacity: 0, y: 20 }, { opacity: 1,   y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
 
   // ── 桌面端：JS-sticky 模拟（transform:translateY，不依赖 CSS sticky）──
   if (window.innerWidth > 768) {

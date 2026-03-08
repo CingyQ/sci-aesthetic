@@ -516,21 +516,23 @@ export function render() {
 <!-- ════════════════════════════════════════════
      Section 1: Hero
      ════════════════════════════════════════════ -->
-<section class="p4-hero section-hero-full">
-  <p class="p4-eyebrow p4-anim-0">Module 01 / Page 04</p>
-  <h1 class="p4-hero-title p4-anim-1">色彩与阅读无障碍</h1>
-  <p class="p4-hero-sub p4-anim-2">Color Accessibility</p>
-  <p class="p4-hero-tagline">
-    好的科研图表不只是"好看"——它需要被每一位读者清晰阅读。<br>
-    从对比度到字号，从配色到排版，让你的研究触达所有人。
-  </p>
-  <nav class="hero-quicknav p4-anim-3" id="p4-hero-nav">
-    <button class="hero-quicknav__item" data-target=".p4-contrast-section">WCAG 对比度</button>
-    <button class="hero-quicknav__item" data-target=".p4-typo-section">图表排版规范</button>
-    <button class="hero-quicknav__item" data-target=".p4-font-section">字体与可读性</button>
-    <button class="hero-quicknav__item" data-target=".p4-check-section">设计检查清单</button>
-  </nav>
-  <div class="p4-scroll-hint p4-anim-4">↓ 向下滚动</div>
+<section class="p4-hero section-dark section-hero-full">
+  <div class="flex-col-center" style="gap:var(--space-md);text-align:center;position:relative;z-index:1;">
+    <p class="p4-eyebrow p4-anim-0">Module 01 / Page 04</p>
+    <h1 class="page-hero-title p4-hero-title p4-anim-1" style="color:var(--text-on-dark);">色彩与阅读无障碍</h1>
+    <p class="page-hero-sub p4-hero-sub p4-anim-2">Color Accessibility</p>
+    <p class="p4-hero-tagline p4-anim-3">
+      好的科研图表不只是"好看"——它需要被每一位读者清晰阅读。<br>
+      从对比度到字号，从配色到排版，让你的研究触达所有人。
+    </p>
+    <nav class="hero-quicknav p4-anim-4" id="p4-hero-nav">
+      <button class="hero-quicknav__item" data-target=".p4-contrast-section">WCAG 对比度</button>
+      <button class="hero-quicknav__item" data-target=".p4-typo-section">图表排版规范</button>
+      <button class="hero-quicknav__item" data-target=".p4-font-section">字体与可读性</button>
+      <button class="hero-quicknav__item" data-target=".p4-check-section">设计检查清单</button>
+    </nav>
+  </div>
+  <div class="p4-scroll-hint" style="position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-size:var(--text-caption);color:var(--text-on-dark-3);">↓ 向下探索</div>
 </section>
 
 <!-- ════════════════════════════════════════════
@@ -898,11 +900,11 @@ export function render() {
 
 export function init() {
   // Hero animations
-  gsap.fromTo('.p4-anim-0', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.1, ease: 'power3.out' });
-  gsap.fromTo('.p4-anim-1', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.9, delay: 0.25, ease: 'power3.out' });
-  gsap.fromTo('.p4-anim-2', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.45, ease: 'power3.out' });
-  gsap.fromTo('.p4-anim-3', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.6, ease: 'power3.out' });
-  gsap.fromTo('.p4-anim-4', { opacity: 0 },         { opacity: 1, duration: 0.6, delay: 1, ease: 'power2.out' });
+  gsap.fromTo('.p4-anim-0', { opacity: 0, y: 20 }, { opacity: 1,   y: 0, duration: 0.7, delay: 0.1,  ease: 'power3.out' });
+  gsap.fromTo('.p4-anim-1', { opacity: 0, y: 40 }, { opacity: 1,   y: 0, duration: 0.9, delay: 0.25, ease: 'power3.out' });
+  gsap.fromTo('.p4-anim-2', { opacity: 0, y: 30 }, { opacity: 0.5, y: 0, duration: 0.8, delay: 0.4,  ease: 'power3.out' });
+  gsap.fromTo('.p4-anim-3', { opacity: 0, y: 20 }, { opacity: 1,   y: 0, duration: 0.8, delay: 0.55, ease: 'power3.out' });
+  gsap.fromTo('.p4-anim-4', { opacity: 0, y: 20 }, { opacity: 1,   y: 0, duration: 0.8, delay: 0.7,  ease: 'power3.out' });
 
   // Scroll reveals
   fadeIn('.p4-contrast-card', { y: 40 });

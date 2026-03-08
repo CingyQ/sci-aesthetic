@@ -516,13 +516,7 @@ export function render() {
   margin-bottom: var(--space-sm);
 }
 .p3-hero-title {
-  font-family: var(--font-display);
-  font-size: clamp(2.8rem, 6vw, 5rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
   color: var(--text-on-dark);
-  line-height: 1.05;
-  margin-bottom: var(--space-sm);
 }
 .p3-hero-sub {
   font-family: var(--font-heading);
@@ -1070,11 +1064,11 @@ export function render() {
 
   <!-- ══ Section 1: Hero ══ -->
   <section class="p3-hero section-dark section-hero-full">
-    <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;">
-      <p class="p3-hero-eyebrow" id="p3-eyebrow">Module 01 / Page 03</p>
-      <h1 class="p3-hero-title" id="p3-hero-title">配色生成器</h1>
-      <p class="p3-hero-sub" id="p3-hero-sub">Color Palette Generator</p>
-      <p class="p3-hero-tagline">从一个基色出发，生成专业的科研配色方案</p>
+    <div class="flex-col-center" style="gap:var(--space-md);text-align:center;position:relative;z-index:1;">
+      <p class="p3-hero-eyebrow" id="p3-eyebrow" style="opacity:0;">Module 01 / Page 03</p>
+      <h1 class="page-hero-title p3-hero-title" id="p3-hero-title" style="color:var(--text-on-dark);opacity:0;">配色生成器</h1>
+      <p class="page-hero-sub p3-hero-sub" id="p3-hero-sub" style="opacity:0;">Color Palette Generator</p>
+      <p class="p3-hero-tagline" id="p3-hero-tagline" style="opacity:0;">从一个基色出发，生成专业的科研配色方案</p>
       <!-- 快捷导航 -->
       <nav class="hero-quicknav" id="p3-hero-nav" style="opacity:0;">
         <button class="hero-quicknav__item" data-target="#p3-generator-section">自定义配色</button>
@@ -1082,10 +1076,7 @@ export function render() {
         <button class="hero-quicknav__item" data-target="#p3-errors-section">常见错误</button>
       </nav>
     </div>
-    <div class="p3-scroll-hint" id="p3-scroll-hint">
-      <span>SCROLL</span>
-      <div class="p3-scroll-arrow"></div>
-    </div>
+    <div class="p3-scroll-hint" id="p3-scroll-hint" style="opacity:0;">↓ 向下探索</div>
   </section>
 
   <!-- ══ Section 2: Generator ══ -->
@@ -1204,11 +1195,12 @@ export function render() {
 // ═══════════════════════════════════════════════════
 export function init() {
   // Hero entrance
-  gsap.fromTo('#p3-eyebrow',    { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.1, ease: 'power3.out' });
-  gsap.fromTo('#p3-hero-title', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.9, delay: 0.25, ease: 'power3.out' });
-  gsap.fromTo('#p3-hero-sub',   { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.45, ease: 'power3.out' });
-  gsap.fromTo('#p3-hero-nav',   { opacity: 0, y: 20 },  { opacity: 1, y: 0, duration: 0.8, delay: 0.6, ease: 'power3.out' });
-  gsap.fromTo('#p3-scroll-hint',{ opacity: 0 },        { opacity: 1, duration: 0.6, delay: 1, ease: 'power2.out' });
+  gsap.fromTo('#p3-eyebrow',      { opacity: 0, y: 20 }, { opacity: 1,   y: 0, duration: 0.7, delay: 0.1,  ease: 'power3.out' });
+  gsap.fromTo('#p3-hero-title',   { opacity: 0, y: 40 }, { opacity: 1,   y: 0, duration: 0.9, delay: 0.25, ease: 'power3.out' });
+  gsap.fromTo('#p3-hero-sub',     { opacity: 0, y: 30 }, { opacity: 0.5, y: 0, duration: 0.8, delay: 0.4,  ease: 'power3.out' });
+  gsap.fromTo('#p3-hero-tagline', { opacity: 0, y: 20 }, { opacity: 1,   y: 0, duration: 0.8, delay: 0.55, ease: 'power3.out' });
+  gsap.fromTo('#p3-hero-nav',     { opacity: 0, y: 20 }, { opacity: 1,   y: 0, duration: 0.8, delay: 0.7,  ease: 'power3.out' });
+  gsap.fromTo('#p3-scroll-hint',  { opacity: 0 },        { opacity: 1,          duration: 0.6, delay: 1,    ease: 'power2.out' });
 
   // Scroll animations
   fadeIn('#p3-gen-header', { y: 40 });

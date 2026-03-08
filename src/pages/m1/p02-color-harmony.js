@@ -163,21 +163,20 @@ export function render() {
 
       <!-- ====== Section 1: Hero ====== -->
       <section class="section-dark section-hero-full m1p2-hero-section" style="align-items:center;">
-        <div class="content-wrapper" style="text-align:center;position:relative;z-index:1;">
-          <p style="font-family:var(--font-code);font-size:var(--text-small);color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:var(--space-sm);">Module 01 / Page 02</p>
-          <h1 class="page-hero-title" style="color:var(--text-on-dark);">色彩和谐与科研配色</h1>
-          <p class="page-hero-sub">Color Harmony & Scientific Palettes</p>
-          <p style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;margin:var(--space-sm) auto 0;line-height:1.8;">
-            掌握经典配色方案，获取可直接用于论文的专业配色
-          </p>
+        <div class="flex-col-center" style="gap:var(--space-md);text-align:center;position:relative;z-index:1;">
+          <p class="m1p2-eyebrow" style="font-family:var(--font-code);font-size:var(--text-small);color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;opacity:0;">Module 01 / Page 02</p>
+          <h1 class="page-hero-title m1p2-hero-title" style="color:var(--text-on-dark);opacity:0;">色彩和谐与科研配色</h1>
+          <p class="page-hero-sub m1p2-hero-sub" style="opacity:0;">Color Harmony & Scientific Palettes</p>
+          <p class="m1p2-hero-tagline" style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;opacity:0;">掌握经典配色方案，获取可直接用于论文的专业配色</p>
           <!-- 快捷导航 -->
-          <nav class="hero-quicknav" id="m1p2-hero-nav">
+          <nav class="hero-quicknav m1p2-hero-nav" style="opacity:0;" id="m1p2-hero-nav">
             <button class="hero-quicknav__item" data-target="#m1p2-harmony">五种配色方案</button>
             <button class="hero-quicknav__item" data-target="#m1p2-rule603010">60-30-10 法则</button>
             <button class="hero-quicknav__item" data-target="#m1p2-deltae">ΔE 色差计算</button>
             <button class="hero-quicknav__item" data-target="#m1p2-palette-browser">配色方案库</button>
           </nav>
         </div>
+        <div style="position:absolute;bottom:28px;left:50%;transform:translateX(-50%);font-size:var(--text-caption);color:var(--text-on-dark-3);">↓ 向下探索</div>
       </section>
 
       <!-- ====== Section 2: Harmony Types ====== -->
@@ -374,6 +373,14 @@ export function render() {
 // ═══════════════════════════════════════════════════
 
 export function init() {
+  // Hero 入场动画
+  const tl = gsap.timeline({ delay: 0.2 });
+  tl.to('.m1p2-eyebrow',      { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0);
+  tl.fromTo('.m1p2-hero-title',  { y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.15);
+  tl.fromTo('.m1p2-hero-sub',    { y: 20 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
+  tl.fromTo('.m1p2-hero-tagline',{ y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
+  tl.fromTo('.m1p2-hero-nav',    { y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
+
   // 导航按钮
   const prevBtn = document.getElementById('m1p2-prev-btn');
   const nextBtn = document.getElementById('m1p2-next-btn');

@@ -2202,28 +2202,13 @@ export function render() {
 .p7-eyebrow {
   font-family:var(--font-code); font-size:var(--text-small);
   color:var(--accent); letter-spacing:.15em; text-transform:uppercase;
-  margin-bottom:var(--space-sm);
 }
 .p7-hero-title {
   font-family:var(--font-display); font-size:clamp(2.5rem,5vw,4.5rem);
   font-weight:700; letter-spacing:-.02em; line-height:1.1; color:var(--text-on-dark);
 }
-.p7-hero-sub {
-  font-family:var(--font-heading); font-size:clamp(1rem,2vw,1.4rem);
-  font-weight:300; color:var(--text-on-dark); opacity:0.5; max-width:600px;
-  line-height:1.4; text-align:center; margin-top:var(--space-xs);
-}
-.p7-hero-tagline {
-  font-family:var(--font-body); font-size:var(--text-body);
-  color:var(--text-on-dark-2); max-width:540px; line-height:1.8;
-  margin-top:var(--space-sm); text-align:center;
-}
-.p7-batch-badge {
-  display:inline-flex; align-items:center; gap:6px;
-  padding:6px 16px; border:1px solid rgba(126,200,227,.25);
-  border-radius:var(--radius-full); font-size:var(--text-small);
-  color:var(--accent); margin-bottom:var(--space-md);
-}
+.p7-hero-sub { /* styling via global .page-hero-sub */ }
+.p7-hero-tagline { /* styling via inline styles */ }
 .p7-scroll-hint {
   position:absolute; bottom:28px; left:50%; transform:translateX(-50%);
   font-size:var(--text-caption); color:var(--text-on-dark-3);
@@ -2469,15 +2454,16 @@ export function render() {
 </style>
 
 <!-- Hero -->
-<section class="p7-hero section-hero-full" id="p7-hero">
-  <div class="p7-batch-badge">完整版 · 12 种图表</div>
-  <p class="p7-eyebrow">Module 01 / Page 07</p>
-  <h1 class="p7-hero-title">ggplot2<br>图表工作坊</h1>
-  <p class="p7-hero-sub">ggplot2 Chart Workshop</p>
-  <p class="p7-hero-tagline">12 种常用图表 · 参数实时调节 · R 代码即时生成 · 一键导出脚本</p>
-  <div class="hero-quicknav" id="p7-hero-nav">
-    <button class="hero-quicknav__item" data-target="#p7-gallery">图表类型库</button>
-    <button class="hero-quicknav__item" data-target="#p7-workshop">交互工作坊</button>
+<section class="p7-hero section-dark section-hero-full" id="p7-hero">
+  <div class="flex-col-center" style="gap:var(--space-md);text-align:center;position:relative;z-index:1;">
+    <p class="p7-eyebrow" id="p7-hero-eyebrow" style="font-family:var(--font-code);font-size:var(--text-small);color:var(--accent);letter-spacing:.15em;text-transform:uppercase;opacity:0;">Module 01 / Page 07</p>
+    <h1 class="page-hero-title p7-hero-title" style="color:var(--text-on-dark);opacity:0;">ggplot2<br>图表工作坊</h1>
+    <p class="page-hero-sub p7-hero-sub" style="opacity:0;">ggplot2 Chart Workshop</p>
+    <p class="p7-hero-tagline" style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;opacity:0;">12 种常用图表 · 参数实时调节 · R 代码即时生成 · 一键导出脚本</p>
+    <div class="hero-quicknav" id="p7-hero-nav" style="opacity:0;">
+      <button class="hero-quicknav__item" data-target="#p7-gallery">图表类型库</button>
+      <button class="hero-quicknav__item" data-target="#p7-workshop">交互工作坊</button>
+    </div>
   </div>
   <div class="p7-scroll-hint">↓ 向下探索</div>
 </section>
@@ -2672,16 +2658,12 @@ function initMobileAccordion() {
 // GSAP 动画
 // ─────────────────────────────────────────────
 function initAnimations() {
-  gsap.fromTo('.p7-eyebrow', { opacity: 0, y: 20 },
-    { opacity: 1, y: 0, duration: 0.8, delay: 0.05, ease: 'power3.out' });
-  gsap.fromTo('.p7-hero-title', { opacity: 0, y: 40 },
-    { opacity: 1, y: 0, duration: 1.1, delay: 0.15, ease: 'power3.out' });
-  gsap.fromTo('.p7-hero-sub', { opacity: 0, y: 30 },
-    { opacity: 1, y: 0, duration: 0.9, delay: 0.35, ease: 'power3.out' });
-  gsap.fromTo('.p7-hero-tagline', { opacity: 0, y: 20 },
-    { opacity: 1, y: 0, duration: 0.8, delay: 0.5, ease: 'power3.out' });
-  gsap.fromTo('#p7-hero-nav', { opacity: 0, y: 24 },
-    { opacity: 1, y: 0, duration: 0.9, delay: 0.65, ease: 'power3.out' });
+  const tl7 = gsap.timeline({ delay: 0.2 });
+  tl7.to('#p7-hero-eyebrow',    { opacity: 1,   y: 0, duration: 0.7, ease: 'power3.out' }, 0);
+  tl7.fromTo('.p7-hero-title',  { y: 30 }, { opacity: 1,   y: 0, duration: 0.9, ease: 'power3.out' }, 0.15);
+  tl7.fromTo('.p7-hero-sub',    { y: 20 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
+  tl7.fromTo('.p7-hero-tagline',{ y: 20 }, { opacity: 1,   y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
+  tl7.fromTo('#p7-hero-nav',    { y: 20 }, { opacity: 1,   y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
 
   gsap.from('#p7-gallery-hdr', {
     scrollTrigger: { trigger: '#p7-gallery', start: 'top 85%' },
