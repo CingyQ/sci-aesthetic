@@ -565,6 +565,49 @@ canvas.addEventListener('touchmove', (e) => {
 }
 ```
 
+### 列表+预览浏览器布局（如配色方案库）
+```css
+/* 桌面端：左列表 + 右 sticky 预览 */
+.browser-layout {
+  display: flex;
+  gap: var(--space-lg);
+  align-items: flex-start;
+}
+.browser-left {
+  flex: 0 0 42%;
+  min-width: 0;
+  max-height: 620px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.browser-right {
+  flex: 1;
+  min-width: 0;
+}
+.browser-right > .sticky-wrap {
+  position: sticky;
+  top: var(--space-lg);
+}
+
+/* 移动端 ≤900px：纵向堆叠 */
+@media (max-width: 900px) {
+  .browser-layout {
+    flex-direction: column;
+  }
+  .browser-left {
+    flex: none;
+    width: 100%;
+    max-height: 400px;
+  }
+  .browser-right {
+    width: 100%;
+  }
+  .browser-right > .sticky-wrap {
+    position: static;
+  }
+}
+```
+
 ### Before/After 对比组件
 ```css
 .before-after {
