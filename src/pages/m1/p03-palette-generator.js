@@ -927,29 +927,7 @@ export function render() {
   border-top: 1px solid var(--border-dark); margin-top: 14px;
 }
 
-/* ── Footer CTA ── */
-.p3-footer-section {
-  background: var(--bg-dark); padding: var(--space-2xl) var(--space-lg);
-  text-align: center; border-top: 1px solid var(--border-dark);
-}
-.p3-footer-stat {
-  font-family: var(--font-display);
-  font-size: clamp(1.6rem, 4vw, 2.8rem);
-  color: var(--text-on-dark); font-weight: 700;
-  margin-bottom: var(--space-md); letter-spacing: -0.02em;
-}
-.p3-footer-sub { color: var(--text-on-dark-2); font-size: 1rem; margin-bottom: var(--space-lg); }
-.p3-footer-links { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-.p3-footer-link {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 12px 28px; border-radius: var(--radius-full);
-  font-size: 0.95rem; font-weight: 600; cursor: pointer;
-  transition: all 0.2s; text-decoration: none; border: none;
-}
-.p3-footer-link.primary { background: var(--accent); color: #1d1d1f; }
-.p3-footer-link.primary:hover { background: var(--accent-hover); transform: translateY(-2px); }
-.p3-footer-link.secondary { background: transparent; color: var(--text-on-dark); border: 1.5px solid var(--border-dark); }
-.p3-footer-link.secondary:hover { border-color: var(--accent); color: var(--accent); }
+/* footer uses global .page-footer-cta */
 
 /* ── Responsive ── */
 
@@ -973,7 +951,7 @@ export function render() {
 
 /* Mobile */
 @media (max-width: 768px) {
-  .p3-generator-section, .p3-datatypes-section, .p3-errors-section, .p3-footer-section {
+  .p3-generator-section, .p3-datatypes-section, .p3-errors-section {
     padding: var(--space-lg) var(--space-sm);
   }
   .p3-hero { padding: 80px var(--space-sm) 48px; }
@@ -1032,8 +1010,7 @@ export function render() {
   .p3-algo-grid { grid-template-columns: 1fr; }
   .p3-hsl-row label { display: none; }
   .p3-scheme-btn span { font-size: 0.7rem; }
-  .p3-footer-links { flex-direction: column; align-items: stretch; }
-  .p3-footer-link { justify-content: center; }
+  /* footer nav uses global btn-primary / btn-ghost */
 }
 </style>
 
@@ -1154,12 +1131,13 @@ export function render() {
   </section>
 
   <!-- ══ Section 5: Footer CTA ══ -->
-  <section class="p3-footer-section section-dark" id="p3-footer">
-    <div class="p3-footer-stat">"好的配色让数据自己说话"</div>
-    <p class="p3-footer-sub">下一步：学习色觉无障碍设计，让更多人看懂你的图表</p>
-    <div class="p3-footer-links">
-      <button class="p3-footer-link primary" id="p3-next-btn">无障碍色彩 →</button>
-      <button class="p3-footer-link secondary" id="p3-prev-btn">← 色彩和谐</button>
+  <section class="page-footer-cta" id="p3-footer">
+    <p class="page-footer-num">03 / 10</p>
+    <h2 class="page-footer-quote">"好的配色让数据自己说话"</h2>
+    <p class="page-footer-desc">下一步：学习色觉无障碍设计，让更多人看懂你的图表</p>
+    <div class="page-footer-nav">
+      <button class="btn-ghost" id="p3-prev-btn">← 色彩和谐</button>
+      <button class="btn-primary" id="p3-next-btn">色彩与阅读无障碍 →</button>
     </div>
   </section>
 

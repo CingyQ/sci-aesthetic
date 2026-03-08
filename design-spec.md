@@ -1259,6 +1259,34 @@ z-index:  99  — 侧边栏遮罩层
 
 ---
 
+## 统一 Footer CTA 规范
+
+每个页面末尾必须使用 `.page-footer-cta` 全局类（定义于 `layout.css`），不再编写页面专属 footer CSS。
+
+### 标准 HTML 结构
+
+```html
+<section class="page-footer-cta">
+  <p class="page-footer-num">0X / 10</p>            <!-- 页码，可选 -->
+  <h2 class="page-footer-quote">"金句/总结语"</h2>   <!-- display 字体，大号 -->
+  <p class="page-footer-desc">过渡引导文案</p>
+  <div class="page-footer-nav">
+    <button class="btn-ghost" id="xxx-prev-btn">← 上一页</button>
+    <button class="btn-primary" id="xxx-next-btn">下一页 →</button>
+  </div>
+</section>
+```
+
+### 规则
+- **背景**：`var(--bg-dark-deep)`（纯黑），与正文深色段区分
+- **按钮**：一律使用全局 `btn-primary` / `btn-ghost`，禁止页面专属按钮类
+- **顺序**：← 上一页（ghost）在左，下一页 →（primary）在右
+- **页码**：`0X / 10` 格式，`var(--font-code)` 等宽字体，`letter-spacing: 0.15em`
+- **金句**：`var(--font-display)` 衬线大字，可以是引用或总结句
+- **移动端**：`min-height: auto`，padding 压缩至 `var(--space-2xl)`
+
+---
+
 ## 禁止清单
 
 ❌ 卡片网格平铺布局

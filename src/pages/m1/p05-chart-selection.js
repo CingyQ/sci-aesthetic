@@ -427,28 +427,8 @@ export function render() {
 .p5-case-note-bad { color:#c53030; }
 .p5-case-note-good { color:#276749; }
 
-/* ── Footer CTA ── */
-.p5-footer {
-  background:var(--bg-dark-deep); color:var(--text-on-dark);
-  padding:var(--space-3xl) var(--space-lg);
-  text-align:center; min-height:50vh;
-  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:var(--space-md);
-}
-.p5-footer-title {
-  font-family:var(--font-display); font-size:clamp(1.75rem,4vw,3rem);
-  font-weight:700; letter-spacing:-0.02em;
-}
-.p5-footer-desc { font-size:1rem; color:var(--text-on-dark-2); line-height:1.7; max-width:520px; }
-.p5-footer-links { display:flex; gap:var(--space-md); flex-wrap:wrap; justify-content:center; margin-top:8px; }
-.p5-fl {
-  padding:14px 32px; min-height:52px; border-radius:var(--radius-full);
-  font-family:var(--font-heading); font-size:0.96rem; font-weight:500;
-  cursor:pointer; transition:all var(--t-base); display:flex; align-items:center; gap:8px;
-}
-.p5-fl-primary { background:var(--accent); color:#1d1d1f; border:none; box-shadow:0 2px 16px var(--accent-glow); }
-.p5-fl-primary:hover { background:var(--accent-hover); transform:translateY(-2px); }
-.p5-fl-ghost { background:transparent; color:var(--text-on-dark-2); border:1.5px solid var(--border-dark); }
-.p5-fl-ghost:hover { border-color:var(--text-on-dark-2); color:var(--text-on-dark); }
+/* footer nav uses global btn-primary / btn-ghost */
+/* footer uses global .page-footer-cta */
 
 /* ── 响应式 ── */
 @media (max-width:900px) {
@@ -457,12 +437,12 @@ export function render() {
   .p5-preview-sticky { position:static; }
 }
 @media (max-width:768px) {
-  .p5-dt-section,.p5-gallery-section,.p5-misuse-section,.p5-footer { padding:var(--space-xl) var(--space-sm); }
+  .p5-dt-section,.p5-gallery-section,.p5-misuse-section { padding:var(--space-xl) var(--space-sm); }
   .p5-opts { flex-direction:column; align-items:stretch; }
   .p5-opt-btn { width:100%; justify-content:center; }
   .p5-case-body { flex-direction:column; }
   .p5-case-side:first-child { border-right:none; border-bottom:1px solid var(--border-light); }
-  .p5-footer-links { flex-direction:column; align-items:center; }
+  /* footer nav uses global .page-footer-nav */
   .p5-res-actions { flex-direction:column; align-items:center; }
   .p5-group-tabs { gap:6px; }
   .p5-gtab { padding:8px 14px; font-size:0.8rem; }
@@ -548,15 +528,13 @@ export function render() {
 </section>
 
 <!-- Footer CTA -->
-<section id="p5-footer" class="p5-footer" style="scroll-margin-top:56px;">
-  <p class="p5-eyebrow" style="opacity:0.7;">下一步</p>
-  <h2 class="p5-footer-title" id="p5-footer-title">选好图表，开始绘制</h2>
-  <p class="p5-footer-desc" id="p5-footer-desc">
-    掌握了图表选择的原则，接下来学习 ggplot2 的图层语法——精准控制图表每一个视觉细节。
-  </p>
-  <div class="p5-footer-links">
-    <button class="p5-fl p5-fl-primary" onclick="window._p5nav('m1-p6')">ggplot2 图层语法 →</button>
-    <button class="p5-fl p5-fl-ghost" onclick="window._p5nav('m1-p4')">← 色彩无障碍</button>
+<section id="p5-footer" class="page-footer-cta" style="scroll-margin-top:56px;">
+  <p class="page-footer-num">05 / 10</p>
+  <h2 class="page-footer-quote">选好图表，让数据开口说话</h2>
+  <p class="page-footer-desc">掌握了图表选择的原则，接下来学习 ggplot2 的图层语法——精准控制图表每一个视觉细节。</p>
+  <div class="page-footer-nav">
+    <button class="btn-ghost" onclick="window._p5nav('m1-p4')">← 色彩与阅读无障碍</button>
+    <button class="btn-primary" onclick="window._p5nav('m1-p6')">ggplot2 图层语法 →</button>
   </div>
 </section>
 

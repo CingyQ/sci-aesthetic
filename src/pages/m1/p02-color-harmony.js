@@ -354,19 +354,13 @@ export function render() {
       </section>
 
       <!-- ====== Section 6: Footer CTA ====== -->
-      <section class="section-dark section-auto" style="align-items:center;min-height:50vh;">
-        <div class="content-wrapper" style="text-align:center;">
-          <p style="color:var(--text-on-dark-3);font-size:var(--text-small);font-weight:500;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:var(--space-sm);">02 / 10</p>
-          <h2 style="font-family:var(--font-display);font-size:var(--text-title);color:var(--text-on-dark);font-weight:700;margin-bottom:var(--space-md);">
-            从理论到实践，配色方案即刻可用
-          </h2>
-          <p style="color:var(--text-on-dark-2);font-size:var(--text-body);max-width:480px;margin:0 auto var(--space-xl);line-height:1.7;">
-            掌握了色彩和谐原理，下一步学习如何用算法生成完美配色。
-          </p>
-          <div style="display:flex;gap:var(--space-md);justify-content:center;flex-wrap:wrap;">
-            <button class="btn-ghost" id="m1p2-prev-btn" style="color:var(--text-on-dark-2);border-color:var(--border-dark);">← 色彩理论基础</button>
-            <button class="btn-primary" id="m1p2-next-btn">配色生成器 →</button>
-          </div>
+      <section class="page-footer-cta">
+        <p class="page-footer-num">02 / 10</p>
+        <h2 class="page-footer-quote">从理论到实践，配色方案即刻可用</h2>
+        <p class="page-footer-desc">掌握了色彩和谐原理，下一步学习如何用算法生成完美配色。</p>
+        <div class="page-footer-nav">
+          <button class="btn-ghost" id="m1p2-prev-btn">← 色彩理论</button>
+          <button class="btn-primary" id="m1p2-next-btn">配色生成器 →</button>
         </div>
       </section>
 

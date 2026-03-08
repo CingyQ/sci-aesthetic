@@ -519,27 +519,7 @@ export function render() {
 @media (max-width:900px) { .p6-axis-layout { grid-template-columns:1fr; } .p6-axis-controls { position:static; } }
 @media (max-width:768px) { .p6-axis-section { padding:var(--space-xl) var(--space-sm); } }
 
-/* ── Footer ── */
-.p6-footer {
-  background:var(--bg-dark-deep); color:var(--text-on-dark);
-  padding:var(--space-3xl) var(--space-lg); text-align:center;
-}
-.p6-footer-title {
-  font-family:var(--font-display); font-size:clamp(1.6rem,3.5vw,2.8rem);
-  font-weight:700; letter-spacing:-0.02em; margin-bottom:var(--space-sm);
-}
-.p6-footer-desc { font-size:1.05rem; color:var(--text-on-dark-2); line-height:1.8; max-width:560px; margin:0 auto var(--space-lg); }
-.p6-footer-links { display:flex; gap:var(--space-sm); justify-content:center; flex-wrap:wrap; }
-.p6-footer-link {
-  padding:14px 28px; min-height:44px; border:1.5px solid var(--border-dark);
-  border-radius:var(--radius-full); color:var(--text-on-dark-2); background:transparent;
-  font-family:var(--font-heading); font-size:0.9rem; cursor:pointer;
-  transition:all 0.25s var(--ease-apple);
-}
-.p6-footer-link:hover { border-color:var(--accent); color:var(--accent); }
-.p6-footer-link.primary { background:var(--accent); color:#1d1d1f; border-color:var(--accent); font-weight:600; }
-.p6-footer-link.primary:hover { background:var(--accent-hover); border-color:var(--accent-hover); }
-@media (max-width:768px) { .p6-footer { padding:var(--space-xl) var(--space-sm); } .p6-footer-links { flex-direction:column; align-items:center; } }
+/* footer uses global .page-footer-cta */
 </style>
 
 <!-- Hero -->
@@ -684,12 +664,13 @@ export function render() {
 </section>
 
 <!-- Footer CTA -->
-<section class="p6-footer">
-  <h2 class="p6-footer-title">下一步：图表工作坊</h2>
-  <p class="p6-footer-desc">掌握了图层语法，现在动手调节 12+ 种图表类型的每一个参数——散点图、箱线图、小提琴图和更多。</p>
-  <div class="p6-footer-links">
-    <button class="p6-footer-link" id="p6-back-btn">← 图表选择指南</button>
-    <button class="p6-footer-link primary" id="p6-next-btn">ggplot2 工作坊 →</button>
+<section class="page-footer-cta">
+  <p class="page-footer-num">06 / 10</p>
+  <h2 class="page-footer-quote">图层即语法，语法即自由</h2>
+  <p class="page-footer-desc">掌握了图层语法，现在动手调节 12+ 种图表类型的每一个参数——散点图、箱线图、小提琴图和更多。</p>
+  <div class="page-footer-nav">
+    <button class="btn-ghost" id="p6-back-btn">← 图表选择指南</button>
+    <button class="btn-primary" id="p6-next-btn">ggplot2 工作坊 →</button>
   </div>
 </section>
 
@@ -1198,7 +1179,7 @@ export function init() {
 
   // 滚动动画
   fadeIn(document.querySelectorAll('.p6-sec-hdr'), { stagger: 0.12, y: 50 });
-  fadeIn(document.querySelectorAll('.p6-footer-title, .p6-footer-desc'), { stagger: 0.15 });
+  fadeIn(document.querySelectorAll('.page-footer-quote, .page-footer-desc'), { stagger: 0.15 });
   scaleReveal(document.getElementById('p6-axis-layout'));
 
   // Footer 导航

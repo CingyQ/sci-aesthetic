@@ -2579,20 +2579,7 @@ export function render() {
 }
 .p7-export-btn:hover { background:var(--accent-subtle); }
 .p7-export-btn:active { transform:scale(.97); }
-/* Footer */
-.p7-footer-section {
-  background:var(--bg-dark); color:var(--text-on-dark);
-  padding:var(--space-3xl) var(--space-lg); text-align:center;
-}
-.p7-footer-title {
-  font-family:var(--font-display); font-size:clamp(1.5rem,3vw,2.25rem);
-  font-weight:700; letter-spacing:-.02em; max-width:640px; margin:0 auto;
-}
-.p7-footer-desc {
-  font-size:1rem; color:var(--text-on-dark-2); max-width:560px;
-  margin:var(--space-sm) auto var(--space-lg); line-height:1.7;
-}
-.p7-footer-links { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+/* footer uses global .page-footer-cta */
 
 /* ── Tablet ── */
 @media (max-width:1024px) {
@@ -2661,8 +2648,7 @@ export function render() {
   #p7-code-editor { flex:1; min-height:0; overflow:auto; max-height:50vh; }
   .p7-code-actions { padding:10px 12px; flex-shrink:0; }
 
-  /* Footer */
-  .p7-footer-links { flex-direction:column; align-items:center; }
+  /* footer nav uses global .page-footer-nav */
 }
 @media (max-width:480px) {
   .p7-chart-grid { gap:10px; }
@@ -2755,18 +2741,13 @@ export function render() {
 </section>
 
 <!-- Footer CTA -->
-<section class="p7-footer-section" id="p7-footer">
-  <div class="p7-container" id="p7-footer-inner">
-    <div class="p7-eyebrow" style="margin-bottom:var(--space-sm)">继续探索</div>
-    <h2 class="p7-footer-title">掌握参数，让图表更出色</h2>
-    <p class="p7-footer-desc">
-      第 8 页深入 R 配色方案与出版级图表调整——<br>
-      主题定制器、期刊规格导出、patchwork 多面板布局。
-    </p>
-    <div class="p7-footer-links">
-      <button class="btn-ghost" id="p7-btn-prev">← 上一页：图层语法</button>
-      <button class="btn-primary" id="p7-btn-next">下一页：R 配色 →</button>
-    </div>
+<section class="page-footer-cta" id="p7-footer">
+  <p class="page-footer-num">07 / 10</p>
+  <h2 class="page-footer-quote" id="p7-footer-inner">掌握参数，让图表更出色</h2>
+  <p class="page-footer-desc">第 8 页深入 R 配色方案与出版级图表调整——主题定制器、期刊规格导出、patchwork 多面板布局。</p>
+  <div class="page-footer-nav">
+    <button class="btn-ghost" id="p7-btn-prev">← 图层语法</button>
+    <button class="btn-primary" id="p7-btn-next">R 配色方案 →</button>
   </div>
 </section>
 </div>`;

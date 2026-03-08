@@ -213,17 +213,12 @@ export function render() {
   </section>
 
   <!-- ====== Section 5: Footer CTA ====== -->
-  <section class="section-dark m1p1-footer-cta" style="min-height:50vh;">
-    <div class="content-wrapper flex-col-center" style="text-align:center;gap:var(--space-md);">
-      <p style="font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;">色彩理论是科研可视化的基石。掌握 HSL 模型与混色原理后，你就拥有了精准控制配色的能力。</p>
-      <div style="display:flex;gap:var(--space-sm);flex-wrap:wrap;justify-content:center;margin-top:var(--space-sm);">
-        <a class="btn-primary m1p1-nav-link" data-route="m1-p2">下一篇：色彩和谐与科研配色 →</a>
-      </div>
-      <div style="margin-top:var(--space-lg);display:flex;gap:var(--space-md);flex-wrap:wrap;justify-content:center;">
-        <a class="btn-ghost btn-small m1p1-nav-link" data-route="m1-p3">调色板生成器</a>
-        <a class="btn-ghost btn-small m1p1-nav-link" data-route="m1-p4">色彩与阅读无障碍</a>
-        <a class="btn-ghost btn-small m1p1-nav-link" data-route="m1-p5">图表类型选择</a>
-      </div>
+  <section class="page-footer-cta">
+    <p class="page-footer-num">01 / 10</p>
+    <h2 class="page-footer-quote">"色彩是数据最直接的语言"</h2>
+    <p class="page-footer-desc">掌握 HSL 模型与混色原理后，你就拥有了精准控制配色的能力。下一步：用色彩和谐原理构建科研配色方案。</p>
+    <div class="page-footer-nav">
+      <button class="btn-primary m1p1-nav-link" data-route="m1-p2">色彩和谐 →</button>
     </div>
   </section>
 

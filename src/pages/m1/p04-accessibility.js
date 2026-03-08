@@ -460,30 +460,8 @@ export function render() {
   font-size: 0.8rem; color: var(--text-on-dark-2); line-height: 1.5;
 }
 
-/* ── Footer ── */
-.p4-footer {
-  background: var(--bg-dark-deep); color: var(--text-on-dark);
-  padding: var(--space-2xl) var(--space-lg); text-align: center;
-  border-top: 1px solid var(--border-dark);
-}
-.p4-footer-summary {
-  font-family: var(--font-display); font-size: clamp(1.4rem, 3vw, 2.2rem);
-  font-weight: 700; max-width: 600px; margin: 0 auto var(--space-lg);
-  line-height: 1.3; letter-spacing: -0.01em;
-}
-.p4-footer-links {
-  display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
-}
-.p4-nav-link {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 12px 28px; border-radius: var(--radius-full);
-  font-size: 0.95rem; font-weight: 600; cursor: pointer;
-  transition: all 0.2s; text-decoration: none; border: none;
-}
-.p4-nav-link--primary { background: var(--accent); color: #1d1d1f; }
-.p4-nav-link--primary:hover { background: var(--accent-hover); transform: translateY(-2px); }
-.p4-nav-link--ghost { background: transparent; color: var(--text-on-dark); border: 1.5px solid var(--border-dark); }
-.p4-nav-link--ghost:hover { border-color: var(--accent); color: var(--accent); }
+/* footer nav uses global btn-primary / btn-ghost */
+/* footer uses global .page-footer-cta */
 
 /* ── Responsive ── */
 @media (max-width: 900px) {
@@ -492,7 +470,7 @@ export function render() {
 }
 @media (max-width: 768px) {
   .p4-contrast-section, .p4-typo-section,
-  .p4-font-section, .p4-check-section, .p4-footer {
+  .p4-font-section, .p4-check-section {
     padding: var(--space-xl) var(--space-sm);
   }
   .p4-hero { padding: 80px var(--space-sm) 48px; }
@@ -500,7 +478,7 @@ export function render() {
   .p4-font-compare { grid-template-columns: 1fr; }
   .p4-check-grid { grid-template-columns: 1fr; }
   .p4-lh-compare { flex-direction: column; }
-  .p4-footer-links { flex-direction: column; align-items: center; }
+  /* footer nav uses global .page-footer-nav */
   .p4-ctrl-slider::-webkit-slider-thumb { width: 20px; height: 20px; }
   .p4-ctrl-slider::-moz-range-thumb { width: 20px; height: 20px; }
   .p4-ctrl-slider { min-height: 32px; }
@@ -872,20 +850,13 @@ export function render() {
 <!-- ════════════════════════════════════════════
      Section 6: Footer
      ════════════════════════════════════════════ -->
-<section class="p4-footer" id="p4-footer">
-  <p class="p4-footer-summary">
-    可读性不是妥协，是让科学发现触达更多人的方式。
-  </p>
-  <div class="p4-footer-links">
-    <button class="p4-nav-link p4-nav-link--primary" id="p4-next-btn">
-      下一篇：图表选择指南 →
-    </button>
-    <button class="p4-nav-link p4-nav-link--ghost" id="p4-prev-btn">
-      ← 配色生成器
-    </button>
-    <button class="p4-nav-link p4-nav-link--ghost" id="p4-m1-btn">
-      ↩ 模块一首页
-    </button>
+<section class="page-footer-cta" id="p4-footer">
+  <p class="page-footer-num">04 / 10</p>
+  <h2 class="page-footer-quote">可读性不是妥协，是让科学发现触达更多人的方式</h2>
+  <p class="page-footer-desc">掌握对比度与色盲友好配色，让你的图表真正惠及所有读者。</p>
+  <div class="page-footer-nav">
+    <button class="btn-ghost" id="p4-prev-btn">← 配色生成器</button>
+    <button class="btn-primary" id="p4-next-btn">图表选择指南 →</button>
   </div>
 </section>
 
