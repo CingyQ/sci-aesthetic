@@ -132,14 +132,31 @@ export function render() {
           height: 24px;
         }
       }
+      @keyframes m1p2-glow {
+        0%,100% { transform: translate(0,0) scale(1); opacity: 1; }
+        50% { transform: translate(4%,3%) scale(1.08); opacity: 0.7; }
+      }
+      @keyframes m1p2-glow-b {
+        0%,100% { transform: translate(0,0) scale(1); opacity: 0.5; }
+        50% { transform: translate(-5%,-2%) scale(0.92); opacity: 0.9; }
+      }
       .m1p2-hero-section::before {
         content: '';
         position: absolute;
         inset: 0;
         background:
-          radial-gradient(ellipse 50% 40% at 35% 45%, rgba(126,200,227,0.10) 0%, transparent 70%),
-          radial-gradient(ellipse 35% 35% at 65% 55%, rgba(149,213,178,0.06) 0%, transparent 70%);
+          radial-gradient(ellipse 50% 40% at 35% 45%, rgba(126,200,227,0.12) 0%, transparent 65%);
         pointer-events: none;
+        animation: m1p2-glow 10s ease-in-out infinite;
+      }
+      .m1p2-hero-section::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(ellipse 35% 35% at 68% 58%, rgba(149,213,178,0.08) 0%, transparent 65%);
+        pointer-events: none;
+        animation: m1p2-glow-b 13s ease-in-out infinite;
       }
     </style>
     <div class="page-scroll">
@@ -147,10 +164,10 @@ export function render() {
       <!-- ====== Section 1: Hero ====== -->
       <section class="section-dark section-hero-full m1p2-hero-section" style="align-items:center;">
         <div class="content-wrapper" style="text-align:center;position:relative;z-index:1;">
-          <p class="page-hero-sub" style="color:var(--module-1);opacity:0.8;font-size:var(--text-small);font-weight:500;letter-spacing:0.1em;text-transform:uppercase;margin:0 auto var(--space-sm);">Module 01 · 科研数据可视化</p>
+          <p style="font-family:var(--font-code);font-size:var(--text-small);color:var(--accent);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:var(--space-sm);">Module 01 / Page 02</p>
           <h1 class="page-hero-title" style="color:var(--text-on-dark);">色彩和谐与科研配色</h1>
-          <p class="page-hero-sub" style="color:var(--text-on-dark-2);font-family:var(--font-heading);font-weight:300;">Color Harmony & Scientific Palettes</p>
-          <p style="color:var(--text-on-dark-3);font-size:var(--text-body);margin-top:var(--space-lg);max-width:560px;margin-left:auto;margin-right:auto;line-height:1.8;">
+          <p class="page-hero-sub">Color Harmony & Scientific Palettes</p>
+          <p style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;margin:var(--space-sm) auto 0;line-height:1.8;">
             掌握经典配色方案，获取可直接用于论文的专业配色
           </p>
           <!-- 快捷导航 -->

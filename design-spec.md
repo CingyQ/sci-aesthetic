@@ -7,6 +7,44 @@
 
 ---
 
+## ⚠️ 已知技术约束
+
+### CSS `position:sticky` 在本项目中全局失效
+
+`base.css` 对 `body` 和 `.page-scroll` 设置了 `overflow-x: hidden`，这会将这些元素变为 BFC 滚动容器，导致所有后代元素的 `position:sticky` 被局限在该容器内而无法正常相对视口粘附。**GSAP ScrollTrigger `pin` 同样失效**（pin 使用 `position:fixed`，在 grid 布局中会脱离文档流导致列坍缩）。
+
+**正确替代方案 — JS transform 模拟 sticky（已验证可用）：**
+
+```js
+// HTML 结构：flex 容器（.layers-body）+ 左列（.sticky-left，will-change:transform）+ 右列（正常流）
+function updateSticky() {
+  const bodyRect = document.getElementById('layers-body').getBoundingClientRect();
+  const leftEl   = document.getElementById('sticky-left');
+  const scrolledPast  = Math.max(0, -bodyRect.top);
+  const maxTranslate  = Math.max(0, bodyEl.offsetHeight - leftEl.offsetHeight);
+  leftEl.style.transform = `translateY(${Math.min(scrolledPast, maxTranslate)}px)`;
+
+  // 步骤检测（每步 100vh）
+  const stepIdx = Math.min(TOTAL_STEPS - 1, Math.max(0, Math.floor(scrolledPast / window.innerHeight)));
+  if (stepIdx !== state.currentStep) updateStep(stepIdx);
+}
+window.addEventListener('scroll', updateSticky, { passive: true });
+// destroy 时清理：window.removeEventListener('scroll', updateSticky)
+```
+
+```css
+/* 配套 CSS */
+.layers-body    { display: flex; align-items: flex-start; position: relative; }
+.sticky-left    { width: 50%; flex-shrink: 0; height: 100vh; will-change: transform; }
+.sticky-steps   { flex: 1; min-width: 0; }
+.step-panel     { height: 100vh; }
+```
+
+### 滚动容器是 `window`
+`layout.css` 中 `#main-content` 无 `overflow-y`，`window.scroll` 是正确的事件来源。
+
+---
+
 ## 色彩系统
 
 ### 浅色表面
@@ -192,8 +230,40 @@ Hero/Display: 700, line-height 1.1, letter-spacing -0.02em
 
 > **重要**：每个页面的第一个 section（Hero）必须添加 `section-hero-full` class，确保在所有分辨率下占满整个视口高度。其他 section 在移动端改为 `min-height: auto` 由内容决定。
 
-### 页面标题（居中，苹果风格）
+### 页面 Hero 标准结构（统一规范，参考 p01-color-theory）
+
+每个页面 Hero 必须包含四层元素，顺序固定：
+
+```html
+<!-- 1. 眉标（Eyebrow）：模块和页码，代码字体，强调色 -->
+<p style="font-family:var(--font-code);font-size:var(--text-small);color:var(--accent);
+          letter-spacing:0.15em;text-transform:uppercase;margin-bottom:var(--space-sm);">
+  Module 01 / Page 0X
+</p>
+
+<!-- 2. 主标题：中文，Playfair Display，超大 -->
+<h1 class="page-hero-title" style="color:var(--text-on-dark);">中文标题</h1>
+
+<!-- 3. 英文副标题：半透明，轻细字重 -->
+<p class="page-hero-sub">English Title</p>
+
+<!-- 4. 中文简介：正文字体，text-on-dark-2 -->
+<p style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);
+          max-width:540px;line-height:1.8;margin-top:var(--space-sm);">
+  简短的中文描述，说明本页核心内容。
+</p>
+
+<!-- 5. 快捷导航 -->
+<nav class="hero-quicknav">...</nav>
+```
+
+**背景光晕**：每个页面 Hero 必须有独特动态光晕，通过 `::before` + `::after` 伪元素实现：
+- `::before`：主色系 radial-gradient + `@keyframes` 漂移动画（8-14s ease-in-out infinite）
+- `::after`：辅助色 radial-gradient + 反向漂移动画（不同时长，避免同步）
+- 各页配色方向：p02 蓝+绿、p03 青+薄荷、p04 琥珀+天蓝、p05 蓝+紫、p06 天蓝漂移、p07 蓝+紫双轨
+
 ```css
+/* 全局 Hero 标题样式 */
 .page-hero-title {
   font-family: var(--font-display);
   font-size: var(--text-display);
@@ -204,12 +274,14 @@ Hero/Display: 700, line-height 1.1, letter-spacing -0.02em
 }
 .page-hero-sub {
   font-family: var(--font-heading);
-  font-size: var(--text-title);
+  font-size: clamp(1rem, 2vw, 1.4rem);
   font-weight: 300;
+  color: var(--text-on-dark);
   text-align: center;
   opacity: 0.5;
   max-width: 600px;
-  margin: var(--space-md) auto 0;
+  line-height: 1.4;
+  margin: var(--space-xs) auto 0;
 }
 ```
 
@@ -567,7 +639,91 @@ Tab 切换器在移动端启用横向滚动（隐藏滚动条），防止多 Tab
 }
 ```
 
-> **注意**：页面自定义滑块（如 `.p3-slider`、`.m1p1-range`）需要各自在页面 CSS 的 `@media (max-width: 768px)` 块中添加相同的移动端适配。不要使用全局 `input[type="range"]` 覆盖，会与页面自定义样式冲突。
+> **注意**：页面自定义滑块（如 `.m1p1-range`）需要各自在页面 CSS 的 `@media (max-width: 768px)` 块中添加相同的移动端适配。不要使用全局 `input[type="range"]` 覆盖，会与页面自定义样式冲突。
+
+### Stepper 离散数量选择器
+
+**适用场景**：离散整数选择（如颜色数量 3–8），替代原生 `<input type="range">`。原生滑块在移动端拖拽精度差、外观受浏览器限制，stepper 提供更精确的触控交互和更高级的视觉效果。
+
+```html
+<!-- 深色背景用 .p3-stepper，浅色背景加 .p3-stepper-light -->
+<div class="p3-stepper" id="my-stepper" data-min="3" data-max="8" data-value="5">
+  <div class="p3-stepper-track"></div>
+  <div class="p3-stepper-fill"></div>
+</div>
+```
+
+```css
+/* 核心结构 */
+.p3-stepper {
+  display: flex; align-items: center; position: relative; gap: 0;
+}
+.p3-stepper-track {
+  position: absolute; top: 50%; left: 0; right: 0;
+  height: 2px; background: var(--border-dark);
+  transform: translateY(-50%); z-index: 0;
+}
+.p3-stepper-fill {
+  position: absolute; top: 50%; left: 0;
+  height: 2px; background: var(--accent);
+  transform: translateY(-50%); z-index: 1;
+  transition: width 0.25s ease-out;
+}
+.p3-stepper-dot {
+  position: relative; z-index: 2;
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-code); font-size: 0.75rem;
+  color: var(--text-on-dark-3);
+  background: var(--bg-dark);
+  border: 1.5px solid var(--border-dark);
+  cursor: pointer; transition: all 0.2s ease-out;
+}
+.p3-stepper-dot.active {
+  background: var(--accent); border-color: var(--accent);
+  color: #1d1d1f; font-weight: 700;
+  box-shadow: 0 0 12px rgba(126,200,227,0.4);
+  transform: scale(1.15);
+}
+.p3-stepper-dot.passed {
+  border-color: rgba(126,200,227,0.3);
+  color: var(--text-on-dark-2);
+}
+.p3-stepper-gap { flex: 1; min-width: 4px; }
+
+/* 浅色背景变体 — 加 .p3-stepper-light 类 */
+.p3-stepper-light .p3-stepper-track { background: var(--border-light); }
+.p3-stepper-light .p3-stepper-fill { background: var(--accent-hover); }
+.p3-stepper-light .p3-stepper-dot {
+  background: var(--bg-light); border-color: var(--border-light);
+  color: var(--text-on-light-3);
+}
+.p3-stepper-light .p3-stepper-dot.active {
+  background: var(--accent-hover); border-color: var(--accent-hover);
+  color: #fff;
+}
+
+/* 移动端：放大触控目标 */
+@media (max-width: 768px) {
+  .p3-stepper-dot { width: 34px; height: 34px; font-size: 0.8rem; }
+}
+```
+
+```js
+// JS 初始化模式
+function initStepper(container, onChange) {
+  const min = parseInt(container.dataset.min);
+  const max = parseInt(container.dataset.max);
+  let value = parseInt(container.dataset.value);
+  // 动态生成 dots + gaps，点击更新 active/passed/fill
+  // fill 宽度通过 getBoundingClientRect() 计算 dot 中心距离
+}
+initStepper(document.getElementById('my-stepper'), val => {
+  // 更新业务状态
+});
+```
+
+> **设计原则**：小范围离散值（≤10 个选项）优先用 stepper 而非 range slider。stepper 提供更清晰的可选值反馈、更好的触控精度，且在深色/浅色背景上都有匹配的变体。
 
 ### Canvas 触摸事件模板
 ```js
@@ -1042,8 +1198,14 @@ z-index:  99  — 侧边栏遮罩层
   /* 表格 */
   .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
-  /* 代码块 */
-  pre, .cm-editor { font-size: 13px; overflow-x: auto; }
+  /* 代码块：必须换行，禁止撑破容器 */
+  pre, .cm-editor {
+    font-size: 13px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
 
   /* 图片 / 图表 */
   img, svg.chart-svg { max-width: 100%; height: auto; }
@@ -1076,7 +1238,9 @@ z-index:  99  — 侧边栏遮罩层
 @media (max-width: 768px) {
   /* section padding 缩小 */
   .xxx-section { padding: var(--space-lg) var(--space-sm); }
-  /* 滑块触摸适配 */
+  /* 离散数值选择器触摸适配 */
+  .p3-stepper-dot { width: 34px; height: 34px; font-size: 0.8rem; }
+  /* 连续滑块触摸适配（仅用于 HSL 等连续值） */
   .xxx-slider { height: auto; min-height: 32px; }
   .xxx-slider::-webkit-slider-thumb { width: 24px; height: 24px; }
   .xxx-slider::-moz-range-thumb { width: 24px; height: 24px; }
@@ -1106,6 +1270,7 @@ z-index:  99  — 侧边栏遮罩层
 ❌ 非数据区域大面积彩色
 ❌ 3D transform 旋转
 ❌ 只读 `<pre>` 充当代码编辑器（需要编辑功能的地方必须用 CodeMirror）
+❌ 代码块使用 `white-space: pre` 不换行（会撑破容器，必须用 `pre-wrap`）
 ❌ 静态截图替代交互演示
 ❌ 移动端忽略触摸交互适配
 ❌ 移动端使用 hover-only 的信息展示

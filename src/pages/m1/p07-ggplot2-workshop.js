@@ -1401,6 +1401,13 @@ function genScatterCode(p) {
     : '';
   return `library(ggplot2)
 
+# ── 数据示例（iris 为 R 内置数据集）──
+# data(iris)  # 150 行 × 5 列
+# str(iris)
+# $ Sepal.Length: num  5.1 4.9 4.7 ...
+# $ Petal.Length: num  1.4 1.4 1.3 ...
+# $ Species     : Factor w/ 3 levels "setosa","versicolor","virginica"
+
 ggplot(iris, aes(
   x     = Sepal.Length,
   y     = Petal.Length,
@@ -1442,7 +1449,14 @@ function genBarCode(p) {
   const titleMap = { grouped: '分组柱状图', stacked: '堆叠柱状图', filled: '百分比堆叠图' };
   return `library(ggplot2)
 
-# data 包含列：cat, grp (factor), mean, se
+# ── 示例数据 ──
+data <- data.frame(
+  cat  = rep(c("Control","Trt-A","Trt-B","Trt-C","Trt-D"), each = 2),
+  grp  = rep(c("Week 1","Week 8"), times = 5),
+  mean = c(32, 55, 28, 62, 41, 78, 35, 48, 29, 71),
+  se   = c(3.1, 4.8, 2.9, 5.2, 3.7, 6.1, 3.3, 4.5, 2.8, 5.9)
+)
+
 ggplot(data, aes(
   x    = cat,
   y    = mean,
@@ -1481,7 +1495,15 @@ function genLineCode(p) {
     : '';
   return `library(ggplot2)
 
-# data 包含列：week (0-4), value, group
+# ── 示例数据 ──
+data <- data.frame(
+  week  = rep(0:4, times = 3),
+  value = c(30, 32, 34, 36, 38,    # Control
+            30, 39, 48, 57, 66,    # Low Dose
+            30, 45, 60, 75, 90),   # High Dose
+  group = rep(c("Control","Low Dose","High Dose"), each = 5)
+)
+
 ggplot(data, aes(
   x     = week,
   y     = value,
@@ -1523,7 +1545,13 @@ function genBoxplotCode(p) {
     : '';
   return `library(ggplot2)
 
-# data 包含列：group (factor), value
+# ── 示例数据 ──
+set.seed(42)
+data <- data.frame(
+  group = rep(c("Control","Drug A","Drug B"), each = 30),
+  value = c(rnorm(30, 25, 5), rnorm(30, 48, 8), rnorm(30, 66, 6))
+)
+
 ggplot(data, aes(
   x    = group,
   y    = value,
@@ -1560,7 +1588,13 @@ function genViolinCode(p) {
     : '';
   return `library(ggplot2)
 
-# data 包含列：group (factor), value
+# ── 示例数据 ──
+set.seed(42)
+data <- data.frame(
+  group = rep(c("Control","Drug A","Drug B"), each = 50),
+  value = c(rnorm(50, 25, 5), rnorm(50, 48, 8), rnorm(50, 66, 6))
+)
+
 ggplot(data, aes(
   x    = group,
   y    = value,
@@ -1594,7 +1628,13 @@ function genHistogramCode(p) {
     : '';
   return `library(ggplot2)
 
-# data 包含列：value (连续变量)
+# ── 示例数据 ──
+set.seed(42)
+data <- data.frame(
+  value = c(rnorm(120, mean = 30, sd = 8),
+            rnorm(80,  mean = 65, sd = 10))
+)
+
 ggplot(data, aes(x = value)) +
   geom_histogram(
     bins  = ${p.bins},
@@ -1617,7 +1657,13 @@ function genDensityCode(p) {
     : '';
   return `library(ggplot2)
 
-# data 包含列：value, group (factor)
+# ── 示例数据 ──
+set.seed(42)
+data <- data.frame(
+  value = c(rnorm(80, 30, 6), rnorm(80, 48, 9), rnorm(80, 62, 7)),
+  group = rep(c("Control","Low Dose","High Dose"), each = 80)
+)
+
 ggplot(data, aes(
   x     = value,
   fill  = group,
@@ -1659,6 +1705,21 @@ function genHeatmapCode(p) {
 library(dplyr)
 library(tidyr)
 
+# ── 示例数据 ──
+mat <- matrix(
+  c(-1.2, 0.8, 1.5,-0.3, 0.5,
+     0.4,-0.9, 1.1, 2.0,-0.7,
+     1.8, 0.3,-1.5, 0.6, 1.2,
+    -0.5, 1.4, 0.7,-1.0, 0.9,
+     0.2,-0.6, 1.3, 1.7,-0.4,
+    -1.0, 0.5, 0.8,-0.2, 1.6),
+  nrow = 6, byrow = TRUE,
+  dimnames = list(
+    c("BRCA1","TP53","MYC","EGFR","VEGF","CDK4"),
+    c("Ctrl","Trt-1h","Trt-6h","Trt-24h","Recover")
+  )
+)
+
 # mat 为基因 × 样本矩阵，转换为长格式
 data_long <- mat |>
   as.data.frame() |>
@@ -1696,7 +1757,15 @@ function genAreaCode(p) {
     : '';
   return `library(ggplot2)
 
-# data 包含列：week, value, group (factor)
+# ── 示例数据 ──
+data <- data.frame(
+  week  = rep(0:4, times = 3),
+  value = c(30, 32, 34, 36, 38,    # Control
+            30, 39, 48, 57, 66,    # Low Dose
+            30, 45, 60, 75, 90),   # High Dose
+  group = rep(c("Control","Low Dose","High Dose"), each = 5)
+)
+
 ggplot(data, aes(
   x     = week,
   y     = value,
@@ -1730,7 +1799,15 @@ function genErrorbarCode(p) {
   const err = errMap[p.errorType] || errMap.se;
   return `library(ggplot2)
 
-# data 包含列：group, mean, ${p.errorType}
+# ── 示例数据 ──
+data <- data.frame(
+  group = c("Control","Group A","Group B","Group C","Group D","Group E"),
+  mean  = c(24.3, 51.7, 38.2, 67.4, 44.8, 82.1),
+  se    = c( 2.8,  4.3,  3.1,  5.6,  3.7,  6.2),
+  sd    = c( 8.4, 12.9,  9.3, 16.8, 11.1, 18.6),
+  ci95  = c( 5.5,  8.4,  6.1, 11.0,  7.3, 12.2)
+)
+
 ${err.note}
 ggplot(data, aes(x = group, y = mean)) +
   geom_errorbar(
@@ -1765,7 +1842,12 @@ function genLollipopCode(p) {
   return `library(ggplot2)
 library(dplyr)
 
-# data 包含列：gene, log2fc
+# ── 示例数据 ──
+data <- data.frame(
+  gene   = c("BRCA2","KRAS","PIK3CA","APC","PTEN","RB1","SMAD4","VHL"),
+  log2fc = c(2.4, -1.8, 1.1, -2.7, 0.6, -1.3, 1.9, -0.5)
+)
+
 data |>
 ${sortCode}ggplot(aes(x = gene, y = log2fc,
          color = ifelse(log2fc > 0, "up", "down"))) +
@@ -1797,7 +1879,17 @@ function genRidgelineCode(p) {
   return `library(ggplot2)
 library(ggridges)
 
-# data 包含列：timepoint (factor), value
+# ── 示例数据 ──
+set.seed(42)
+data <- data.frame(
+  value     = c(rnorm(50, 30, 5), rnorm(50, 42, 7),
+                rnorm(50, 54, 9), rnorm(50, 66, 11)),
+  timepoint = factor(
+    rep(c("Week 0","Week 4","Week 8","Week 12"), each = 50),
+    levels = c("Week 12","Week 8","Week 4","Week 0")
+  )
+)
+
 ggplot(data, aes(
   x    = value,
   y    = timepoint,
@@ -2086,10 +2178,26 @@ export function render() {
   text-align:center; padding:var(--space-3xl) var(--space-lg);
   position:relative; overflow:hidden;
 }
+@keyframes p7-glow-a {
+  0%,100% { transform:translate(0,0) scale(1); opacity:1; }
+  40% { transform:translate(-4%,2%) scale(1.08); opacity:0.7; }
+  70% { transform:translate(3%,-3%) scale(0.95); opacity:0.9; }
+}
+@keyframes p7-glow-b {
+  0%,100% { transform:translate(0,0) scale(1); opacity:0.5; }
+  50% { transform:translate(6%,4%) scale(1.12); opacity:0.9; }
+}
 .p7-hero::before {
   content:''; position:absolute; inset:0;
-  background:radial-gradient(ellipse 60% 50% at 50% 40%, rgba(126,200,227,0.07) 0%, transparent 70%);
+  background:radial-gradient(ellipse 55% 45% at 35% 45%, rgba(126,200,227,0.12) 0%, transparent 65%);
   pointer-events:none;
+  animation:p7-glow-a 12s ease-in-out infinite;
+}
+.p7-hero::after {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse 45% 40% at 72% 58%, rgba(184,184,232,0.08) 0%, transparent 60%);
+  pointer-events:none;
+  animation:p7-glow-b 15s ease-in-out infinite;
 }
 .p7-eyebrow {
   font-family:var(--font-code); font-size:var(--text-small);
@@ -2101,9 +2209,14 @@ export function render() {
   font-weight:700; letter-spacing:-.02em; line-height:1.1; color:var(--text-on-dark);
 }
 .p7-hero-sub {
-  font-family:var(--font-heading); font-size:clamp(.9rem,1.8vw,1.25rem);
-  font-weight:300; color:var(--text-on-dark-2); max-width:560px;
-  line-height:1.75; margin-top:var(--space-sm);
+  font-family:var(--font-heading); font-size:clamp(1rem,2vw,1.4rem);
+  font-weight:300; color:var(--text-on-dark); opacity:0.5; max-width:600px;
+  line-height:1.4; text-align:center; margin-top:var(--space-xs);
+}
+.p7-hero-tagline {
+  font-family:var(--font-body); font-size:var(--text-body);
+  color:var(--text-on-dark-2); max-width:540px; line-height:1.8;
+  margin-top:var(--space-sm); text-align:center;
 }
 .p7-batch-badge {
   display:inline-flex; align-items:center; gap:6px;
@@ -2123,7 +2236,7 @@ export function render() {
 /* ── Gallery ── */
 .p7-gallery-section {
   background:var(--bg-light); color:var(--text-on-light);
-  padding:var(--space-3xl) var(--space-lg);
+  padding:var(--space-xl) var(--space-lg) var(--space-2xl);
 }
 .p7-sec-hdr { text-align:center; margin-bottom:var(--space-xl); }
 .p7-sec-title {
@@ -2358,9 +2471,10 @@ export function render() {
 <!-- Hero -->
 <section class="p7-hero section-hero-full" id="p7-hero">
   <div class="p7-batch-badge">完整版 · 12 种图表</div>
-  <div class="p7-eyebrow">模块一 · 第 7 页</div>
+  <p class="p7-eyebrow">Module 01 / Page 07</p>
   <h1 class="p7-hero-title">ggplot2<br>图表工作坊</h1>
-  <p class="p7-hero-sub">12 种常用图表 · 参数实时调节<br>R 代码即时生成 · 一键导出脚本</p>
+  <p class="p7-hero-sub">ggplot2 Chart Workshop</p>
+  <p class="p7-hero-tagline">12 种常用图表 · 参数实时调节 · R 代码即时生成 · 一键导出脚本</p>
   <div class="hero-quicknav" id="p7-hero-nav">
     <button class="hero-quicknav__item" data-target="#p7-gallery">图表类型库</button>
     <button class="hero-quicknav__item" data-target="#p7-workshop">交互工作坊</button>
@@ -2558,12 +2672,16 @@ function initMobileAccordion() {
 // GSAP 动画
 // ─────────────────────────────────────────────
 function initAnimations() {
+  gsap.fromTo('.p7-eyebrow', { opacity: 0, y: 20 },
+    { opacity: 1, y: 0, duration: 0.8, delay: 0.05, ease: 'power3.out' });
   gsap.fromTo('.p7-hero-title', { opacity: 0, y: 40 },
-    { opacity: 1, y: 0, duration: 1.1, delay: 0.1, ease: 'power3.out' });
+    { opacity: 1, y: 0, duration: 1.1, delay: 0.15, ease: 'power3.out' });
   gsap.fromTo('.p7-hero-sub', { opacity: 0, y: 30 },
-    { opacity: 1, y: 0, duration: 0.9, delay: 0.3, ease: 'power3.out' });
+    { opacity: 1, y: 0, duration: 0.9, delay: 0.35, ease: 'power3.out' });
+  gsap.fromTo('.p7-hero-tagline', { opacity: 0, y: 20 },
+    { opacity: 1, y: 0, duration: 0.8, delay: 0.5, ease: 'power3.out' });
   gsap.fromTo('#p7-hero-nav', { opacity: 0, y: 24 },
-    { opacity: 1, y: 0, duration: 0.9, delay: 0.5, ease: 'power3.out' });
+    { opacity: 1, y: 0, duration: 0.9, delay: 0.65, ease: 'power3.out' });
 
   gsap.from('#p7-gallery-hdr', {
     scrollTrigger: { trigger: '#p7-gallery', start: 'top 85%' },

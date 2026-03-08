@@ -193,10 +193,26 @@ export function render() {
   text-align:center; padding:var(--space-3xl) var(--space-lg);
   position:relative; overflow:hidden;
 }
+@keyframes p5-glow-a {
+  0%,100% { transform:translate(0,0) scale(1); opacity:0.8; }
+  33% { transform:translate(-3%,2%) scale(1.05); opacity:1; }
+  66% { transform:translate(4%,-1%) scale(0.95); opacity:0.6; }
+}
+@keyframes p5-glow-b {
+  0%,100% { transform:translate(0,0); opacity:0.4; }
+  50% { transform:translate(5%,4%); opacity:0.8; }
+}
 .p5-hero::before {
   content:''; position:absolute; inset:0;
-  background:radial-gradient(ellipse 60% 50% at 50% 40%, rgba(126,200,227,0.08) 0%, transparent 70%);
+  background:radial-gradient(ellipse 60% 50% at 45% 38%, rgba(126,200,227,0.11) 0%, transparent 65%);
   pointer-events:none;
+  animation:p5-glow-a 13s ease-in-out infinite;
+}
+.p5-hero::after {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse 35% 40% at 75% 62%, rgba(184,184,232,0.07) 0%, transparent 60%);
+  pointer-events:none;
+  animation:p5-glow-b 16s ease-in-out infinite;
 }
 .p5-eyebrow {
   font-family:var(--font-code); font-size:var(--text-small);
@@ -209,8 +225,13 @@ export function render() {
 }
 .p5-hero-sub {
   font-family:var(--font-heading); font-size:clamp(1rem,2vw,1.4rem);
-  font-weight:300; color:var(--text-on-dark-2);
-  max-width:560px; line-height:1.7; margin-top:var(--space-sm);
+  font-weight:300; color:var(--text-on-dark); opacity:0.5;
+  max-width:600px; line-height:1.4; text-align:center; margin-top:var(--space-xs);
+}
+.p5-hero-tagline {
+  font-family:var(--font-body); font-size:var(--text-body);
+  color:var(--text-on-dark-2); max-width:540px; line-height:1.8;
+  margin-top:var(--space-sm); text-align:center;
 }
 .p5-scroll-hint {
   position:absolute; bottom:32px; left:50%; transform:translateX(-50%);
@@ -452,9 +473,10 @@ export function render() {
 
 <!-- HERO -->
 <section id="p5-hero" class="p5-hero section-hero-full" style="scroll-margin-top:56px;">
-  <p class="p5-eyebrow" id="p5-eyebrow" style="opacity:0;">Module 01 · Page 05</p>
+  <p class="p5-eyebrow" id="p5-eyebrow" style="opacity:0;">Module 01 / Page 05</p>
   <h1 class="p5-hero-title" id="p5-hero-title" style="opacity:0;">图表选择指南</h1>
-  <p class="p5-hero-sub" id="p5-hero-sub" style="opacity:0;">
+  <p class="p5-hero-sub" id="p5-hero-sub" style="opacity:0;">Chart Selection Guide</p>
+  <p class="p5-hero-tagline" id="p5-hero-tagline" style="opacity:0;">
     面对数据时，如何快速选对图表？<br>从决策树到完整图表库，帮你科学决策。
   </p>
   <nav class="hero-quicknav" id="p5-quicknav" style="opacity:0;">
@@ -548,10 +570,11 @@ export function init() {
   window._p5nav = navigateTo;
 
   // Hero 入场
-  gsap.fromTo('#p5-eyebrow',    { opacity:0, y:20 }, { opacity:1, y:0, duration:0.6, delay:0.1, ease:'power3.out' });
-  gsap.fromTo('#p5-hero-title', { opacity:0, y:30 }, { opacity:1, y:0, duration:0.8, delay:0.25, ease:'power3.out' });
-  gsap.fromTo('#p5-hero-sub',   { opacity:0, y:20 }, { opacity:1, y:0, duration:0.8, delay:0.45, ease:'power3.out' });
-  gsap.fromTo('#p5-quicknav',   { opacity:0, y:20 }, { opacity:1, y:0, duration:0.8, delay:0.65, ease:'power3.out' });
+  gsap.fromTo('#p5-eyebrow',      { opacity:0, y:20 }, { opacity:1, y:0, duration:0.6, delay:0.1,  ease:'power3.out' });
+  gsap.fromTo('#p5-hero-title',   { opacity:0, y:30 }, { opacity:1, y:0, duration:0.8, delay:0.25, ease:'power3.out' });
+  gsap.fromTo('#p5-hero-sub',     { opacity:0, y:20 }, { opacity:1, y:0, duration:0.8, delay:0.4,  ease:'power3.out' });
+  gsap.fromTo('#p5-hero-tagline', { opacity:0, y:20 }, { opacity:1, y:0, duration:0.8, delay:0.55, ease:'power3.out' });
+  gsap.fromTo('#p5-quicknav',     { opacity:0, y:20 }, { opacity:1, y:0, duration:0.8, delay:0.7,  ease:'power3.out' });
 
   // 快捷导航
   document.querySelectorAll('#p5-quicknav .hero-quicknav__item').forEach(btn => {

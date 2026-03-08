@@ -59,6 +59,7 @@
       ↳ 含 Bug Fix：CSS sticky → transform:translateY JS 模拟；移动端改为堆叠卡片自然滚动
 - [x] m1-p7 ggplot2 图表工作坊 — 先做 4 种验证（scatter/bar/line/boxplot，WorkshopLayout 三面板 + 移动端手风琴）
 - [x] m1-p7 ggplot2 图表工作坊 — 剩余 8 种（violin/histogram/density/heatmap/area/errorbar/lollipop/ridgeline）
+- [x] **Bug Fix（m1-p2~p7）**：Hero 版式统一（eyebrow 英文 Module 0X/Page 0X + 英文副标题 + 中文 tagline）；各页独特动态光晕（CSS keyframe 漂移动画）；m1-p7 gallery padding 压缩；12 种图表 R 代码加示例数据
 - [ ] m1-p8 R 配色与出版级图表（配色包浏览器列表+预览 + 主题定制器滑块+D3+theme()代码 + ggsave 期刊代码生成器 + patchwork 4 种布局）
 - [ ] m1-p9 Python 可视化与数据叙事（matplotlib 层次图解 + seaborn 10 种图表参数面板 + matplotlib vs ggplot2 对照 + annotate Canvas 拖拽 + 叙事 4 种方法动画）
 - [ ] m1-p10 科研绘图工作流与导出（6 步粘性时间线 + 格式原理动画 + DPI 对比器 BeforeAfter + 分辨率计算器 + 期刊速查）

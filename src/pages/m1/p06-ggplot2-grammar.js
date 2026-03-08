@@ -52,6 +52,7 @@ let state = {
   customLabels: false,
   resizeHandlers: [],
   layerObservers: [],
+  scrollHandlers: [],
 };
 
 // ─────────────────────────────────────────────
@@ -210,10 +211,16 @@ export function render() {
   text-align:center; padding:var(--space-3xl) var(--space-lg);
   position:relative; overflow:hidden;
 }
+@keyframes p6-glow {
+  0%,100% { transform:translate(0,0) scale(1); opacity:1; }
+  35% { transform:translate(-2%,3%) scale(1.06); opacity:0.65; }
+  70% { transform:translate(3%,-2%) scale(0.96); opacity:0.85; }
+}
 .p6-hero::before {
   content:''; position:absolute; inset:0;
-  background:radial-gradient(ellipse 70% 55% at 50% 45%, rgba(126,200,227,0.09) 0%, transparent 70%);
+  background:radial-gradient(ellipse 70% 55% at 50% 45%, rgba(126,200,227,0.11) 0%, transparent 70%);
   pointer-events:none;
+  animation:p6-glow 11s ease-in-out infinite;
 }
 .p6-hero::after {
   content:''; position:absolute; inset:0;
@@ -233,9 +240,14 @@ export function render() {
   font-weight:700; letter-spacing:-0.03em; line-height:1.05; color:var(--text-on-dark);
 }
 .p6-hero-sub {
-  font-family:var(--font-heading); font-size:clamp(1rem,1.8vw,1.3rem);
-  font-weight:300; color:var(--text-on-dark-2);
-  max-width:540px; line-height:1.75; margin:var(--space-sm) auto 0;
+  font-family:var(--font-heading); font-size:clamp(1rem,2vw,1.4rem);
+  font-weight:300; color:var(--text-on-dark); opacity:0.5;
+  max-width:600px; line-height:1.4; margin:var(--space-xs) auto 0; text-align:center;
+}
+.p6-hero-tagline {
+  font-family:var(--font-body); font-size:var(--text-body);
+  color:var(--text-on-dark-2); max-width:540px; line-height:1.8;
+  margin:var(--space-sm) auto 0; text-align:center;
 }
 .p6-scroll-hint {
   position:absolute; bottom:32px; left:50%; transform:translateX(-50%);
@@ -267,31 +279,27 @@ export function render() {
 .p6-layers-hdr { padding:var(--space-3xl) var(--space-lg) var(--space-xl); text-align:center; }
 .p6-layers-section .p6-sec-title { color:var(--text-on-light); }
 
-/* 桌面端：CSS sticky 方案（比 GSAP pin 更可靠） */
-.p6-sticky-wrap {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:0;
-  align-items:start; /* 必须：sticky 在 grid 里要求 align-self:start */
+/* 桌面端：flex布局 + JS transform模拟sticky（CSS sticky 在有 overflow 的祖先元素中失效） */
+.p6-layers-body {
+  display:flex; align-items:flex-start;
   max-width:1100px; margin:0 auto; padding:0 var(--space-lg);
 }
 .p6-sticky-left {
-  /* CSS sticky：随外层容器滚动而固定 */
-  position:sticky;
-  top:0;
+  width:50%; flex-shrink:0;
   height:100vh;
   padding:0 var(--space-lg) 0 0;
+  box-sizing:border-box;
   display:flex; flex-direction:column; justify-content:center;
   overflow:hidden;
+  will-change:transform; /* JS 通过 transform:translateY() 模拟 sticky */
 }
-.p6-sticky-steps { /* 右侧：普通文档流，提供滚动距离 */ }
+.p6-sticky-steps {
+  flex:1; min-width:0;
+  padding-left:var(--space-lg);
+}
 .p6-step-panel {
   height:100vh; display:flex; align-items:center;
-  padding:var(--space-xl) 0 var(--space-xl) var(--space-lg);
-}
-/* 激活步骤：背景微高亮 */
-.p6-step-panel.p6-step-active .p6-step-panel-inner {
-  opacity:1;
+  padding:var(--space-xl) 0;
 }
 .p6-step-panel .p6-step-panel-inner {
   width:100%; opacity:0.4;
@@ -331,55 +339,46 @@ export function render() {
 }
 .p6-chart-box svg { width:100%; height:100%; display:block; }
 
-/* ── 移动端步骤选择器（desktop 隐藏） ── */
-.p6-mobile-picker { display:none; }
+/* 移动端步骤卡片列表（桌面隐藏） */
+.p6-mobile-steps-list { display:none; }
 
 @media (max-width:900px) {
-  .p6-sticky-wrap { padding:0 var(--space-md); }
+  .p6-layers-body { padding:0 var(--space-md); }
   .p6-sticky-left { padding-right:var(--space-md); }
-  .p6-step-panel { padding-left:var(--space-md); }
+  .p6-sticky-steps { padding-left:var(--space-md); }
 }
 
-/* ── 移动端：完全不同的交互模式 ── */
+/* ── 移动端：堆叠步骤卡片，自然滚动，无需交互 ── */
 @media (max-width:768px) {
-  /* 桌面滚动面板隐藏 */
-  .p6-sticky-wrap { display:block; padding:0 var(--space-sm); }
-  .p6-sticky-left { position:static; height:auto; padding:0; overflow:visible; }
-  .p6-sticky-steps { display:none; }
+  /* 隐藏桌面端 JS-sticky 布局 */
+  .p6-layers-body { display:none; }
 
-  /* 移动端步骤选择器 */
-  .p6-mobile-picker {
+  /* 移动端：5 张独立卡片，各含代码+图表+说明 */
+  .p6-mobile-steps-list {
     display:block;
-    padding:0 var(--space-sm) var(--space-md);
-    max-width:1100px; margin:0 auto;
+    padding:0 var(--space-sm) var(--space-2xl); /* bottom gap 防止紧贴下一节 */
+    max-width:100%;
   }
-  .p6-mobile-step-nav {
-    display:flex; gap:8px; justify-content:center;
-    margin-bottom:var(--space-md); flex-wrap:nowrap;
-  }
-  .p6-mstep-btn {
-    width:44px; height:44px; border-radius:50%;
-    background:var(--bg-light-alt); border:1.5px solid var(--border-light);
-    color:var(--text-on-light-2); font-family:var(--font-code); font-size:0.85rem;
-    cursor:pointer; transition:all 0.2s var(--ease-apple);
-    display:flex; align-items:center; justify-content:center;
-    flex-shrink:0;
-  }
-  .p6-mstep-btn.active {
-    background:var(--accent); border-color:var(--accent);
-    color:#1d1d1f; font-weight:700;
-    box-shadow:0 0 0 3px rgba(126,200,227,0.25);
-  }
-  .p6-mobile-step-info {
+  .p6-mobile-step-card {
+    background:var(--bg-light-alt);
+    border:1px solid var(--border-light);
+    border-radius:var(--radius-md);
     padding:var(--space-md);
-    background:var(--bg-light-alt); border-radius:var(--radius-md);
-    border:1px solid var(--border-light); margin-bottom:var(--space-md);
-    min-height:100px;
+    margin-bottom:var(--space-md);
   }
-  .p6-mobile-step-info .p6-step-title { font-size:1.1rem; }
-  .p6-mobile-step-info .p6-step-desc { font-size:0.9rem; line-height:1.7; }
-
-  .p6-code-panel { font-size:12px; }
+  .p6-mobile-step-card .p6-step-num {
+    font-family:var(--font-code); font-size:var(--text-caption);
+    color:var(--accent); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:10px;
+  }
+  .p6-mobile-step-card .p6-step-title { font-size:1.1rem; color:var(--text-on-light); margin-bottom:8px; }
+  .p6-mobile-step-card .p6-step-desc { font-size:0.9rem; line-height:1.7; color:var(--text-on-light-2); margin-bottom:var(--space-sm); }
+  .p6-mobile-step-card .p6-code-panel { font-size:12px; margin-bottom:var(--space-sm); }
+  .p6-m-chart-box {
+    width:100%; aspect-ratio:4/3;
+    border-radius:var(--radius-md); overflow:hidden;
+    background:#111218; border:1px solid var(--border-dark);
+  }
+  .p6-m-chart-box svg { width:100%; height:100%; display:block; }
 }
 
 /* ── 分面演示 ── */
@@ -543,9 +542,10 @@ export function render() {
 <!-- Hero -->
 <section class="p6-hero section-hero-full" id="p6-hero">
   <div class="p6-hero-inner">
-    <div class="p6-eyebrow">模块一 · 第六讲</div>
+    <p class="p6-eyebrow">Module 01 / Page 06</p>
     <h1 class="p6-hero-title">ggplot2<br>图层语法与分面</h1>
-    <p class="p6-hero-sub">理解图形语法的核心设计哲学——每一层都是一次对数据的诠释。从空白画布到出版级图表，五步完成。</p>
+    <p class="p6-hero-sub">ggplot2 Grammar of Graphics</p>
+    <p class="p6-hero-tagline">理解图形语法的核心设计哲学——每一层都是一次对数据的诠释。<br>从空白画布到出版级图表，五步完成。</p>
     <nav class="hero-quicknav" id="p6-hero-nav">
       <button class="hero-quicknav__item" data-target="#p6-layers">图层叠加</button>
       <button class="hero-quicknav__item" data-target="#p6-facet">分面演示</button>
@@ -564,25 +564,24 @@ export function render() {
     <p class="p6-sec-desc" style="color:var(--text-on-light-2)">ggplot2 是"图形语法"的具体实现。一张图表 = 数据 + 映射 + 几何 + 标度 + 主题的叠加。向下滚动，逐层构建一张完整的散点图。</p>
   </div>
 
-  <!-- 移动端：步骤选择器（桌面端隐藏） -->
-  <div class="p6-mobile-picker" id="p6-mobile-picker">
-    <div class="p6-mobile-step-nav">
-      ${LAYER_STEPS.map((_, i) => `<button class="p6-mstep-btn${i === 0 ? ' active' : ''}" data-step="${i}">${i + 1}</button>`).join('')}
-    </div>
-    <div class="p6-mobile-step-info" id="p6-mobile-step-info">
-      <div class="p6-step-num" id="p6-m-num">Step 1 / ${LAYER_STEPS.length}</div>
-      <h3 class="p6-step-title" id="p6-m-title">${LAYER_STEPS[0].title}</h3>
-      <p class="p6-step-desc" id="p6-m-desc">${LAYER_STEPS[0].desc}</p>
-    </div>
+  <!-- 移动端：5 张堆叠卡片，每张包含说明+代码+图表，向下滚动即可（桌面端隐藏） -->
+  <div class="p6-mobile-steps-list" id="p6-mobile-steps-list">
+    ${LAYER_STEPS.map((step, i) => `
+    <div class="p6-mobile-step-card">
+      <div class="p6-step-num">Step ${i + 1} / ${LAYER_STEPS.length}</div>
+      <h3 class="p6-step-title">${step.title}</h3>
+      <p class="p6-step-desc">${step.desc}</p>
+      <div class="p6-code-panel" id="p6-m-code-${i}"></div>
+      <div class="p6-m-chart-box" id="p6-m-chart-${i}"></div>
+    </div>`).join('')}
   </div>
 
-  <!-- 代码 + 图表（桌面 sticky 左列，移动端普通流） -->
-  <div class="p6-sticky-wrap" id="p6-sticky-wrap">
+  <!-- 桌面端：JS-sticky 左列（代码+图表）+ 可滚动右列（步骤描述）（移动端隐藏） -->
+  <div class="p6-layers-body" id="p6-layers-body">
     <div class="p6-sticky-left" id="p6-sticky-left">
       <div class="p6-code-panel" id="p6-code-display"></div>
       <div class="p6-chart-box" id="p6-layer-chart"></div>
     </div>
-    <!-- 桌面端：5个滚动步骤面板（移动端隐藏） -->
     <div class="p6-sticky-steps" id="p6-sticky-steps">
       ${LAYER_STEPS.map((step, i) => `
       <div class="p6-step-panel" data-step="${i}">
@@ -1083,77 +1082,51 @@ export function init() {
     { opacity: 0, y: 20 },
     { opacity: 1, y: 0, duration: 0.8, delay: 0.7, ease: 'power3.out' });
 
-  // 初始化代码面板 + 图表（步骤 0）
-  const codeEl = document.getElementById('p6-code-display');
-  const chartEl = document.getElementById('p6-layer-chart');
-  renderCodePanel(codeEl, 0);
-  buildLayerChart(chartEl, 0);
-
-  // ── 步骤更新核心函数（桌面+移动共用） ──
-  function updateLayerStep(i) {
-    state.layerStep = i;
-    renderCodePanel(document.getElementById('p6-code-display'), i);
-    buildLayerChart(document.getElementById('p6-layer-chart'), i);
-    // 更新桌面右侧面板高亮
-    document.querySelectorAll('.p6-step-panel').forEach((p, idx) => {
-      p.classList.toggle('p6-step-active', idx === i);
-    });
-  }
-  // 激活第一步
-  updateLayerStep(0);
-
-  // ── 桌面端：IntersectionObserver 检测当前步骤 ──
-  // rootMargin '-40% 0% -40% 0%' 使触发区域收缩到视口中间 20%
-  // 这样只有"居中"的步骤面板才会激活
+  // ── 桌面端：JS-sticky 模拟（transform:translateY，不依赖 CSS sticky）──
   if (window.innerWidth > 768) {
-    const desktopObs = new IntersectionObserver((entries) => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          const i = parseInt(e.target.dataset.step);
-          updateLayerStep(i);
-        }
-      });
-    }, {
-      rootMargin: '-40% 0px -40% 0px',
-      threshold: 0,
-    });
-    document.querySelectorAll('.p6-step-panel').forEach(p => desktopObs.observe(p));
-    state.layerObservers.push(desktopObs);
-  }
+    // 初始化代码面板 + 图表（步骤 0）
+    renderCodePanel(document.getElementById('p6-code-display'), 0);
+    buildLayerChart(document.getElementById('p6-layer-chart'), 0);
+    document.querySelectorAll('.p6-step-panel')[0]?.classList.add('p6-step-active');
 
-  // ── 移动端：步骤按钮点击切换 ──
-  if (window.innerWidth <= 768) {
-    document.querySelectorAll('.p6-mstep-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const i = parseInt(btn.dataset.step);
-        updateLayerStep(i);
-        // 更新移动端说明区域
-        document.getElementById('p6-m-num').textContent = `Step ${i + 1} / ${LAYER_STEPS.length}`;
-        document.getElementById('p6-m-title').textContent = LAYER_STEPS[i].title;
-        document.getElementById('p6-m-desc').textContent = LAYER_STEPS[i].desc;
-        // 更新按钮高亮
-        document.querySelectorAll('.p6-mstep-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-      });
-    });
-  }
+    const bodyEl = document.getElementById('p6-layers-body');
+    const leftEl = document.getElementById('p6-sticky-left');
 
-  // ── resize 时重建（移动↔桌面切换） ──
-  const onResize = () => {
-    // 销毁旧 observer，根据当前宽度重新绑定
-    state.layerObservers.forEach(o => o.disconnect());
-    state.layerObservers = [];
-    updateLayerStep(state.layerStep);
-    if (window.innerWidth > 768) {
-      const obs = new IntersectionObserver((entries) => {
-        entries.forEach(e => { if (e.isIntersecting) updateLayerStep(parseInt(e.target.dataset.step)); });
-      }, { rootMargin: '-40% 0px -40% 0px', threshold: 0 });
-      document.querySelectorAll('.p6-step-panel').forEach(p => obs.observe(p));
-      state.layerObservers.push(obs);
+    function updateStickyLeft() {
+      if (!bodyEl || !leftEl) return;
+      const bodyRect = bodyEl.getBoundingClientRect();
+      const scrolledPast = Math.max(0, -bodyRect.top);
+      const maxTranslate = Math.max(0, bodyEl.offsetHeight - leftEl.offsetHeight);
+      leftEl.style.transform = `translateY(${Math.min(scrolledPast, maxTranslate)}px)`;
+
+      // 根据滚动进度激活对应步骤
+      const stepH = window.innerHeight;
+      const stepIdx = Math.min(LAYER_STEPS.length - 1, Math.max(0, Math.floor(scrolledPast / stepH)));
+      if (stepIdx !== state.layerStep) {
+        state.layerStep = stepIdx;
+        renderCodePanel(document.getElementById('p6-code-display'), stepIdx);
+        buildLayerChart(document.getElementById('p6-layer-chart'), stepIdx);
+        document.querySelectorAll('.p6-step-panel').forEach((p, idx) => {
+          p.classList.toggle('p6-step-active', idx === stepIdx);
+        });
+      }
     }
-  };
-  window.addEventListener('resize', onResize);
-  state.resizeHandlers.push(onResize);
+
+    // 监听 window scroll（layout.css 中 #main-content 无 overflow-y，页面滚动在 window 上）
+    window.addEventListener('scroll', updateStickyLeft, { passive: true });
+    state.scrollHandlers.push({ el: window, fn: updateStickyLeft });
+    updateStickyLeft(); // 初始调用一次
+  }
+
+  // ── 移动端：渲染所有步骤卡片（每张卡片含独立代码+图表，无需交互，向下滚动即可）──
+  if (window.innerWidth <= 768) {
+    LAYER_STEPS.forEach((_, i) => {
+      const mCodeEl = document.getElementById(`p6-m-code-${i}`);
+      const mChartEl = document.getElementById(`p6-m-chart-${i}`);
+      if (mCodeEl) renderCodePanel(mCodeEl, i);
+      if (mChartEl) buildLayerChart(mChartEl, i);
+    });
+  }
 
   // 分面 Tabs
   function updateFacet(mode) {
@@ -1237,10 +1210,12 @@ export function destroy() {
   killAll();
   state.layerObservers.forEach(o => o.disconnect());
   state.layerObservers = [];
+  state.scrollHandlers.forEach(({ el, fn }) => el.removeEventListener('scroll', fn));
+  state.scrollHandlers = [];
+  state.resizeHandlers.forEach(fn => window.removeEventListener('resize', fn));
+  state.resizeHandlers = [];
   state.layerStep = 0;
   state.facetTab = 'none';
   state.coordTab = 'cartesian';
   state.customLabels = false;
-  state.resizeHandlers.forEach(fn => window.removeEventListener('resize', fn));
-  state.resizeHandlers = [];
 }

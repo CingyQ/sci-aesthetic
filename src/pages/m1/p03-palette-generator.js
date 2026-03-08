@@ -483,14 +483,29 @@ export function render() {
   overflow: hidden;
   padding: var(--space-xl) var(--space-lg);
 }
+@keyframes p3-glow-a {
+  0%,100% { transform: translate(0,0) scale(1); opacity: 1; }
+  45% { transform: translate(-3%,4%) scale(1.1); opacity: 0.65; }
+}
+@keyframes p3-glow-b {
+  0%,100% { transform: translate(0,0) scale(1); opacity: 0.6; }
+  55% { transform: translate(5%,-3%) scale(0.9); opacity: 1; }
+}
 .p3-hero::before {
   content: '';
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(ellipse 60% 50% at 30% 40%, rgba(77,187,213,0.12) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 40% at 70% 60%, rgba(149,213,178,0.08) 0%, transparent 70%);
+  background: radial-gradient(ellipse 60% 50% at 30% 40%, rgba(77,187,213,0.14) 0%, transparent 65%);
   pointer-events: none;
+  animation: p3-glow-a 11s ease-in-out infinite;
+}
+.p3-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 40% 40% at 72% 62%, rgba(149,213,178,0.09) 0%, transparent 60%);
+  pointer-events: none;
+  animation: p3-glow-b 14s ease-in-out infinite;
 }
 .p3-hero-eyebrow {
   font-family: var(--font-code);
@@ -510,11 +525,23 @@ export function render() {
   margin-bottom: var(--space-sm);
 }
 .p3-hero-sub {
+  font-family: var(--font-heading);
+  font-size: clamp(1rem, 2vw, 1.4rem);
+  font-weight: 300;
+  color: var(--text-on-dark);
+  opacity: 0.5;
+  max-width: 600px;
+  line-height: 1.4;
+  text-align: center;
+}
+.p3-hero-tagline {
   font-family: var(--font-body);
-  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-size: var(--text-body);
   color: var(--text-on-dark-2);
   max-width: 540px;
-  line-height: 1.7;
+  line-height: 1.8;
+  margin-top: var(--space-sm);
+  text-align: center;
 }
 .p3-scroll-hint {
   position: absolute;
@@ -645,20 +672,79 @@ export function render() {
 }
 .p3-algo-btn:hover { border-color: var(--accent); color: var(--text-on-dark); }
 .p3-algo-btn.active { background: var(--accent); border-color: var(--accent); color: #1d1d1f; font-weight: 600; }
-.p3-slider-row { display: flex; align-items: center; gap: 12px; }
-.p3-slider {
-  flex: 1;
-  -webkit-appearance: none; appearance: none;
-  height: 4px; border-radius: 2px;
-  background: var(--border-dark); outline: none; cursor: pointer;
+/* ── Stepper 数量选择器（替代原生 range） ── */
+.p3-stepper {
+  display: flex; align-items: center; position: relative; gap: 0;
+  padding: 4px 0;
 }
-.p3-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 16px; height: 16px; border-radius: 50%;
-  background: var(--accent); cursor: pointer;
-  box-shadow: 0 1px 6px rgba(126,200,227,0.4);
+.p3-stepper-track {
+  position: absolute; top: 50%; left: 0; right: 0;
+  height: 2px; background: var(--border-dark);
+  transform: translateY(-50%); z-index: 0;
+  border-radius: 1px;
 }
-.p3-slider-val { font-family: var(--font-code); font-size: 0.85rem; color: var(--accent); min-width: 24px; text-align: right; }
+.p3-stepper-fill {
+  position: absolute; top: 50%; left: 0;
+  height: 2px; background: var(--accent);
+  transform: translateY(-50%); z-index: 1;
+  border-radius: 1px;
+  transition: width 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.p3-stepper-dot {
+  position: relative; z-index: 2;
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-code); font-size: 0.75rem; font-weight: 500;
+  color: var(--text-on-dark-3);
+  background: var(--bg-dark);
+  border: 1.5px solid var(--border-dark);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.p3-stepper-dot:hover {
+  border-color: var(--accent);
+  color: var(--text-on-dark);
+}
+.p3-stepper-dot.passed {
+  border-color: rgba(126, 200, 227, 0.3);
+  color: var(--text-on-dark-2);
+}
+.p3-stepper-dot.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #1d1d1f;
+  font-weight: 700;
+  box-shadow: 0 0 12px rgba(126, 200, 227, 0.4);
+  transform: scale(1.15);
+}
+.p3-stepper-gap {
+  flex: 1; min-width: 4px;
+}
+
+/* 浅色段内的 stepper */
+.p3-stepper-light .p3-stepper-track { background: var(--border-light); }
+.p3-stepper-light .p3-stepper-fill { background: var(--accent-hover); }
+.p3-stepper-light .p3-stepper-dot {
+  color: var(--text-on-light-3);
+  background: var(--bg-light);
+  border-color: var(--border-light);
+}
+.p3-stepper-light .p3-stepper-dot:hover {
+  border-color: var(--accent-hover);
+  color: var(--text-on-light);
+}
+.p3-stepper-light .p3-stepper-dot.passed {
+  border-color: rgba(126, 200, 227, 0.35);
+  color: var(--text-on-light-2);
+}
+.p3-stepper-light .p3-stepper-dot.active {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: #fff;
+  box-shadow: 0 0 10px rgba(126, 200, 227, 0.3);
+}
 .p3-generate-btn {
   width: 100%; padding: 14px;
   background: var(--accent); color: #1d1d1f;
@@ -782,7 +868,7 @@ export function render() {
   line-height: 1.7; color: #a8d8ea;
   background: #0d0d0f; border-radius: var(--radius-sm);
   padding: 16px; margin: 12px 0 0;
-  overflow-x: auto; white-space: pre;
+  overflow-x: auto; white-space: pre-wrap; word-wrap: break-word; overflow-wrap: break-word;
   border: 1px solid var(--border-dark); min-height: 90px;
 }
 .p3-export-copy-wrap { position: absolute; top: 24px; right: 32px; }
@@ -815,15 +901,6 @@ export function render() {
 .p3-datatype-desc { font-size: 1rem; color: var(--text-on-light-2); line-height: 1.7; max-width: 680px; margin-bottom: 16px; }
 .p3-datatype-controls { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
 .p3-datatype-controls label { font-size: 0.85rem; color: var(--text-on-light-2); white-space: nowrap; }
-.p3-data-slider {
-  width: 140px; -webkit-appearance: none; appearance: none;
-  height: 4px; border-radius: 2px; background: var(--border-light); outline: none; cursor: pointer;
-}
-.p3-data-slider::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%;
-  background: var(--accent); cursor: pointer;
-}
-.p3-data-slider-val { font-family: var(--font-code); font-size: 0.85rem; color: var(--accent-hover); min-width: 20px; }
 .p3-data-chart-wrap {
   background: #fff; border: 1px solid var(--border-light);
   border-radius: var(--radius-md); padding: 4px;
@@ -936,20 +1013,16 @@ export function render() {
   .p3-algo-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
   .p3-algo-btn { font-size: 0.8rem; padding: 8px 10px; }
 
-  /* Slider touch sizing */
-  .p3-slider, .p3-hsl-slider, .p3-data-slider {
+  /* Stepper 移动端：更大的触控点 */
+  .p3-stepper-dot { width: 34px; height: 34px; font-size: 0.8rem; }
+  .p3-stepper-dot.active { transform: scale(1.1); }
+
+  /* HSL slider touch sizing */
+  .p3-hsl-slider {
     height: auto; min-height: 32px;
   }
-  .p3-slider::-webkit-slider-thumb,
-  .p3-hsl-slider::-webkit-slider-thumb,
-  .p3-data-slider::-webkit-slider-thumb {
-    width: 22px; height: 22px;
-  }
-  .p3-slider::-moz-range-thumb,
-  .p3-hsl-slider::-moz-range-thumb,
-  .p3-data-slider::-moz-range-thumb {
-    width: 22px; height: 22px;
-  }
+  .p3-hsl-slider::-webkit-slider-thumb { width: 22px; height: 22px; }
+  .p3-hsl-slider::-moz-range-thumb { width: 22px; height: 22px; }
 
   /* Swatches wrap on very narrow */
   .p3-palette-swatches { flex-wrap: wrap; gap: 4px; }
@@ -974,7 +1047,6 @@ export function render() {
   .p3-scheme-btn { padding: 6px 10px; font-size: 0.78rem; }
   .p3-scheme-swatch { width: 10px; height: 10px; }
   .p3-datatype-controls { flex-wrap: wrap; gap: 8px; }
-  .p3-data-slider { width: 100px; }
 
   /* Error cards */
   .p3-comparison-row { flex-direction: column; gap: 10px; }
@@ -1001,7 +1073,8 @@ export function render() {
     <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;">
       <p class="p3-hero-eyebrow" id="p3-eyebrow">Module 01 / Page 03</p>
       <h1 class="p3-hero-title" id="p3-hero-title">配色生成器</h1>
-      <p class="p3-hero-sub" id="p3-hero-sub">从一个基色出发，生成专业的科研配色方案</p>
+      <p class="p3-hero-sub" id="p3-hero-sub">Color Palette Generator</p>
+      <p class="p3-hero-tagline">从一个基色出发，生成专业的科研配色方案</p>
       <!-- 快捷导航 -->
       <nav class="hero-quicknav" id="p3-hero-nav" style="opacity:0;">
         <button class="hero-quicknav__item" data-target="#p3-generator-section">自定义配色</button>
@@ -1046,9 +1119,9 @@ export function render() {
 
         <div class="p3-panel-group">
           <div class="p3-panel-label">颜色数量</div>
-          <div class="p3-slider-row">
-            <input type="range" class="p3-slider" id="p3-count-slider" min="3" max="8" value="5">
-            <span class="p3-slider-val" id="p3-count-val">5</span>
+          <div class="p3-stepper" id="p3-count-stepper" data-min="3" data-max="8" data-value="5">
+            <div class="p3-stepper-track"></div>
+            <div class="p3-stepper-fill"></div>
           </div>
         </div>
 
@@ -1182,11 +1255,81 @@ export function init() {
 // ═══════════════════════════════════════════════════
 // Generator controls
 // ═══════════════════════════════════════════════════
+/**
+ * 初始化 stepper 数量选择器
+ * @param {HTMLElement} container - .p3-stepper 容器
+ * @param {function} onChange - 值变化回调 (newValue: number) => void
+ */
+function initStepper(container, onChange) {
+  if (!container) return;
+  const min = parseInt(container.dataset.min);
+  const max = parseInt(container.dataset.max);
+  let value = parseInt(container.dataset.value);
+
+  function render() {
+    // 清除旧的 dots 和 gaps（保留 track 和 fill）
+    container.querySelectorAll('.p3-stepper-dot, .p3-stepper-gap').forEach(el => el.remove());
+    const fill = container.querySelector('.p3-stepper-fill');
+
+    for (let i = min; i <= max; i++) {
+      if (i > min) {
+        const gap = document.createElement('div');
+        gap.className = 'p3-stepper-gap';
+        container.appendChild(gap);
+      }
+      const dot = document.createElement('button');
+      dot.className = 'p3-stepper-dot';
+      dot.textContent = i;
+      dot.type = 'button';
+      if (i === value) dot.classList.add('active');
+      else if (i < value) dot.classList.add('passed');
+      dot.addEventListener('click', () => {
+        value = i;
+        container.dataset.value = i;
+        updateVisual();
+        if (onChange) onChange(i);
+      });
+      container.appendChild(dot);
+    }
+    updateFill(fill);
+  }
+
+  function updateVisual() {
+    const dots = container.querySelectorAll('.p3-stepper-dot');
+    dots.forEach((dot, idx) => {
+      const num = min + idx;
+      dot.classList.remove('active', 'passed');
+      if (num === value) dot.classList.add('active');
+      else if (num < value) dot.classList.add('passed');
+    });
+    updateFill(container.querySelector('.p3-stepper-fill'));
+  }
+
+  function updateFill(fill) {
+    if (!fill) return;
+    const total = max - min;
+    const progress = total > 0 ? (value - min) / total : 0;
+    // 计算 fill 宽度：从第一个 dot 中心到 active dot 中心
+    const dots = container.querySelectorAll('.p3-stepper-dot');
+    if (dots.length < 2) { fill.style.width = '0'; return; }
+    requestAnimationFrame(() => {
+      const first = dots[0];
+      const active = dots[value - min];
+      if (!first || !active) return;
+      const containerRect = container.getBoundingClientRect();
+      const firstCenter = first.getBoundingClientRect().left + first.offsetWidth / 2 - containerRect.left;
+      const activeCenter = active.getBoundingClientRect().left + active.offsetWidth / 2 - containerRect.left;
+      fill.style.left = firstCenter + 'px';
+      fill.style.width = (activeCenter - firstCenter) + 'px';
+    });
+  }
+
+  render();
+}
+
 function setupGeneratorControls() {
   const colorPicker = document.getElementById('p3-base-color');
   const hexInput = document.getElementById('p3-hex-input');
-  const countSlider = document.getElementById('p3-count-slider');
-  const countVal = document.getElementById('p3-count-val');
   const generateBtn = document.getElementById('p3-generate-btn');
 
   if (colorPicker) {
@@ -1218,13 +1361,11 @@ function setupGeneratorControls() {
     });
   });
 
-  if (countSlider) {
-    countSlider.addEventListener('input', e => {
-      state.colorCount = parseInt(e.target.value);
-      if (countVal) countVal.textContent = state.colorCount;
-      debouncedGenerate();
-    });
-  }
+  // 颜色数量 stepper
+  initStepper(document.getElementById('p3-count-stepper'), val => {
+    state.colorCount = val;
+    debouncedGenerate();
+  });
 
   if (generateBtn) generateBtn.addEventListener('click', doGenerate);
 }
@@ -1453,9 +1594,10 @@ function renderDataTypeContent() {
     </div>
     <div class="p3-datatype-controls">
       <label>颜色数量</label>
-      <input type="range" class="p3-data-slider" id="p3-data-count"
-        min="${range.min}" max="${range.max}" value="${count}">
-      <span class="p3-data-slider-val" id="p3-data-count-val">${count}</span>
+      <div class="p3-stepper p3-stepper-light" id="p3-data-stepper" data-min="${range.min}" data-max="${range.max}" data-value="${count}" style="flex:1;">
+        <div class="p3-stepper-track"></div>
+        <div class="p3-stepper-fill"></div>
+      </div>
     </div>
     <div class="p3-data-chart-wrap">
       <div class="p3-data-chart-area" id="p3-data-chart-area"></div>
@@ -1472,19 +1614,14 @@ function renderDataTypeContent() {
     });
   });
 
-  const sl = contentEl.querySelector('#p3-data-count');
-  const sv = contentEl.querySelector('#p3-data-count-val');
-  if (sl) {
-    sl.addEventListener('input', e => {
-      const v = parseInt(e.target.value);
-      if (type === 'sequential') state.seqCount = v;
-      else if (type === 'diverging') state.divCount = v;
-      else state.qualCount = v;
-      if (sv) sv.textContent = v;
-      const updatedColors = getSchemeColors(type, schemeIdx, v);
-      renderDataChart(updatedColors, type);
-    });
-  }
+  // 数据配色数量 stepper
+  initStepper(contentEl.querySelector('#p3-data-stepper'), v => {
+    if (type === 'sequential') state.seqCount = v;
+    else if (type === 'diverging') state.divCount = v;
+    else state.qualCount = v;
+    const updatedColors = getSchemeColors(type, schemeIdx, v);
+    renderDataChart(updatedColors, type);
+  });
 
   renderDataChart(colors, type);
 }
@@ -1509,7 +1646,7 @@ function setupErrorCards() {
   const cards = [
     {
       title: '用彩虹色显示连续数据',
-      desc: '彩虹色没有感知上的单调亮度排序，人眼难以判断哪端更大，且对色盲用户完全失效。应改用有序的单色渐变（如 Blues）。',
+      desc: '彩虹色没有感知上的单调亮度排序，人眼难以判断哪端更大，且对不同色觉条件的读者不友好。应改用有序的单色渐变（如 Blues）。',
       badFn: el => drawHeatmap(el, ['#FF0000','#FF7700','#FFFF00','#00FF00','#0000FF','#8B00FF']),
       goodFn: el => drawHeatmap(el, SEQUENTIAL_SCHEMES[0].colors),
     },
@@ -1520,8 +1657,8 @@ function setupErrorCards() {
       goodFn: el => drawBarChart(el, ['#EFF3FF','#6BAED6','#2171B5','#084594','#041E4A']),
     },
     {
-      title: '忽略色盲友好性',
-      desc: '红绿配色对约8%的男性（红绿色盲）无法区分，信息完全丢失。Okabe-Ito 配色方案经专门设计，在多种色觉类型下均可区分。',
+      title: '忽略色觉多样性',
+      desc: '红绿配色对约 8% 的男性读者难以区分，信息可能丢失。Okabe-Ito 配色方案经专门设计，在多种色觉条件下均可清晰辨别。',
       badFn: el => drawBarChart(el, ['#FF0000','#00CC00','#FF3333','#009900','#FF6666']),
       goodFn: el => drawBarChart(el, QUALITATIVE_SCHEMES[1].colors.slice(0, 5)),
     },
