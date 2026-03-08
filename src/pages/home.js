@@ -7,8 +7,8 @@ export function render() {
 
       <!-- ====== Hero（深色） ====== -->
       <section class="section-dark" style="align-items:center;">
-        <h1 class="text-hero" style="color:var(--text-on-dark);text-align:center;">设计系统</h1>
-        <p class="page-hero-sub">科研绘图指南 — 样式展示页</p>
+        <h1 class="text-hero" style="color:var(--text-on-dark);text-align:center;font-family:var(--font-display);letter-spacing:0.02em;">SciAesthetic</h1>
+        <p class="page-hero-sub" style="font-weight:300;opacity:0.5;">样式展示页</p>
       </section>
 
       <!-- ====== 色彩系统（浅色） ====== -->
@@ -98,7 +98,7 @@ export function render() {
 
           <div style="margin-bottom:var(--space-xl);">
             <p style="font-size:var(--text-caption);color:var(--text-on-dark-3);margin-bottom:var(--space-xs);">--text-display · Playfair Display · 700</p>
-            <span class="page-hero-title" style="color:var(--text-on-dark);text-align:left;">科研绘图指南</span>
+            <span class="page-hero-title" style="color:var(--text-on-dark);text-align:left;font-family:var(--font-display);letter-spacing:0.02em;">SciAesthetic</span>
           </div>
 
           <div style="margin-bottom:var(--space-xl);">

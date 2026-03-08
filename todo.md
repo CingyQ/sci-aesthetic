@@ -1,4 +1,4 @@
-# TODO - 科研绘图指南（首页 + 4 模块架构）
+# TODO - SciAesthetic 科研美学（首页 + 4 模块架构）
 
 ## Phase 0: 项目骨架
 - [x] 初始化 Vite 项目（vanilla JS）

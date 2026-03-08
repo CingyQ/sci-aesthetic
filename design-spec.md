@@ -1,4 +1,9 @@
-# 设计规范 - Apple-Inspired Academic
+# SciAesthetic 设计规范 - Apple-Inspired Academic
+
+> **品牌**：SciAesthetic（科研美学）
+> **Slogan**：你的研究值得更好的表达。
+> **Logo 排版**：`SciAesthetic` — Playfair Display, letter-spacing: 0.03em
+> **Slogan 排版**：Noto Sans SC, font-weight: 300, opacity: 0.5
 
 ---
 

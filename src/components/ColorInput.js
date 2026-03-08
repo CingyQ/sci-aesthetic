@@ -22,6 +22,7 @@ export function createColorInput(container, {
   const wrapper = document.createElement('div');
   wrapper.className = 'color-input';
 
+  // 完整渲染（切换 mode 或初始化时调用）
   function render() {
     const rgb = hexToRgb(currentHex);
     const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
@@ -59,27 +60,62 @@ export function createColorInput(container, {
         <input class="color-input__hue-slider" type="range" min="0" max="360" value="${Math.round(hsl.h)}" />
       </div>
     `;
+
+    bindEvents();
   }
 
-  render();
-  container.appendChild(wrapper);
+  // 局部更新（拖动滑块/输入数值时调用，不重建 DOM）
+  function patchUI() {
+    const preview = wrapper.querySelector('.color-input__preview');
+    if (preview) preview.style.background = currentHex;
 
-  function updateColor(hex, fromSlider = false) {
+    const rgb = hexToRgb(currentHex);
+    const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+
+    // 更新数值输入框（不触发事件）
+    if (currentMode === 'hex') {
+      const hexInput = wrapper.querySelector('.color-input__hex-input');
+      if (hexInput && document.activeElement !== hexInput) {
+        hexInput.value = currentHex;
+      }
+    } else if (currentMode === 'rgb') {
+      const rIn = wrapper.querySelector('[data-channel="r"]');
+      const gIn = wrapper.querySelector('[data-channel="g"]');
+      const bIn = wrapper.querySelector('[data-channel="b"]');
+      if (rIn && document.activeElement !== rIn) rIn.value = rgb.r;
+      if (gIn && document.activeElement !== gIn) gIn.value = rgb.g;
+      if (bIn && document.activeElement !== bIn) bIn.value = rgb.b;
+    } else {
+      const hIn = wrapper.querySelector('[data-channel="h"]');
+      const sIn = wrapper.querySelector('[data-channel="s"]');
+      const lIn = wrapper.querySelector('[data-channel="l"]');
+      if (hIn && document.activeElement !== hIn) hIn.value = Math.round(hsl.h);
+      if (sIn && document.activeElement !== sIn) sIn.value = Math.round(hsl.s);
+      if (lIn && document.activeElement !== lIn) lIn.value = Math.round(hsl.l);
+    }
+
+    // 滑块位置：不更新正在拖动的滑块
+    const hueSlider = wrapper.querySelector('.color-input__hue-slider');
+    if (hueSlider && document.activeElement !== hueSlider) {
+      hueSlider.value = Math.round(hsl.h);
+    }
+  }
+
+  // 更新颜色值（局部更新，不重建 DOM）
+  function updateColor(hex) {
     const normalized = normalizeHex(hex);
-    if (!normalized) return;
+    if (!normalized || normalized === currentHex) return;
     currentHex = normalized;
-    render();
-    bindEvents();
+    patchUI();
     if (onChange) onChange(currentHex);
   }
 
   function bindEvents() {
-    // Tab 切换
+    // Tab 切换 — 需要完整 render
     wrapper.querySelectorAll('.color-input__tab').forEach(tab => {
       tab.addEventListener('click', () => {
         currentMode = tab.dataset.mode;
         render();
-        bindEvents();
       });
     });
 
@@ -91,7 +127,7 @@ export function createColorInput(container, {
       });
     }
 
-    // RGB 输入
+    // RGB/HSL 数值输入
     wrapper.querySelectorAll('.color-input__triple input[data-channel]').forEach(input => {
       input.addEventListener('input', () => {
         if (currentMode === 'rgb') {
@@ -109,7 +145,7 @@ export function createColorInput(container, {
       });
     });
 
-    // 色相滑块
+    // 色相滑块 — 连续拖动，局部更新
     const hueSlider = wrapper.querySelector('.color-input__hue-slider');
     if (hueSlider) {
       hueSlider.addEventListener('input', () => {
@@ -117,12 +153,19 @@ export function createColorInput(container, {
         const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
         hsl.h = parseInt(hueSlider.value);
         const newRgb = hslToRgb(hsl.h, hsl.s, hsl.l);
-        updateColor(rgbToHex(newRgb.r, newRgb.g, newRgb.b), true);
+        const newHex = rgbToHex(newRgb.r, newRgb.g, newRgb.b);
+        const normalized = normalizeHex(newHex);
+        if (normalized && normalized !== currentHex) {
+          currentHex = normalized;
+          patchUI();
+          if (onChange) onChange(currentHex);
+        }
       });
     }
   }
 
-  bindEvents();
+  render();
+  container.appendChild(wrapper);
 
   return {
     getValue() { return currentHex; },

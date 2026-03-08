@@ -109,7 +109,7 @@ function buildSidebar() {
   // 侧边栏头部
   html += `
     <div class="sidebar-header">
-      <span class="sidebar-logo">科研绘图指南</span>
+      <span class="sidebar-logo" style="font-family:var(--font-display);letter-spacing:0.03em;">SciAesthetic</span>
       <button class="btn-icon sidebar-close-btn" id="sidebar-close-btn" aria-label="关闭菜单">
         ${ICONS.close}
       </button>

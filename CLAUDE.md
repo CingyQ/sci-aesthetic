@@ -1,4 +1,13 @@
-# 科研绘图指南 - 项目规范
+# SciAesthetic（科研美学）- 项目规范
+
+## 品牌信息
+- **英文品牌名**：SciAesthetic
+- **中文标题**：科研美学
+- **Slogan**：你的研究值得更好的表达。
+- **浏览器标签页**：科研美学 | SciAesthetic
+- **GitHub 仓库名**：sci-aesthetic
+- **侧边栏 logo**：SciAesthetic（Playfair Display 衬线体，大字号，letter-spacing: 0.03em）
+- **Slogan 排版**：Noto Sans SC，font-weight: 300，opacity 稍降
 
 ## 项目定位
 面向科研工作者的**交互式教学网站**——科研视觉传达完整体系。

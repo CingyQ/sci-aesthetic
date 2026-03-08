@@ -532,8 +532,17 @@ export function init() {
       },
       {
         id: 'preview', title: '图表预览', icon: '📊',
-        content: `<div style="background:#1a1a2e;border-radius:var(--radius-sm);height:250px;display:flex;align-items:center;justify-content:center;color:var(--text-on-dark-3);font-size:var(--text-small);">
-          SVG 图表预览区域
+        content: `<div style="background:#1a1a2e;border-radius:var(--radius-sm);padding:var(--space-sm);overflow:hidden;">
+          <svg viewBox="0 0 300 200" style="width:100%;height:auto;display:block;">
+            <rect width="300" height="200" fill="#1a1a2e" rx="8"/>
+            <line x1="40" y1="170" x2="280" y2="170" stroke="#424245" stroke-width="1"/>
+            <line x1="40" y1="170" x2="40" y2="20" stroke="#424245" stroke-width="1"/>
+            <circle cx="70" cy="130" r="5" fill="#7EC8E3" opacity="0.8"/><circle cx="100" cy="90" r="6" fill="#95D5B2" opacity="0.8"/>
+            <circle cx="130" cy="110" r="4" fill="#B8B8E8" opacity="0.8"/><circle cx="160" cy="60" r="7" fill="#F0B27A" opacity="0.8"/>
+            <circle cx="190" cy="80" r="5" fill="#7EC8E3" opacity="0.8"/><circle cx="220" cy="45" r="6" fill="#E07A7A" opacity="0.8"/>
+            <circle cx="250" cy="70" r="4" fill="#95D5B2" opacity="0.8"/>
+            <text x="160" y="190" fill="#6e6e73" font-size="10" text-anchor="middle" font-family="Inter,sans-serif">散点图预览</text>
+          </svg>
         </div>`
       },
       {
