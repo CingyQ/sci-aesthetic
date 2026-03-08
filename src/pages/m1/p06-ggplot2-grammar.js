@@ -267,21 +267,38 @@ export function render() {
 .p6-layers-hdr { padding:var(--space-3xl) var(--space-lg) var(--space-xl); text-align:center; }
 .p6-layers-section .p6-sec-title { color:var(--text-on-light); }
 
+/* 桌面端：CSS sticky 方案（比 GSAP pin 更可靠） */
 .p6-sticky-wrap {
-  display:grid; grid-template-columns:1fr 1fr; gap:0;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:0;
+  align-items:start; /* 必须：sticky 在 grid 里要求 align-self:start */
   max-width:1100px; margin:0 auto; padding:0 var(--space-lg);
-  position:relative;
 }
 .p6-sticky-left {
-  padding:0 var(--space-lg) var(--space-xl) 0;
-  display:flex; flex-direction:column; justify-content:center;
+  /* CSS sticky：随外层容器滚动而固定 */
+  position:sticky;
+  top:0;
   height:100vh;
+  padding:0 var(--space-lg) 0 0;
+  display:flex; flex-direction:column; justify-content:center;
+  overflow:hidden;
 }
+.p6-sticky-steps { /* 右侧：普通文档流，提供滚动距离 */ }
 .p6-step-panel {
   height:100vh; display:flex; align-items:center;
   padding:var(--space-xl) 0 var(--space-xl) var(--space-lg);
 }
-.p6-step-panel-inner { width:100%; }
+/* 激活步骤：背景微高亮 */
+.p6-step-panel.p6-step-active .p6-step-panel-inner {
+  opacity:1;
+}
+.p6-step-panel .p6-step-panel-inner {
+  width:100%; opacity:0.4;
+  transition:opacity 0.35s ease;
+}
+.p6-step-panel.p6-step-active .p6-step-panel-inner { opacity:1; }
+
 .p6-step-num {
   font-family:var(--font-code); font-size:var(--text-caption);
   color:var(--accent); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:14px;
@@ -290,14 +307,13 @@ export function render() {
   font-family:var(--font-display); font-size:clamp(1.3rem,2.5vw,1.9rem);
   font-weight:700; letter-spacing:-0.01em; color:var(--text-on-light); margin-bottom:var(--space-sm);
 }
-.p6-step-desc {
-  font-size:1rem; line-height:1.8; color:var(--text-on-light-2); max-width:440px;
-}
+.p6-step-desc { font-size:1rem; line-height:1.8; color:var(--text-on-light-2); max-width:440px; }
 
 .p6-code-panel {
   background:var(--bg-dark); border-radius:var(--radius-lg);
   padding:var(--space-md); font-family:var(--font-code); font-size:13.5px; line-height:1.65;
   margin-bottom:var(--space-md); border:1px solid var(--border-dark); overflow:hidden;
+  flex-shrink:0;
 }
 .p6-code-line {
   color:var(--text-on-dark-2); border-radius:3px;
@@ -311,19 +327,58 @@ export function render() {
 .p6-chart-box {
   width:100%; aspect-ratio:4/3; border-radius:var(--radius-md);
   overflow:hidden; background:#111218; border:1px solid var(--border-dark);
+  flex-shrink:0;
 }
 .p6-chart-box svg { width:100%; height:100%; display:block; }
+
+/* ── 移动端步骤选择器（desktop 隐藏） ── */
+.p6-mobile-picker { display:none; }
 
 @media (max-width:900px) {
   .p6-sticky-wrap { padding:0 var(--space-md); }
   .p6-sticky-left { padding-right:var(--space-md); }
   .p6-step-panel { padding-left:var(--space-md); }
 }
+
+/* ── 移动端：完全不同的交互模式 ── */
 @media (max-width:768px) {
-  .p6-sticky-wrap { grid-template-columns:1fr; padding:0 var(--space-sm); gap:var(--space-lg); }
-  .p6-sticky-left { height:auto; padding:0; position:sticky; top:56px; z-index:10; background:var(--bg-light); padding-bottom:var(--space-sm); }
-  .p6-step-panel { height:auto; padding:var(--space-lg) 0; }
-  .p6-step-title { font-size:1.2rem; }
+  /* 桌面滚动面板隐藏 */
+  .p6-sticky-wrap { display:block; padding:0 var(--space-sm); }
+  .p6-sticky-left { position:static; height:auto; padding:0; overflow:visible; }
+  .p6-sticky-steps { display:none; }
+
+  /* 移动端步骤选择器 */
+  .p6-mobile-picker {
+    display:block;
+    padding:0 var(--space-sm) var(--space-md);
+    max-width:1100px; margin:0 auto;
+  }
+  .p6-mobile-step-nav {
+    display:flex; gap:8px; justify-content:center;
+    margin-bottom:var(--space-md); flex-wrap:nowrap;
+  }
+  .p6-mstep-btn {
+    width:44px; height:44px; border-radius:50%;
+    background:var(--bg-light-alt); border:1.5px solid var(--border-light);
+    color:var(--text-on-light-2); font-family:var(--font-code); font-size:0.85rem;
+    cursor:pointer; transition:all 0.2s var(--ease-apple);
+    display:flex; align-items:center; justify-content:center;
+    flex-shrink:0;
+  }
+  .p6-mstep-btn.active {
+    background:var(--accent); border-color:var(--accent);
+    color:#1d1d1f; font-weight:700;
+    box-shadow:0 0 0 3px rgba(126,200,227,0.25);
+  }
+  .p6-mobile-step-info {
+    padding:var(--space-md);
+    background:var(--bg-light-alt); border-radius:var(--radius-md);
+    border:1px solid var(--border-light); margin-bottom:var(--space-md);
+    min-height:100px;
+  }
+  .p6-mobile-step-info .p6-step-title { font-size:1.1rem; }
+  .p6-mobile-step-info .p6-step-desc { font-size:0.9rem; line-height:1.7; }
+
   .p6-code-panel { font-size:12px; }
 }
 
@@ -508,11 +563,26 @@ export function render() {
     <h2 class="p6-sec-title">图层叠加的哲学</h2>
     <p class="p6-sec-desc" style="color:var(--text-on-light-2)">ggplot2 是"图形语法"的具体实现。一张图表 = 数据 + 映射 + 几何 + 标度 + 主题的叠加。向下滚动，逐层构建一张完整的散点图。</p>
   </div>
+
+  <!-- 移动端：步骤选择器（桌面端隐藏） -->
+  <div class="p6-mobile-picker" id="p6-mobile-picker">
+    <div class="p6-mobile-step-nav">
+      ${LAYER_STEPS.map((_, i) => `<button class="p6-mstep-btn${i === 0 ? ' active' : ''}" data-step="${i}">${i + 1}</button>`).join('')}
+    </div>
+    <div class="p6-mobile-step-info" id="p6-mobile-step-info">
+      <div class="p6-step-num" id="p6-m-num">Step 1 / ${LAYER_STEPS.length}</div>
+      <h3 class="p6-step-title" id="p6-m-title">${LAYER_STEPS[0].title}</h3>
+      <p class="p6-step-desc" id="p6-m-desc">${LAYER_STEPS[0].desc}</p>
+    </div>
+  </div>
+
+  <!-- 代码 + 图表（桌面 sticky 左列，移动端普通流） -->
   <div class="p6-sticky-wrap" id="p6-sticky-wrap">
     <div class="p6-sticky-left" id="p6-sticky-left">
       <div class="p6-code-panel" id="p6-code-display"></div>
       <div class="p6-chart-box" id="p6-layer-chart"></div>
     </div>
+    <!-- 桌面端：5个滚动步骤面板（移动端隐藏） -->
     <div class="p6-sticky-steps" id="p6-sticky-steps">
       ${LAYER_STEPS.map((step, i) => `
       <div class="p6-step-panel" data-step="${i}">
@@ -1019,53 +1089,71 @@ export function init() {
   renderCodePanel(codeEl, 0);
   buildLayerChart(chartEl, 0);
 
-  // 粘性滚动
-  const stickyWrap = document.getElementById('p6-sticky-wrap');
-  const stickyLeft = document.getElementById('p6-sticky-left');
-  const stepPanels = document.querySelectorAll('.p6-step-panel');
+  // ── 步骤更新核心函数（桌面+移动共用） ──
+  function updateLayerStep(i) {
+    state.layerStep = i;
+    renderCodePanel(document.getElementById('p6-code-display'), i);
+    buildLayerChart(document.getElementById('p6-layer-chart'), i);
+    // 更新桌面右侧面板高亮
+    document.querySelectorAll('.p6-step-panel').forEach((p, idx) => {
+      p.classList.toggle('p6-step-active', idx === i);
+    });
+  }
+  // 激活第一步
+  updateLayerStep(0);
 
-  ScrollTrigger.matchMedia({
-    '(min-width: 769px)': () => {
-      if (!stickyWrap || !stickyLeft) return;
-      ScrollTrigger.create({
-        trigger: stickyWrap,
-        start: 'top top',
-        end: 'bottom bottom',
-        pin: stickyLeft,
-        pinSpacing: false,
+  // ── 桌面端：IntersectionObserver 检测当前步骤 ──
+  // rootMargin '-40% 0% -40% 0%' 使触发区域收缩到视口中间 20%
+  // 这样只有"居中"的步骤面板才会激活
+  if (window.innerWidth > 768) {
+    const desktopObs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const i = parseInt(e.target.dataset.step);
+          updateLayerStep(i);
+        }
       });
-      stepPanels.forEach((panel, i) => {
-        ScrollTrigger.create({
-          trigger: panel,
-          start: 'top center',
-          end: 'bottom center',
-          onEnter: () => {
-            renderCodePanel(document.getElementById('p6-code-display'), i);
-            buildLayerChart(document.getElementById('p6-layer-chart'), i);
-          },
-          onEnterBack: () => {
-            renderCodePanel(document.getElementById('p6-code-display'), i);
-            buildLayerChart(document.getElementById('p6-layer-chart'), i);
-          },
-        });
+    }, {
+      rootMargin: '-40% 0px -40% 0px',
+      threshold: 0,
+    });
+    document.querySelectorAll('.p6-step-panel').forEach(p => desktopObs.observe(p));
+    state.layerObservers.push(desktopObs);
+  }
+
+  // ── 移动端：步骤按钮点击切换 ──
+  if (window.innerWidth <= 768) {
+    document.querySelectorAll('.p6-mstep-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const i = parseInt(btn.dataset.step);
+        updateLayerStep(i);
+        // 更新移动端说明区域
+        document.getElementById('p6-m-num').textContent = `Step ${i + 1} / ${LAYER_STEPS.length}`;
+        document.getElementById('p6-m-title').textContent = LAYER_STEPS[i].title;
+        document.getElementById('p6-m-desc').textContent = LAYER_STEPS[i].desc;
+        // 更新按钮高亮
+        document.querySelectorAll('.p6-mstep-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
       });
-    },
-    '(max-width: 768px)': () => {
-      // 移动端：IntersectionObserver 代替 pin
+    });
+  }
+
+  // ── resize 时重建（移动↔桌面切换） ──
+  const onResize = () => {
+    // 销毁旧 observer，根据当前宽度重新绑定
+    state.layerObservers.forEach(o => o.disconnect());
+    state.layerObservers = [];
+    updateLayerStep(state.layerStep);
+    if (window.innerWidth > 768) {
       const obs = new IntersectionObserver((entries) => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            const i = parseInt(e.target.dataset.step);
-            renderCodePanel(document.getElementById('p6-code-display'), i);
-            buildLayerChart(document.getElementById('p6-layer-chart'), i);
-          }
-        });
-      }, { threshold: 0.5 });
-      stepPanels.forEach(p => obs.observe(p));
+        entries.forEach(e => { if (e.isIntersecting) updateLayerStep(parseInt(e.target.dataset.step)); });
+      }, { rootMargin: '-40% 0px -40% 0px', threshold: 0 });
+      document.querySelectorAll('.p6-step-panel').forEach(p => obs.observe(p));
       state.layerObservers.push(obs);
-      return () => { obs.disconnect(); };
-    },
-  });
+    }
+  };
+  window.addEventListener('resize', onResize);
+  state.resizeHandlers.push(onResize);
 
   // 分面 Tabs
   function updateFacet(mode) {
