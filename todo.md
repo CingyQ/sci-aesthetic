@@ -20,7 +20,7 @@
 - [x] 移动端底部 Tab Bar（5 tabs：首页/M1/M2/M3/M4）
 - [x] 移动端顶部页面导航栏（返回 + 标题 + 页码）
 - [x] Tablet 汉堡菜单 + 侧边栏覆盖层
-- [ ] 横屏提示 Toast 组件
+- [x] 横屏提示 Toast 组件
 - [x] 样式展示页：所有组件 + 明暗交替 + 移动端布局验证
 
 ## Phase 2: 通用组件库
@@ -28,15 +28,15 @@
 - [x] CodeEditor.js — CodeMirror 6 封装（R/Python 双语言，深色主题，onChange，移动端只读模式）
 - [x] ChartPreview.js — D3 SVG 画布封装（深色画布 + 坐标轴 + 响应式 viewBox）
 - [x] InteractiveCanvas.js — Canvas API 封装（HiDPI + Pointer Events + touchAction + 双指缩放）
-- [ ] TabSwitcher.js — 带滑动指示器
-- [ ] Modal.js — 全屏模态（ESC + 触摸关闭 + 过渡 + GSAP 入场）
-- [ ] Accordion.js — 平滑展开（移动端工作坊面板）
-- [ ] BeforeAfter.js — 拖拽/滑动对比（Pointer Events 触摸支持）
-- [ ] Toast.js — 消息提示（含横屏提示）
-- [ ] StickySteps.js — 粘性滚动步骤教学（移动端降级为普通滚动 + 固定标题）
-- [ ] ColorInput.js — 颜色选择器（HEX/RGB/HSL 切换 + 精确输入 + 移动端全屏模态）
+- [x] TabSwitcher.js — 带滑动指示器
+- [x] Modal.js — 全屏模态（ESC + 触摸关闭 + 过渡 + GSAP 入场）
+- [x] Accordion.js — 平滑展开（移动端工作坊面板）
+- [x] BeforeAfter.js — 拖拽/滑动对比（Pointer Events 触摸支持）
+- [x] Toast.js — 消息提示（含横屏提示）
+- [x] StickySteps.js — 粘性滚动步骤教学（移动端降级为普通滚动 + 固定标题）
+- [x] ColorInput.js — 颜色选择器（HEX/RGB/HSL 切换 + 精确输入 + 移动端全屏模态）
 - [x] CopyButton.js — 一键复制 + 反馈动画
-- [ ] WorkshopLayout.js — 三面板布局（桌面网格 / 移动端手风琴）
+- [x] WorkshopLayout.js — 三面板布局（桌面网格 / 移动端手风琴）
 - [x] 组件 demo 页验证（桌面端 + 移动端）
 
 ## Phase 3: 首页 + 全局功能
