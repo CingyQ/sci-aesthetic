@@ -19,22 +19,155 @@ let _codeEditors = [];
 const WORKFLOW_STEPS = [
   { num:'01', title:'数据整理', en:'Data Cleaning', icon:'🗂', desc:'在绘图前整理数据，确保格式正确、缺失值处理妥当，是出版级图表的基础。',
     code: `# R 数据整理示例\nlibrary(tidyverse)\n\ndata <- read_csv("experiment.csv") |>\n  filter(!is.na(value)) |>        # 移除缺失值\n  mutate(\n    group = factor(group),         # 分组变量因子化\n    value = log1p(value)           # 对数变换改善分布\n  ) |>\n  group_by(group) |>\n  summarise(\n    mean = mean(value),\n    se   = sd(value) / sqrt(n()),  # 标准误用于误差线\n    .groups = "drop"\n  )`,
-    trap:'⚠️ 陷阱：未处理异常值就直接绘图，导致坐标轴范围失真，关键数据被压缩到角落。', color:'#7EC8E3' },
+    trap:'⚠️ 陷阱：未处理异常值就直接绘图，导致坐标轴范围失真，关键数据被压缩到角落。', color:'#7EC8E3',
+    visual: `<div class="p10-step-visual">
+  <div class="p10-sv-label">📋 数据质量检查</div>
+  <div class="p10-sv-table-wrap">
+    <table class="p10-sv-table">
+      <thead><tr><th>group</th><th>value</th><th>状态</th></tr></thead>
+      <tbody>
+        <tr class="p10-sv-ok"><td>A</td><td>2.34</td><td class="p10-sv-tag ok">✓ 正常</td></tr>
+        <tr class="p10-sv-bad"><td>B</td><td>NA</td><td class="p10-sv-tag bad">✗ 缺失</td></tr>
+        <tr class="p10-sv-bad"><td>C</td><td>9999</td><td class="p10-sv-tag bad">✗ 异常</td></tr>
+        <tr class="p10-sv-ok"><td>A</td><td>1.87</td><td class="p10-sv-tag ok">✓ 正常</td></tr>
+        <tr class="p10-sv-ok"><td>B</td><td>3.21</td><td class="p10-sv-tag ok">✓ 正常</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="p10-sv-caption">移除 NA 和异常值后，分析结果更可靠</p>
+</div>` },
   { num:'02', title:'选择图表', en:'Chart Selection', icon:'📊', desc:'根据数据类型和研究问题选择最合适的图表类型，避免用错图表误导读者。',
     code: `# 图表类型选择参考\n# 比较多组均值 → 箱线图 or 小提琴图\nggplot(data, aes(x=group, y=value, fill=group)) +\n  geom_boxplot(width=0.5, outlier.shape=21) +\n  geom_jitter(width=0.1, alpha=0.4, size=1.5)\n\n# 展示趋势变化 → 折线图（加置信带）\nggplot(data, aes(x=time, y=value, color=group)) +\n  geom_line(linewidth=0.8) +\n  geom_ribbon(aes(ymin=lower, ymax=upper, fill=group),\n              alpha=0.15, color=NA)\n\n# 展示相关性 → 散点图（加回归线）\nggplot(data, aes(x=x, y=y)) +\n  geom_point(alpha=0.6) +\n  geom_smooth(method="lm", se=TRUE)`,
-    trap:'⚠️ 陷阱：用折线图连接非时序的分类数据，暗示了不存在的趋势关系。', color:'#95D5B2' },
+    trap:'⚠️ 陷阱：用折线图连接非时序的分类数据，暗示了不存在的趋势关系。', color:'#95D5B2',
+    visual: `<div class="p10-step-visual">
+  <div class="p10-sv-label">📊 图表类型速查</div>
+  <div class="p10-sv-chart-grid">
+    <div class="p10-sv-chart-item active"><svg viewBox="0 0 40 32" fill="none"><rect x="5" y="16" width="6" height="14" fill="#7EC8E3"/><rect x="14" y="8" width="6" height="22" fill="#7EC8E3" opacity=".7"/><rect x="23" y="12" width="6" height="18" fill="#7EC8E3" opacity=".5"/><rect x="32" y="4" width="6" height="26" fill="#7EC8E3" opacity=".4"/><line x1="3" y1="30" x2="40" y2="30" stroke="#555" stroke-width="1"/></svg><span>箱线图</span><small>分布对比</small></div>
+    <div class="p10-sv-chart-item"><svg viewBox="0 0 40 32" fill="none"><polyline points="4,26 12,18 20,22 28,10 36,14" stroke="#95D5B2" stroke-width="2" fill="none"/><circle cx="4" cy="26" r="2" fill="#95D5B2"/><circle cx="12" cy="18" r="2" fill="#95D5B2"/><circle cx="20" cy="22" r="2" fill="#95D5B2"/><circle cx="28" cy="10" r="2" fill="#95D5B2"/><circle cx="36" cy="14" r="2" fill="#95D5B2"/></svg><span>折线图</span><small>趋势变化</small></div>
+    <div class="p10-sv-chart-item"><svg viewBox="0 0 40 32" fill="none"><circle cx="10" cy="22" r="2.5" fill="#B8B8E8"/><circle cx="16" cy="14" r="2.5" fill="#B8B8E8"/><circle cx="22" cy="18" r="2.5" fill="#B8B8E8"/><circle cx="28" cy="8" r="2.5" fill="#B8B8E8"/><circle cx="14" cy="24" r="2.5" fill="#B8B8E8"/><circle cx="32" cy="12" r="2.5" fill="#B8B8E8"/><circle cx="20" cy="10" r="2.5" fill="#B8B8E8"/></svg><span>散点图</span><small>相关性</small></div>
+    <div class="p10-sv-chart-item"><svg viewBox="0 0 40 32" fill="none"><ellipse cx="12" cy="18" rx="5" ry="10" fill="none" stroke="#F0B27A" stroke-width="1.5"/><line x1="7" y1="18" x2="17" y2="18" stroke="#F0B27A" stroke-width="1.5"/><line x1="9" y1="10" x2="15" y2="10" stroke="#F0B27A" stroke-width="1"/><line x1="9" y1="26" x2="15" y2="26" stroke="#F0B27A" stroke-width="1"/><ellipse cx="28" cy="18" rx="5" ry="8" fill="none" stroke="#F0B27A" stroke-width="1.5" opacity=".7"/><line x1="23" y1="18" x2="33" y2="18" stroke="#F0B27A" stroke-width="1.5" opacity=".7"/></svg><span>箱线图</span><small>多组分布</small></div>
+    <div class="p10-sv-chart-item"><svg viewBox="0 0 40 32" fill="none"><rect x="4" y="4" width="8" height="8" fill="#7EC8E3" opacity=".9"/><rect x="14" y="4" width="8" height="8" fill="#7EC8E3" opacity=".6"/><rect x="24" y="4" width="8" height="8" fill="#7EC8E3" opacity=".3"/><rect x="4" y="14" width="8" height="8" fill="#E07A7A" opacity=".4"/><rect x="14" y="14" width="8" height="8" fill="#E07A7A" opacity=".7"/><rect x="24" y="14" width="8" height="8" fill="#E07A7A" opacity=".9"/></svg><span>热力图</span><small>矩阵关系</small></div>
+    <div class="p10-sv-chart-item"><svg viewBox="0 0 40 32" fill="none"><path d="M8 28 Q10 4 12 28" fill="#95D5B2" opacity=".4"/><path d="M8 28 Q10 14 12 28" fill="none" stroke="#95D5B2" stroke-width="1.5"/><path d="M24 28 Q26 6 28 28" fill="#B8B8E8" opacity=".3"/><path d="M24 28 Q26 16 28 28" fill="none" stroke="#B8B8E8" stroke-width="1.5"/></svg><span>小提琴图</span><small>密度分布</small></div>
+  </div>
+  <p class="p10-sv-caption">高亮为本步骤场景推荐图表类型</p>
+</div>` },
   { num:'03', title:'生成初稿', en:'First Draft', icon:'✏️', desc:'先快速生成功能完整的初稿，不追求美观，验证数据和图表类型是否正确。',
     code: `# 快速初稿：使用 ggplot2 默认设置\nlibrary(ggplot2)\n\np <- ggplot(data, aes(x=group, y=value, fill=group)) +\n  geom_boxplot() +\n  labs(\n    title = "各处理组细胞活性对比",\n    x = "实验组",\n    y = "细胞活性 (OD450)",\n    caption = "n=30 per group, data: experiment.csv"\n  )\n\n# 先保存低分辨率草稿查看效果\nggsave("draft.png", p, width=8, height=5, dpi=72)`,
-    trap:'⚠️ 陷阱：初稿阶段花太多时间在配色和字体上，应先确认数据展示逻辑再精调外观。', color:'#B8B8E8' },
+    trap:'⚠️ 陷阱：初稿阶段花太多时间在配色和字体上，应先确认数据展示逻辑再精调外观。', color:'#B8B8E8',
+    visual: `<div class="p10-step-visual">
+  <div class="p10-sv-label">✏️ 初稿效果预览（ggplot2 默认主题）</div>
+  <div class="p10-sv-draft-preview">
+    <svg viewBox="0 0 320 160" style="width:100%;height:auto;display:block;">
+      <rect width="320" height="160" fill="#f0f0f0"/>
+      <line x1="44" y1="8" x2="44" y2="136" stroke="#ccc" stroke-width="1"/>
+      <line x1="44" y1="136" x2="312" y2="136" stroke="#ccc" stroke-width="1"/>
+      <line x1="44" y1="108" x2="312" y2="108" stroke="white" stroke-width="1"/>
+      <line x1="44" y1="80" x2="312" y2="80" stroke="white" stroke-width="1"/>
+      <line x1="44" y1="52" x2="312" y2="52" stroke="white" stroke-width="1"/>
+      <line x1="44" y1="24" x2="312" y2="24" stroke="white" stroke-width="1"/>
+      <rect x="60" y="68" width="40" height="68" fill="#F8766D"/>
+      <rect x="140" y="36" width="40" height="100" fill="#00BFC4"/>
+      <rect x="220" y="52" width="40" height="84" fill="#7CAE00"/>
+      <text x="80" y="150" text-anchor="middle" font-size="10" fill="#666">Control</text>
+      <text x="160" y="150" text-anchor="middle" font-size="10" fill="#666">Treatment</text>
+      <text x="240" y="150" text-anchor="middle" font-size="10" fill="#666">Vehicle</text>
+      <text x="22" y="140" text-anchor="middle" font-size="9" fill="#666">0</text>
+      <text x="22" y="112" text-anchor="middle" font-size="9" fill="#666">1</text>
+      <text x="22" y="84" text-anchor="middle" font-size="9" fill="#666">2</text>
+      <text x="22" y="56" text-anchor="middle" font-size="9" fill="#666">3</text>
+      <text x="22" y="28" text-anchor="middle" font-size="9" fill="#666">4</text>
+    </svg>
+  </div>
+  <p class="p10-sv-caption">默认灰色主题 — 先验证数据逻辑，再做美化</p>
+</div>` },
   { num:'04', title:'配色优化', en:'Color Refinement', icon:'🎨', desc:'选择符合期刊要求、色盲友好的配色方案，确保印刷版和屏幕版效果一致。',
     code: `# 使用色盲安全的 ggsci 配色\nlibrary(ggsci)\nlibrary(RColorBrewer)\n\n# 方案 1：ggsci Nature 期刊配色\np + scale_fill_npg()\n\n# 方案 2：手动 Okabe-Ito 色盲安全色板\nokabe_ito <- c("#E69F00","#56B4E9","#009E73",\n               "#F0E442","#0072B2","#D55E00","#CC79A7")\np + scale_fill_manual(values = okabe_ito)\n\n# 方案 3：ColorBrewer 渐变（适合连续数据）\np + scale_fill_brewer(palette = "Blues", direction = -1)`,
-    trap:'⚠️ 陷阱：使用彩虹色（rainbow）配色——在灰度印刷后颜色差异消失，且对色盲读者不友好。', color:'#F0B27A' },
+    trap:'⚠️ 陷阱：使用彩虹色（rainbow）配色——在灰度印刷后颜色差异消失，且对色盲读者不友好。', color:'#F0B27A',
+    visual: `<div class="p10-step-visual">
+  <div class="p10-sv-label">🎨 配色方案对比</div>
+  <div class="p10-sv-palette-compare">
+    <div class="p10-sv-palette-row">
+      <span class="p10-sv-palette-tag bad">❌ 彩虹色（色盲不友好）</span>
+      <div class="p10-sv-swatches">
+        <div style="background:#FF0000"></div><div style="background:#FF7F00"></div>
+        <div style="background:#FFFF00"></div><div style="background:#00FF00"></div>
+        <div style="background:#0000FF"></div><div style="background:#8B00FF"></div>
+      </div>
+    </div>
+    <div class="p10-sv-palette-row">
+      <span class="p10-sv-palette-tag ok">✓ Okabe-Ito（色盲安全）</span>
+      <div class="p10-sv-swatches">
+        <div style="background:#E69F00"></div><div style="background:#56B4E9"></div>
+        <div style="background:#009E73"></div><div style="background:#F0E442"></div>
+        <div style="background:#0072B2"></div><div style="background:#D55E00"></div>
+      </div>
+    </div>
+    <div class="p10-sv-palette-row">
+      <span class="p10-sv-palette-tag ok">✓ ggsci NPG（期刊风格）</span>
+      <div class="p10-sv-swatches">
+        <div style="background:#E64B35"></div><div style="background:#4DBBD5"></div>
+        <div style="background:#00A087"></div><div style="background:#3C5488"></div>
+        <div style="background:#F39B7F"></div><div style="background:#8491B4"></div>
+      </div>
+    </div>
+  </div>
+</div>` },
   { num:'05', title:'标注与排版', en:'Annotation & Layout', icon:'📐', desc:'添加统计标注、调整字号和布局，让图表在期刊规定的列宽下依然清晰可读。',
     code: `# 添加显著性标注 + 精调排版\nlibrary(ggpubr)\n\np_final <- p +\n  stat_compare_means(\n    comparisons = list(c("Control","Treatment")),\n    method = "t.test", label = "p.signif"  # *, **, ***\n  ) +\n  theme_classic(base_size = 10) +          # 期刊常用 base 10pt\n  theme(\n    legend.position  = "none",             # 分组已在 x 轴体现\n    axis.text        = element_text(size=9, color="black"),\n    axis.title       = element_text(size=10, face="bold"),\n    plot.title       = element_text(size=11, face="bold",\n                                    hjust=0.5),\n    plot.margin      = margin(5,5,5,5,"mm")\n  )`,
-    trap:'⚠️ 陷阱：字号用 ggplot2 默认的 11pt，但期刊要求印刷后坐标轴标签不小于 7pt，需按实际输出尺寸换算。', color:'#E07A7A' },
+    trap:'⚠️ 陷阱：字号用 ggplot2 默认的 11pt，但期刊要求印刷后坐标轴标签不小于 7pt，需按实际输出尺寸换算。', color:'#E07A7A',
+    visual: `<div class="p10-step-visual">
+  <div class="p10-sv-label">📐 标注规范示意</div>
+  <div class="p10-sv-annotate-preview">
+    <svg viewBox="0 0 300 160" style="width:100%;height:auto;display:block;">
+      <rect width="300" height="160" fill="#fff" rx="4"/>
+      <line x1="30" y1="10" x2="30" y2="130" stroke="#ccc" stroke-width="1"/>
+      <line x1="30" y1="130" x2="280" y2="130" stroke="#ccc" stroke-width="1"/>
+      <rect x="50" y="70" width="30" height="60" fill="#7EC8E3" rx="2"/>
+      <rect x="110" y="40" width="30" height="90" fill="#7EC8E3" rx="2" opacity=".8"/>
+      <rect x="170" y="55" width="30" height="75" fill="#7EC8E3" rx="2" opacity=".65"/>
+      <line x1="50" y1="62" x2="80" y2="62" stroke="#333" stroke-width="1"/>
+      <line x1="50" y1="62" x2="50" y2="68" stroke="#333" stroke-width="1"/>
+      <line x1="80" y1="62" x2="80" y2="68" stroke="#333" stroke-width="1"/>
+      <line x1="65" y1="55" x2="65" y2="62" stroke="#333" stroke-width="1"/>
+      <text x="65" y="52" text-anchor="middle" font-size="9" fill="#E07A7A" font-weight="bold">**</text>
+      <line x1="110" y1="32" x2="140" y2="32" stroke="#333" stroke-width="1"/>
+      <line x1="110" y1="32" x2="110" y2="38" stroke="#333" stroke-width="1"/>
+      <line x1="140" y1="32" x2="140" y2="38" stroke="#333" stroke-width="1"/>
+      <line x1="125" y1="25" x2="125" y2="32" stroke="#333" stroke-width="1"/>
+      <text x="125" y="22" text-anchor="middle" font-size="9" fill="#E07A7A" font-weight="bold">***</text>
+      <text x="65" y="145" text-anchor="middle" font-size="8" fill="#666">Control</text>
+      <text x="125" y="145" text-anchor="middle" font-size="8" fill="#666">Treat A</text>
+      <text x="185" y="145" text-anchor="middle" font-size="8" fill="#666">Treat B</text>
+      <text x="218" y="80" font-size="7.5" fill="#888">base_size=10</text>
+      <text x="218" y="92" font-size="7.5" fill="#888">theme_classic()</text>
+      <text x="218" y="104" font-size="7.5" fill="#888">axis.text: 9pt</text>
+    </svg>
+  </div>
+  <p class="p10-sv-caption">显著性标注 + theme_classic() + 9pt 坐标轴字体</p>
+</div>` },
   { num:'06', title:'导出发表', en:'Export & Publish', icon:'🚀', desc:'按期刊要求导出正确的格式、分辨率和尺寸，避免返修。',
     code: `# Nature 系列期刊导出规范\n# 单栏（89mm）/ 1.5 栏（120mm）/ 双栏（183mm），300 DPI，PDF/EPS\n\nggsave(\n  "figure1.pdf",\n  plot   = p_final,\n  width  = 89,          # 单栏：89mm\n  height = 60,          # 高宽比约 0.67\n  units  = "mm",\n  dpi    = 300,         # 矢量格式 dpi 参数影响嵌入字体\n  device = "pdf"\n)\n\n# 位图备份（用于预览/提交系统）\nggsave(\n  "figure1.tiff",\n  plot   = p_final,\n  width  = 89, height = 60, units = "mm",\n  dpi    = 300,\n  compression = "lzw"   # TIFF LZW 无损压缩\n)`,
-    trap:'⚠️ 陷阱：用 ggsave 导出时忘记指定 units="mm"，默认 inches 会导致尺寸翻倍，不符合期刊规定的列宽要求。', color:'#7EC8E3' },
+    trap:'⚠️ 陷阱：用 ggsave 导出时忘记指定 units="mm"，默认 inches 会导致尺寸翻倍，不符合期刊规定的列宽要求。', color:'#7EC8E3',
+    visual: `<div class="p10-step-visual">
+  <div class="p10-sv-label">🚀 期刊常用导出规格</div>
+  <div class="p10-sv-export-grid">
+    <div class="p10-sv-export-card" style="--ec:#E07A7A">
+      <div class="p10-sv-ec-format">PDF</div>
+      <div class="p10-sv-ec-badge">矢量</div>
+      <div class="p10-sv-ec-specs">Nature / Science<br>单栏 89mm<br>字体嵌入</div>
+    </div>
+    <div class="p10-sv-export-card" style="--ec:#F0B27A">
+      <div class="p10-sv-ec-format">TIFF</div>
+      <div class="p10-sv-ec-badge">位图</div>
+      <div class="p10-sv-ec-specs">Cell / Lancet<br>300 DPI 半调<br>LZW 压缩</div>
+    </div>
+    <div class="p10-sv-export-card" style="--ec:#95D5B2">
+      <div class="p10-sv-ec-format">PNG</div>
+      <div class="p10-sv-ec-badge">位图</div>
+      <div class="p10-sv-ec-specs">网页 / 演示<br>300 DPI<br>透明背景可选</div>
+    </div>
+  </div>
+</div>` },
 ];
 
 // ══════════════════════════════════════════════════════
@@ -228,6 +361,7 @@ export function render() {
         <h3 class="p10-wf-step-title">${s.title}</h3>
         <p class="p10-wf-step-en">${s.en}</p>
         <p class="p10-wf-step-desc">${s.desc}</p>
+        ${s.visual || ''}
         <div class="p10-wf-code-container" id="p10-wf-code-${i}"></div>
         <div class="p10-wf-trap">
           <p class="p10-wf-trap-text">${s.trap}</p>
@@ -626,6 +760,236 @@ export function render() {
   overflow: hidden;
   min-height: 200px;
   background: var(--bg-dark);
+}
+
+/* ── Step Visual Cards ── */
+.p10-step-visual {
+  background: rgba(126, 200, 227, 0.04);
+  border: 1px solid rgba(126, 200, 227, 0.12);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  margin-bottom: var(--space-md);
+}
+
+.p10-sv-label {
+  font-family: var(--font-code);
+  font-size: var(--text-caption);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: var(--space-sm);
+}
+
+.p10-sv-caption {
+  font-size: var(--text-caption);
+  color: var(--text-on-light-3);
+  margin-top: var(--space-sm);
+  margin-bottom: 0;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* Data Table */
+.p10-sv-table-wrap {
+  overflow-x: auto;
+}
+
+.p10-sv-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  font-family: var(--font-code);
+}
+
+.p10-sv-table th {
+  text-align: left;
+  padding: 6px 12px;
+  background: rgba(0,0,0,0.04);
+  color: var(--text-on-light-2);
+  font-size: var(--text-caption);
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.p10-sv-table td {
+  padding: 6px 12px;
+  color: var(--text-on-light);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+.p10-sv-bad td {
+  background: rgba(224, 122, 122, 0.06);
+}
+
+.p10-sv-tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.p10-sv-tag.ok {
+  background: rgba(149, 213, 178, 0.2);
+  color: #009E73;
+}
+
+.p10-sv-tag.bad {
+  background: rgba(224, 122, 122, 0.15);
+  color: #E07A7A;
+}
+
+/* Chart Grid */
+.p10-sv-chart-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+}
+
+.p10-sv-chart-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: var(--space-sm);
+  border-radius: var(--radius-sm);
+  background: rgba(0,0,0,0.03);
+  border: 1px solid var(--border-light);
+  cursor: default;
+  transition: border-color var(--t-fast);
+}
+
+.p10-sv-chart-item svg {
+  width: 48px;
+  height: 38px;
+}
+
+.p10-sv-chart-item span {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-on-light);
+}
+
+.p10-sv-chart-item small {
+  font-size: 10px;
+  color: var(--text-on-light-3);
+}
+
+.p10-sv-chart-item.active {
+  border-color: var(--accent);
+  background: rgba(126, 200, 227, 0.06);
+}
+
+/* Draft Preview */
+.p10-sv-draft-preview {
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border-light);
+}
+
+/* Palette Compare */
+.p10-sv-palette-compare {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.p10-sv-palette-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.p10-sv-palette-tag {
+  font-size: 12px;
+  min-width: 180px;
+  flex-shrink: 0;
+  font-family: var(--font-code);
+}
+
+.p10-sv-palette-tag.ok { color: #009E73; }
+.p10-sv-palette-tag.bad { color: #E07A7A; }
+
+.p10-sv-swatches {
+  display: flex;
+  gap: 3px;
+}
+
+.p10-sv-swatches div {
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+}
+
+/* Annotate Preview */
+.p10-sv-annotate-preview {
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border-light);
+  background: #fff;
+}
+
+/* Export Grid */
+.p10-sv-export-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-sm);
+}
+
+.p10-sv-export-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: var(--space-md) var(--space-sm);
+  border-radius: var(--radius-md);
+  background: rgba(0,0,0,0.03);
+  border: 1px solid var(--border-light);
+  text-align: center;
+}
+
+.p10-sv-ec-format {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ec, var(--accent));
+  line-height: 1;
+}
+
+.p10-sv-ec-badge {
+  font-family: var(--font-code);
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  background: rgba(var(--ec, 126), 200, 227, 0.1);
+  color: var(--ec, var(--accent));
+  border: 1px solid currentColor;
+  opacity: 0.8;
+}
+
+.p10-sv-ec-specs {
+  font-size: 11px;
+  color: var(--text-on-light-2);
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .p10-sv-chart-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .p10-sv-palette-tag {
+    min-width: 140px;
+    font-size: 11px;
+  }
+  .p10-sv-swatches div {
+    width: 22px;
+    height: 22px;
+  }
+  .p10-sv-export-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-xs, 8px);
+  }
 }
 
 .p10-wf-trap {
