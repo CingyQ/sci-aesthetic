@@ -1050,6 +1050,19 @@ export function render() {
 @media (max-width: 400px) {
   .hero-quicknav { flex-direction: column; align-items: center; }
 }
+/* Storytelling blocks responsive */
+@media (max-width: 768px) {
+  #s5-storytelling .story-block { margin-bottom: 40px !important; }
+}
+/* Compare table mobile: already handled via JS, but add min-width:0 to pre elements */
+#compare-rows pre { min-width: 0; }
+/* Seaborn params + preview on small screens */
+@media (max-width: 600px) {
+  .sb-right > div:first-child { flex-direction: column !important; }
+  .sb-params { width: 100% !important; }
+}
+/* Annotate toolbar wraps on small screens */
+.annotate-toolbar { flex-wrap: wrap; }
 </style>
 
 <!-- ══════════════════ HERO ══════════════════ -->
@@ -1547,6 +1560,23 @@ export function init() {
   initCompareTable(document.getElementById('s3-mpl-vs-ggplot'));
   state.annCanvas = initAnnotateCanvas(document.getElementById('s4-annotate-canvas'));
   initStorytelling(document.getElementById('s5-storytelling'));
+
+  // ScrollTrigger fadeIn for section headers
+  [
+    '#s1-matplotlib-hierarchy h2',
+    '#s1-matplotlib-hierarchy p',
+    '#s2-seaborn-gallery h2',
+    '#s2-seaborn-gallery > div > p',
+    '#s3-mpl-vs-ggplot h2',
+    '#s3-mpl-vs-ggplot > div > p',
+    '#s4-annotate-canvas h2',
+    '#s4-annotate-canvas > div > p',
+    '#s5-storytelling h2',
+    '#s5-storytelling > div > p',
+  ].forEach((sel) => {
+    const el = document.querySelector(sel);
+    if (el) fadeIn(el, { y: 40, stagger: 0 });
+  });
 }
 
 // ══════════════════════════════════════════════════════
