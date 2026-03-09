@@ -728,7 +728,7 @@ export function render() {
 }
 
 .p10-fmt-info {
-  flex: 1;
+  flex: 1.1;
   min-width: 0;
 }
 
@@ -790,14 +790,14 @@ export function render() {
 }
 
 .p10-fmt-visual {
-  flex: 1;
+  flex: 0.9;
   min-width: 0;
 }
 
 .p10-fmt-svg-container {
   background: var(--bg-dark-elevated);
   border-radius: var(--radius-md);
-  height: 180px;
+  height: 240px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1382,10 +1382,26 @@ export function render() {
   }
   .p10-format-tabs {
     gap: 2px;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    max-width: 100%;
+    padding-bottom: 2px;
+  }
+  .p10-format-tabs::-webkit-scrollbar {
+    display: none;
   }
   .p10-format-tab {
     padding: 8px 12px;
     font-size: 13px;
+    flex-shrink: 0;
+  }
+  .p10-fmt-visual {
+    width: 100%;
+  }
+  .p10-fmt-svg-container {
+    height: 200px;
   }
 
   /* DPI：桌面网格隐藏，移动端 Tab 显示 */
@@ -1418,13 +1434,6 @@ export function render() {
 @media (max-width: 480px) {
   .p10-hero-content {
     padding: 0 var(--space-sm);
-  }
-  .p10-format-tabs {
-    flex-direction: column;
-  }
-  .p10-format-tab {
-    width: 100%;
-    justify-content: flex-start;
   }
   .p10-calc-result-grid {
     grid-template-columns: 1fr;
