@@ -398,7 +398,7 @@ function renderChartPreview(svg, chartId, params, W, H) {
 
   function axisLabel(x, y, txt, anchor='middle') {
     g.append('text').attr('x',x).attr('y',y).attr('text-anchor',anchor)
-      .attr('font-size',10).attr('fill','#6e6e73').attr('font-family','sans-serif').text(txt);
+      .attr('font-size',10).attr('fill','#a0a0a8').attr('font-family','sans-serif').text(txt);
   }
 
   if (chartId === 'scatter') {
@@ -449,7 +449,6 @@ function renderChartPreview(svg, chartId, params, W, H) {
           const cx = xS(CATS[i])+xS.bandwidth()/2;
           const top = (1-(v+errs[i]))*iH, bot = (1-(v-errs[i]))*iH;
           g.append('line').attr('x1',cx).attr('y1',top).attr('x2',cx).attr('y2',bot).attr('stroke','#fff').attr('stroke-width',1.5);
-          [[cx-5,top],[cx+5,top],[cx-5,bot],[cx+5,bot]].forEach(([x1,y1],[x2,y2])=>{});
           g.append('line').attr('x1',cx-5).attr('y1',top).attr('x2',cx+5).attr('y2',top).attr('stroke','#fff').attr('stroke-width',1.5);
           g.append('line').attr('x1',cx-5).attr('y1',bot).attr('x2',cx+5).attr('y2',bot).attr('stroke','#fff').attr('stroke-width',1.5);
         });
@@ -545,7 +544,7 @@ function renderChartPreview(svg, chartId, params, W, H) {
     });
 
   } else if (chartId === 'hist') {
-    const nBins = Math.max(4, Math.min(params.bins||20, 18));
+    const nBins = Math.max(4, Math.min(params.bins||20, 50));
     const mu = 0.45, sig = 0.18;
     const vals = Array.from({length:nBins}, (_,i)=>{
       const x = (i+0.5)/nBins;
@@ -1714,9 +1713,9 @@ function initStoryCompare(el) {
     // Only one annotation on the key point
     const kx=xS(5), ky=yS(70);
     g.append('circle').attr('cx',kx).attr('cy',ky).attr('r',6).attr('fill','#7EC8E3');
-    g.append('line').attr('x1',kx).attr('y1',ky-8).attr('x2',kx-25).attr('y2',ky-30)
+    g.append('line').attr('x1',kx).attr('y1',ky+8).attr('x2',kx-30).attr('y2',ky+28)
       .attr('stroke','#7EC8E3').attr('stroke-width',1.5);
-    g.append('text').attr('x',kx-28).attr('y',ky-34)
+    g.append('text').attr('x',kx-34).attr('y',ky+38)
       .attr('fill','#7EC8E3').attr('font-size',10).attr('font-weight','600')
       .attr('text-anchor','end').text('季度最高：70');
   }
