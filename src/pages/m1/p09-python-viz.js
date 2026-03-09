@@ -368,205 +368,313 @@ function seededRng9(seed) {
 
 function renderChartPreview(svg, chartId, params, W, H) {
   svg.selectAll('*').remove();
-  const pad = { t: 20, r: 20, b: 35, l: 40 };
+  const pad = { t: 25, r: 20, b: 35, l: 45 };
   const iW = W - pad.l - pad.r;
   const iH = H - pad.t - pad.b;
   const g = svg.append('g').attr('transform', `translate(${pad.l},${pad.t})`);
 
-  // background
-  svg.insert('rect','g').attr('width', W).attr('height', H)
-    .attr('fill', '#1d1d1f').attr('rx', 8);
-
-  // axis lines
-  g.append('line').attr('x1',0).attr('y1',iH).attr('x2',iW).attr('y2',iH)
-    .attr('stroke','#424245').attr('stroke-width',1);
-  g.append('line').attr('x1',0).attr('y1',0).attr('x2',0).attr('y2',iH)
-    .attr('stroke','#424245').attr('stroke-width',1);
+  // dark background + grid
+  svg.insert('rect','g').attr('width', W).attr('height', H).attr('fill', '#1d1d1f').attr('rx', 8);
+  for (let i=1;i<=4;i++) {
+    g.append('line').attr('x1',0).attr('y1',i*iH/4).attr('x2',iW).attr('y2',i*iH/4)
+      .attr('stroke','#2d2d2f').attr('stroke-width',1);
+  }
+  g.append('line').attr('x1',0).attr('y1',iH).attr('x2',iW).attr('y2',iH).attr('stroke','#424245').attr('stroke-width',1);
+  g.append('line').attr('x1',0).attr('y1',0).attr('x2',0).attr('y2',iH).attr('stroke','#424245').attr('stroke-width',1);
 
   const rng = seededRng9(42);
-  const CATS = ['Mon','Tue','Wed','Thu'];
-  const COLORS = ['#7EC8E3','#95D5B2','#B8B8E8','#F0B27A'];
+  const CATS = ['A','B','C','D'];
+  const PALETTE_MAP = {
+    'deep':    ['#4C72B0','#DD8452','#55A868','#C44E52'],
+    'Set2':    ['#66C2A5','#FC8D62','#8DA0CB','#E78AC3'],
+    'Set1':    ['#E41A1C','#377EB8','#4DAF4A','#984EA3'],
+    'pastel':  ['#AEC6CF','#FFD1DC','#B5EAD7','#FFDAC1'],
+    'viridis': ['#440154','#31688E','#35B779','#FDE725'],
+    'muted':   ['#4878D0','#EE854A','#6ACC64','#D65F5F'],
+    'rocket':  ['#03051A','#4A0C5C','#B0298B','#F87060'],
+    'husl':    ['#F77189','#BB9832','#50B131','#36ADA4'],
+  };
+  const COLS = (params.palette && PALETTE_MAP[params.palette]) || ['#7EC8E3','#95D5B2','#B8B8E8','#F0B27A'];
+
+  function axisLabel(x, y, txt, anchor='middle') {
+    g.append('text').attr('x',x).attr('y',y).attr('text-anchor',anchor)
+      .attr('font-size',10).attr('fill','#6e6e73').attr('font-family','sans-serif').text(txt);
+  }
 
   if (chartId === 'scatter') {
-    const pts = Array.from({length:40}, () => ({
-      x: 0.1 + rng()*0.8, y: 0.1 + rng()*0.8,
-      g: Math.floor(rng()*4)
+    const pts = Array.from({length:50}, () => ({
+      x: 0.05+rng()*0.9, y: 0.05+rng()*0.9, gi: Math.floor(rng()*4)
     }));
+    const r = Math.max(2, Math.sqrt((params.size||60)/Math.PI) * 1.1);
     g.selectAll('circle').data(pts).join('circle')
-      .attr('cx', d => d.x * iW)
-      .attr('cy', d => (1-d.y) * iH)
-      .attr('r', Math.sqrt((params.size||60)/Math.PI) * 1.2)
-      .attr('fill', d => params.hue ? COLORS[d.g] : '#7EC8E3')
-      .attr('opacity', params.alpha||0.7);
+      .attr('cx', d=>d.x*iW).attr('cy', d=>(1-d.y)*iH)
+      .attr('r', r)
+      .attr('fill', d => params.hue ? COLS[d.gi] : COLS[0])
+      .attr('opacity', params.alpha || 0.7);
 
   } else if (chartId === 'line') {
-    const lines = [0,1,2].map(gi => ({
-      gi, pts: Array.from({length:8}, (_,i) => ({
-        x: i/(7), y: 0.15 + gi*0.22 + rng()*0.12
+    const nLines = 3;
+    const lines = Array.from({length:nLines}, (_, gi) => ({
+      gi, pts: Array.from({length:10}, (_,i) => ({
+        x: i/9, y: Math.max(0.02, Math.min(0.92, 0.12+gi*0.22+rng()*0.08+Math.sin(i/3)*0.06))
       }))
     }));
     const lineGen = d3.line().x(d=>d.x*iW).y(d=>(1-d.y)*iH).curve(d3.curveCatmullRom);
     lines.forEach(ln => {
-      g.append('path').attr('d', lineGen(ln.pts))
-        .attr('fill','none').attr('stroke', COLORS[ln.gi]).attr('stroke-width',2);
+      if (params.ci) {
+        const areaGen = d3.area()
+          .x(d=>d.x*iW).y0(d=>(1-Math.max(0.02,d.y-0.06))*iH).y1(d=>(1-Math.min(0.92,d.y+0.06))*iH)
+          .curve(d3.curveCatmullRom);
+        g.append('path').attr('d',areaGen(ln.pts)).attr('fill',COLS[ln.gi]).attr('opacity',0.2);
+      }
+      g.append('path').attr('d',lineGen(ln.pts)).attr('fill','none').attr('stroke',COLS[ln.gi]).attr('stroke-width',2);
       if (params.markers) {
-        g.selectAll(null).data(ln.pts).join('circle')
-          .attr('cx', d=>d.x*iW).attr('cy', d=>(1-d.y)*iH)
-          .attr('r',3).attr('fill', COLORS[ln.gi]);
+        g.selectAll(`.mk${ln.gi}`).data(ln.pts).join('circle').attr('class',`.mk${ln.gi}`)
+          .attr('cx',d=>d.x*iW).attr('cy',d=>(1-d.y)*iH).attr('r',3.5).attr('fill',COLS[ln.gi]);
       }
     });
+    [0,3,6,9].forEach(i => axisLabel(i/9*iW, iH+14, `Q${i+1}`));
 
   } else if (chartId === 'bar') {
-    const vals = CATS.map((_,i) => 0.3 + rng()*0.5);
-    const xScale = d3.scaleBand().domain(CATS).range([0,iW]).padding(0.25);
+    const vals = CATS.map(() => 0.35+rng()*0.45);
+    const errs = vals.map(v => v*0.1+0.03);
     if (params.orient === 'v') {
+      const xS = d3.scaleBand().domain(CATS).range([0,iW]).padding(0.28);
       g.selectAll('rect').data(vals).join('rect')
-        .attr('x', (_,i)=>xScale(CATS[i])).attr('y', d=>(1-d)*iH)
-        .attr('width', xScale.bandwidth()).attr('height', d=>d*iH)
-        .attr('fill', (_,i)=>COLORS[i]).attr('rx',3);
+        .attr('x',(_,i)=>xS(CATS[i])).attr('y',d=>(1-d)*iH)
+        .attr('width',xS.bandwidth()).attr('height',d=>d*iH)
+        .attr('fill',(_,i)=>COLS[i]).attr('rx',3);
+      if (params.ci) {
+        vals.forEach((v,i)=>{
+          const cx = xS(CATS[i])+xS.bandwidth()/2;
+          const top = (1-(v+errs[i]))*iH, bot = (1-(v-errs[i]))*iH;
+          g.append('line').attr('x1',cx).attr('y1',top).attr('x2',cx).attr('y2',bot).attr('stroke','#fff').attr('stroke-width',1.5);
+          [[cx-5,top],[cx+5,top],[cx-5,bot],[cx+5,bot]].forEach(([x1,y1],[x2,y2])=>{});
+          g.append('line').attr('x1',cx-5).attr('y1',top).attr('x2',cx+5).attr('y2',top).attr('stroke','#fff').attr('stroke-width',1.5);
+          g.append('line').attr('x1',cx-5).attr('y1',bot).attr('x2',cx+5).attr('y2',bot).attr('stroke','#fff').attr('stroke-width',1.5);
+        });
+      }
+      CATS.forEach((c,i)=>axisLabel(xS(c)+xS.bandwidth()/2, iH+14, c));
     } else {
-      const yScale = d3.scaleBand().domain(CATS).range([0,iH]).padding(0.25);
+      const yS = d3.scaleBand().domain(CATS).range([0,iH]).padding(0.28);
       g.selectAll('rect').data(vals).join('rect')
-        .attr('x',0).attr('y', (_,i)=>yScale(CATS[i]))
-        .attr('width', d=>d*iW).attr('height', yScale.bandwidth())
-        .attr('fill', (_,i)=>COLORS[i]).attr('rx',3);
+        .attr('x',0).attr('y',(_,i)=>yS(CATS[i]))
+        .attr('width',d=>d*iW).attr('height',yS.bandwidth())
+        .attr('fill',(_,i)=>COLS[i]).attr('rx',3);
+      if (params.ci) {
+        vals.forEach((v,i)=>{
+          const cy = yS(CATS[i])+yS.bandwidth()/2;
+          const rx = (v+errs[i])*iW;
+          g.append('line').attr('x1',rx).attr('y1',cy-6).attr('x2',rx).attr('y2',cy+6).attr('stroke','#fff').attr('stroke-width',1.5);
+        });
+      }
+      CATS.forEach((c,i)=>axisLabel(-6, yS(c)+yS.bandwidth()/2+4, c, 'end'));
     }
 
   } else if (chartId === 'box') {
-    const bw = (params.width||0.5) * iW / 5;
-    CATS.forEach((cat,i) => {
-      const cx = (i+0.5) * (iW/4);
-      const med = 0.35 + rng()*0.3;
-      const q1 = med - 0.1 - rng()*0.08;
-      const q3 = med + 0.1 + rng()*0.08;
-      const wlo = q1 - 0.12; const whi = q3 + 0.12;
-      g.append('line').attr('x1',cx).attr('y1',(1-whi)*iH).attr('x2',cx).attr('y2',(1-q3)*iH).attr('stroke',COLORS[i]).attr('stroke-width',1.5);
-      g.append('line').attr('x1',cx).attr('y1',(1-q1)*iH).attr('x2',cx).attr('y2',(1-wlo)*iH).attr('stroke',COLORS[i]).attr('stroke-width',1.5);
-      g.append('rect').attr('x',cx-bw/2).attr('y',(1-q3)*iH).attr('width',bw).attr('height',(q3-q1)*iH).attr('fill',COLORS[i]).attr('opacity',0.7).attr('rx',2);
+    const bw = (params.width||0.5) * iW / 5.5;
+    const hasNotch = !!params.notch;
+    CATS.forEach((cat,i)=>{
+      const cx = (i+0.5)*(iW/4);
+      const med = 0.35+rng()*0.28;
+      const q1 = Math.max(0.04, med-0.1-rng()*0.06);
+      const q3 = Math.min(0.94, med+0.1+rng()*0.06);
+      const wlo = Math.max(0.01, q1-0.13);
+      const whi = Math.min(0.97, q3+0.13);
+      const col = COLS[i];
+      g.append('line').attr('x1',cx).attr('y1',(1-whi)*iH).attr('x2',cx).attr('y2',(1-q3)*iH).attr('stroke',col).attr('stroke-width',1.5).attr('stroke-dasharray','3,2');
+      g.append('line').attr('x1',cx).attr('y1',(1-q1)*iH).attr('x2',cx).attr('y2',(1-wlo)*iH).attr('stroke',col).attr('stroke-width',1.5).attr('stroke-dasharray','3,2');
+      g.append('line').attr('x1',cx-bw/3).attr('y1',(1-whi)*iH).attr('x2',cx+bw/3).attr('y2',(1-whi)*iH).attr('stroke',col).attr('stroke-width',1.5);
+      g.append('line').attr('x1',cx-bw/3).attr('y1',(1-wlo)*iH).attr('x2',cx+bw/3).attr('y2',(1-wlo)*iH).attr('stroke',col).attr('stroke-width',1.5);
+      if (hasNotch) {
+        const nw = bw*0.45, nm = (1-med)*iH;
+        const q1y=(1-q1)*iH, q3y=(1-q3)*iH;
+        const pathD = `M${cx-bw/2},${q3y} L${cx-bw/2},${nm-7} L${cx-nw/2},${nm} L${cx-bw/2},${nm+7} L${cx-bw/2},${q1y} L${cx+bw/2},${q1y} L${cx+bw/2},${nm+7} L${cx+nw/2},${nm} L${cx+bw/2},${nm-7} L${cx+bw/2},${q3y}Z`;
+        g.append('path').attr('d',pathD).attr('fill',col).attr('opacity',0.7);
+      } else {
+        g.append('rect').attr('x',cx-bw/2).attr('y',(1-q3)*iH).attr('width',bw).attr('height',(q3-q1)*iH).attr('fill',col).attr('opacity',0.7).attr('rx',2);
+      }
       g.append('line').attr('x1',cx-bw/2).attr('y1',(1-med)*iH).attr('x2',cx+bw/2).attr('y2',(1-med)*iH).attr('stroke','#fff').attr('stroke-width',2);
+      axisLabel(cx, iH+14, cat);
     });
 
   } else if (chartId === 'violin') {
-    CATS.forEach((cat,i) => {
+    const bwScale = Math.max(0.4, Math.min(2.5, params.bw||1.0));
+    const innerStyle = params.inner || 'box';
+    CATS.forEach((cat,i)=>{
       const cx = (i+0.5)*(iW/4);
-      const nPts = 20;
+      const col = COLS[i];
+      const nPts = 28;
       const pts = [];
-      for (let j=0; j<nPts; j++) {
+      for (let j=0;j<nPts;j++) {
         const t = j/(nPts-1);
-        const y = 0.1 + t*0.8;
-        const w = Math.sin(Math.PI*t) * (0.04 + rng()*0.03) * iW;
+        const y = 0.05+t*0.9;
+        const base = Math.sin(Math.PI*t);
+        const skew = Math.sin(Math.PI*t*1.6+i*0.6)*0.18;
+        const w = Math.max(1, (base+skew)*(0.035+rng()*0.018)*bwScale*iW);
         pts.push({y,w});
       }
-      const pathD = pts.map((p,j)=>`${j===0?'M':'L'}${cx-p.w},${(1-p.y)*iH}`).join(' ') +
-                    pts.slice().reverse().map(p=>`L${cx+p.w},${(1-p.y)*iH}`).join(' ') + 'Z';
-      g.append('path').attr('d',pathD).attr('fill',COLORS[i]).attr('opacity',0.7);
+      const pathD = pts.map((p,j)=>`${j===0?'M':'L'}${cx-p.w},${(1-p.y)*iH}`).join(' ')+
+                    pts.slice().reverse().map(p=>`L${cx+p.w},${(1-p.y)*iH}`).join(' ')+'Z';
+      g.append('path').attr('d',pathD).attr('fill',col).attr('opacity',0.65);
+      const med = 0.38+rng()*0.22;
+      const q1 = Math.max(0.06, med-0.1);
+      const q3 = Math.min(0.92, med+0.1);
+      const mIdx = Math.floor(nPts/2);
+      const innerW = pts[mIdx].w*0.45;
+      if (innerStyle==='box') {
+        g.append('rect').attr('x',cx-innerW/2).attr('y',(1-q3)*iH).attr('width',innerW).attr('height',(q3-q1)*iH).attr('fill','#1d1d1f').attr('stroke',col).attr('stroke-width',1);
+        g.append('circle').attr('cx',cx).attr('cy',(1-med)*iH).attr('r',3).attr('fill','#fff');
+      } else if (innerStyle==='quartile') {
+        [q1,med,q3].forEach(qv=>{
+          g.append('line').attr('x1',cx-innerW).attr('y1',(1-qv)*iH).attr('x2',cx+innerW).attr('y2',(1-qv)*iH).attr('stroke',qv===med?'#fff':'#aaa').attr('stroke-width',qv===med?2:1);
+        });
+      } else if (innerStyle==='point') {
+        for (let k=0;k<12;k++) {
+          const py = 0.08+rng()*0.84;
+          const pw = (rng()-0.5)*innerW*1.8;
+          g.append('circle').attr('cx',cx+pw).attr('cy',(1-py)*iH).attr('r',1.5).attr('fill','#fff').attr('opacity',0.75);
+        }
+      } else if (innerStyle==='stick') {
+        for (let k=0;k<12;k++) {
+          const py = 0.08+rng()*0.84;
+          g.append('line').attr('x1',cx-innerW*0.9).attr('y1',(1-py)*iH).attr('x2',cx+innerW*0.9).attr('y2',(1-py)*iH).attr('stroke','#fff').attr('stroke-width',0.8).attr('opacity',0.7);
+        }
+      }
+      axisLabel(cx, iH+14, cat);
     });
 
   } else if (chartId === 'hist') {
-    const nBins = Math.min(params.bins||20, 15);
-    const vals = Array.from({length:nBins}, () => 0.05 + rng()*0.85);
-    const bw = iW / nBins;
+    const nBins = Math.max(4, Math.min(params.bins||20, 18));
+    const mu = 0.45, sig = 0.18;
+    const vals = Array.from({length:nBins}, (_,i)=>{
+      const x = (i+0.5)/nBins;
+      return Math.exp(-Math.pow((x-mu)/sig,2)/2)*(0.7+rng()*0.18);
+    });
+    const bw = iW/nBins;
     g.selectAll('rect').data(vals).join('rect')
-      .attr('x', (_,i)=>i*bw+1).attr('y', d=>(1-d)*iH)
-      .attr('width', bw-2).attr('height', d=>d*iH)
-      .attr('fill', params.color||'#7EC8E3').attr('opacity',0.8);
+      .attr('x',(_,i)=>i*bw+1).attr('y',d=>(1-d)*iH)
+      .attr('width',bw-2).attr('height',d=>d*iH)
+      .attr('fill',params.color||'#7EC8E3').attr('opacity',0.85);
     if (params.kde) {
-      const kdeY = Array.from({length:30}, (_,i) => {
-        const x = i/29; const gau = Math.exp(-Math.pow((x-0.45)/0.2,2)/2);
-        return (1-gau*0.85)*iH;
+      const kdePoints = Array.from({length:60}, (_,i)=>{
+        const x=i/59; return { x, y: Math.exp(-Math.pow((x-mu)/sig,2)/2)*0.92 };
       });
-      const kdeX = Array.from({length:30}, (_,i) => i/29*iW);
-      const path = kdeX.map((x,i)=>`${i===0?'M':'L'}${x},${kdeY[i]}`).join(' ');
-      g.append('path').attr('d',path).attr('fill','none').attr('stroke','#F0D264').attr('stroke-width',2);
+      g.append('path').attr('d',d3.line().x(d=>d.x*iW).y(d=>(1-d.y)*iH).curve(d3.curveBasis)(kdePoints))
+        .attr('fill','none').attr('stroke','#F0D264').attr('stroke-width',2.5);
     }
 
   } else if (chartId === 'kde') {
-    [0,1].forEach(gi => {
-      const offset = gi*0.25;
-      const kdeY = Array.from({length:30}, (_,i) => {
-        const x = i/29; const gau = Math.exp(-Math.pow((x-0.35-offset)/0.18,2)/2);
-        return (1-gau*0.8)*iH;
+    const bwScale = Math.max(0.3, params.bw||1.0);
+    const sig = 0.12*bwScale;
+    const nCurves = params.hue ? 3 : 1;
+    const mus = [0.28, 0.48, 0.68];
+    for (let gi=0;gi<nCurves;gi++) {
+      const col = COLS[gi];
+      const kpts = Array.from({length:60}, (_,i)=>{
+        const x=i/59; return { x, y: Math.exp(-Math.pow((x-mus[gi])/sig,2)/2)*0.88 };
       });
-      const kdeX = Array.from({length:30}, (_,i) => i/29*iW);
-      const pathD = kdeX.map((x,i)=>`${i===0?'M':'L'}${x},${kdeY[i]}`).join(' ');
-      if (params.hue) {
-        if (params.fill) {
-          const fillD = pathD + `L${iW},${iH} L0,${iH}Z`;
-          g.append('path').attr('d',fillD).attr('fill',COLORS[gi]).attr('opacity',0.25);
-        }
-        g.append('path').attr('d',pathD).attr('fill','none').attr('stroke',COLORS[gi]).attr('stroke-width',2);
-      } else if (gi===0) {
-        if (params.fill) {
-          const fillD = pathD + `L${iW},${iH} L0,${iH}Z`;
-          g.append('path').attr('d',fillD).attr('fill','#7EC8E3').attr('opacity',0.25);
-        }
-        g.append('path').attr('d',pathD).attr('fill','none').attr('stroke','#7EC8E3').attr('stroke-width',2);
+      const kgen = d3.line().x(d=>d.x*iW).y(d=>(1-d.y)*iH).curve(d3.curveBasis);
+      if (params.fill) {
+        const agen = d3.area().x(d=>d.x*iW).y0(iH).y1(d=>(1-d.y)*iH).curve(d3.curveBasis);
+        g.append('path').attr('d',agen(kpts)).attr('fill',col).attr('opacity',0.2);
       }
-    });
+      g.append('path').attr('d',kgen(kpts)).attr('fill','none').attr('stroke',col).attr('stroke-width',2.5);
+    }
 
   } else if (chartId === 'heatmap') {
     const n = 4;
-    const cellW = iW/n; const cellH = iH/n;
-    const corr = [[1,0.7,-0.3,0.5],[0.7,1,0.2,-0.1],[-0.3,0.2,1,-0.6],[0.5,-0.1,-0.6,1]];
-    const colorScale = d3.scaleSequential(d3.interpolateRdBu).domain([1,-1]);
+    const cellW = iW/n, cellH = iH/n;
+    const corr = [[1,0.72,-0.31,0.54],[0.72,1,0.18,-0.08],[-0.31,0.18,1,-0.63],[0.54,-0.08,-0.63,1]];
+    const CMAP_FNS = {
+      'coolwarm': d3.interpolateRdBu,
+      'viridis': d3.interpolateViridis,
+      'RdBu': d3.interpolateRdBu,
+      'Blues': d3.interpolateBlues,
+      'Oranges': d3.interpolateOranges,
+    };
+    const colorScale = d3.scaleSequential(CMAP_FNS[params.cmap]||d3.interpolateRdBu).domain([1,-1]);
+    const lbls = ['X1','X2','X3','X4'];
     for (let r=0;r<n;r++) for (let c=0;c<n;c++) {
-      g.append('rect')
-        .attr('x',c*cellW).attr('y',r*cellH)
-        .attr('width',cellW-2).attr('height',cellH-2)
-        .attr('fill', colorScale(corr[r][c])).attr('rx',2);
+      g.append('rect').attr('x',c*cellW+1).attr('y',r*cellH+1).attr('width',cellW-2).attr('height',cellH-2).attr('fill',colorScale(corr[r][c])).attr('rx',2);
       if (params.annot) {
-        g.append('text').attr('x',c*cellW+cellW/2).attr('y',r*cellH+cellH/2+4)
-          .attr('text-anchor','middle').attr('font-size',10).attr('fill','#fff')
-          .attr('font-family','JetBrains Mono, monospace')
-          .text(corr[r][c].toFixed(1));
+        const fmt = params.fmt==='.2f' ? 2 : 1;
+        g.append('text').attr('x',c*cellW+cellW/2).attr('y',r*cellH+cellH/2+4).attr('text-anchor','middle')
+          .attr('font-size',9).attr('fill','#fff').attr('font-weight','600').attr('font-family','JetBrains Mono, monospace')
+          .text(corr[r][c].toFixed(fmt));
       }
     }
+    lbls.forEach((l,i)=>axisLabel(i*cellW+cellW/2, iH+14, l));
 
   } else if (chartId === 'pair') {
-    // Show 2x2 grid of mini plots
-    const n=2; const cellW=iW/n; const cellH=iH/n;
+    const n = 2;
+    const cellW = iW/n, cellH = iH/n;
+    const nGrp = params.hue ? 3 : 1;
     for (let r=0;r<n;r++) for (let c=0;c<n;c++) {
-      g.append('rect').attr('x',c*cellW+2).attr('y',r*cellH+2)
-        .attr('width',cellW-4).attr('height',cellH-4)
-        .attr('fill','#2d2d2f').attr('rx',4);
+      g.append('rect').attr('x',c*cellW+2).attr('y',r*cellH+2).attr('width',cellW-4).attr('height',cellH-4).attr('fill','#2d2d2f').attr('rx',4);
       if (r===c) {
-        // diagonal: histogram bars
-        const nB=8;
-        for (let b=0;b<nB;b++) {
-          const h=(0.2+rng()*0.6)*cellH*0.8;
-          g.append('rect').attr('x',c*cellW+4+b*(cellW-8)/nB).attr('y',r*cellH+cellH-h-4)
-            .attr('width',(cellW-8)/nB-1).attr('height',h).attr('fill',COLORS[r]).attr('opacity',0.8);
+        if (params.diag==='kde') {
+          for (let gi=0;gi<nGrp;gi++) {
+            const mu = 0.25+gi*0.25;
+            const kpts = Array.from({length:20},(_,i)=>{
+              const x=i/19; return { x, y: Math.exp(-Math.pow((x-mu)/0.16,2)/2)*0.85 };
+            });
+            g.append('path').attr('d',d3.line().x(d=>c*cellW+4+d.x*(cellW-8)).y(d=>r*cellH+cellH-4-d.y*(cellH-8)).curve(d3.curveBasis)(kpts))
+              .attr('fill','none').attr('stroke',COLS[gi]).attr('stroke-width',1.5);
+          }
+        } else {
+          const nB = 6;
+          for (let gi=0;gi<nGrp;gi++) {
+            for (let b=0;b<nB;b++) {
+              const h = (0.15+rng()*0.55)*(cellH-8)*0.8;
+              const bw2 = (cellW-8)/nB/nGrp;
+              g.append('rect')
+                .attr('x',c*cellW+4+b*(cellW-8)/nB+gi*bw2).attr('y',r*cellH+cellH-4-h)
+                .attr('width',bw2-1).attr('height',h).attr('fill',COLS[gi]).attr('opacity',0.85);
+            }
+          }
         }
       } else {
-        // scatter
-        for (let i=0;i<12;i++) {
-          g.append('circle').attr('cx',c*cellW+6+rng()*(cellW-12))
-            .attr('cy',r*cellH+6+rng()*(cellH-12))
-            .attr('r',3).attr('fill',COLORS[c]).attr('opacity',0.7);
+        for (let gi=0;gi<nGrp;gi++) {
+          for (let k=0;k<8;k++) {
+            g.append('circle').attr('cx',c*cellW+5+rng()*(cellW-10)).attr('cy',r*cellH+5+rng()*(cellH-10))
+              .attr('r',2.5).attr('fill',params.hue?COLS[gi]:COLS[0]).attr('opacity',0.75);
+          }
         }
       }
     }
+    ['V1','V2'].forEach((l,i)=>axisLabel(i*cellW+cellW/2, iH+14, l));
 
   } else if (chartId === 'reg') {
-    const pts = Array.from({length:30}, () => ({
-      x: 0.05+rng()*0.9, y: 0.0
-    }));
-    pts.forEach(p => { p.y = 0.1 + p.x*0.7 + (rng()-0.5)*0.2; });
+    const order = params.order || 1;
+    const col = params.color || '#7EC8E3';
+    const ciW = ((params.ci||95)/100) * 0.07;
+    const pts = Array.from({length:35}, ()=>({ x: 0.05+rng()*0.9, y:0 }));
+    pts.forEach(p => {
+      if (order===1) p.y = 0.1+p.x*0.7+(rng()-0.5)*0.16;
+      else if (order===2) p.y = 0.1+0.1*p.x+0.9*p.x*p.x+(rng()-0.5)*0.13;
+      else p.y = 0.7-2.2*p.x+3.5*p.x*p.x-1.5*p.x*p.x*p.x+(rng()-0.5)*0.1;
+      p.y = Math.max(0.02, Math.min(0.95, p.y));
+    });
     if (params.scatter) {
-      g.selectAll('circle').data(pts).join('circle')
-        .attr('cx', d=>d.x*iW).attr('cy', d=>(1-d.y)*iH)
-        .attr('r', 4).attr('fill', params.color||'#7EC8E3').attr('opacity',0.5);
+      g.selectAll('circle').data(pts).join('circle').attr('cx',d=>d.x*iW).attr('cy',d=>(1-d.y)*iH).attr('r',3.5).attr('fill',col).attr('opacity',0.45);
     }
-    // regression line
-    const slope = 0.7; const intercept = 0.1;
-    g.append('line')
-      .attr('x1',0.05*iW).attr('y1',(1-(intercept+0.05*slope))*iH)
-      .attr('x2',0.95*iW).attr('y2',(1-(intercept+0.95*slope))*iH)
-      .attr('stroke',params.color||'#7EC8E3').attr('stroke-width',2.5);
+    const linePts = Array.from({length:50}, (_,i)=>{
+      const x = 0.05+i/49*0.9;
+      let y;
+      if (order===1) y = 0.1+x*0.7;
+      else if (order===2) y = 0.1+0.1*x+0.9*x*x;
+      else y = 0.7-2.2*x+3.5*x*x-1.5*x*x*x;
+      return { x, y: Math.max(0.02, Math.min(0.95, y)) };
+    });
     // CI band
+    const upPts = linePts.map(p=>({ x:p.x*iW, y:(1-Math.min(0.95,p.y+ciW))*iH }));
+    const dnPts = [...linePts].reverse().map(p=>({ x:p.x*iW, y:(1-Math.max(0.02,p.y-ciW))*iH }));
     g.append('path')
-      .attr('d', `M${0.05*iW},${(1-(intercept+0.05*slope+0.06))*iH} L${0.95*iW},${(1-(intercept+0.95*slope+0.04))*iH} L${0.95*iW},${(1-(intercept+0.95*slope-0.04))*iH} L${0.05*iW},${(1-(intercept+0.05*slope-0.06))*iH}Z`)
-      .attr('fill',params.color||'#7EC8E3').attr('opacity',0.2);
+      .attr('d', upPts.map((p,i)=>`${i===0?'M':'L'}${p.x},${p.y}`).join(' ')+' '+dnPts.map(p=>`L${p.x},${p.y}`).join(' ')+'Z')
+      .attr('fill',col).attr('opacity',0.2);
+    g.append('path').attr('d',d3.line().x(d=>d.x*iW).y(d=>(1-d.y)*iH).curve(d3.curveCatmullRom)(linePts))
+      .attr('fill','none').attr('stroke',col).attr('stroke-width',2.5);
   }
 }
 
@@ -786,40 +894,35 @@ function initCompareTable(container) {
   const tabsEl = container.querySelector('.compare-tabs');
   if (!rowsEl) return;
 
-  const isMobile = window.innerWidth <= 768;
-  const gridCols = isMobile ? '80px 1fr' : '90px 140px 1fr 1fr';
-
-  // Column header (desktop only)
-  if (!isMobile) {
-    const header = document.createElement('div');
-    header.style.cssText = `display:grid;grid-template-columns:${gridCols};gap:12px;padding:8px 0 10px;border-bottom:2px solid var(--border-light);margin-bottom:4px;`;
-    header.innerHTML = `
-      <div style="font-size:11px;font-weight:600;color:var(--text-on-light-3);text-transform:uppercase;letter-spacing:0.08em">概念</div>
-      <div style="font-size:11px;font-weight:600;color:var(--text-on-light-3);text-transform:uppercase;letter-spacing:0.08em">示意图</div>
-      <div style="font-size:11px;font-weight:600;color:#7EC8E3;text-transform:uppercase;letter-spacing:0.08em;padding-left:12px">🐍 Python / matplotlib</div>
-      <div style="font-size:11px;font-weight:600;color:#95D5B2;text-transform:uppercase;letter-spacing:0.08em;padding-left:12px">📊 R / ggplot2</div>`;
-    rowsEl.appendChild(header);
-  }
+  // Column header row
+  const header = document.createElement('div');
+  header.className = 'compare-header-row';
+  header.style.cssText = 'display:grid;grid-template-columns:90px 140px 1fr 1fr;gap:12px;padding:8px 0 10px;border-bottom:2px solid var(--border-light);margin-bottom:4px;';
+  header.innerHTML = `
+    <div style="font-size:11px;font-weight:600;color:var(--text-on-light-3);text-transform:uppercase;letter-spacing:0.08em">概念</div>
+    <div style="font-size:11px;font-weight:600;color:var(--text-on-light-3);text-transform:uppercase;letter-spacing:0.08em">示意图</div>
+    <div style="font-size:11px;font-weight:600;color:#7EC8E3;text-transform:uppercase;letter-spacing:0.08em;padding-left:12px">🐍 Python / matplotlib</div>
+    <div style="font-size:11px;font-weight:600;color:#95D5B2;text-transform:uppercase;letter-spacing:0.08em;padding-left:12px">📊 R / ggplot2</div>`;
+  rowsEl.appendChild(header);
 
   MPL_GGPLOT_COMPARE.forEach(item => {
     const row = document.createElement('div');
     row.className = 'compare-row';
-    row.style.cssText = `display:grid;grid-template-columns:${gridCols};gap:12px;border-top:1px solid var(--border-light);padding:16px 0;align-items:start;`;
-    const miniHtml = isMobile ? '' : `<div class="cmp-mini-wrap" style="border-radius:6px;overflow:hidden;"></div>`;
+    row.style.cssText = 'display:grid;grid-template-columns:90px 140px 1fr 1fr;gap:12px;border-top:1px solid var(--border-light);padding:16px 0;align-items:start;';
     row.innerHTML = `
       <div style="font-weight:600;color:var(--accent);font-size:13px;padding-top:4px;font-family:var(--font-code);line-height:1.5">${item.concept}</div>
-      ${miniHtml}
+      <div class="cmp-mini-wrap" style="border-radius:6px;overflow:hidden;"></div>
       <pre class="compare-python" style="background:#1d1d1f;color:#f5f5f7;padding:12px;border-radius:8px;font-size:11px;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:break-word;margin:0;font-family:var(--font-code);line-height:1.5;min-width:0">${item.python}</pre>
-      <pre class="compare-r" style="background:#f5f5f7;color:#1d1d1f;padding:12px;border-radius:8px;font-size:11px;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:break-word;margin:0;font-family:var(--font-code);line-height:1.5;min-width:0${isMobile ? ';display:none' : ''}">${item.r}</pre>`;
+      <pre class="compare-r" style="background:#f5f5f7;color:#1d1d1f;padding:12px;border-radius:8px;font-size:11px;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:break-word;margin:0;font-family:var(--font-code);line-height:1.5;min-width:0">${item.r}</pre>`;
     rowsEl.appendChild(row);
-    if (!isMobile) {
-      drawMiniCompareChart(row.querySelector('.cmp-mini-wrap'), item.concept);
-    }
+    drawMiniCompareChart(row.querySelector('.cmp-mini-wrap'), item.concept);
   });
 
-  // Mobile: show tab switcher
-  if (isMobile && tabsEl) {
+  // Mobile: tab switcher to show Python or R
+  if (window.innerWidth <= 768 && tabsEl) {
     tabsEl.style.display = 'flex';
+    // Initially hide R column
+    rowsEl.querySelectorAll('.compare-r').forEach(el => el.style.display = 'none');
     tabsEl.querySelectorAll('.compare-tab').forEach(tab => {
       tab.addEventListener('click', () => {
         tabsEl.querySelectorAll('.compare-tab').forEach(t => {
@@ -1168,8 +1271,13 @@ export function render() {
 @media (max-width: 768px) {
   #s5-storytelling .story-block { margin-bottom: 40px !important; }
 }
-/* Compare table mobile: already handled via JS, but add min-width:0 to pre elements */
+/* Compare table mobile: responsive via CSS */
 #compare-rows pre { min-width: 0; }
+@media (max-width: 768px) {
+  .compare-row { grid-template-columns: 80px 1fr !important; }
+  .compare-header-row { display: none !important; }
+  .cmp-mini-wrap { display: none !important; }
+}
 /* Seaborn params + preview on small screens */
 @media (max-width: 600px) {
   .sb-right > div:first-child { flex-direction: column !important; }
@@ -1388,19 +1496,19 @@ function initAnnotationFlow(el) {
     .attr('cx',(_,i)=>xS(i)).attr('cy',d=>yS(d)).attr('r',4).attr('fill','#7EC8E3');
 
   const annotations = [
-    { x:xS(3), y:yS(55), label:'重要转折点', tx:-30, ty:-30 },
-    { x:xS(7), y:yS(88), label:'高峰值',    tx:10,  ty:-25 },
-    { x:xS(9), y:yS(95), label:'最终水平',   tx:-60, ty:15  },
+    { x:xS(3), y:yS(55), label:'转折点 ↑',  tx:-15, ty:-32 },
+    { x:xS(7), y:yS(88), label:'高峰值',     tx:-52, ty:22  },
+    { x:xS(9), y:yS(95), label:'终点 95',    tx:-58, ty:28  },
   ];
   const annG = g.append('g').attr('class','ann-layer');
   const annItems = annotations.map(a => {
     const grp = annG.append('g').style('opacity','0');
-    grp.append('line').attr('x1',a.x).attr('y1',a.y).attr('x2',a.x+a.tx*0.7).attr('y2',a.y+a.ty*0.7)
+    grp.append('line').attr('x1',a.x).attr('y1',a.y).attr('x2',a.x+a.tx*0.65).attr('y2',a.y+a.ty*0.65)
        .attr('stroke','#F0D264').attr('stroke-width',1.5)
        .attr('marker-end','url(#arrow-marker)');
     grp.append('text').attr('x',a.x+a.tx).attr('y',a.y+a.ty)
        .attr('fill','#F0D264').attr('font-size',11).attr('font-weight','600')
-       .attr('font-family','sans-serif').text(a.label);
+       .attr('font-family','sans-serif').attr('text-anchor', a.tx < 0 ? 'end' : 'start').text(a.label);
     return grp;
   });
   // arrow marker
