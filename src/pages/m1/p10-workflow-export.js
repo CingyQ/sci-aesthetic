@@ -495,12 +495,12 @@ export function render() {
   font-family: var(--font-body);
   font-size: var(--text-body);
   color: var(--text-on-dark-2);
-  max-width: 560px;
+  max-width: 540px;
   line-height: 1.8;
   margin-top: var(--space-sm);
 }
 
-.scroll-hint {
+.p10-scroll-hint {
   font-family: var(--font-code);
   font-size: var(--text-small);
   color: var(--text-on-dark-3);
@@ -1852,7 +1852,7 @@ export function render() {
       <button class="hero-quicknav__item" data-target="#p10-calc">分辨率计算器</button>
       <button class="hero-quicknav__item" data-target="#p10-journal">期刊速查</button>
     </nav>
-    <p class="scroll-hint" id="p10-scroll-hint">↓ 向下探索</p>
+    <p class="p10-scroll-hint" id="p10-scroll-hint">↓ 向下探索</p>
   </div>
 </section>
 
@@ -2151,7 +2151,7 @@ export function init() {
       });
     gsap.fromTo('#p10-quicknav',
       { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.72, ease: 'power3.out' });
-    gsap.fromTo('#p10-hero .scroll-hint',
+    gsap.fromTo('#p10-hero .p10-scroll-hint',
       { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, delay: 0.9, ease: 'power3.out' });
   }
 

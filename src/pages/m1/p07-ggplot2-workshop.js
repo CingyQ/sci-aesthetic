@@ -2665,10 +2665,10 @@ export function render() {
     <h1 class="page-hero-title p7-hero-title" style="color:var(--text-on-dark);opacity:0;">ggplot2<br>图表工作坊</h1>
     <p class="page-hero-sub p7-hero-sub" style="opacity:0;">ggplot2 Chart Workshop</p>
     <p class="p7-hero-tagline" style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;opacity:0;">12 种常用图表 · 参数实时调节 · R 代码即时生成 · 一键导出脚本</p>
-    <div class="hero-quicknav" id="p7-hero-nav" style="opacity:0;">
+    <nav class="hero-quicknav" id="p7-hero-nav" style="opacity:0;">
       <button class="hero-quicknav__item" data-target="#p7-gallery">图表类型库</button>
       <button class="hero-quicknav__item" data-target="#p7-workshop">交互工作坊</button>
-    </div>
+    </nav>
     <div class="p7-scroll-hint">↓ 向下探索</div>
   </div>
 </section>
