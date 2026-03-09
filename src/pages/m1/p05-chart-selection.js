@@ -557,6 +557,7 @@ export function init() {
   gsap.fromTo('#p5-hero-sub',     { opacity:0, y:20 }, { opacity:0.5, y:0, duration:0.8, delay:0.4, ease:'power3.out' });
   gsap.fromTo('#p5-hero-tagline', { opacity:0, y:20 }, { opacity:1, y:0, duration:0.8, delay:0.55, ease:'power3.out' });
   gsap.fromTo('#p5-quicknav',     { opacity:0, y:20 }, { opacity:1, y:0, duration:0.8, delay:0.7,  ease:'power3.out' });
+  gsap.fromTo('.p5-scroll-hint', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, delay: 0.85, ease: 'power3.out' });
 
   // 快捷导航
   document.querySelectorAll('#p5-quicknav .hero-quicknav__item').forEach(btn => {

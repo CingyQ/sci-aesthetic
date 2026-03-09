@@ -1,7 +1,7 @@
 // p08-r-themes.js — R 配色与出版级图表
 // 配色包浏览器 + 主题定制器 + ggsave 生成器 + patchwork 布局
 
-import { fadeIn, scaleReveal, killAll, gsap } from '../../components/ScrollAnimations.js';
+import { fadeIn, killAll, gsap } from '../../components/ScrollAnimations.js';
 import { createCodeEditor } from '../../components/CodeEditor.js';
 import { navigateTo } from '../../utils/router.js';
 import * as d3 from 'd3';
@@ -1599,8 +1599,8 @@ export function init() {
   // GSAP scroll animations
   gsap.fromTo('#p8-hero .hero-eyebrow', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: 0.1 });
   gsap.fromTo('#p8-hero .page-hero-title', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 0.25 });
-  gsap.fromTo('#p8-hero .page-hero-sub',  { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: 0.4 });
-  gsap.fromTo('#p8-hero .p8-hero-tagline', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 0.5 });
+  gsap.fromTo('#p8-hero .page-hero-sub',  { opacity: 0, y: 30 }, { opacity: 0.5, y: 0, duration: 0.7, ease: 'power3.out', delay: 0.4 });
+  gsap.fromTo('#p8-hero .p8-hero-tagline', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 0.55 });
   gsap.fromTo('#p8-quicknav',             { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 0.6 });
   gsap.fromTo('#p8-hero .p8-scroll-hint', { opacity: 0 },        { opacity: 1, duration: 0.5, ease: 'power3.out', delay: 0.8 });
 

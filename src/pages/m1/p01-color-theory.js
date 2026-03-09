@@ -577,6 +577,7 @@ function initHeroAnimations() {
   tl.fromTo('.m1p1-hero-sub', { y: 20 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
   tl.fromTo('.m1p1-hero-tagline', { y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
   tl.fromTo('.m1p1-hero-nav', { y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
+  tl.fromTo('.m1p1-scroll-hint', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.75);
   // 快捷导航点击
   initHeroQuickNav();
 }

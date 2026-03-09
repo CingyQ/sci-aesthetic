@@ -380,6 +380,7 @@ export function init() {
   tl.fromTo('.m1p2-hero-sub',    { y: 20 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
   tl.fromTo('.m1p2-hero-tagline',{ y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
   tl.fromTo('.m1p2-hero-nav',    { y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
+  tl.fromTo('.m1p2-scroll-hint', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.75);
 
   // 导航按钮
   const prevBtn = document.getElementById('m1p2-prev-btn');

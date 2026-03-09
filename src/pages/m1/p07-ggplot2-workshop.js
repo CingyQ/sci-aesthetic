@@ -2,7 +2,7 @@
 // scatter / bar / line / boxplot
 // 三面板：左参数 · 中D3预览 · 右R代码；移动端手风琴
 
-import { fadeIn, scaleReveal, killAll, gsap } from '../../components/ScrollAnimations.js';
+import { fadeIn, killAll, gsap } from '../../components/ScrollAnimations.js';
 import { createCodeEditor } from '../../components/CodeEditor.js';
 import { createCopyButton } from '../../components/CopyButton.js';
 import { navigateTo } from '../../utils/router.js';
@@ -2870,6 +2870,7 @@ function initAnimations() {
   tl7.fromTo('.p7-hero-sub',    { y: 20 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
   tl7.fromTo('.p7-hero-tagline',{ y: 20 }, { opacity: 1,   y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
   tl7.fromTo('#p7-hero-nav',    { y: 20 }, { opacity: 1,   y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
+  tl7.fromTo('.p7-scroll-hint', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.75);
 
   gsap.from('#p7-gallery-hdr', {
     scrollTrigger: { trigger: '#p7-gallery', start: 'top 85%' },

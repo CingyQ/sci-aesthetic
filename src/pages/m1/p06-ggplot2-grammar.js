@@ -1065,6 +1065,7 @@ export function init() {
   tl6.fromTo('.p6-hero-sub',    { opacity: 0, y: 30 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
   tl6.fromTo('.p6-hero-tagline',{ opacity: 0, y: 20 }, { opacity: 1,   y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
   tl6.fromTo('#p6-hero-nav',    { opacity: 0, y: 20 }, { opacity: 1,   y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
+  tl6.fromTo('.p6-scroll-hint', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.75);
 
   // ── 桌面端：JS-sticky 模拟（transform:translateY，不依赖 CSS sticky）──
   if (window.innerWidth > 768) {
