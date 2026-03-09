@@ -1698,6 +1698,8 @@ export function init() {
   initWorkflow();
   initFormatSection();
   initDpiComparison();
+  initResolutionCalc();
+  initJournalLookup();
 
   // 5. ScrollTrigger section 入场动画（桌面端）
   if (gsap && window.ScrollTrigger && window.innerWidth >= 769) {
@@ -2025,5 +2027,179 @@ function initDpiComparison() {
       if (mobileCanvas) drawDpiCanvas(mobileCanvas, dpi);
       if (mobileLabel) mobileLabel.textContent = DPI_LABELS[dpi] || '';
     });
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  initResolutionCalc() — 分辨率计算器
+// ══════════════════════════════════════════════════════
+function initResolutionCalc() {
+  // HTML uses p10-calc-width / p10-calc-height / p10-calc-format
+  // and separate p10-res-w, p10-res-h, p10-res-mp, p10-res-size for output
+  const wInput  = document.getElementById('p10-calc-width');
+  const hInput  = document.getElementById('p10-calc-height');
+  const dpiSel  = document.getElementById('p10-calc-dpi');
+  const fmtSel  = document.getElementById('p10-calc-format');
+  const resWEl  = document.getElementById('p10-res-w');
+  const resHEl  = document.getElementById('p10-res-h');
+  const mpEl    = document.getElementById('p10-res-mp');
+  const sizeEl  = document.getElementById('p10-res-size');
+  const codeEl  = document.getElementById('p10-calc-code');
+  const warnEl  = document.getElementById('p10-calc-warning');
+
+  if (!wInput || !resWEl) return;
+
+  function calc() {
+    const w   = parseFloat(wInput.value) || 8.9;
+    const h   = parseFloat(hInput.value) || 6;
+    const dpi = parseInt(dpiSel.value) || 300;
+    const fmt = fmtSel.value;
+
+    // cm to pixels: 1 inch = 2.54 cm
+    const pxW = Math.round(w / 2.54 * dpi);
+    const pxH = Math.round(h / 2.54 * dpi);
+    const totalPx = pxW * pxH;
+    const megaPx = (totalPx / 1e6).toFixed(2);
+
+    // Estimate file size
+    let bytesEst = 0;
+    if (fmt === 'png') {
+      bytesEst = totalPx * 0.6;
+    } else if (fmt === 'tiff') {
+      bytesEst = totalPx * 1.2;
+    } else if (fmt === 'jpeg') {
+      bytesEst = totalPx * 0.4;
+    }
+    // svg/pdf: bytesEst stays 0 (vector)
+
+    const sizeMB = bytesEst > 0 ? (bytesEst / 1024 / 1024).toFixed(1) : '—';
+
+    // Update result cards — each card has a value + unit span
+    // Replace inner content while preserving the unit span structure
+    if (resWEl) resWEl.innerHTML = `${pxW.toLocaleString()} <span class="p10-calc-result-unit">px</span>`;
+    if (resHEl) resHEl.innerHTML = `${pxH.toLocaleString()} <span class="p10-calc-result-unit">px</span>`;
+    if (mpEl)   mpEl.innerHTML   = `${megaPx} <span class="p10-calc-result-unit">MP</span>`;
+    if (sizeEl) sizeEl.innerHTML = bytesEst > 0
+      ? `${sizeMB} <span class="p10-calc-result-unit">MB</span>`
+      : `— <span class="p10-calc-result-unit">矢量</span>`;
+
+    // Generate ggsave code
+    const fmtStr = (fmt === 'svg') ? 'pdf' : fmt;
+    const tiffExtra = (fmtStr === 'tiff') ? ',\n  compression = "lzw"' : '';
+    if (codeEl) {
+      codeEl.textContent = `ggsave("figure.${fmtStr}",\n  plot   = p,\n  width  = ${w},\n  height = ${h},\n  units  = "cm",\n  dpi    = ${dpi}${tiffExtra}\n)`;
+    }
+
+    // Warning for large files (>10MB) — CSS uses .visible class
+    if (warnEl) {
+      const showWarn = bytesEst > 10 * 1024 * 1024;
+      warnEl.classList.toggle('visible', showWarn);
+      const warnText = document.getElementById('p10-calc-warning-text');
+      if (warnText && showWarn) {
+        warnText.textContent = `⚠️ 估算文件大小约 ${sizeMB} MB，超过 10MB。建议使用 LZW 压缩（TIFF）或改用矢量格式（PDF/SVG）。`;
+      }
+    }
+  }
+
+  [wInput, hInput, dpiSel, fmtSel].forEach(el => {
+    el.addEventListener('input', calc);
+    el.addEventListener('change', calc);
+  });
+
+  // Run initial calculation
+  calc();
+}
+
+// ══════════════════════════════════════════════════════
+//  initJournalLookup() — 期刊速查
+// ══════════════════════════════════════════════════════
+function initJournalLookup() {
+  const select = document.getElementById('p10-journal-select');
+  const result = document.getElementById('p10-journal-result');
+  const card   = document.getElementById('p10-journal-card');
+  if (!select || !result || !card) return;
+
+  select.addEventListener('change', () => {
+    const name = select.value;
+    if (!name) {
+      result.classList.remove('visible');
+      return;
+    }
+    const journal = JOURNAL_DATA.find(j => j.name === name);
+    if (!journal) return;
+
+    // Build card using the existing CSS classes from the embedded <style>
+    card.innerHTML = `
+      <div class="p10-journal-card-header">
+        <div>
+          <div class="p10-journal-card-name">${journal.name}</div>
+          <div class="p10-journal-card-group">${journal.group}</div>
+        </div>
+      </div>
+      <div class="p10-journal-card-body">
+        <div class="p10-journal-spec-section">
+          <div class="p10-journal-spec-title">栏宽规格</div>
+          <div class="p10-journal-width-grid">
+            <div class="p10-journal-width-cell">
+              <span class="p10-journal-width-label">单栏</span>
+              <span class="p10-journal-width-val">${journal.single}</span>
+            </div>
+            <div class="p10-journal-width-cell">
+              <span class="p10-journal-width-label">1.5 栏</span>
+              <span class="p10-journal-width-val">${journal.oneHalf}</span>
+            </div>
+            <div class="p10-journal-width-cell">
+              <span class="p10-journal-width-label">双栏</span>
+              <span class="p10-journal-width-val">${journal.double}</span>
+            </div>
+          </div>
+        </div>
+        <div class="p10-journal-spec-section">
+          <div class="p10-journal-spec-title">分辨率要求</div>
+          <div class="p10-journal-dpi-grid">
+            <div class="p10-journal-dpi-cell">
+              <span class="p10-journal-dpi-label">半色调</span>
+              <span class="p10-journal-dpi-val">${journal.dpi_halftone} DPI</span>
+            </div>
+            <div class="p10-journal-dpi-cell">
+              <span class="p10-journal-dpi-label">线条图</span>
+              <span class="p10-journal-dpi-val">${journal.dpi_line} DPI</span>
+            </div>
+            <div class="p10-journal-dpi-cell">
+              <span class="p10-journal-dpi-label">混合图</span>
+              <span class="p10-journal-dpi-val">${journal.dpi_combo} DPI</span>
+            </div>
+          </div>
+        </div>
+        <div class="p10-journal-spec-section">
+          <div class="p10-journal-spec-row">
+            <span class="p10-journal-spec-key">格式</span>
+            <span class="p10-journal-spec-val">${journal.formats}</span>
+          </div>
+          <div class="p10-journal-spec-row">
+            <span class="p10-journal-spec-key">色彩</span>
+            <span class="p10-journal-spec-val">${journal.color}</span>
+          </div>
+          <div class="p10-journal-spec-row">
+            <span class="p10-journal-spec-key">文件大小</span>
+            <span class="p10-journal-spec-val">${journal.maxSize}</span>
+          </div>
+          <div class="p10-journal-spec-row">
+            <span class="p10-journal-spec-key">字体</span>
+            <span class="p10-journal-spec-val">${journal.fonts}</span>
+          </div>
+        </div>
+        <div class="p10-journal-notes">📌 ${journal.notes}</div>
+      </div>
+    `;
+
+    // CSS uses .visible class to show the result container
+    result.classList.add('visible');
+
+    // GSAP entrance animation
+    const gsap = window.gsap;
+    if (gsap) {
+      gsap.fromTo(card, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' });
+    }
   });
 }
