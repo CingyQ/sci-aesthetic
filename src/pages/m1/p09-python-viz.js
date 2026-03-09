@@ -1165,6 +1165,342 @@ export function render() {
 }
 
 // ══════════════════════════════════════════════════════
+//  Section 5: 图表叙事四种方法
+// ══════════════════════════════════════════════════════
+
+function initColorContrast(el) {
+  if (!el) return;
+  el.innerHTML = `
+    <div style="margin-bottom:20px">
+      <span style="font-size:11px;font-family:var(--font-code);color:var(--accent);text-transform:uppercase;letter-spacing:0.1em">方法一</span>
+      <h3 style="font:700 1.4rem var(--font-display);color:var(--text-on-light);margin:6px 0">颜色对比突出关键数据</h3>
+      <p style="color:var(--text-on-light-2);font-size:14px;line-height:1.7;max-width:480px">将需要强调的数据组染成鲜明颜色，其余保持灰色——读者视线被自动吸引。</p>
+    </div>
+    <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
+      <button class="cc-btn active" data-group="all" style="padding:6px 16px;min-height:36px;border-radius:20px;border:none;background:var(--accent);color:#1d1d1f;font-size:13px;cursor:pointer;font-weight:600">全部</button>
+      <button class="cc-btn" data-group="A" style="padding:6px 16px;min-height:36px;border-radius:20px;border:1px solid var(--border-light);background:transparent;color:var(--text-on-light-2);font-size:13px;cursor:pointer">突出 A 组</button>
+      <button class="cc-btn" data-group="B" style="padding:6px 16px;min-height:36px;border-radius:20px;border:1px solid var(--border-light);background:transparent;color:var(--text-on-light-2);font-size:13px;cursor:pointer">突出 B 组</button>
+      <button class="cc-btn" data-group="C" style="padding:6px 16px;min-height:36px;border-radius:20px;border:1px solid var(--border-light);background:transparent;color:var(--text-on-light-2);font-size:13px;cursor:pointer">突出 C 组</button>
+    </div>
+    <div class="cc-svg-wrap" style="max-width:500px"></div>`;
+
+  const rng = seededRng9(55);
+  const groups = ['A','B','C','D'];
+  const groupColors = { A:'#7EC8E3', B:'#95D5B2', C:'#F0B27A', D:'#B8B8E8' };
+  const pts = Array.from({length:60}, () => {
+    const g = groups[Math.floor(rng()*4)];
+    return { x: 0.05+rng()*0.9, y: 0.05+rng()*0.9, g };
+  });
+
+  const W = 480, H = 280;
+  const svg = d3.select(el.querySelector('.cc-svg-wrap')).append('svg')
+    .attr('viewBox', `0 0 ${W} ${H}`)
+    .attr('preserveAspectRatio','xMidYMid meet')
+    .style('width','100%').style('height','auto')
+    .style('background','var(--bg-light-alt)').style('border-radius','10px');
+
+  const pad = {t:15,r:15,b:30,l:40};
+  const g = svg.append('g').attr('transform',`translate(${pad.l},${pad.t})`);
+  const iW = W-pad.l-pad.r, iH = H-pad.t-pad.b;
+  g.append('line').attr('x1',0).attr('y1',iH).attr('x2',iW).attr('y2',iH).attr('stroke','#d2d2d7').attr('stroke-width',1);
+  g.append('line').attr('x1',0).attr('y1',0).attr('x2',0).attr('y2',iH).attr('stroke','#d2d2d7').attr('stroke-width',1);
+
+  const circles = g.selectAll('circle').data(pts).join('circle')
+    .attr('cx', d=>d.x*iW).attr('cy', d=>(1-d.y)*iH)
+    .attr('r', 5).attr('fill', d=>groupColors[d.g]).attr('opacity',0.75);
+
+  function updateHighlight(group) {
+    circles.transition().duration(400)
+      .attr('fill', d => group==='all' ? groupColors[d.g] : (d.g===group ? groupColors[d.g] : '#d2d2d7'))
+      .attr('opacity', d => group==='all' ? 0.75 : (d.g===group ? 0.9 : 0.3));
+    el.querySelectorAll('.cc-btn').forEach(btn => {
+      const active = btn.dataset.group === group;
+      btn.style.background = active ? 'var(--accent)' : 'transparent';
+      btn.style.color = active ? '#1d1d1f' : 'var(--text-on-light-2)';
+      btn.style.fontWeight = active ? '600' : '400';
+    });
+  }
+  el.querySelectorAll('.cc-btn').forEach(btn => {
+    btn.addEventListener('click', () => updateHighlight(btn.dataset.group));
+  });
+}
+
+function initAnnotationFlow(el) {
+  if (!el) return;
+  el.innerHTML = `
+    <div style="margin-bottom:20px">
+      <span style="font-size:11px;font-family:var(--font-code);color:var(--accent);text-transform:uppercase;letter-spacing:0.1em">方法二</span>
+      <h3 style="font:700 1.4rem var(--font-display);color:var(--text-on-light);margin:6px 0">标注引导阅读顺序</h3>
+      <p style="color:var(--text-on-light-2);font-size:14px;line-height:1.7;max-width:480px">将分析结论直接写在图表上，箭头和文字标注引导读者按预设顺序理解数据。</p>
+    </div>
+    <button id="af-play-btn" style="padding:8px 20px;min-height:40px;background:var(--accent);color:#1d1d1f;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;margin-bottom:16px">▶ 播放标注</button>
+    <div class="af-svg-wrap" style="max-width:520px"></div>`;
+
+  const W=500, H=260;
+  const svg = d3.select(el.querySelector('.af-svg-wrap')).append('svg')
+    .attr('viewBox',`0 0 ${W} ${H}`).attr('preserveAspectRatio','xMidYMid meet')
+    .style('width','100%').style('height','auto')
+    .style('background','var(--bg-light-alt)').style('border-radius','10px');
+
+  const pad={t:20,r:20,b:35,l:45};
+  const g=svg.append('g').attr('transform',`translate(${pad.l},${pad.t})`);
+  const iW=W-pad.l-pad.r, iH=H-pad.t-pad.b;
+  g.append('line').attr('x1',0).attr('y1',iH).attr('x2',iW).attr('y2',iH).attr('stroke','#d2d2d7').attr('stroke-width',1);
+  g.append('line').attr('x1',0).attr('y1',0).attr('x2',0).attr('y2',iH).attr('stroke','#d2d2d7').attr('stroke-width',1);
+
+  const data = [18,32,28,55,48,72,65,88,78,95];
+  const xS = d3.scaleLinear().domain([0,9]).range([0,iW]);
+  const yS = d3.scaleLinear().domain([0,100]).range([iH,0]);
+  const lineGen = d3.line().x((_,i)=>xS(i)).y(d=>yS(d)).curve(d3.curveCatmullRom);
+  g.append('path').attr('d',lineGen(data)).attr('fill','none').attr('stroke','#7EC8E3').attr('stroke-width',2.5);
+  g.selectAll('circle').data(data).join('circle')
+    .attr('cx',(_,i)=>xS(i)).attr('cy',d=>yS(d)).attr('r',4).attr('fill','#7EC8E3');
+
+  const annotations = [
+    { x:xS(3), y:yS(55), label:'重要转折点', tx:-30, ty:-30 },
+    { x:xS(7), y:yS(88), label:'高峰值',    tx:10,  ty:-25 },
+    { x:xS(9), y:yS(95), label:'最终水平',   tx:-60, ty:15  },
+  ];
+  const annG = g.append('g').attr('class','ann-layer');
+  const annItems = annotations.map(a => {
+    const grp = annG.append('g').style('opacity','0');
+    grp.append('line').attr('x1',a.x).attr('y1',a.y).attr('x2',a.x+a.tx*0.7).attr('y2',a.y+a.ty*0.7)
+       .attr('stroke','#F0D264').attr('stroke-width',1.5)
+       .attr('marker-end','url(#arrow-marker)');
+    grp.append('text').attr('x',a.x+a.tx).attr('y',a.y+a.ty)
+       .attr('fill','#F0D264').attr('font-size',11).attr('font-weight','600')
+       .attr('font-family','sans-serif').text(a.label);
+    return grp;
+  });
+  // arrow marker
+  const defs = svg.append('defs');
+  const marker = defs.append('marker').attr('id','arrow-marker')
+    .attr('markerWidth',8).attr('markerHeight',8).attr('refX',6).attr('refY',3).attr('orient','auto');
+  marker.append('path').attr('d','M0,0 L0,6 L8,3 z').attr('fill','#F0D264');
+
+  let playing = false;
+  el.querySelector('#af-play-btn').addEventListener('click', () => {
+    if (playing) return;
+    playing = true;
+    annItems.forEach(grp => grp.style('opacity','0'));
+    annItems.forEach((grp, i) => {
+      gsap.to(grp.node(), { opacity:1, duration:0.5, delay: i * 0.8 + 0.2,
+        onComplete: i===annItems.length-1 ? ()=>{ playing=false; } : undefined });
+    });
+  });
+}
+
+function initGreyOut(el) {
+  if (!el) return;
+  el.innerHTML = `
+    <div style="margin-bottom:20px">
+      <span style="font-size:11px;font-family:var(--font-code);color:var(--accent);text-transform:uppercase;letter-spacing:0.1em">方法三</span>
+      <h3 style="font:700 1.4rem var(--font-display);color:var(--text-on-light);margin:6px 0">灰化非重点数据</h3>
+      <p style="color:var(--text-on-light-2);font-size:14px;line-height:1.7;max-width:480px">将非核心数据调成低饱和度灰色，让重点数据自然浮现。悬停柱子体验效果。</p>
+    </div>
+    <div class="go-svg-wrap" style="max-width:500px"></div>`;
+
+  const cats=['一月','二月','三月','四月','五月','六月'];
+  const vals=[42,68,55,80,63,91];
+  const colors=['#7EC8E3','#95D5B2','#F0B27A','#B8B8E8','#E07A7A','#F0D264'];
+  const W=480, H=260;
+  const svg=d3.select(el.querySelector('.go-svg-wrap')).append('svg')
+    .attr('viewBox',`0 0 ${W} ${H}`).attr('preserveAspectRatio','xMidYMid meet')
+    .style('width','100%').style('height','auto')
+    .style('background','var(--bg-light-alt)').style('border-radius','10px');
+
+  const pad={t:15,r:20,b:35,l:45};
+  const g=svg.append('g').attr('transform',`translate(${pad.l},${pad.t})`);
+  const iW=W-pad.l-pad.r, iH=H-pad.t-pad.b;
+  g.append('line').attr('x1',0).attr('y1',iH).attr('x2',iW).attr('y2',iH).attr('stroke','#d2d2d7');
+  const xS=d3.scaleBand().domain(cats).range([0,iW]).padding(0.25);
+  const yS=d3.scaleLinear().domain([0,100]).range([iH,0]);
+  g.selectAll('text.xt').data(cats).join('text').attr('class','xt')
+    .attr('x',d=>xS(d)+xS.bandwidth()/2).attr('y',iH+16)
+    .attr('text-anchor','middle').attr('font-size',11).attr('fill','#6e6e73').text(d=>d);
+
+  const bars=g.selectAll('rect').data(vals).join('rect')
+    .attr('x',(_,i)=>xS(cats[i])).attr('y',d=>yS(d))
+    .attr('width',xS.bandwidth()).attr('height',d=>iH-yS(d))
+    .attr('fill',(_,i)=>colors[i]).attr('rx',3).attr('opacity',0.85)
+    .style('cursor','pointer');
+
+  bars.on('mouseover', function(event, d) {
+    const idx = Array.from(this.parentNode.querySelectorAll('rect')).indexOf(this);
+    bars.transition().duration(200)
+      .attr('fill', (_, i) => i === idx ? colors[i] : '#d2d2d7')
+      .attr('opacity', (_, i) => i === idx ? 1 : 0.5);
+  }).on('mouseout', () => {
+    bars.transition().duration(200)
+      .attr('fill', (_, i) => colors[i]).attr('opacity', 0.85);
+  });
+}
+
+function initStepReveal(el) {
+  if (!el) return;
+  el.innerHTML = `
+    <div style="margin-bottom:20px">
+      <span style="font-size:11px;font-family:var(--font-code);color:var(--accent);text-transform:uppercase;letter-spacing:0.1em">方法四</span>
+      <h3 style="font:700 1.4rem var(--font-display);color:var(--text-on-light);margin:6px 0">分步揭示</h3>
+      <p style="color:var(--text-on-light-2);font-size:14px;line-height:1.7;max-width:480px">按时间顺序或分析步骤逐步展示数据，引导读者跟随叙事节奏理解趋势。</p>
+    </div>
+    <div style="display:flex;gap:12px;margin-bottom:16px;align-items:center">
+      <button id="sr-play-btn" style="padding:8px 20px;min-height:40px;background:var(--accent);color:#1d1d1f;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">▶ 播放</button>
+      <button id="sr-reset-btn" style="padding:8px 16px;min-height:40px;background:transparent;border:1px solid var(--border-light);border-radius:8px;cursor:pointer;font-size:13px;color:var(--text-on-light-2)">重置</button>
+      <span id="sr-step-label" style="font-size:13px;color:var(--text-on-light-3);font-family:var(--font-code)">0 / 10</span>
+    </div>
+    <div class="sr-svg-wrap" style="max-width:500px"></div>`;
+
+  const data=[12,28,22,45,38,62,55,75,68,88];
+  const W=480, H=250;
+  const svg=d3.select(el.querySelector('.sr-svg-wrap')).append('svg')
+    .attr('viewBox',`0 0 ${W} ${H}`).attr('preserveAspectRatio','xMidYMid meet')
+    .style('width','100%').style('height','auto')
+    .style('background','var(--bg-light-alt)').style('border-radius','10px');
+
+  const pad={t:15,r:15,b:30,l:45};
+  const g=svg.append('g').attr('transform',`translate(${pad.l},${pad.t})`);
+  const iW=W-pad.l-pad.r, iH=H-pad.t-pad.b;
+  g.append('line').attr('x1',0).attr('y1',iH).attr('x2',iW).attr('y2',iH).attr('stroke','#d2d2d7');
+  g.append('line').attr('x1',0).attr('y1',0).attr('x2',0).attr('y2',iH).attr('stroke','#d2d2d7');
+
+  const xS=d3.scaleLinear().domain([0,9]).range([0,iW]);
+  const yS=d3.scaleLinear().domain([0,100]).range([iH,0]);
+
+  const allCircles=g.selectAll('circle.sr-dot').data(data).join('circle')
+    .attr('class','sr-dot').attr('cx',(_,i)=>xS(i)).attr('cy',d=>yS(d))
+    .attr('r',5).attr('fill','#7EC8E3').attr('opacity',0);
+
+  const pathEl=g.append('path').attr('fill','none').attr('stroke','#7EC8E3').attr('stroke-width',2.5).attr('opacity',0);
+
+  let step=0, timer=null;
+  const stepLabel=el.querySelector('#sr-step-label');
+
+  function showStep(n) {
+    step=n;
+    if(stepLabel) stepLabel.textContent=`${n} / ${data.length}`;
+    allCircles.attr('opacity',(_,i)=>i<n?0.85:0);
+    if(n>1){
+      const visData=data.slice(0,n);
+      const lineGen=d3.line().x((_,i)=>xS(i)).y(d=>yS(d)).curve(d3.curveCatmullRom);
+      pathEl.attr('d',lineGen(visData)).attr('opacity',1);
+    } else { pathEl.attr('opacity',0); }
+  }
+
+  el.querySelector('#sr-play-btn').addEventListener('click',()=>{
+    if(timer) return;
+    showStep(0);
+    let cur=0;
+    timer=setInterval(()=>{
+      cur++;
+      showStep(cur);
+      if(cur>=data.length){ clearInterval(timer); timer=null; }
+    },500);
+  });
+  el.querySelector('#sr-reset-btn').addEventListener('click',()=>{
+    if(timer){ clearInterval(timer); timer=null; }
+    showStep(0);
+  });
+}
+
+function initStoryCompare(el) {
+  if (!el) return;
+  el.innerHTML = `
+    <div style="margin-bottom:20px;padding-top:20px;border-top:1px solid var(--border-light)">
+      <h3 style="font:700 1.3rem var(--font-display);color:var(--text-on-light);margin-bottom:8px">好/差标注对比</h3>
+      <p style="color:var(--text-on-light-2);font-size:14px;line-height:1.7;margin-bottom:20px">同样的折线图，标注质量决定可读性。</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:720px">
+      <div>
+        <div style="text-align:center;margin-bottom:8px;font-size:13px;color:#E07A7A;font-weight:600">✗ 标注混乱</div>
+        <div class="sc-bad-wrap"></div>
+        <p style="font-size:12px;color:var(--text-on-light-3);margin-top:8px;line-height:1.6">过多标注、颜色杂乱、视线无法聚焦</p>
+      </div>
+      <div>
+        <div style="text-align:center;margin-bottom:8px;font-size:13px;color:#95D5B2;font-weight:600">✓ 精准引导</div>
+        <div class="sc-good-wrap"></div>
+        <p style="font-size:12px;color:var(--text-on-light-3);margin-top:8px;line-height:1.6">只标最关键一个点，简洁有力</p>
+      </div>
+    </div>`;
+
+  // Mobile: switch to single column
+  const grid = el.querySelector('div[style*="grid-template-columns"]');
+  if (window.innerWidth <= 600 && grid) grid.style.gridTemplateColumns = '1fr';
+
+  function drawBadChart(wrap) {
+    const W=300, H=180;
+    const svg=d3.select(wrap).append('svg').attr('viewBox',`0 0 ${W} ${H}`)
+      .attr('preserveAspectRatio','xMidYMid meet').style('width','100%').style('height','auto')
+      .style('background','var(--bg-light-alt)').style('border-radius','8px');
+    const pad={t:15,r:15,b:25,l:35};
+    const g=svg.append('g').attr('transform',`translate(${pad.l},${pad.t})`);
+    const iW=W-pad.l-pad.r, iH=H-pad.t-pad.b;
+    const data=[20,35,28,55,48,70];
+    const xS=d3.scaleLinear().domain([0,5]).range([0,iW]);
+    const yS=d3.scaleLinear().domain([0,80]).range([iH,0]);
+    const lineGen=d3.line().x((_,i)=>xS(i)).y(d=>yS(d)).curve(d3.curveCatmullRom);
+    g.append('path').attr('d',lineGen(data)).attr('fill','none').attr('stroke','#7EC8E3').attr('stroke-width',2);
+    // too many annotations in clashing colors
+    const badAnns=[
+      {x:xS(1),y:yS(35),label:'增长?',color:'#E64B35'},
+      {x:xS(2),y:yS(28),label:'下降!',color:'#F0B27A'},
+      {x:xS(3),y:yS(55),label:'最高点',color:'#4DBBD5'},
+      {x:xS(4),y:yS(48),label:'又降了',color:'#00A087'},
+      {x:xS(5),y:yS(70),label:'高点',color:'#3C5488'},
+    ];
+    badAnns.forEach(a=>{
+      g.append('circle').attr('cx',a.x).attr('cy',a.y).attr('r',6).attr('fill',a.color).attr('opacity',0.9);
+      g.append('text').attr('x',a.x+6).attr('y',a.y-6).attr('fill',a.color).attr('font-size',9).attr('font-weight','bold').text(a.label);
+    });
+  }
+
+  function drawGoodChart(wrap) {
+    const W=300, H=180;
+    const svg=d3.select(wrap).append('svg').attr('viewBox',`0 0 ${W} ${H}`)
+      .attr('preserveAspectRatio','xMidYMid meet').style('width','100%').style('height','auto')
+      .style('background','var(--bg-light-alt)').style('border-radius','8px');
+    const pad={t:15,r:15,b:25,l:35};
+    const g=svg.append('g').attr('transform',`translate(${pad.l},${pad.t})`);
+    const iW=W-pad.l-pad.r, iH=H-pad.t-pad.b;
+    const data=[20,35,28,55,48,70];
+    const xS=d3.scaleLinear().domain([0,5]).range([0,iW]);
+    const yS=d3.scaleLinear().domain([0,80]).range([iH,0]);
+    const lineGen=d3.line().x((_,i)=>xS(i)).y(d=>yS(d)).curve(d3.curveCatmullRom);
+    g.append('path').attr('d',lineGen(data)).attr('fill','none').attr('stroke','#d2d2d7').attr('stroke-width',2);
+    // Only one annotation on the key point
+    const kx=xS(5), ky=yS(70);
+    g.append('circle').attr('cx',kx).attr('cy',ky).attr('r',6).attr('fill','#7EC8E3');
+    g.append('line').attr('x1',kx).attr('y1',ky-8).attr('x2',kx-25).attr('y2',ky-30)
+      .attr('stroke','#7EC8E3').attr('stroke-width',1.5);
+    g.append('text').attr('x',kx-28).attr('y',ky-34)
+      .attr('fill','#7EC8E3').attr('font-size',10).attr('font-weight','600')
+      .attr('text-anchor','end').text('季度最高：70');
+  }
+
+  drawBadChart(el.querySelector('.sc-bad-wrap'));
+  drawGoodChart(el.querySelector('.sc-good-wrap'));
+}
+
+function initStorytelling(container) {
+  if (!container) return;
+  initColorContrast(container.querySelector('#story-color-contrast'));
+  initAnnotationFlow(container.querySelector('#story-annotation-flow'));
+  initGreyOut(container.querySelector('#story-grey-out'));
+  initStepReveal(container.querySelector('#story-reveal'));
+  initStoryCompare(container.querySelector('#story-compare'));
+
+  // ScrollTrigger fadeIn for each block
+  ['#story-color-contrast','#story-annotation-flow','#story-grey-out','#story-reveal'].forEach(sel => {
+    const el = document.querySelector(sel);
+    if (!el) return;
+    gsap.fromTo(el, { opacity:0, y:40 }, {
+      opacity:1, y:0, duration:0.7, ease:'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 82%', toggleActions: 'play none none none' }
+    });
+  });
+}
+
+// ══════════════════════════════════════════════════════
 //  init()
 // ══════════════════════════════════════════════════════
 
@@ -1210,7 +1546,7 @@ export function init() {
   state.sbGallery = initSeabornGallery(document.getElementById('s2-seaborn-gallery'));
   initCompareTable(document.getElementById('s3-mpl-vs-ggplot'));
   state.annCanvas = initAnnotateCanvas(document.getElementById('s4-annotate-canvas'));
-  // initStorytelling(...)
+  initStorytelling(document.getElementById('s5-storytelling'));
 }
 
 // ══════════════════════════════════════════════════════
@@ -1229,4 +1565,9 @@ export function destroy() {
   if (state.annCanvas) { state.annCanvas.destroy(); state.annCanvas = null; }
   state.resizeObservers.forEach(ro => ro.disconnect());
   state.resizeObservers = [];
+  // Clear storytelling timers (timers are local scope, cleared on re-init)
+  ['#story-color-contrast','#story-annotation-flow','#story-grey-out','#story-reveal','#story-compare'].forEach(sel => {
+    const el = document.querySelector(sel);
+    if (el) el.innerHTML = '';
+  });
 }
