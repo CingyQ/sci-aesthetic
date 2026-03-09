@@ -1,4 +1,4 @@
-import{k as L}from"./ScrollAnimations-B5Kyk-Xq.js";import{c as _}from"./CodeEditor-BiI1SvFS.js";import{n as F}from"./index-BI1ljIWX.js";import{s as N,l as z,c as D}from"./transform-CrlstJ90.js";import{l as T}from"./line-Ci26EkcQ.js";import{m as A}from"./monotone-KI2q-aQs.js";import"./path-CbwjOpE9.js";let B=null,P=[];const E=[{num:"01",title:"数据整理",en:"Data Cleaning",icon:"🗂",desc:"在绘图前整理数据，确保格式正确、缺失值处理妥当，是出版级图表的基础。",code:`# R 数据整理示例
+import{k as L}from"./ScrollAnimations-B5Kyk-Xq.js";import{c as _}from"./CodeEditor-BiI1SvFS.js";import{n as F}from"./index-DP3sbK4o.js";import{s as N,l as z,c as D}from"./transform-CrlstJ90.js";import{l as T}from"./line-Ci26EkcQ.js";import{m as A}from"./monotone-KI2q-aQs.js";import"./path-CbwjOpE9.js";let B=null,P=[];const E=[{num:"01",title:"数据整理",en:"Data Cleaning",icon:"🗂",desc:"在绘图前整理数据，确保格式正确、缺失值处理妥当，是出版级图表的基础。",code:`# R 数据整理示例
 library(tidyverse)
 
 data <- read_csv("experiment.csv") |>
@@ -273,16 +273,16 @@ ggsave(
 
 # LaTeX 中使用
 # \\usepackage{graphicx}
-# \\includegraphics[width=\\columnwidth]{figure1.eps}`}],C=[{name:"Nature",group:"Nature Portfolio",single:"89mm",oneHalf:"120mm",double:"183mm",dpi_line:1e3,dpi_halftone:300,dpi_combo:500,formats:"PDF / EPS / TIFF / PSD",color:"RGB (屏幕) / CMYK (印刷，需向编辑确认)",maxSize:"单图 ≤ 10MB",fonts:"嵌入所有字体；推荐 Helvetica / Arial",notes:"图片在投稿时可先提交低分辨率，接受后再上传高分辨率版本。坐标轴标签不小于 7pt（印刷后）。"},{name:"Science",group:"AAAS",single:"57mm",oneHalf:"120mm",double:"178mm",dpi_line:1e3,dpi_halftone:300,dpi_combo:500,formats:"PDF / EPS / TIFF",color:"CMYK 优先（印刷版），RGB 可接受",maxSize:"单图 ≤ 20MB",fonts:"嵌入字体；禁止 Times New Roman",notes:"Science 单栏比 Nature 更窄（57mm vs 89mm），需特别注意字号换算。图注文字要简洁，不超过 200 字。"},{name:"Cell",group:"Cell Press / Elsevier",single:"85mm",oneHalf:"114mm",double:"174mm",dpi_line:600,dpi_halftone:300,dpi_combo:600,formats:"PDF / EPS / TIFF / PSD",color:"RGB（提交时），CMYK（印刷转换由期刊处理）",maxSize:"单图 ≤ 20MB",fonts:"嵌入字体；推荐 Arial / Helvetica",notes:"Cell 系列线图要求 600 DPI TIFF（而非 300），注意与 Nature 的区别。接受 PSD 分层文件，便于编辑后期调整。"},{name:"PNAS",group:"National Academy of Sciences",single:"87mm",oneHalf:"114mm",double:"178mm",dpi_line:1e3,dpi_halftone:300,dpi_combo:500,formats:"PDF / EPS / TIFF / PNG",color:"RGB 或 CMYK 均可",maxSize:"单图 ≤ 10MB",fonts:"嵌入字体；Arial / Helvetica 常用",notes:"PNAS 接受 PNG 格式（其他顶刊较少），但建议仍使用 TIFF/PDF。图表需清楚标注实验重复次数和统计方法。"},{name:"Lancet",group:"Elsevier / Lancet",single:"83mm",oneHalf:"N/A",double:"171mm",dpi_line:1e3,dpi_halftone:300,dpi_combo:500,formats:"TIFF / EPS",color:"CMYK（印刷导向）",maxSize:"单图 ≤ 5MB",fonts:"嵌入字体；最小 6pt",notes:"Lancet 系列医学期刊对图表格式要求较严格，偏好 TIFF。统计图必须包含置信区间或误差线，数据点不得少于 5 个。"},{name:"NEJM",group:"Massachusetts Medical Society",single:"84mm",oneHalf:"113mm",double:"171mm",dpi_line:1e3,dpi_halftone:300,dpi_combo:600,formats:"PDF / TIFF / EPS",color:"CMYK 或 Grayscale",maxSize:"单图 ≤ 10MB",fonts:"嵌入字体；Times New Roman 或 Arial",notes:"NEJM 允许使用 Times New Roman（罕见的顶刊）。临床数据图表须包含样本量（n）。彩色图表在线版免费，印刷版收费。"}];function at(){const l=E.map((t,n)=>`
-    <div class="p10-wf-dot" data-step="${n}" id="p10-wf-dot-${n}">
+# \\includegraphics[width=\\columnwidth]{figure1.eps}`}],C=[{name:"Nature",group:"Nature Portfolio",single:"89mm",oneHalf:"120mm",double:"183mm",dpi_line:1e3,dpi_halftone:300,dpi_combo:500,formats:"PDF / EPS / TIFF / PSD",color:"RGB (屏幕) / CMYK (印刷，需向编辑确认)",maxSize:"单图 ≤ 10MB",fonts:"嵌入所有字体；推荐 Helvetica / Arial",notes:"图片在投稿时可先提交低分辨率，接受后再上传高分辨率版本。坐标轴标签不小于 7pt（印刷后）。"},{name:"Science",group:"AAAS",single:"57mm",oneHalf:"120mm",double:"178mm",dpi_line:1e3,dpi_halftone:300,dpi_combo:500,formats:"PDF / EPS / TIFF",color:"CMYK 优先（印刷版），RGB 可接受",maxSize:"单图 ≤ 20MB",fonts:"嵌入字体；禁止 Times New Roman",notes:"Science 单栏比 Nature 更窄（57mm vs 89mm），需特别注意字号换算。图注文字要简洁，不超过 200 字。"},{name:"Cell",group:"Cell Press / Elsevier",single:"85mm",oneHalf:"114mm",double:"174mm",dpi_line:600,dpi_halftone:300,dpi_combo:600,formats:"PDF / EPS / TIFF / PSD",color:"RGB（提交时），CMYK（印刷转换由期刊处理）",maxSize:"单图 ≤ 20MB",fonts:"嵌入字体；推荐 Arial / Helvetica",notes:"Cell 系列线图要求 600 DPI TIFF（而非 300），注意与 Nature 的区别。接受 PSD 分层文件，便于编辑后期调整。"},{name:"PNAS",group:"National Academy of Sciences",single:"87mm",oneHalf:"114mm",double:"178mm",dpi_line:1e3,dpi_halftone:300,dpi_combo:500,formats:"PDF / EPS / TIFF / PNG",color:"RGB 或 CMYK 均可",maxSize:"单图 ≤ 10MB",fonts:"嵌入字体；Arial / Helvetica 常用",notes:"PNAS 接受 PNG 格式（其他顶刊较少），但建议仍使用 TIFF/PDF。图表需清楚标注实验重复次数和统计方法。"},{name:"Lancet",group:"Elsevier / Lancet",single:"83mm",oneHalf:"N/A",double:"171mm",dpi_line:1e3,dpi_halftone:300,dpi_combo:500,formats:"TIFF / EPS",color:"CMYK（印刷导向）",maxSize:"单图 ≤ 5MB",fonts:"嵌入字体；最小 6pt",notes:"Lancet 系列医学期刊对图表格式要求较严格，偏好 TIFF。统计图必须包含置信区间或误差线，数据点不得少于 5 个。"},{name:"NEJM",group:"Massachusetts Medical Society",single:"84mm",oneHalf:"113mm",double:"171mm",dpi_line:1e3,dpi_halftone:300,dpi_combo:600,formats:"PDF / TIFF / EPS",color:"CMYK 或 Grayscale",maxSize:"单图 ≤ 10MB",fonts:"嵌入字体；Times New Roman 或 Arial",notes:"NEJM 允许使用 Times New Roman（罕见的顶刊）。临床数据图表须包含样本量（n）。彩色图表在线版免费，印刷版收费。"}];function at(){const c=E.map((t,s)=>`
+    <div class="p10-wf-dot" data-step="${s}" id="p10-wf-dot-${s}">
       <div class="p10-wf-dot-circle" style="--step-color:${t.color};">
         <span class="p10-wf-dot-num">${t.num}</span>
       </div>
       <span class="p10-wf-dot-label">${t.title}</span>
     </div>
-    ${n<E.length-1?`<div class="p10-wf-connector" id="p10-conn-${n}"></div>`:""}
-  `).join(""),o=E.map((t,n)=>`
-    <div class="p10-wf-panel" id="p10-wf-panel-${n}" data-step="${n}">
+    ${s<E.length-1?`<div class="p10-wf-connector" id="p10-conn-${s}"></div>`:""}
+  `).join(""),o=E.map((t,s)=>`
+    <div class="p10-wf-panel" id="p10-wf-panel-${s}" data-step="${s}">
       <div class="p10-wf-panel-inner">
         <div class="p10-wf-panel-header">
           <span class="p10-wf-step-num" style="color:${t.color};">${t.num}</span>
@@ -292,20 +292,20 @@ ggsave(
         <p class="p10-wf-step-en">${t.en}</p>
         <p class="p10-wf-step-desc">${t.desc}</p>
         ${t.visual||""}
-        <div class="p10-wf-code-container" id="p10-wf-code-${n}"></div>
+        <div class="p10-wf-code-container" id="p10-wf-code-${s}"></div>
         <div class="p10-wf-trap">
           <p class="p10-wf-trap-text">${t.trap}</p>
         </div>
       </div>
     </div>
-  `).join(""),a=S.map((t,n)=>`
-    <button class="p10-format-tab${n===0?" active":""}" data-fmt="${n}" aria-selected="${n===0}">
+  `).join(""),a=S.map((t,s)=>`
+    <button class="p10-format-tab${s===0?" active":""}" data-fmt="${s}" aria-selected="${s===0}">
       <span class="p10-fmt-tab-badge" style="background:${t.color};"></span>
       ${t.name}
       <span class="p10-fmt-tab-type">${t.type==="vector"?"矢量":"位图"}</span>
     </button>
-  `).join(""),r=S.map((t,n)=>`
-    <div class="p10-format-panel${n===0?" active":""}" data-fmt="${n}" role="tabpanel">
+  `).join(""),l=S.map((t,s)=>`
+    <div class="p10-format-panel${s===0?" active":""}" data-fmt="${s}" role="tabpanel">
       <div class="p10-format-panel-inner">
         <!-- 左侧：信息 -->
         <div class="p10-fmt-info">
@@ -335,10 +335,10 @@ ggsave(
         </div>
         <!-- 右侧：SVG 预览 + 代码 -->
         <div class="p10-fmt-visual">
-          <div class="p10-fmt-svg-container" id="p10-fmt-svg-${n}">
+          <div class="p10-fmt-svg-container" id="p10-fmt-svg-${s}">
             <div class="p10-fmt-svg-placeholder">格式示意图</div>
           </div>
-          <div class="p10-fmt-code-container" id="p10-fmt-code-${n}"></div>
+          <div class="p10-fmt-code-container" id="p10-fmt-code-${s}"></div>
         </div>
       </div>
     </div>
@@ -398,86 +398,17 @@ ggsave(
   to   { transform: translate(-50px, -30px) scale(1.1); }
 }
 
-.p10-hero-content {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-md);
-  text-align: center;
-  padding: 0 var(--space-lg);
-}
-
-.p10-hero-tagline {
-  font-family: var(--font-body);
-  font-size: var(--text-body);
-  color: var(--text-on-dark-2);
-  max-width: 540px;
-  line-height: 1.8;
+.p10-scroll-hint {
+  font-size: var(--text-caption);
+  color: var(--text-on-dark-3);
+  animation: p10-float 2s ease-in-out infinite;
+  white-space: nowrap;
   margin-top: var(--space-sm);
 }
 
-.p10-scroll-hint {
-  font-family: var(--font-code);
-  font-size: var(--text-small);
-  color: var(--text-on-dark-3);
-  letter-spacing: 0.1em;
-  margin-top: var(--space-lg);
-  animation: p10-bounce 2.5s ease-in-out infinite;
-}
-
-@keyframes p10-bounce {
-  0%, 100% { transform: translateY(0); opacity: 0.5; }
-  50%       { transform: translateY(6px); opacity: 1; }
-}
-
-/* ── Hero Stats ── */
-.p10-hero-stats {
-  display: flex;
-  align-items: center;
-  gap: var(--space-lg);
-  margin: var(--space-md) 0;
-}
-
-.p10-hero-stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-.p10-hero-stat-num {
-  font-family: var(--font-display);
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 700;
-  color: var(--accent);
-  line-height: 1;
-  letter-spacing: -0.03em;
-}
-
-.p10-hero-stat-label {
-  font-family: var(--font-code);
-  font-size: var(--text-caption);
-  color: var(--text-on-dark-3);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.p10-hero-stat-divider {
-  width: 1px;
-  height: 40px;
-  background: rgba(255,255,255,0.12);
-  flex-shrink: 0;
-}
-
-@media (max-width: 480px) {
-  .p10-hero-stats {
-    gap: var(--space-md);
-  }
-  .p10-hero-stat-num {
-    font-size: 2rem;
-  }
+@keyframes p10-float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(6px); }
 }
 
 /* ── Workflow Section ── */
@@ -1708,9 +1639,6 @@ ggsave(
 }
 
 @media (max-width: 480px) {
-  .p10-hero-content {
-    padding: 0 var(--space-sm);
-  }
   .p10-format-tabs {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1738,39 +1666,22 @@ ggsave(
      Section 1: Hero
      ══════════════════════════════════════════════════════ -->
 <section class="section-dark section-hero-full p10-hero" id="p10-hero">
-  <div class="p10-hero-content">
-    <p class="hero-eyebrow" id="p10-eyebrow">Module 01 / Page 10</p>
-    <h1 class="page-hero-title" style="color:var(--text-on-dark);" id="p10-hero-title">工作流与导出</h1>
-    <p class="page-hero-sub" id="p10-hero-sub">Research Workflow &amp; Export</p>
-    <p class="p10-hero-tagline" id="p10-hero-tagline">
+  <div class="flex-col-center" style="gap:var(--space-md);text-align:center;position:relative;z-index:1;">
+    <p class="hero-eyebrow" id="p10-eyebrow" style="opacity:0;">Module 01 / Page 10</p>
+    <h1 class="page-hero-title" style="color:var(--text-on-dark);opacity:0;" id="p10-hero-title">工作流与导出</h1>
+    <p class="page-hero-sub" id="p10-hero-sub" style="opacity:0;">Research Workflow &amp; Export</p>
+    <p class="p10-hero-tagline" id="p10-hero-tagline" style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;margin-top:var(--space-sm);opacity:0;">
       从原始数据到顶刊图表，掌握每一步的决策与规范——<br>
       让你的图表在第一次提交时就符合期刊要求。
     </p>
-    <!-- Hero stats -->
-    <div class="p10-hero-stats" id="p10-hero-stats">
-      <div class="p10-hero-stat">
-        <span class="p10-hero-stat-num" data-target="6">6</span>
-        <span class="p10-hero-stat-label">核心步骤</span>
-      </div>
-      <div class="p10-hero-stat-divider"></div>
-      <div class="p10-hero-stat">
-        <span class="p10-hero-stat-num" data-target="5">5</span>
-        <span class="p10-hero-stat-label">导出格式</span>
-      </div>
-      <div class="p10-hero-stat-divider"></div>
-      <div class="p10-hero-stat">
-        <span class="p10-hero-stat-num" data-target="6">6</span>
-        <span class="p10-hero-stat-label">期刊速查</span>
-      </div>
-    </div>
-    <nav class="hero-quicknav" id="p10-quicknav">
+    <nav class="hero-quicknav" id="p10-quicknav" style="opacity:0;">
       <button class="hero-quicknav__item" data-target="#p10-workflow">工作流六步</button>
       <button class="hero-quicknav__item" data-target="#p10-format">格式对比</button>
       <button class="hero-quicknav__item" data-target="#p10-dpi">DPI 对比</button>
       <button class="hero-quicknav__item" data-target="#p10-calc">分辨率计算器</button>
       <button class="hero-quicknav__item" data-target="#p10-journal">期刊速查</button>
     </nav>
-    <p class="p10-scroll-hint" id="p10-scroll-hint">↓ 向下探索</p>
+    <div class="p10-scroll-hint" id="p10-scroll-hint" style="opacity:0;">↓ 向下探索</div>
   </div>
 </section>
 
@@ -1787,7 +1698,7 @@ ggsave(
     <!-- 左侧：步骤指示器 -->
     <div class="p10-wf-left" id="p10-wf-left">
       <div class="p10-wf-step-indicator" id="p10-wf-indicator">
-        ${l}
+        ${c}
       </div>
     </div>
     <!-- 右侧：面板 -->
@@ -1812,7 +1723,7 @@ ggsave(
   </div>
   <!-- 内容面板 -->
   <div id="p10-format-panels">
-    ${r}
+    ${l}
   </div>
 </section>
 
@@ -2026,14 +1937,14 @@ ggsave(
 </section>
 
 </div>
-`}function it(){document.querySelectorAll("#p10-quicknav .hero-quicknav__item").forEach(o=>{o.addEventListener("click",()=>{const a=document.querySelector(o.dataset.target);a&&a.scrollIntoView({behavior:"smooth",block:"start"})})});const l=window.gsap;l&&(l.fromTo("#p10-hero .hero-eyebrow",{opacity:0,y:20},{opacity:1,y:0,duration:.7,delay:.1,ease:"power3.out"}),l.fromTo("#p10-hero .page-hero-title",{opacity:0,y:30},{opacity:1,y:0,duration:.8,delay:.25,ease:"power3.out"}),l.fromTo("#p10-hero .page-hero-sub",{opacity:0,y:20},{opacity:1,y:0,duration:.7,delay:.4,ease:"power3.out"}),l.fromTo("#p10-hero .p10-hero-tagline",{opacity:0,y:20},{opacity:1,y:0,duration:.7,delay:.55,ease:"power3.out"}),l.fromTo("#p10-hero-stats",{opacity:0,y:20},{opacity:1,y:0,duration:.7,delay:.65,ease:"power3.out",onComplete:()=>{document.querySelectorAll(".p10-hero-stat-num").forEach(o=>{const a=parseInt(o.dataset.target)||0;let r=0;const i=()=>{r++,o.textContent=r,r<a&&requestAnimationFrame(i)};a>0&&requestAnimationFrame(i)})}}),l.fromTo("#p10-quicknav",{opacity:0,y:20},{opacity:1,y:0,duration:.7,delay:.72,ease:"power3.out"}),l.fromTo("#p10-hero .p10-scroll-hint",{opacity:0,y:20},{opacity:1,y:0,duration:.6,delay:.9,ease:"power3.out"})),document.getElementById("p10-prev-btn")?.addEventListener("click",()=>F("m1-p9")),document.getElementById("p10-next-btn")?.addEventListener("click",()=>F("m2-p1")),R(),q(),V(),Y(),O(),l&&window.ScrollTrigger&&window.innerWidth>=769&&["#p10-workflow","#p10-format","#p10-dpi","#p10-calc","#p10-journal"].forEach(a=>{const r=document.querySelector(a);if(!r)return;const i=r.querySelectorAll(".p10-section-eyebrow, .p10-section-title, .p10-section-sub");i.length&&l.from(i,{scrollTrigger:{trigger:r,start:"top 85%"},opacity:0,y:40,duration:.8,stagger:.12,ease:"power3.out"})})}function ot(){L(),B&&(window.removeEventListener("scroll",B),B=null),P.forEach(l=>{try{l.destroy()}catch{}}),P=[]}function R(){const l=window.innerWidth<=900;E.forEach((o,a)=>{const r=document.getElementById(`p10-wf-code-${a}`);if(r)try{const i=_(r,{code:o.code,language:"r",readOnly:!0});i&&i.destroy&&P.push(i)}catch{r.innerHTML=`<pre style="background:#1a1a2e;padding:16px;border-radius:8px;font-family:var(--font-code);font-size:0.78rem;color:#a1a1a6;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:break-word;overflow:hidden;">${o.code.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}</pre>`}}),l?W():H()}function W(){const l=document.querySelectorAll(".p10-wf-dot"),o=document.querySelectorAll(".p10-wf-panel");function a(r){l.forEach((i,t)=>i.classList.toggle("active",t===r)),o.forEach((i,t)=>{i.style.display=t===r?"flex":"none"})}a(0),o.forEach((r,i)=>{i>0&&(r.style.display="none")}),l.forEach((r,i)=>{r.addEventListener("click",()=>a(i))})}function H(){const l=document.getElementById("p10-wf-body"),o=document.getElementById("p10-wf-left");if(!l||!o)return;let a=0;const r=E.length;function i(m){a=m,document.querySelectorAll(".p10-wf-dot").forEach((p,e)=>{p.classList.toggle("active",e===m)}),document.querySelectorAll(".p10-wf-connector").forEach((p,e)=>{p.classList.toggle("passed",e<m)})}const t=l.offsetHeight,n=o.offsetHeight,f=Math.max(0,t-n);let u=!1;function d(){u||(u=!0,requestAnimationFrame(()=>{const m=Math.max(0,-l.getBoundingClientRect().top);o.style.transform=`translateY(${Math.min(m,f)}px)`;const p=Math.min(r-1,Math.max(0,Math.floor(m/window.innerHeight)));p!==a&&i(p),u=!1}))}B=d,window.addEventListener("scroll",d,{passive:!0}),d(),document.querySelectorAll(".p10-wf-dot").forEach((m,p)=>{m.addEventListener("click",()=>{const e=document.getElementById(`p10-wf-panel-${p}`);e&&e.scrollIntoView({behavior:"smooth",block:"start"})})})}function q(){const l=document.querySelectorAll(".p10-format-tab"),o=document.querySelectorAll(".p10-format-panel");l.forEach(a=>{a.addEventListener("click",()=>{const r=parseInt(a.dataset.fmt);l.forEach((i,t)=>i.classList.toggle("active",t===r)),o.forEach((i,t)=>i.classList.toggle("active",t===r)),requestAnimationFrame(()=>$(r))})}),$(0),S.forEach((a,r)=>{const i=document.getElementById(`p10-fmt-code-${r}`);if(i)try{const t=_(i,{code:a.code,language:"r",readOnly:!0});t&&t.destroy&&P.push(t)}catch{i.innerHTML=`<pre style="background:#0d1117;padding:14px;border-radius:8px;font-size:0.75rem;color:#a1a1a6;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:break-word;overflow:hidden;">${a.code.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}</pre>`}})}function $(l){const o=S[l],a=document.getElementById(`p10-fmt-svg-${l}`);!a||a._rendered||(a._rendered=!0,o.type==="vector"?G(a,o):J(a,o))}function G(l,o){const a=N(l).append("svg").attr("viewBox","0 0 420 230").attr("preserveAspectRatio","xMidYMid meet").style("width","100%").style("height","100%");a.append("rect").attr("width",420).attr("height",230).attr("fill","#0d1117"),a.append("text").attr("x",210).attr("y",22).attr("text-anchor","middle").attr("fill",o.color).attr("font-size",12).attr("font-family","JetBrains Mono, monospace").text("矢量格式：无限缩放不失真"),a.append("line").attr("x1",210).attr("y1",34).attr("x2",210).attr("y2",210).attr("stroke","#2a2a3a").attr("stroke-width",1).attr("stroke-dasharray","4,3");const r=[0,1,2,3,4,5].map(s=>({x:s,y:[2.1,3.8,2.9,4.5,3.2,5.1][s]})),i=z().domain([0,5]).range([32,188]),t=z().domain([0,6]).range([195,46]);a.append("line").attr("x1",32).attr("y1",195).attr("x2",188).attr("y2",195).attr("stroke","#3a3a4a").attr("stroke-width",1),a.append("line").attr("x1",32).attr("y1",46).attr("x2",32).attr("y2",195).attr("stroke","#3a3a4a").attr("stroke-width",1),[1,3,5].forEach(s=>{a.append("line").attr("x1",28).attr("y1",t(s)).attr("x2",32).attr("y2",t(s)).attr("stroke","#3a3a4a").attr("stroke-width",1)});const n=T().x(s=>i(s.x)).y(s=>t(s.y)).curve(A);a.append("path").attr("d",n(r)).attr("fill","none").attr("stroke",o.color).attr("stroke-width",2).attr("stroke-dasharray",function(){return this.getTotalLength()}).attr("stroke-dashoffset",function(){return this.getTotalLength()}).transition().duration(1200).ease(D).attr("stroke-dashoffset",0),r.forEach(s=>{a.append("circle").attr("cx",i(s.x)).attr("cy",t(s.y)).attr("r",0).attr("fill",o.color).attr("stroke","#0d1117").attr("stroke-width",1).transition().delay(1e3).duration(300).attr("r",3.5)}),a.append("text").attr("x",110).attr("y",215).attr("text-anchor","middle").attr("fill","#555").attr("font-size",10).attr("font-family","JetBrains Mono, monospace").text("100% 原始大小"),a.append("rect").attr("x",222).attr("y",38).attr("width",174).attr("height",162).attr("fill","#111520").attr("rx",4);const u=r.slice(1,5),d=z().domain([1,4]).range([234,382]),m=z().domain([2,6]).range([185,50]);a.append("line").attr("x1",234).attr("y1",185).attr("x2",382).attr("y2",185).attr("stroke","#3a3a4a").attr("stroke-width",.8),a.append("line").attr("x1",234).attr("y1",50).attr("x2",234).attr("y2",185).attr("stroke","#3a3a4a").attr("stroke-width",.8);const p=T().x(s=>d(s.x)).y(s=>m(s.y)).curve(A);a.append("path").attr("d",p(u)).attr("fill","none").attr("stroke",o.color).attr("stroke-width",2.8).attr("stroke-dasharray",function(){return this.getTotalLength()}).attr("stroke-dashoffset",function(){return this.getTotalLength()}).transition().delay(300).duration(1e3).ease(D).attr("stroke-dashoffset",0),u.forEach(s=>{a.append("circle").attr("cx",d(s.x)).attr("cy",m(s.y)).attr("r",0).attr("fill",o.color).attr("stroke","#0d1117").attr("stroke-width",1.5).transition().delay(1200).duration(300).attr("r",6)}),a.append("rect").attr("x",222).attr("y",38).attr("width",48).attr("height",18).attr("fill",o.color).attr("rx",3),a.append("text").attr("x",246).attr("y",51).attr("text-anchor","middle").attr("fill","#000").attr("font-size",10).attr("font-weight","bold").attr("font-family","JetBrains Mono, monospace").text("×4 zoom"),a.append("text").attr("x",309).attr("y",215).attr("text-anchor","middle").attr("fill",o.color).attr("font-size",10).attr("font-family","JetBrains Mono, monospace").text("依然清晰 ✓")}function J(l,o){const a=document.createElement("canvas"),r=420,i=230;a.width=r,a.height=i,a.style.width="100%",a.style.height="100%",l.appendChild(a);const t=a.getContext("2d");t.roundRect||(t.roundRect=function(c,v,y,x,w){this.beginPath(),this.moveTo(c+w,v),this.arcTo(c+y,v,c+y,v+x,w),this.arcTo(c+y,v+x,c,v+x,w),this.arcTo(c,v+x,c,v,w),this.arcTo(c,v,c+y,v,w),this.closePath()}),t.fillStyle="#0d1117",t.fillRect(0,0,r,i),t.fillStyle=o.color,t.font='12px "JetBrains Mono", monospace',t.textAlign="center",t.fillText("位图格式：放大后像素化",r/2,22),t.strokeStyle="#2a2a3a",t.setLineDash([4,3]),t.lineWidth=1,t.beginPath(),t.moveTo(210,34),t.lineTo(210,210),t.stroke(),t.setLineDash([]);const n=10,f=36;t.strokeStyle="#3a3a4a",t.lineWidth=1,t.beginPath(),t.moveTo(36+n,36+f),t.lineTo(36+n,158+f),t.stroke(),t.beginPath(),t.moveTo(36+n,158+f),t.lineTo(168+n,158+f),t.stroke();const u=[[36,120],[58,88],[80,108],[102,68],[124,84],[146,54]].map(([c,v])=>[c+n,v+f]);t.strokeStyle=o.color,t.lineWidth=2,t.beginPath(),u.forEach(([c,v],y)=>y===0?t.moveTo(c,v):t.lineTo(c,v)),t.stroke(),u.forEach(([c,v])=>{t.beginPath(),t.arc(c,v,3,0,Math.PI*2),t.fillStyle=o.color,t.fill(),t.strokeStyle="#0d1117",t.lineWidth=1,t.stroke()}),t.fillStyle="#555",t.font='10px "JetBrains Mono", monospace',t.textAlign="center",t.fillText("100% 原始大小",107,215),t.fillStyle="#111520",t.beginPath(),t.roundRect(222,38,174,162,4),t.fill();const d=13,m=228,p=48,e="#0d1117",s=o.color,g=o.color+"88",h=o.color+"33",b=[[e,e,e,g,s,s,g,e,e,e,e,e],[e,e,g,s,s,g,e,e,e,e,e,e],[e,g,s,s,g,e,e,e,e,e,e,e],[g,s,s,h,e,e,e,e,e,e,e,e],[s,s,h,e,e,e,g,s,g,e,e,e],[s,h,e,e,e,g,s,s,g,e,e,e],[h,e,e,e,g,s,s,h,e,e,e,e],[e,e,e,g,s,s,h,e,e,e,e,e],[e,e,g,s,h,e,e,e,g,s,g,e],[e,g,s,h,e,e,e,e,g,s,g,e]];for(let c=0;c<b.length;c++)for(let v=0;v<b[c].length;v++)t.fillStyle=b[c][v],t.fillRect(m+v*d,p+c*d,d-1,d-1);t.strokeStyle="rgba(255,255,255,0.05)",t.lineWidth=.5;for(let c=0;c<=12;c++)t.beginPath(),t.moveTo(m+c*d,p),t.lineTo(m+c*d,p+b.length*d),t.stroke();for(let c=0;c<=b.length;c++)t.beginPath(),t.moveTo(m,p+c*d),t.lineTo(m+12*d,p+c*d),t.stroke();t.fillStyle=o.color,t.beginPath(),t.roundRect(222,38,48,18,3),t.fill(),t.fillStyle="#000",t.font='bold 10px "JetBrains Mono", monospace',t.textAlign="center",t.fillText("×4 zoom",246,51),t.fillStyle="#E07A7A",t.font='10px "JetBrains Mono", monospace',t.textAlign="center",t.fillText("像素化 ✗",309,215)}function V(){const l=[72,150,300,600],o={72:"屏幕显示（模糊）",150:"一般印刷",300:"期刊标准 ✓",600:"顶刊线条图 ✓"};function a(n,f){n.width=300,n.height=300;const d=n.getContext("2d");d.fillStyle="#ffffff",d.fillRect(0,0,300,300);const m=document.createElement("canvas"),p=Math.max(8,Math.round(300*f/300/4));m.width=p,m.height=p;const e=m.getContext("2d");e.fillStyle="#ffffff",e.fillRect(0,0,p,p),e.beginPath(),e.arc(p*.35,p*.4,p*.22,0,Math.PI*2),e.fillStyle="#7EC8E3",e.fill(),e.lineWidth=Math.max(.5,p*.02),e.strokeStyle="#1d1d1f",e.stroke(),e.beginPath(),e.moveTo(p*.1,p*.75),e.lineTo(p*.6,p*.55),e.lineTo(p*.9,p*.7),e.strokeStyle="#95D5B2",e.lineWidth=Math.max(.5,p*.025),e.stroke(),e.font=`${Math.max(4,p*.15)}px Arial`,e.fillStyle="#1d1d1f",e.fillText("ABC",p*.55,p*.4),d.imageSmoothingEnabled=f>=300,d.drawImage(m,0,0,300,300),d.fillStyle="#1d1d1f",d.font="bold 20px Inter, sans-serif",d.textAlign="center",d.fillText(`${f} DPI`,300/2,284)}l.forEach(n=>{const f=document.getElementById(`p10-dpi-canvas-${n}`);f&&a(f,n)});const r=document.querySelectorAll(".p10-dpi-mobile-tab"),i=document.getElementById("p10-dpi-mobile-canvas"),t=document.getElementById("p10-dpi-mobile-label");i&&(a(i,72),t&&(t.textContent=`72 DPI — ${o[72]}`)),r.forEach(n=>{n.addEventListener("click",()=>{const f=parseInt(n.dataset.dpi);r.forEach(u=>u.classList.toggle("active",u.dataset.dpi==f)),i&&a(i,f),t&&(t.textContent=`${f} DPI — ${o[f]||""}`)})})}function Y(){const l=document.getElementById("p10-calc-width"),o=document.getElementById("p10-calc-height"),a=document.getElementById("p10-calc-dpi"),r=document.getElementById("p10-calc-format"),i=document.getElementById("p10-res-w"),t=document.getElementById("p10-res-h"),n=document.getElementById("p10-res-mp"),f=document.getElementById("p10-res-size"),u=document.getElementById("p10-calc-code"),d=document.getElementById("p10-calc-warning"),m=document.getElementById("p10-calc-warning-text");if(!l||!i)return;function p(){const e=parseFloat(l.value)||8.9,s=parseFloat(o.value)||6,g=parseInt(a.value)||300,h=r.value,b=Math.round(e/2.54*g),c=Math.round(s/2.54*g),v=b*c,y=(v/1e6).toFixed(2);let x=0;h==="png"?x=v*.6:h==="tiff"?x=v*1.2:h==="jpeg"&&(x=v*.4);const w=x>0?(x/1024/1024).toFixed(1):"—";let k="";h==="png"?k="无损压缩，适合网页与演示文稿":h==="tiff"?k="LZW 无损压缩，期刊提交首选":h==="jpeg"?k="有损压缩，不建议用于期刊投稿":k="矢量格式，ggsave 生成 PDF 文件",i&&(i.innerHTML=`${b.toLocaleString()} <span class="p10-calc-result-unit">px</span>`),t&&(t.innerHTML=`${c.toLocaleString()} <span class="p10-calc-result-unit">px</span>`),n&&(n.innerHTML=`${y} <span class="p10-calc-result-unit">MP</span>`),f&&(f.innerHTML=x>0?`<span class="p10-calc-result-value">${w} MB</span><p class="p10-calc-result-note">${k}</p>`:`<span class="p10-calc-result-value">矢量</span><p class="p10-calc-result-note">${k}</p>`);const I=h==="svg"?"pdf":h,M=I==="tiff"?`,
-  compression = "lzw"`:"";if(u&&(u.textContent=`ggsave("figure.${I}",
+`}function it(){document.querySelectorAll("#p10-quicknav .hero-quicknav__item").forEach(o=>{o.addEventListener("click",()=>{const a=document.querySelector(o.dataset.target);a&&a.scrollIntoView({behavior:"smooth",block:"start"})})});const c=window.gsap;if(c){const o=c.timeline({delay:.2});o.fromTo("#p10-hero .hero-eyebrow",{opacity:0,y:20},{opacity:1,y:0,duration:.6,ease:"power3.out"},0),o.fromTo("#p10-hero .page-hero-title",{y:30,opacity:0},{opacity:1,y:0,duration:.8,ease:"power3.out"},.15),o.fromTo("#p10-hero .page-hero-sub",{y:20,opacity:0},{opacity:.5,y:0,duration:.8,ease:"power3.out"},.3),o.fromTo("#p10-hero .p10-hero-tagline",{y:20,opacity:0},{opacity:1,y:0,duration:.8,ease:"power3.out"},.45),o.fromTo("#p10-hero #p10-quicknav",{y:20,opacity:0},{opacity:1,y:0,duration:.8,ease:"power3.out"},.6),o.fromTo("#p10-hero .p10-scroll-hint",{opacity:0,y:15},{opacity:1,y:0,duration:.6,ease:"power3.out"},.75)}document.getElementById("p10-prev-btn")?.addEventListener("click",()=>F("m1-p9")),document.getElementById("p10-next-btn")?.addEventListener("click",()=>F("m2-p1")),R(),G(),V(),Y(),O(),c&&window.ScrollTrigger&&window.innerWidth>=769&&["#p10-workflow","#p10-format","#p10-dpi","#p10-calc","#p10-journal"].forEach(a=>{const l=document.querySelector(a);if(!l)return;const i=l.querySelectorAll(".p10-section-eyebrow, .p10-section-title, .p10-section-sub");i.length&&c.from(i,{scrollTrigger:{trigger:l,start:"top 85%"},opacity:0,y:40,duration:.8,stagger:.12,ease:"power3.out"})})}function ot(){L(),B&&(window.removeEventListener("scroll",B),B=null),P.forEach(c=>{try{c.destroy()}catch{}}),P=[]}function R(){const c=window.innerWidth<=900;E.forEach((o,a)=>{const l=document.getElementById(`p10-wf-code-${a}`);if(l)try{const i=_(l,{code:o.code,language:"r",readOnly:!0});i&&i.destroy&&P.push(i)}catch{l.innerHTML=`<pre style="background:#1a1a2e;padding:16px;border-radius:8px;font-family:var(--font-code);font-size:0.78rem;color:#a1a1a6;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:break-word;overflow:hidden;">${o.code.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}</pre>`}}),c?W():H()}function W(){const c=document.querySelectorAll(".p10-wf-dot"),o=document.querySelectorAll(".p10-wf-panel");function a(l){c.forEach((i,t)=>i.classList.toggle("active",t===l)),o.forEach((i,t)=>{i.style.display=t===l?"flex":"none"})}a(0),o.forEach((l,i)=>{i>0&&(l.style.display="none")}),c.forEach((l,i)=>{l.addEventListener("click",()=>a(i))})}function H(){const c=document.getElementById("p10-wf-body"),o=document.getElementById("p10-wf-left");if(!c||!o)return;let a=0;const l=E.length;function i(f){a=f,document.querySelectorAll(".p10-wf-dot").forEach((n,e)=>{n.classList.toggle("active",e===f)}),document.querySelectorAll(".p10-wf-connector").forEach((n,e)=>{n.classList.toggle("passed",e<f)})}const t=c.offsetHeight,s=o.offsetHeight,m=Math.max(0,t-s);let u=!1;function d(){u||(u=!0,requestAnimationFrame(()=>{const f=Math.max(0,-c.getBoundingClientRect().top);o.style.transform=`translateY(${Math.min(f,m)}px)`;const n=Math.min(l-1,Math.max(0,Math.floor(f/window.innerHeight)));n!==a&&i(n),u=!1}))}B=d,window.addEventListener("scroll",d,{passive:!0}),d(),document.querySelectorAll(".p10-wf-dot").forEach((f,n)=>{f.addEventListener("click",()=>{const e=document.getElementById(`p10-wf-panel-${n}`);e&&e.scrollIntoView({behavior:"smooth",block:"start"})})})}function G(){const c=document.querySelectorAll(".p10-format-tab"),o=document.querySelectorAll(".p10-format-panel");c.forEach(a=>{a.addEventListener("click",()=>{const l=parseInt(a.dataset.fmt);c.forEach((i,t)=>i.classList.toggle("active",t===l)),o.forEach((i,t)=>i.classList.toggle("active",t===l)),requestAnimationFrame(()=>$(l))})}),$(0),S.forEach((a,l)=>{const i=document.getElementById(`p10-fmt-code-${l}`);if(i)try{const t=_(i,{code:a.code,language:"r",readOnly:!0});t&&t.destroy&&P.push(t)}catch{i.innerHTML=`<pre style="background:#0d1117;padding:14px;border-radius:8px;font-size:0.75rem;color:#a1a1a6;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:break-word;overflow:hidden;">${a.code.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}</pre>`}})}function $(c){const o=S[c],a=document.getElementById(`p10-fmt-svg-${c}`);!a||a._rendered||(a._rendered=!0,o.type==="vector"?q(a,o):J(a,o))}function q(c,o){const a=N(c).append("svg").attr("viewBox","0 0 420 230").attr("preserveAspectRatio","xMidYMid meet").style("width","100%").style("height","100%");a.append("rect").attr("width",420).attr("height",230).attr("fill","#0d1117"),a.append("text").attr("x",210).attr("y",22).attr("text-anchor","middle").attr("fill",o.color).attr("font-size",12).attr("font-family","JetBrains Mono, monospace").text("矢量格式：无限缩放不失真"),a.append("line").attr("x1",210).attr("y1",34).attr("x2",210).attr("y2",210).attr("stroke","#2a2a3a").attr("stroke-width",1).attr("stroke-dasharray","4,3");const l=[0,1,2,3,4,5].map(r=>({x:r,y:[2.1,3.8,2.9,4.5,3.2,5.1][r]})),i=z().domain([0,5]).range([32,188]),t=z().domain([0,6]).range([195,46]);a.append("line").attr("x1",32).attr("y1",195).attr("x2",188).attr("y2",195).attr("stroke","#3a3a4a").attr("stroke-width",1),a.append("line").attr("x1",32).attr("y1",46).attr("x2",32).attr("y2",195).attr("stroke","#3a3a4a").attr("stroke-width",1),[1,3,5].forEach(r=>{a.append("line").attr("x1",28).attr("y1",t(r)).attr("x2",32).attr("y2",t(r)).attr("stroke","#3a3a4a").attr("stroke-width",1)});const s=T().x(r=>i(r.x)).y(r=>t(r.y)).curve(A);a.append("path").attr("d",s(l)).attr("fill","none").attr("stroke",o.color).attr("stroke-width",2).attr("stroke-dasharray",function(){return this.getTotalLength()}).attr("stroke-dashoffset",function(){return this.getTotalLength()}).transition().duration(1200).ease(D).attr("stroke-dashoffset",0),l.forEach(r=>{a.append("circle").attr("cx",i(r.x)).attr("cy",t(r.y)).attr("r",0).attr("fill",o.color).attr("stroke","#0d1117").attr("stroke-width",1).transition().delay(1e3).duration(300).attr("r",3.5)}),a.append("text").attr("x",110).attr("y",215).attr("text-anchor","middle").attr("fill","#555").attr("font-size",10).attr("font-family","JetBrains Mono, monospace").text("100% 原始大小"),a.append("rect").attr("x",222).attr("y",38).attr("width",174).attr("height",162).attr("fill","#111520").attr("rx",4);const u=l.slice(1,5),d=z().domain([1,4]).range([234,382]),f=z().domain([2,6]).range([185,50]);a.append("line").attr("x1",234).attr("y1",185).attr("x2",382).attr("y2",185).attr("stroke","#3a3a4a").attr("stroke-width",.8),a.append("line").attr("x1",234).attr("y1",50).attr("x2",234).attr("y2",185).attr("stroke","#3a3a4a").attr("stroke-width",.8);const n=T().x(r=>d(r.x)).y(r=>f(r.y)).curve(A);a.append("path").attr("d",n(u)).attr("fill","none").attr("stroke",o.color).attr("stroke-width",2.8).attr("stroke-dasharray",function(){return this.getTotalLength()}).attr("stroke-dashoffset",function(){return this.getTotalLength()}).transition().delay(300).duration(1e3).ease(D).attr("stroke-dashoffset",0),u.forEach(r=>{a.append("circle").attr("cx",d(r.x)).attr("cy",f(r.y)).attr("r",0).attr("fill",o.color).attr("stroke","#0d1117").attr("stroke-width",1.5).transition().delay(1200).duration(300).attr("r",6)}),a.append("rect").attr("x",222).attr("y",38).attr("width",48).attr("height",18).attr("fill",o.color).attr("rx",3),a.append("text").attr("x",246).attr("y",51).attr("text-anchor","middle").attr("fill","#000").attr("font-size",10).attr("font-weight","bold").attr("font-family","JetBrains Mono, monospace").text("×4 zoom"),a.append("text").attr("x",309).attr("y",215).attr("text-anchor","middle").attr("fill",o.color).attr("font-size",10).attr("font-family","JetBrains Mono, monospace").text("依然清晰 ✓")}function J(c,o){const a=document.createElement("canvas"),l=420,i=230;a.width=l,a.height=i,a.style.width="100%",a.style.height="100%",c.appendChild(a);const t=a.getContext("2d");t.roundRect||(t.roundRect=function(p,v,y,x,w){this.beginPath(),this.moveTo(p+w,v),this.arcTo(p+y,v,p+y,v+x,w),this.arcTo(p+y,v+x,p,v+x,w),this.arcTo(p,v+x,p,v,w),this.arcTo(p,v,p+y,v,w),this.closePath()}),t.fillStyle="#0d1117",t.fillRect(0,0,l,i),t.fillStyle=o.color,t.font='12px "JetBrains Mono", monospace',t.textAlign="center",t.fillText("位图格式：放大后像素化",l/2,22),t.strokeStyle="#2a2a3a",t.setLineDash([4,3]),t.lineWidth=1,t.beginPath(),t.moveTo(210,34),t.lineTo(210,210),t.stroke(),t.setLineDash([]);const s=10,m=36;t.strokeStyle="#3a3a4a",t.lineWidth=1,t.beginPath(),t.moveTo(36+s,36+m),t.lineTo(36+s,158+m),t.stroke(),t.beginPath(),t.moveTo(36+s,158+m),t.lineTo(168+s,158+m),t.stroke();const u=[[36,120],[58,88],[80,108],[102,68],[124,84],[146,54]].map(([p,v])=>[p+s,v+m]);t.strokeStyle=o.color,t.lineWidth=2,t.beginPath(),u.forEach(([p,v],y)=>y===0?t.moveTo(p,v):t.lineTo(p,v)),t.stroke(),u.forEach(([p,v])=>{t.beginPath(),t.arc(p,v,3,0,Math.PI*2),t.fillStyle=o.color,t.fill(),t.strokeStyle="#0d1117",t.lineWidth=1,t.stroke()}),t.fillStyle="#555",t.font='10px "JetBrains Mono", monospace',t.textAlign="center",t.fillText("100% 原始大小",107,215),t.fillStyle="#111520",t.beginPath(),t.roundRect(222,38,174,162,4),t.fill();const d=13,f=228,n=48,e="#0d1117",r=o.color,g=o.color+"88",h=o.color+"33",b=[[e,e,e,g,r,r,g,e,e,e,e,e],[e,e,g,r,r,g,e,e,e,e,e,e],[e,g,r,r,g,e,e,e,e,e,e,e],[g,r,r,h,e,e,e,e,e,e,e,e],[r,r,h,e,e,e,g,r,g,e,e,e],[r,h,e,e,e,g,r,r,g,e,e,e],[h,e,e,e,g,r,r,h,e,e,e,e],[e,e,e,g,r,r,h,e,e,e,e,e],[e,e,g,r,h,e,e,e,g,r,g,e],[e,g,r,h,e,e,e,e,g,r,g,e]];for(let p=0;p<b.length;p++)for(let v=0;v<b[p].length;v++)t.fillStyle=b[p][v],t.fillRect(f+v*d,n+p*d,d-1,d-1);t.strokeStyle="rgba(255,255,255,0.05)",t.lineWidth=.5;for(let p=0;p<=12;p++)t.beginPath(),t.moveTo(f+p*d,n),t.lineTo(f+p*d,n+b.length*d),t.stroke();for(let p=0;p<=b.length;p++)t.beginPath(),t.moveTo(f,n+p*d),t.lineTo(f+12*d,n+p*d),t.stroke();t.fillStyle=o.color,t.beginPath(),t.roundRect(222,38,48,18,3),t.fill(),t.fillStyle="#000",t.font='bold 10px "JetBrains Mono", monospace',t.textAlign="center",t.fillText("×4 zoom",246,51),t.fillStyle="#E07A7A",t.font='10px "JetBrains Mono", monospace',t.textAlign="center",t.fillText("像素化 ✗",309,215)}function V(){const c=[72,150,300,600],o={72:"屏幕显示（模糊）",150:"一般印刷",300:"期刊标准 ✓",600:"顶刊线条图 ✓"};function a(s,m){s.width=300,s.height=300;const d=s.getContext("2d");d.fillStyle="#ffffff",d.fillRect(0,0,300,300);const f=document.createElement("canvas"),n=Math.max(8,Math.round(300*m/300/4));f.width=n,f.height=n;const e=f.getContext("2d");e.fillStyle="#ffffff",e.fillRect(0,0,n,n),e.beginPath(),e.arc(n*.35,n*.4,n*.22,0,Math.PI*2),e.fillStyle="#7EC8E3",e.fill(),e.lineWidth=Math.max(.5,n*.02),e.strokeStyle="#1d1d1f",e.stroke(),e.beginPath(),e.moveTo(n*.1,n*.75),e.lineTo(n*.6,n*.55),e.lineTo(n*.9,n*.7),e.strokeStyle="#95D5B2",e.lineWidth=Math.max(.5,n*.025),e.stroke(),e.font=`${Math.max(4,n*.15)}px Arial`,e.fillStyle="#1d1d1f",e.fillText("ABC",n*.55,n*.4),d.imageSmoothingEnabled=m>=300,d.drawImage(f,0,0,300,300),d.fillStyle="#1d1d1f",d.font="bold 20px Inter, sans-serif",d.textAlign="center",d.fillText(`${m} DPI`,300/2,284)}c.forEach(s=>{const m=document.getElementById(`p10-dpi-canvas-${s}`);m&&a(m,s)});const l=document.querySelectorAll(".p10-dpi-mobile-tab"),i=document.getElementById("p10-dpi-mobile-canvas"),t=document.getElementById("p10-dpi-mobile-label");i&&(a(i,72),t&&(t.textContent=`72 DPI — ${o[72]}`)),l.forEach(s=>{s.addEventListener("click",()=>{const m=parseInt(s.dataset.dpi);l.forEach(u=>u.classList.toggle("active",u.dataset.dpi==m)),i&&a(i,m),t&&(t.textContent=`${m} DPI — ${o[m]||""}`)})})}function Y(){const c=document.getElementById("p10-calc-width"),o=document.getElementById("p10-calc-height"),a=document.getElementById("p10-calc-dpi"),l=document.getElementById("p10-calc-format"),i=document.getElementById("p10-res-w"),t=document.getElementById("p10-res-h"),s=document.getElementById("p10-res-mp"),m=document.getElementById("p10-res-size"),u=document.getElementById("p10-calc-code"),d=document.getElementById("p10-calc-warning"),f=document.getElementById("p10-calc-warning-text");if(!c||!i)return;function n(){const e=parseFloat(c.value)||8.9,r=parseFloat(o.value)||6,g=parseInt(a.value)||300,h=l.value,b=Math.round(e/2.54*g),p=Math.round(r/2.54*g),v=b*p,y=(v/1e6).toFixed(2);let x=0;h==="png"?x=v*.6:h==="tiff"?x=v*1.2:h==="jpeg"&&(x=v*.4);const w=x>0?(x/1024/1024).toFixed(1):"—";let k="";h==="png"?k="无损压缩，适合网页与演示文稿":h==="tiff"?k="LZW 无损压缩，期刊提交首选":h==="jpeg"?k="有损压缩，不建议用于期刊投稿":k="矢量格式，ggsave 生成 PDF 文件",i&&(i.innerHTML=`${b.toLocaleString()} <span class="p10-calc-result-unit">px</span>`),t&&(t.innerHTML=`${p.toLocaleString()} <span class="p10-calc-result-unit">px</span>`),s&&(s.innerHTML=`${y} <span class="p10-calc-result-unit">MP</span>`),m&&(m.innerHTML=x>0?`<span class="p10-calc-result-value">${w} MB</span><p class="p10-calc-result-note">${k}</p>`:`<span class="p10-calc-result-value">矢量</span><p class="p10-calc-result-note">${k}</p>`);const j=h==="svg"?"pdf":h,M=j==="tiff"?`,
+  compression = "lzw"`:"";if(u&&(u.textContent=`ggsave("figure.${j}",
   plot   = p,
   width  = ${e},
-  height = ${s},
+  height = ${r},
   units  = "cm",
   dpi    = ${g}${M}
-)`),d){const j=x>10485760;d.classList.toggle("visible",j),m&&j&&(m.textContent=`⚠️ 估算文件大小约 ${w} MB，超过 10MB。建议使用 LZW 压缩（TIFF）或改用矢量格式（PDF/SVG）。`)}}[l,o,a,r].forEach(e=>{e.addEventListener("input",p),e.addEventListener("change",p)}),p()}function O(){const l=document.getElementById("p10-journal-select"),o=document.getElementById("p10-journal-result"),a=document.getElementById("p10-journal-card");!l||!o||!a||l.addEventListener("change",()=>{const r=l.value;if(!r){o.classList.remove("visible");return}const i=C.find(n=>n.name===r);if(!i)return;a.innerHTML=`
+)`),d){const I=x>10485760;d.classList.toggle("visible",I),f&&I&&(f.textContent=`⚠️ 估算文件大小约 ${w} MB，超过 10MB。建议使用 LZW 压缩（TIFF）或改用矢量格式（PDF/SVG）。`)}}[c,o,a,l].forEach(e=>{e.addEventListener("input",n),e.addEventListener("change",n)}),n()}function O(){const c=document.getElementById("p10-journal-select"),o=document.getElementById("p10-journal-result"),a=document.getElementById("p10-journal-card");!c||!o||!a||c.addEventListener("change",()=>{const l=c.value;if(!l){o.classList.remove("visible");return}const i=C.find(s=>s.name===l);if(!i)return;a.innerHTML=`
       <div class="p10-journal-card-header">
         <div>
           <div class="p10-journal-card-name">${i.name}</div>
