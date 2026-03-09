@@ -65,6 +65,20 @@
 - [x] m1-p8 R 配色与出版级图表（配色包浏览器列表+预览 + 主题定制器滑块+D3+theme()代码 + ggsave 期刊代码生成器 + patchwork 4 种布局）
 - [x] m1-p9 Python 可视化与数据叙事（matplotlib 层次图解 + seaborn 10 种图表参数面板 + matplotlib vs ggplot2 对照 + annotate Canvas 拖拽 + 叙事 4 种方法动画）
 - [x] m1-p10 科研绘图工作流与导出（6 步粘性时间线 + 格式原理动画 + DPI 对比器 + 分辨率计算器 + 期刊速查）
+      ↳ Debug：window.gsap → import from ScrollAnimations.js（hero invisible fix）；scroll handler → rAF ticking（sticky jitter fix）；countUp zero-guard；hero stats 移至正文 section
+
+## Phase 4.5: M1 审计与统一（Audit & Polish）
+- [x] Hero 统一：所有 10 页使用 flex-col-center wrapper、opacity:0、统一 GSAP timeline
+- [x] P10 删除 hero stats 数字展示（不属于 hero 模板）
+- [x] P08 添加 section-dark class 和 scroll-hint
+- [x] Footer CTA 统一：quote 引号改 CSS、按钮标签改页面标题、P05 onclick→addEventListener
+- [x] CSS 清理：删除 48 行未使用 .m1-section-title 等、P04 语义色变量化
+- [x] 动画统一：6 页补 scroll-hint 动画、P08 subtitle opacity、删除 dead import
+- [x] P10 修复：gsap 从 ScrollAnimations.js 导入（window.gsap 导致 hero 不可见）
+- [x] Git 历史：移除 28 个 commit 的 Co-Authored-By、force push
+- [x] 文档更新：CLAUDE.md / design-spec.md / commands.md / todo.md 同步审计结论
+- [x] P10 debug：三个 p10 专属 fix（window.gsap / rAF ticking / countUp zero guard）在审计过程中识别并修复
+- [x] 规范同步：CLAUDE.md / design-spec.md / commands.md 补充 rAF ticking 模式、countUp 零值保护、Hero 不放统计数字三条新规范
 
 ## Phase 5: 模块二 — AI 辅助科研绘图（m2-p1 ~ m2-p6）
 - [ ] m2-p1 AI 工具全景（D3 决策树选工具 + 工具矩阵可排序筛选 + 传统vsAI 时间对比动画 + 5 个合理应用场景）
@@ -114,9 +128,10 @@
 | Phase 2 组件库 | ✅ 完成 | |
 | Phase 3 首页 | ✅ 完成 | |
 | Phase 4 模块一 | ✅ 10/10 | m1-p1~p10 全部完成 |
+| Phase 4.5 M1 审计 | ✅ 完成 | Hero/Footer/CSS/动画统一 + 文档更新 |
 | Phase 5 模块二 | ⏳ 待开始 | |
 | Phase 6 模块三 | ⏳ 待开始 | |
 | Phase 7 模块四 | ⏳ 待开始 | |
 | Phase 8 收尾 | ⏳ 待开始 | |
 
-**下一步**：`commands.md` Step 5 — m1-p8 R 配色与出版级图表
+**下一步**：`commands.md` Step 8 — m2-p1 AI 工具全景 + m2-p2 Prompt 工程

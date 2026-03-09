@@ -4,7 +4,7 @@
 >
 > 所有页面内容细节见 `content-outline.md`，技术规范见 `CLAUDE.md`，CSS 变量和组件模板见 `design-spec.md`。
 >
-> **当前进度**：Phase 0–3 ✅ | m1-p1 ~ m1-p6 ✅（含 sticky bug fix） | 从 **Step 3（m1-p7）** 开始执行。
+> **当前进度**：Phase 0–4 ✅（M1 全 10 页完成 + 审计统一） | 从 **Step 8（m2-p1）** 开始执行。
 
 ---
 
@@ -34,64 +34,54 @@
 
 ### Hero 版式规范（每页必须统一）
 
-每个页面 Hero 必须包含以下结构，顺序固定：
+每个页面 Hero 必须严格遵循以下结构：
 
 ```html
-<!-- eyebrow：模块编号 / 页码，全英文，font-code 字体，accent 颜色 -->
-<p class="hero-eyebrow">Module 0X / Page 0X</p>
-
-<!-- 主标题：中文，大字号，深色背景下白色 -->
-<h1 class="page-hero-title">页面中文标题</h1>
-
-<!-- 副标题：英文全称，较小字号，text-on-dark-2 -->
-<p class="page-hero-sub">English Subtitle</p>
-
-<!-- tagline：一句话概括，中文，font-body 字体，text-on-dark-2，max-width:520px -->
-<p class="page-hero-tagline">一句话介绍本页核心内容……</p>
-
-<!-- quicknav：本页各 section 快捷跳转，hero-quicknav__item 按钮 -->
-<nav class="hero-quicknav" id="pXX-quicknav">
-  <button class="hero-quicknav__item" data-target="#section-id">按钮文字</button>
-  …
-</nav>
-
-<!-- scroll hint：↓ 向下探索，移动端放在 flex 流内，不用 position:absolute -->
-<p class="scroll-hint">↓ 向下探索</p>
+<section class="section-dark section-hero-full {prefix}-hero" id="{prefix}-hero">
+  <div class="flex-col-center" style="gap:var(--space-md);text-align:center;position:relative;z-index:1;">
+    <p class="hero-eyebrow" style="opacity:0;">Module 0X / Page 0X</p>
+    <h1 class="page-hero-title" style="color:var(--text-on-dark);opacity:0;">页面中文标题</h1>
+    <p class="page-hero-sub" style="opacity:0;">English Subtitle</p>
+    <p class="{prefix}-hero-tagline" style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;margin-top:var(--space-sm);opacity:0;">
+      一句话介绍本页核心内容
+    </p>
+    <nav class="hero-quicknav" id="{prefix}-quicknav" style="opacity:0;">
+      <button class="hero-quicknav__item" data-target="#section-id">按钮文字</button>
+    </nav>
+    <div class="{prefix}-scroll-hint" style="opacity:0;">↓ 向下探索</div>
+  </div>
+</section>
 ```
 
-- `section-hero-full` class：全分辨率 `min-height: 100vh; min-height: 100dvh`
-- Hero 背景：深色 `var(--bg-dark)` + 独特径向光晕（每页不同颜色/位置，CSS keyframe 漂移）
-- GSAP 入场：eyebrow→title→sub→tagline→quicknav 依次 fadeIn，delay 递增 0.15s
-- `.hero-quicknav` 移动端：按钮自动换行，极窄屏（<400px）纵向排列
-- 每页光晕颜色和动画参数必须与其他页面不同，体现独特性
+- 所有元素必须有 `opacity:0` inline style（GSAP fromTo 初始状态）
+- Tagline max-width 统一 **540px**（不是 520px）
+- Quicknav 必须用 `<nav>` 标签，scroll-hint 用 `<div>`，class 带页面前缀
+- Hero 不放统计数字展示（属于正文 section）
+- GSAP 入场用 `gsap.timeline({ delay: 0.2 })`，统一时序（0/0.15/0.3/0.45/0.6/0.75）
+- Subtitle 目标 opacity 为 **0.5**
+- **gsap 必须从 ScrollAnimations.js 导入**，禁止 `window.gsap`
+- 每页光晕颜色和动画参数必须与其他页面不同
 
 ---
 
 ### Footer CTA 规范（每页必须统一）
 
-每个页面结尾必须用全局 `.page-footer-cta` 组件，结构固定：
-
 ```html
 <section class="page-footer-cta">
-  <!-- 页码：当前页/总页数，font-code，accent 颜色 -->
   <p class="page-footer-num">0X / 10</p>
-
-  <!-- 金句：与本页主题强相关的一句话，双引号，font-display，大字号 -->
-  <h2 class="page-footer-quote">"与本页主题相关的一句话。"</h2>
-
-  <!-- 过渡描述：介绍下一页内容，font-body，text-on-dark-2 -->
-  <p class="page-footer-desc">下一页：XXX — 简短描述下一页核心内容</p>
-
-  <!-- 导航按钮：上一页（btn-ghost）+ 下一页（btn-primary）-->
+  <h2 class="page-footer-quote">金句（不含引号，CSS 自动加）</h2>
+  <p class="page-footer-desc">过渡引导文案</p>
   <div class="page-footer-nav">
-    <button class="btn-ghost" id="pXX-prev-btn">← 上一页</button>
-    <button class="btn-primary" id="pXX-next-btn">下一页 →</button>
+    <button class="btn-ghost" id="pXX-prev-btn">← 上一页标题</button>
+    <button class="btn-primary" id="pXX-next-btn">下一页标题 →</button>
   </div>
 </section>
 ```
 
-- 背景 `var(--bg-dark-deep)`，纯黑，与上方 section 形成明显层次
-- 金句必须是**有意义的原创句子**，与页面主题直接相关，不能用通用语
+- 背景 `var(--bg-dark-deep)`，纯黑
+- 金句标签必须 `<h2>`（不是 `<p>`），不含引号符号（CSS `::before`/`::after` 自动添加）
+- 按钮标签使用目标页面标题（如 "← R 配色方案"），**禁止** generic "← 上一页"
+- 按钮导航用 `getElementById` + `addEventListener`，**禁止** `onclick` 属性
 - 按钮顺序：上一页在左（ghost），下一页在右（primary）
 
 ---
@@ -149,9 +139,12 @@
 
 ### GSAP 动画
 - 滚动动画必须用 GSAP ScrollTrigger，不用 CSS-only IntersectionObserver
-- 使用 `ScrollTrigger.matchMedia()` 为移动端设置简化参数（减少 y 偏移、缩短 stagger、移动端不 pin）
-- `destroy()` 必须调用 `ScrollTrigger.getAll().forEach(t => t.kill())`
-- Hero 入场动画：`gsap.fromTo` + delay 依次递增（不用 ScrollTrigger，页面加载即播放）
+- 使用 `ScrollTrigger.matchMedia()` 为移动端设置简化参数
+- `destroy()` 必须调用 `killAll()`（来自 ScrollAnimations.js）
+- Hero 入场动画：`gsap.timeline({ delay: 0.2 })`，统一时序，禁止独立 `gsap.fromTo()`
+- **gsap / ScrollTrigger 必须从 ScrollAnimations.js 导入**，禁止 `window.gsap`（混用导致动画不生效）
+- **scroll 监听器用 rAF ticking 模式**：`let ticking = false` + `requestAnimationFrame()` 包裹，事件加 `{ passive: true }`
+- **不变量在监听器外一次性缓存**（`offsetHeight`、`maxTranslate`），避免每帧 reflow
 
 ---
 
@@ -176,6 +169,8 @@
 - [ ] 所有交互完整可用，**不允许 placeholder**
 - [ ] 控制台零报错（F12 检查）
 - [ ] `destroy()` 能清理所有事件监听器、ScrollTrigger、CodeMirror 实例
+- [ ] scroll 监听器使用 rAF ticking 模式（无直接 DOM 读写在 scroll 回调内）
+- [ ] count-up 动画有零值保护（`data-target="0"` 或 NaN 时不启动 rAF 循环）
 
 **响应式验证（Chrome DevTools）**
 - [ ] 375px（iPhone SE）：无水平滚动条，所有内容可见，文字不溢出

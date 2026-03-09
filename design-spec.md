@@ -40,6 +40,31 @@ window.addEventListener('scroll', updateSticky, { passive: true });
 .step-panel     { height: 100vh; }
 ```
 
+**⚡ 性能优化 — rAF ticking 模式（必须用于生产代码）：**
+
+```js
+// 在 updateSticky() 外层缓存不变量（避免每帧 layout reflow）
+const cachedBodyH  = bodyEl.offsetHeight;
+const cachedLeftH  = leftEl.offsetHeight;
+const maxTranslate = Math.max(0, cachedBodyH - cachedLeftH);
+let ticking = false;
+
+function updateSticky() {
+  if (ticking) return;
+  ticking = true;
+  requestAnimationFrame(() => {
+    const scrolledPast = Math.max(0, -bodyEl.getBoundingClientRect().top);
+    leftEl.style.transform = `translateY(${Math.min(scrolledPast, maxTranslate)}px)`;
+    const stepIdx = Math.min(TOTAL_STEPS - 1, Math.max(0, Math.floor(scrolledPast / window.innerHeight)));
+    if (stepIdx !== state.currentStep) updateStep(stepIdx);
+    ticking = false;
+  });
+}
+window.addEventListener('scroll', updateSticky, { passive: true });
+```
+
+> **为什么**：直接在 scroll 回调中读写 DOM 会触发每帧 layout reflow（读 getBoundingClientRect → 写 transform → 再读 → 浏览器被迫同步计算布局），导致可见抖动。rAF ticking 将读写合并到一帧，并用 `ticking` flag 去重。`passive: true` 告知浏览器此监听器不调用 `preventDefault()`，允许浏览器提前开始渲染。
+
 ### 滚动容器是 `window`
 `layout.css` 中 `#main-content` 无 `overflow-y`，`window.scroll` 是正确的事件来源。
 
@@ -230,32 +255,49 @@ Hero/Display: 700, line-height 1.1, letter-spacing -0.02em
 
 > **重要**：每个页面的第一个 section（Hero）必须添加 `section-hero-full` class，确保在所有分辨率下占满整个视口高度。其他 section 在移动端改为 `min-height: auto` 由内容决定。
 
-### 页面 Hero 标准结构（统一规范，参考 p01-color-theory）
+### 页面 Hero 标准结构（M1 审计后最终规范）
 
-每个页面 Hero 必须包含四层元素，顺序固定：
+每个页面 Hero 必须严格遵循以下结构，所有元素必须带 `opacity:0` inline style：
 
 ```html
-<!-- 1. 眉标（Eyebrow）：模块和页码，代码字体，强调色 -->
-<p style="font-family:var(--font-code);font-size:var(--text-small);color:var(--accent);
-          letter-spacing:0.15em;text-transform:uppercase;margin-bottom:var(--space-sm);">
-  Module 01 / Page 0X
-</p>
-
-<!-- 2. 主标题：中文，Playfair Display，超大 -->
-<h1 class="page-hero-title" style="color:var(--text-on-dark);">中文标题</h1>
-
-<!-- 3. 英文副标题：半透明，轻细字重 -->
-<p class="page-hero-sub">English Title</p>
-
-<!-- 4. 中文简介：正文字体，text-on-dark-2 -->
-<p style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);
-          max-width:540px;line-height:1.8;margin-top:var(--space-sm);">
-  简短的中文描述，说明本页核心内容。
-</p>
-
-<!-- 5. 快捷导航 -->
-<nav class="hero-quicknav">...</nav>
+<section class="section-dark section-hero-full {prefix}-hero" id="{prefix}-hero">
+  <div class="flex-col-center" style="gap:var(--space-md);text-align:center;position:relative;z-index:1;">
+    <p class="hero-eyebrow" style="opacity:0;">Module 0X / Page 0X</p>
+    <h1 class="page-hero-title" style="color:var(--text-on-dark);opacity:0;">中文标题</h1>
+    <p class="page-hero-sub" style="opacity:0;">English Subtitle</p>
+    <p class="{prefix}-hero-tagline" style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;margin-top:var(--space-sm);opacity:0;">
+      一句话中文说明
+    </p>
+    <nav class="hero-quicknav" id="{prefix}-quicknav" style="opacity:0;">
+      <button class="hero-quicknav__item" data-target="#section-id">按钮文字</button>
+    </nav>
+    <div class="{prefix}-scroll-hint" style="opacity:0;">↓ 向下探索</div>
+  </div>
+</section>
 ```
+
+**关键规则：**
+- 外层 wrapper 必须是 `<div class="flex-col-center" style="gap:var(--space-md);text-align:center;position:relative;z-index:1;">`
+- Tagline max-width 统一 **540px**
+- Quicknav 必须用 `<nav>` 标签
+- Scroll hint 用 `<div>`，class 必须有页面前缀
+- Hero 不放统计数字展示（属于正文 section）
+- **所有元素必须有 `opacity:0` inline style**（GSAP `fromTo` 动画需要初始隐藏状态，否则页面加载时内容闪现）
+
+**GSAP 入场动画（统一 timeline 模式）：**
+```js
+const heroTl = gsap.timeline({ delay: 0.2 });
+heroTl.fromTo('{eyebrow}', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0);
+heroTl.fromTo('{title}',   { y: 30, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.15);
+heroTl.fromTo('{sub}',     { y: 20, opacity: 0 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
+heroTl.fromTo('{tagline}', { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
+heroTl.fromTo('{quicknav}',{ y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
+heroTl.fromTo('{scroll}',  { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.75);
+```
+
+⚠️ **禁止用独立 `gsap.fromTo()` 调用**（容易导致时序不统一）。必须用 timeline。
+⚠️ **gsap 必须从 ScrollAnimations.js 导入**，禁止 `window.gsap`（ES Module 和 CDN 是不同实例，混用会导致动画不生效）。
+⚠️ Subtitle 目标 opacity 为 **0.5**（不是 1.0）。
 
 **背景光晕**：每个页面 Hero 必须有独特动态光晕，通过 `::before` + `::after` 伪元素实现：
 - `::before`：主色系 radial-gradient + `@keyframes` 漂移动画（8-14s ease-in-out infinite）
@@ -1090,7 +1132,19 @@ export function countUp(el, target, duration = 2) {
     ease: 'power2.out'
   });
 }
+```
 
+> **⚠️ count-up 零值保护（手写 rAF 实现）**：在不使用 GSAP、自行用 `requestAnimationFrame` 实现数字递增时，若 `data-target` 为 `"0"` 或未设置，`parseInt()` 返回 `0` 或 `NaN`，可能导致 rAF 循环永不终止或显示 NaN。调用前必须加保护：
+>
+> ```js
+> function startCountUp(el) {
+>   const target = parseInt(el.dataset.target) || 0;
+>   if (!target) { el.textContent = '0'; return; }
+>   // ... 正常 rAF 循环逻辑
+> }
+> ```
+
+```js
 // 视差（背景装饰慢速移动）
 export function parallax(el, speed = 0.3) {
   return gsap.to(el, {
@@ -1369,12 +1423,12 @@ z-index:  99  — 侧边栏遮罩层
 
 ```html
 <section class="page-footer-cta">
-  <p class="page-footer-num">0X / 10</p>            <!-- 页码，可选 -->
-  <h2 class="page-footer-quote">"金句/总结语"</h2>   <!-- display 字体，大号 -->
+  <p class="page-footer-num">0X / 10</p>
+  <h2 class="page-footer-quote">金句/总结语</h2>   <!-- 不含引号符号，CSS ::before/::after 自动添加 -->
   <p class="page-footer-desc">过渡引导文案</p>
   <div class="page-footer-nav">
-    <button class="btn-ghost" id="xxx-prev-btn">← 上一页</button>
-    <button class="btn-primary" id="xxx-next-btn">下一页 →</button>
+    <button class="btn-ghost" id="xxx-prev-btn">← 上一页标题</button>
+    <button class="btn-primary" id="xxx-next-btn">下一页标题 →</button>
   </div>
 </section>
 ```
@@ -1382,9 +1436,12 @@ z-index:  99  — 侧边栏遮罩层
 ### 规则
 - **背景**：`var(--bg-dark-deep)`（纯黑），与正文深色段区分
 - **按钮**：一律使用全局 `btn-primary` / `btn-ghost`，禁止页面专属按钮类
+- **按钮标签**：使用目标页面标题（如 "← ggplot2 工作坊"），**禁止** generic "← 上一页 / 下一页 →"
+- **按钮导航**：使用 `getElementById` + `addEventListener` 绑定，**禁止** `onclick` 属性
 - **顺序**：← 上一页（ghost）在左，下一页 →（primary）在右
 - **页码**：`0X / 10` 格式，`var(--font-code)` 等宽字体，`letter-spacing: 0.15em`
-- **金句**：`var(--font-display)` 衬线大字，可以是引用或总结句
+- **金句**：`var(--font-display)` 衬线大字，不含引号符号（CSS `::before`/`::after` 添加 `\201C` / `\201D`）
+- **金句标签**：必须用 `<h2>`，不能用 `<p>`
 - **移动端**：`min-height: auto`，padding 压缩至 `var(--space-2xl)`
 
 ---
@@ -1405,3 +1462,5 @@ z-index:  99  — 侧边栏遮罩层
 ❌ 移动端忽略触摸交互适配
 ❌ 移动端使用 hover-only 的信息展示
 ❌ 可交互元素小于 44×44px
+❌ scroll 监听器直接读写 DOM（触发 layout reflow + 抖动），必须用 rAF ticking 模式
+❌ Hero Section 内放统计数字 / Hero Stats（属于第一个正文 section）
