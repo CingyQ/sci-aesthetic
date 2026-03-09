@@ -243,6 +243,33 @@ plt.tight_layout()`,
   },
 ];
 
+const MPL_GGPLOT_COMPARE = [
+  { concept: '散点图',
+    python: `import matplotlib.pyplot as plt\nimport numpy as np\n\nfig, ax = plt.subplots(figsize=(8,6), dpi=150)\nax.scatter(x, y, c=color, s=60, alpha=0.7)\nax.set_xlabel("X轴")\nax.set_ylabel("Y轴")\nax.spines[["top","right"]].set_visible(False)`,
+    r: `library(ggplot2)\n\nggplot(df, aes(x=x, y=y, color=group)) +\n  geom_point(size=2, alpha=0.7) +\n  labs(x="X轴", y="Y轴") +\n  theme_minimal()` },
+  { concept: '折线图',
+    python: `fig, ax = plt.subplots(figsize=(8,6), dpi=150)\nax.plot(x, y, color="#7EC8E3", lw=2, marker="o")\nax.fill_between(x, y-err, y+err,\n    color="#7EC8E3", alpha=0.2)\nax.set_xlabel("时间")\nax.set_ylabel("值")`,
+    r: `ggplot(df, aes(x=x, y=y, group=grp)) +\n  geom_line(color="#7EC8E3", linewidth=1) +\n  geom_ribbon(aes(ymin=y-err, ymax=y+err),\n              alpha=0.2, fill="#7EC8E3") +\n  theme_minimal()` },
+  { concept: '柱状图',
+    python: `fig, ax = plt.subplots(figsize=(8,6), dpi=150)\nax.bar(categories, values,\n       color="#95D5B2", edgecolor="white",\n       width=0.6)\nax.set_xlabel("类别")\nax.set_ylabel("数值")`,
+    r: `ggplot(df, aes(x=category, y=value,\n               fill=category)) +\n  geom_col(width=0.6) +\n  scale_fill_brewer(palette="Set2") +\n  theme_minimal()` },
+  { concept: '分面 Facet',
+    python: `fig, axes = plt.subplots(2, 3, figsize=(12,8))\nfor ax, grp in zip(axes.flat, groups):\n    ax.scatter(x[grp], y[grp],\n               color=colors[grp])\n    ax.set_title(grp)\nplt.tight_layout()`,
+    r: `ggplot(df, aes(x=x, y=y)) +\n  geom_point() +\n  facet_wrap(~group, ncol=3) +\n  theme_minimal()` },
+  { concept: '主题样式',
+    python: `import matplotlib as mpl\nplt.style.use("seaborn-v0_8-whitegrid")\n# 精细控制：\nax.spines[["top","right"]].set_visible(False)\nax.grid(axis="y", alpha=0.3, linestyle="--")\nmpl.rcParams["font.family"] = "sans-serif"`,
+    r: `ggplot(df, aes(x,y)) +\n  geom_point() +\n  theme_minimal() +\n  theme(\n    panel.grid.minor = element_blank(),\n    text = element_text(family="sans")\n  )` },
+  { concept: '配色 Scale',
+    python: `import matplotlib.cm as cm\nimport seaborn as sns\n\n# 连续配色\ncolors = cm.viridis(np.linspace(0,1,n))\n# 定性配色\nsns.set_palette("Set2")`,
+    r: `ggplot(df, aes(x,y,color=z)) +\n  geom_point() +\n  # 连续：\n  scale_color_viridis_c() +\n  # 定性：\n  # scale_color_brewer(palette="Set2")` },
+  { concept: '标注 Annotate',
+    python: `ax.annotate(\n    "关键点",\n    xy=(x0, y0),\n    xytext=(x0+1, y0+2),\n    arrowprops=dict(\n        arrowstyle="->",\n        color="gray"\n    ),\n    fontsize=10\n)`,
+    r: `ggplot(df, aes(x,y)) +\n  geom_point() +\n  annotate("text", x=x0+1, y=y0+2,\n           label="关键点", size=3) +\n  annotate("segment",\n           x=x0+1, xend=x0,\n           y=y0+2, yend=y0,\n           arrow=arrow(length=unit(0.2,"cm")))` },
+  { concept: '保存图片',
+    python: `plt.savefig(\n    "fig.pdf",\n    dpi=300,\n    bbox_inches="tight",\n    format="pdf"\n)\n# 透明背景：\n# transparent=True`,
+    r: `ggsave(\n    "fig.pdf",\n    plot = p,\n    width = 88,\n    height = 66,\n    units = "mm",\n    dpi = 300\n)` },
+];
+
 // ══════════════════════════════════════════════════════
 //  状态
 // ══════════════════════════════════════════════════════
@@ -251,6 +278,7 @@ let state = {
   cleanupFns: [],
   resizeObservers: [],
   sbGallery: null,
+  annCanvas: null,
 };
 
 // ══════════════════════════════════════════════════════
@@ -649,6 +677,311 @@ function initSeabornGallery(container) {
 }
 
 // ══════════════════════════════════════════════════════
+//  initCompareTable()
+// ══════════════════════════════════════════════════════
+
+function initCompareTable(container) {
+  if (!container) return;
+  const rowsEl = container.querySelector('#compare-rows');
+  const tabsEl = container.querySelector('.compare-tabs');
+  if (!rowsEl) return;
+
+  MPL_GGPLOT_COMPARE.forEach(item => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:grid;grid-template-columns:110px 1fr 1fr;gap:12px;border-top:1px solid var(--border-light);padding:16px 0;align-items:start;';
+    row.innerHTML = `
+      <div style="font-weight:600;color:var(--accent);font-size:13px;padding-top:4px;font-family:var(--font-code);line-height:1.5">${item.concept}</div>
+      <pre class="compare-python" style="background:#1d1d1f;color:#f5f5f7;padding:12px;border-radius:8px;font-size:11px;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:break-word;margin:0;font-family:var(--font-code);line-height:1.5;min-width:0">${item.python}</pre>
+      <pre class="compare-r" style="background:#f5f5f7;color:#1d1d1f;padding:12px;border-radius:8px;font-size:11px;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:break-word;margin:0;font-family:var(--font-code);line-height:1.5;min-width:0">${item.r}</pre>`;
+    rowsEl.appendChild(row);
+  });
+
+  // Mobile: show tab switcher, hide one language column
+  if (window.innerWidth <= 768 && tabsEl) {
+    tabsEl.style.display = 'flex';
+    // Switch to single column layout
+    rowsEl.querySelectorAll('div').forEach(row => {
+      if (row.style.gridTemplateColumns) {
+        row.style.gridTemplateColumns = '1fr';
+      }
+    });
+    // Hide R column initially
+    rowsEl.querySelectorAll('.compare-r').forEach(el => el.style.display = 'none');
+
+    tabsEl.querySelectorAll('.compare-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabsEl.querySelectorAll('.compare-tab').forEach(t => {
+          t.style.background = 'var(--bg-light-alt)';
+          t.style.color = 'var(--text-on-light)';
+          t.style.border = '1px solid var(--border-light)';
+        });
+        tab.style.background = 'var(--accent)';
+        tab.style.color = '#1d1d1f';
+        tab.style.border = 'none';
+
+        const lang = tab.dataset.lang;
+        rowsEl.querySelectorAll('.compare-python').forEach(el => {
+          el.style.display = lang === 'python' ? 'block' : 'none';
+        });
+        rowsEl.querySelectorAll('.compare-r').forEach(el => {
+          el.style.display = lang === 'r' ? 'block' : 'none';
+        });
+      });
+    });
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  annotate Canvas helpers
+// ══════════════════════════════════════════════════════
+
+function drawArrow9(ctx, x1, y1, x2, y2, color) {
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  const len = 10;
+  ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x2, y2);
+  ctx.lineTo(x2 - len * Math.cos(angle - 0.4), y2 - len * Math.sin(angle - 0.4));
+  ctx.lineTo(x2 - len * Math.cos(angle + 0.4), y2 - len * Math.sin(angle + 0.4));
+  ctx.closePath(); ctx.fill();
+}
+
+function hitTest9(ann, pos) {
+  const bx = ann.type === 'arrow' ? Math.min(ann.x1, ann.x2) : ann.x;
+  const by = ann.type === 'arrow' ? Math.min(ann.y1, ann.y2) : ann.y;
+  const bw = ann.type === 'arrow' ? Math.abs(ann.x2 - ann.x1) + 20 : (ann.w || 60);
+  const bh = ann.type === 'arrow' ? Math.abs(ann.y2 - ann.y1) + 20 : (ann.h || 40);
+  return pos.x >= bx - 10 && pos.x <= bx + bw + 10 &&
+         pos.y >= by - 10 && pos.y <= by + bh + 10;
+}
+
+// ══════════════════════════════════════════════════════
+//  initAnnotateCanvas()
+// ══════════════════════════════════════════════════════
+
+function initAnnotateCanvas(container) {
+  if (!container) return null;
+  const canvas = container.querySelector('#annotate-canvas');
+  const toolbar = container.querySelector('.annotate-toolbar');
+  const codeWrap = container.querySelector('.ann-code-editor');
+  if (!canvas || !toolbar || !codeWrap) return null;
+
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  let annEditor = null;
+  const annotations = [];
+  let activeType = 'arrow';
+  let dragging = null;
+  let dragOffset = { x: 0, y: 0 };
+  let startPos = null;
+
+  // Toolbar buttons
+  const toolDefs = [
+    { type: 'arrow', label: '↗ 箭头' },
+    { type: 'text',  label: 'T 文字' },
+    { type: 'rect',  label: '□ 方框' },
+    { type: 'highlight', label: '◆ 高亮' },
+  ];
+  toolDefs.forEach(td => {
+    const btn = document.createElement('button');
+    btn.textContent = td.label;
+    btn.dataset.type = td.type;
+    btn.style.cssText = 'padding:8px 14px;min-height:44px;background:#2d2d2f;border:1px solid var(--border-dark);border-radius:8px;color:var(--text-on-dark);cursor:pointer;font-size:13px;transition:background 0.2s;white-space:nowrap;';
+    if (td.type === 'arrow') btn.style.background = 'rgba(126,200,227,0.18)';
+    btn.addEventListener('click', () => {
+      toolbar.querySelectorAll('button[data-type]').forEach(b => b.style.background = '#2d2d2f');
+      btn.style.background = 'rgba(126,200,227,0.18)';
+      activeType = td.type;
+    });
+    toolbar.appendChild(btn);
+  });
+  // Reset button
+  const resetBtn = document.createElement('button');
+  resetBtn.textContent = '重置';
+  resetBtn.style.cssText = 'padding:8px 14px;min-height:44px;background:transparent;border:1px solid var(--border-dark);border-radius:8px;color:var(--accent);cursor:pointer;font-size:13px;margin-left:auto;white-space:nowrap;';
+  resetBtn.addEventListener('click', () => {
+    annotations.length = 0;
+    redraw();
+    updateAnnotateCode();
+  });
+  toolbar.appendChild(resetBtn);
+
+  function resizeCanvas() {
+    const W = canvas.parentElement.clientWidth || 400;
+    const H = Math.round(Math.min(W * 0.55, 380));
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    canvas.style.width = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    drawBase();
+    drawAnnotations();
+  }
+
+  function drawBase() {
+    const W = canvas.clientWidth;
+    const H = canvas.clientHeight;
+    ctx.fillStyle = '#1d1d1f';
+    ctx.fillRect(0, 0, W, H);
+    // axes
+    ctx.strokeStyle = '#424245'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(55,15); ctx.lineTo(55,H-30); ctx.lineTo(W-15,H-30); ctx.stroke();
+    // chart data (line)
+    const data = [30,80,55,120,95,150,110,170,140,185];
+    const xStep = (W - 80) / (data.length - 1);
+    const yScale = (H - 55) / 200;
+    const pts = data.map((v, i) => ({ x: 55 + i * xStep, y: H - 30 - v * yScale }));
+    ctx.strokeStyle = '#7EC8E3'; ctx.lineWidth = 2;
+    ctx.beginPath(); pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)); ctx.stroke();
+    ctx.fillStyle = '#7EC8E3';
+    pts.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, 3.5, 0, Math.PI * 2); ctx.fill(); });
+    // labels
+    ctx.fillStyle = '#6e6e73'; ctx.font = '11px sans-serif';
+    ctx.fillText('时间', W/2 - 10, H - 8);
+    ctx.save(); ctx.translate(14, H/2); ctx.rotate(-Math.PI/2);
+    ctx.fillText('值', -8, 0); ctx.restore();
+  }
+
+  function drawAnnotations() {
+    annotations.forEach(ann => {
+      ctx.save();
+      if (ann.type === 'arrow') {
+        drawArrow9(ctx, ann.x1, ann.y1, ann.x2, ann.y2, '#F0D264');
+        ctx.fillStyle = '#F0D264'; ctx.font = 'bold 11px sans-serif';
+        ctx.fillText(ann.label || '峰值', ann.x2 + 6, ann.y2 - 4);
+      } else if (ann.type === 'text') {
+        ctx.font = '12px sans-serif';
+        const tw = ctx.measureText(ann.label || '标注').width;
+        ctx.fillStyle = 'rgba(240,210,100,0.9)';
+        ctx.fillRect(ann.x - 3, ann.y - 14, tw + 8, 18);
+        ctx.fillStyle = '#1d1d1f';
+        ctx.fillText(ann.label || '标注', ann.x + 1, ann.y);
+      } else if (ann.type === 'rect') {
+        ctx.strokeStyle = '#E07A7A'; ctx.lineWidth = 2;
+        ctx.setLineDash([5, 3]);
+        ctx.strokeRect(ann.x, ann.y, ann.w || 70, ann.h || 45);
+        ctx.setLineDash([]);
+      } else if (ann.type === 'highlight') {
+        ctx.fillStyle = 'rgba(240,178,122,0.22)';
+        ctx.fillRect(ann.x, ann.y, ann.w || 70, ann.h || 45);
+        ctx.strokeStyle = '#F0B27A'; ctx.lineWidth = 1.5;
+        ctx.strokeRect(ann.x, ann.y, ann.w || 70, ann.h || 45);
+      }
+      ctx.restore();
+    });
+  }
+
+  function redraw() { drawBase(); drawAnnotations(); }
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.clientWidth / rect.width;
+    const scaleY = canvas.clientHeight / rect.height;
+    const clientX = e.clientX ?? (e.touches?.[0]?.clientX ?? 0);
+    const clientY = e.clientY ?? (e.touches?.[0]?.clientY ?? 0);
+    return { x: (clientX - rect.left) * scaleX, y: (clientY - rect.top) * scaleY };
+  }
+
+  canvas.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    canvas.setPointerCapture(e.pointerId);
+    const pos = getPos(e);
+    dragging = annotations.slice().reverse().find(a => hitTest9(a, pos)) || null;
+    if (dragging) {
+      dragOffset = { x: pos.x - (dragging.x ?? dragging.x1), y: pos.y - (dragging.y ?? dragging.y1) };
+    } else {
+      startPos = pos;
+    }
+  });
+
+  canvas.addEventListener('pointermove', e => {
+    if (!dragging && !startPos) return;
+    const pos = getPos(e);
+    if (dragging) {
+      const dx = pos.x - dragOffset.x - (dragging.x ?? dragging.x1);
+      const dy = pos.y - dragOffset.y - (dragging.y ?? dragging.y1);
+      if (dragging.type === 'arrow') {
+        dragging.x1 += dx; dragging.y1 += dy; dragging.x2 += dx; dragging.y2 += dy;
+      } else {
+        dragging.x += dx; dragging.y += dy;
+      }
+      dragOffset = { x: pos.x - (dragging.x ?? dragging.x1), y: pos.y - (dragging.y ?? dragging.y1) };
+      redraw();
+    }
+  });
+
+  canvas.addEventListener('pointerup', e => {
+    if (!dragging && startPos) {
+      const pos = getPos(e);
+      if (activeType === 'arrow') {
+        annotations.push({ type: 'arrow', x1: startPos.x, y1: startPos.y, x2: pos.x, y2: pos.y, label: '关键点' });
+      } else if (activeType === 'text') {
+        annotations.push({ type: 'text', x: pos.x, y: pos.y, label: '标注文字' });
+      } else {
+        const dx = pos.x - startPos.x, dy = pos.y - startPos.y;
+        annotations.push({ type: activeType, x: Math.min(startPos.x, pos.x), y: Math.min(startPos.y, pos.y), w: Math.abs(dx) || 70, h: Math.abs(dy) || 45 });
+      }
+      redraw();
+      updateAnnotateCode();
+    }
+    dragging = null; startPos = null;
+  });
+
+  function updateAnnotateCode() {
+    const W = canvas.clientWidth;
+    const H = canvas.clientHeight;
+    const toX = v => ((v - 55) / (W - 80) * 10).toFixed(1);
+    const toY = v => ((H - 30 - v) / (H - 55) * 200).toFixed(0);
+    const lines = [
+      'import matplotlib.pyplot as plt',
+      '',
+      'fig, ax = plt.subplots(figsize=(8, 6), dpi=150)',
+      '# ... 绘制图表数据 ...',
+      '',
+    ];
+    annotations.forEach(a => {
+      if (a.type === 'arrow') {
+        lines.push(`ax.annotate("${a.label || '关键点'}",`);
+        lines.push(`    xy=(${toX(a.x2)}, ${toY(a.y2)}),`);
+        lines.push(`    xytext=(${toX(a.x1)}, ${toY(a.y1)}),`);
+        lines.push(`    arrowprops=dict(arrowstyle="->", color="#F0D264"),`);
+        lines.push(`    color="#F0D264", fontsize=10)`);
+      } else if (a.type === 'text') {
+        lines.push(`ax.text(${toX(a.x)}, ${toY(a.y)}, "标注文字",`);
+        lines.push(`    fontsize=10, color="#F0D264")`);
+      } else if (a.type === 'rect' || a.type === 'highlight') {
+        lines.push(`from matplotlib.patches import FancyBboxPatch`);
+        lines.push(`rect = FancyBboxPatch((${toX(a.x)}, ${toY(a.y + (a.h||45))}),`);
+        lines.push(`    ${((a.w||70)/(W-80)*10).toFixed(1)}, ${((a.h||45)/(H-55)*200).toFixed(0)},`);
+        lines.push(`    boxstyle="round,pad=0.1",`);
+        lines.push(`    fill=${a.type==='highlight' ? 'True' : 'False'},`);
+        lines.push(`    alpha=0.2, color="#F0B27A")`);
+        lines.push(`ax.add_patch(rect)`);
+      }
+      lines.push('');
+    });
+    lines.push('plt.tight_layout()');
+    const code = lines.join('\n');
+    if (annEditor) { annEditor.setCode(code); }
+    else { annEditor = createCodeEditor(codeWrap, { language: 'python', code, readOnly: window.innerWidth < 768 }); }
+  }
+
+  resizeCanvas();
+  updateAnnotateCode();
+
+  const onResize = () => { resizeCanvas(); updateAnnotateCode(); };
+  window.addEventListener('resize', onResize);
+
+  return {
+    destroy() {
+      window.removeEventListener('resize', onResize);
+      if (annEditor) { try { annEditor.destroy(); } catch {} annEditor = null; }
+    }
+  };
+}
+
+// ══════════════════════════════════════════════════════
 //  render()
 // ══════════════════════════════════════════════════════
 
@@ -875,8 +1208,8 @@ export function init() {
   // Section init stubs (to be filled by later tasks)
   initMatplotlibHierarchy(document.getElementById('s1-matplotlib-hierarchy'));
   state.sbGallery = initSeabornGallery(document.getElementById('s2-seaborn-gallery'));
-  // initCompareTable(...)
-  // initAnnotateCanvas(...)
+  initCompareTable(document.getElementById('s3-mpl-vs-ggplot'));
+  state.annCanvas = initAnnotateCanvas(document.getElementById('s4-annotate-canvas'));
   // initStorytelling(...)
 }
 
@@ -891,6 +1224,9 @@ export function destroy() {
   const mplSvg = document.querySelector('#s1-matplotlib-hierarchy .mpl-hierarchy-svg svg');
   if (mplSvg) mplSvg.remove();
   if (state.sbGallery) { state.sbGallery.destroy(); state.sbGallery = null; }
+  const compareRows = document.getElementById('compare-rows');
+  if (compareRows) compareRows.innerHTML = '';
+  if (state.annCanvas) { state.annCanvas.destroy(); state.annCanvas = null; }
   state.resizeObservers.forEach(ro => ro.disconnect());
   state.resizeObservers = [];
 }
