@@ -208,7 +208,7 @@ export function render() {
       </div>
       <span class="p10-wf-dot-label">${s.title}</span>
     </div>
-    ${i < WORKFLOW_STEPS.length - 1 ? '<div class="p10-wf-connector"></div>' : ''}
+    ${i < WORKFLOW_STEPS.length - 1 ? `<div class="p10-wf-connector" id="p10-conn-${i}"></div>` : ''}
   `).join('');
 
   // 生成工作流面板 HTML
@@ -280,8 +280,8 @@ export function render() {
   `).join('');
 
   // 生成期刊选项
-  const journalOptions = JOURNAL_DATA.map((j, i) =>
-    `<option value="${i}">${j.name}（${j.group}）</option>`
+  const journalOptions = JOURNAL_DATA.map(j =>
+    `<option value="${j.name}">${j.name}（${j.group}）</option>`
   ).join('');
 
   return `
@@ -429,8 +429,6 @@ export function render() {
 .p10-wf-left {
   width: 320px;
   flex-shrink: 0;
-  position: sticky;
-  top: 80px;
   will-change: transform;
   padding-top: var(--space-md);
 }
@@ -480,7 +478,7 @@ export function render() {
 
 .p10-wf-dot.active .p10-wf-dot-circle {
   background: var(--step-color, var(--accent));
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--step-color, var(--accent)) 30%, transparent);
+  box-shadow: 0 0 0 4px rgba(126, 200, 227, 0.3);
 }
 
 .p10-wf-dot-num {
