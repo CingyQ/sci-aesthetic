@@ -644,7 +644,7 @@ function initSeabornGallery(container) {
   function updatePreview() {
     previewEl.innerHTML = '';
     const W = Math.max(previewEl.clientWidth || 0, 180);
-    const H = 200;
+    const H = 320;
     const svg = d3.select(previewEl).append('svg')
       .attr('viewBox', `0 0 ${W} ${H}`)
       .attr('preserveAspectRatio', 'xMidYMid meet')
@@ -677,6 +677,106 @@ function initSeabornGallery(container) {
 }
 
 // ══════════════════════════════════════════════════════
+//  drawMiniCompareChart() — illustrative mini chart per concept
+// ══════════════════════════════════════════════════════
+
+function drawMiniCompareChart(container, concept) {
+  const W = 130, H = 80;
+  const svg = d3.select(container).append('svg')
+    .attr('viewBox', `0 0 ${W} ${H}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet')
+    .style('width', '100%').style('height', 'auto').style('display', 'block');
+  svg.append('rect').attr('width', W).attr('height', H).attr('fill', '#1d1d1f').attr('rx', 6);
+  const pad = { t: 10, r: 10, b: 16, l: 18 };
+  const g = svg.append('g').attr('transform', `translate(${pad.l},${pad.t})`);
+  const iW = W - pad.l - pad.r, iH = H - pad.t - pad.b;
+  g.append('line').attr('x1',0).attr('y1',iH).attr('x2',iW).attr('y2',iH).attr('stroke','#424245').attr('stroke-width',0.8);
+  g.append('line').attr('x1',0).attr('y1',0).attr('x2',0).attr('y2',iH).attr('stroke','#424245').attr('stroke-width',0.8);
+  const COLS = ['#7EC8E3','#95D5B2','#B8B8E8','#F0B27A'];
+  const rng = seededRng9(concept.length * 7 + 1);
+
+  if (concept === '散点图') {
+    for (let i = 0; i < 22; i++) {
+      g.append('circle').attr('cx', rng()*iW).attr('cy', rng()*iH)
+        .attr('r', 2.5).attr('fill', COLS[Math.floor(rng()*3)]).attr('opacity', 0.8);
+    }
+  } else if (concept === '折线图') {
+    const d1=[0.55,0.35,0.65,0.45,0.75,0.6,0.85], d2=[0.25,0.15,0.3,0.2,0.4,0.28,0.45];
+    const xS=d3.scaleLinear().domain([0,6]).range([0,iW]);
+    const yS=d3.scaleLinear().domain([0,1]).range([iH,0]);
+    const ln=d3.line().x((_,i)=>xS(i)).y(d=>yS(d)).curve(d3.curveCatmullRom);
+    g.append('path').attr('d',ln(d1)).attr('fill','none').attr('stroke','#7EC8E3').attr('stroke-width',1.8);
+    g.append('path').attr('d',ln(d2)).attr('fill','none').attr('stroke','#95D5B2').attr('stroke-width',1.8);
+  } else if (concept === '柱状图') {
+    const vals=[0.55,0.8,0.4,0.65];
+    const xS=d3.scaleBand().domain([0,1,2,3]).range([0,iW]).padding(0.2);
+    vals.forEach((v,i) => {
+      const bH=v*iH;
+      g.append('rect').attr('x',xS(i)).attr('y',iH-bH).attr('width',xS.bandwidth())
+        .attr('height',bH).attr('fill',COLS[i]).attr('rx',2).attr('opacity',0.9);
+    });
+  } else if (concept === '分面 Facet') {
+    const pW=(iW-4)/2, pH=(iH-4)/2;
+    [[0,0],[1,0],[0,1],[1,1]].forEach(([c,r],pi) => {
+      const px=c*(pW+4), py=r*(pH+4);
+      g.append('rect').attr('x',px).attr('y',py).attr('width',pW).attr('height',pH)
+        .attr('fill','#2a2a2d').attr('rx',2);
+      const rng2=seededRng9(pi*13+3);
+      for (let i=0;i<5;i++) {
+        g.append('circle').attr('cx',px+3+rng2()*(pW-6)).attr('cy',py+3+rng2()*(pH-6))
+          .attr('r',2).attr('fill',COLS[pi]).attr('opacity',0.85);
+      }
+    });
+  } else if (concept === '主题样式') {
+    [0.25,0.5,0.75,1].forEach(y => {
+      g.append('line').attr('x1',0).attr('y1',y*iH).attr('x2',iW).attr('y2',y*iH)
+        .attr('stroke','#333336').attr('stroke-dasharray','2,2').attr('stroke-width',0.6);
+    });
+    const d=[0.3,0.5,0.42,0.68,0.55,0.78];
+    const xS=d3.scaleLinear().domain([0,5]).range([0,iW]);
+    const yS=d3.scaleLinear().domain([0,1]).range([iH,0]);
+    const ln=d3.line().x((_,i)=>xS(i)).y(d=>yS(d)).curve(d3.curveCatmullRom);
+    g.append('path').attr('d',ln(d)).attr('fill','none').attr('stroke','#7EC8E3').attr('stroke-width',1.8);
+  } else if (concept === '配色 Scale') {
+    const defs=svg.append('defs');
+    const grad=defs.append('linearGradient').attr('id',`cg${concept.length}`).attr('x1','0%').attr('x2','100%');
+    grad.append('stop').attr('offset','0%').attr('stop-color','#3B4CC0');
+    grad.append('stop').attr('offset','50%').attr('stop-color','#95D5B2');
+    grad.append('stop').attr('offset','100%').attr('stop-color','#F0B27A');
+    g.append('rect').attr('x',0).attr('y',iH/2-5).attr('width',iW).attr('height',12)
+      .attr('fill',`url(#cg${concept.length})`).attr('rx',3);
+    ['#3B4CC0','#6A8FD5','#95D5B2','#F0C070','#F0B27A'].forEach((c,i) => {
+      g.append('circle').attr('cx',(i+0.5)*iW/5).attr('cy',iH/2-18).attr('r',6).attr('fill',c);
+    });
+  } else if (concept === '标注 Annotate') {
+    const d=[0.25,0.45,0.38,0.7,0.55,0.65];
+    const xS=d3.scaleLinear().domain([0,5]).range([0,iW]);
+    const yS=d3.scaleLinear().domain([0,1]).range([iH,0]);
+    const ln=d3.line().x((_,i)=>xS(i)).y(d=>yS(d)).curve(d3.curveCatmullRom);
+    g.append('path').attr('d',ln(d)).attr('fill','none').attr('stroke','#7EC8E3').attr('stroke-width',1.8);
+    const ax=xS(3), ay=yS(0.7);
+    g.append('circle').attr('cx',ax).attr('cy',ay).attr('r',4).attr('fill','#F0B27A');
+    g.append('line').attr('x1',ax).attr('y1',ay).attr('x2',ax-15).attr('y2',ay-18)
+      .attr('stroke','#F0B27A').attr('stroke-width',1.2);
+    g.append('text').attr('x',ax-16).attr('y',ay-20).attr('fill','#F0B27A').attr('font-size',8)
+      .attr('text-anchor','end').attr('font-family','sans-serif').text('关键点');
+  } else if (concept === '保存图片') {
+    const dW=32, dH=42, dx=(iW-dW)/2, dy=(iH-dH)/2-4;
+    g.append('path').attr('d',`M${dx},${dy+8} L${dx+8},${dy} L${dx+dW},${dy} L${dx+dW},${dy+dH} L${dx},${dy+dH} Z`)
+      .attr('fill','#2a2a2d').attr('stroke','#424245').attr('stroke-width',1.2);
+    g.append('path').attr('d',`M${dx},${dy+8} L${dx+8},${dy+8} L${dx+8},${dy}`)
+      .attr('fill','none').attr('stroke','#424245').attr('stroke-width',1);
+    const mx=dx+dW/2, my=dy+dH/2+4;
+    g.append('line').attr('x1',mx).attr('y1',my-8).attr('x2',mx).attr('y2',my+6)
+      .attr('stroke','#7EC8E3').attr('stroke-width',1.5);
+    g.append('path').attr('d',`M${mx-4},${my+2} L${mx},${my+7} L${mx+4},${my+2}`)
+      .attr('fill','#7EC8E3');
+    g.append('text').attr('x',mx).attr('y',dy+dH+12).attr('fill','#7EC8E3').attr('font-size',7)
+      .attr('text-anchor','middle').attr('font-family','sans-serif').text('PDF/SVG');
+  }
+}
+
+// ══════════════════════════════════════════════════════
 //  initCompareTable()
 // ══════════════════════════════════════════════════════
 
@@ -686,28 +786,40 @@ function initCompareTable(container) {
   const tabsEl = container.querySelector('.compare-tabs');
   if (!rowsEl) return;
 
+  const isMobile = window.innerWidth <= 768;
+  const gridCols = isMobile ? '80px 1fr' : '90px 140px 1fr 1fr';
+
+  // Column header (desktop only)
+  if (!isMobile) {
+    const header = document.createElement('div');
+    header.style.cssText = `display:grid;grid-template-columns:${gridCols};gap:12px;padding:8px 0 10px;border-bottom:2px solid var(--border-light);margin-bottom:4px;`;
+    header.innerHTML = `
+      <div style="font-size:11px;font-weight:600;color:var(--text-on-light-3);text-transform:uppercase;letter-spacing:0.08em">概念</div>
+      <div style="font-size:11px;font-weight:600;color:var(--text-on-light-3);text-transform:uppercase;letter-spacing:0.08em">示意图</div>
+      <div style="font-size:11px;font-weight:600;color:#7EC8E3;text-transform:uppercase;letter-spacing:0.08em;padding-left:12px">🐍 Python / matplotlib</div>
+      <div style="font-size:11px;font-weight:600;color:#95D5B2;text-transform:uppercase;letter-spacing:0.08em;padding-left:12px">📊 R / ggplot2</div>`;
+    rowsEl.appendChild(header);
+  }
+
   MPL_GGPLOT_COMPARE.forEach(item => {
     const row = document.createElement('div');
-    row.style.cssText = 'display:grid;grid-template-columns:110px 1fr 1fr;gap:12px;border-top:1px solid var(--border-light);padding:16px 0;align-items:start;';
+    row.className = 'compare-row';
+    row.style.cssText = `display:grid;grid-template-columns:${gridCols};gap:12px;border-top:1px solid var(--border-light);padding:16px 0;align-items:start;`;
+    const miniHtml = isMobile ? '' : `<div class="cmp-mini-wrap" style="border-radius:6px;overflow:hidden;"></div>`;
     row.innerHTML = `
       <div style="font-weight:600;color:var(--accent);font-size:13px;padding-top:4px;font-family:var(--font-code);line-height:1.5">${item.concept}</div>
+      ${miniHtml}
       <pre class="compare-python" style="background:#1d1d1f;color:#f5f5f7;padding:12px;border-radius:8px;font-size:11px;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:break-word;margin:0;font-family:var(--font-code);line-height:1.5;min-width:0">${item.python}</pre>
-      <pre class="compare-r" style="background:#f5f5f7;color:#1d1d1f;padding:12px;border-radius:8px;font-size:11px;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:break-word;margin:0;font-family:var(--font-code);line-height:1.5;min-width:0">${item.r}</pre>`;
+      <pre class="compare-r" style="background:#f5f5f7;color:#1d1d1f;padding:12px;border-radius:8px;font-size:11px;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:break-word;margin:0;font-family:var(--font-code);line-height:1.5;min-width:0${isMobile ? ';display:none' : ''}">${item.r}</pre>`;
     rowsEl.appendChild(row);
+    if (!isMobile) {
+      drawMiniCompareChart(row.querySelector('.cmp-mini-wrap'), item.concept);
+    }
   });
 
-  // Mobile: show tab switcher, hide one language column
-  if (window.innerWidth <= 768 && tabsEl) {
+  // Mobile: show tab switcher
+  if (isMobile && tabsEl) {
     tabsEl.style.display = 'flex';
-    // Switch to single column layout
-    rowsEl.querySelectorAll('div').forEach(row => {
-      if (row.style.gridTemplateColumns) {
-        row.style.gridTemplateColumns = '1fr';
-      }
-    });
-    // Hide R column initially
-    rowsEl.querySelectorAll('.compare-r').forEach(el => el.style.display = 'none');
-
     tabsEl.querySelectorAll('.compare-tab').forEach(tab => {
       tab.addEventListener('click', () => {
         tabsEl.querySelectorAll('.compare-tab').forEach(t => {
@@ -718,7 +830,6 @@ function initCompareTable(container) {
         tab.style.background = 'var(--accent)';
         tab.style.color = '#1d1d1f';
         tab.style.border = 'none';
-
         const lang = tab.dataset.lang;
         rowsEl.querySelectorAll('.compare-python').forEach(el => {
           el.style.display = lang === 'python' ? 'block' : 'none';
@@ -1050,6 +1161,9 @@ export function render() {
 @media (max-width: 400px) {
   .hero-quicknav { flex-direction: column; align-items: center; }
 }
+/* Story block 2-column grid */
+.story-grid { display:grid; grid-template-columns:minmax(200px,340px) 1fr; gap:32px; align-items:start; }
+@media (max-width: 768px) { .story-grid { grid-template-columns:1fr !important; } }
 /* Storytelling blocks responsive */
 @media (max-width: 768px) {
   #s5-storytelling .story-block { margin-bottom: 40px !important; }
@@ -1184,18 +1298,20 @@ export function render() {
 function initColorContrast(el) {
   if (!el) return;
   el.innerHTML = `
-    <div style="margin-bottom:20px">
-      <span style="font-size:11px;font-family:var(--font-code);color:var(--accent);text-transform:uppercase;letter-spacing:0.1em">方法一</span>
-      <h3 style="font:700 1.4rem var(--font-display);color:var(--text-on-light);margin:6px 0">颜色对比突出关键数据</h3>
-      <p style="color:var(--text-on-light-2);font-size:14px;line-height:1.7;max-width:480px">将需要强调的数据组染成鲜明颜色，其余保持灰色——读者视线被自动吸引。</p>
-    </div>
-    <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
-      <button class="cc-btn active" data-group="all" style="padding:6px 16px;min-height:36px;border-radius:20px;border:none;background:var(--accent);color:#1d1d1f;font-size:13px;cursor:pointer;font-weight:600">全部</button>
-      <button class="cc-btn" data-group="A" style="padding:6px 16px;min-height:36px;border-radius:20px;border:1px solid var(--border-light);background:transparent;color:var(--text-on-light-2);font-size:13px;cursor:pointer">突出 A 组</button>
-      <button class="cc-btn" data-group="B" style="padding:6px 16px;min-height:36px;border-radius:20px;border:1px solid var(--border-light);background:transparent;color:var(--text-on-light-2);font-size:13px;cursor:pointer">突出 B 组</button>
-      <button class="cc-btn" data-group="C" style="padding:6px 16px;min-height:36px;border-radius:20px;border:1px solid var(--border-light);background:transparent;color:var(--text-on-light-2);font-size:13px;cursor:pointer">突出 C 组</button>
-    </div>
-    <div class="cc-svg-wrap" style="max-width:500px"></div>`;
+    <div class="story-grid">
+      <div>
+        <span style="font-size:11px;font-family:var(--font-code);color:var(--accent);text-transform:uppercase;letter-spacing:0.1em">方法一</span>
+        <h3 style="font:700 1.4rem var(--font-display);color:var(--text-on-light);margin:6px 0 12px">颜色对比突出关键数据</h3>
+        <p style="color:var(--text-on-light-2);font-size:14px;line-height:1.7;margin-bottom:20px">将需要强调的数据组染成鲜明颜色，其余保持灰色——读者视线被自动吸引。</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <button class="cc-btn active" data-group="all" style="padding:6px 16px;min-height:36px;border-radius:20px;border:none;background:var(--accent);color:#1d1d1f;font-size:13px;cursor:pointer;font-weight:600">全部</button>
+          <button class="cc-btn" data-group="A" style="padding:6px 16px;min-height:36px;border-radius:20px;border:1px solid var(--border-light);background:transparent;color:var(--text-on-light-2);font-size:13px;cursor:pointer">突出 A 组</button>
+          <button class="cc-btn" data-group="B" style="padding:6px 16px;min-height:36px;border-radius:20px;border:1px solid var(--border-light);background:transparent;color:var(--text-on-light-2);font-size:13px;cursor:pointer">突出 B 组</button>
+          <button class="cc-btn" data-group="C" style="padding:6px 16px;min-height:36px;border-radius:20px;border:1px solid var(--border-light);background:transparent;color:var(--text-on-light-2);font-size:13px;cursor:pointer">突出 C 组</button>
+        </div>
+      </div>
+      <div class="cc-svg-wrap"></div>
+    </div>`;
 
   const rng = seededRng9(55);
   const groups = ['A','B','C','D'];
@@ -1241,13 +1357,15 @@ function initColorContrast(el) {
 function initAnnotationFlow(el) {
   if (!el) return;
   el.innerHTML = `
-    <div style="margin-bottom:20px">
-      <span style="font-size:11px;font-family:var(--font-code);color:var(--accent);text-transform:uppercase;letter-spacing:0.1em">方法二</span>
-      <h3 style="font:700 1.4rem var(--font-display);color:var(--text-on-light);margin:6px 0">标注引导阅读顺序</h3>
-      <p style="color:var(--text-on-light-2);font-size:14px;line-height:1.7;max-width:480px">将分析结论直接写在图表上，箭头和文字标注引导读者按预设顺序理解数据。</p>
-    </div>
-    <button id="af-play-btn" style="padding:8px 20px;min-height:40px;background:var(--accent);color:#1d1d1f;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;margin-bottom:16px">▶ 播放标注</button>
-    <div class="af-svg-wrap" style="max-width:520px"></div>`;
+    <div class="story-grid">
+      <div>
+        <span style="font-size:11px;font-family:var(--font-code);color:var(--accent);text-transform:uppercase;letter-spacing:0.1em">方法二</span>
+        <h3 style="font:700 1.4rem var(--font-display);color:var(--text-on-light);margin:6px 0 12px">标注引导阅读顺序</h3>
+        <p style="color:var(--text-on-light-2);font-size:14px;line-height:1.7;margin-bottom:20px">将分析结论直接写在图表上，箭头和文字标注引导读者按预设顺序理解数据。</p>
+        <button id="af-play-btn" style="padding:8px 20px;min-height:40px;background:var(--accent);color:#1d1d1f;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">▶ 播放标注</button>
+      </div>
+      <div class="af-svg-wrap"></div>
+    </div>`;
 
   const W=500, H=260;
   const svg = d3.select(el.querySelector('.af-svg-wrap')).append('svg')
@@ -1306,12 +1424,15 @@ function initAnnotationFlow(el) {
 function initGreyOut(el) {
   if (!el) return;
   el.innerHTML = `
-    <div style="margin-bottom:20px">
-      <span style="font-size:11px;font-family:var(--font-code);color:var(--accent);text-transform:uppercase;letter-spacing:0.1em">方法三</span>
-      <h3 style="font:700 1.4rem var(--font-display);color:var(--text-on-light);margin:6px 0">灰化非重点数据</h3>
-      <p style="color:var(--text-on-light-2);font-size:14px;line-height:1.7;max-width:480px">将非核心数据调成低饱和度灰色，让重点数据自然浮现。悬停柱子体验效果。</p>
-    </div>
-    <div class="go-svg-wrap" style="max-width:500px"></div>`;
+    <div class="story-grid">
+      <div>
+        <span style="font-size:11px;font-family:var(--font-code);color:var(--accent);text-transform:uppercase;letter-spacing:0.1em">方法三</span>
+        <h3 style="font:700 1.4rem var(--font-display);color:var(--text-on-light);margin:6px 0 12px">灰化非重点数据</h3>
+        <p style="color:var(--text-on-light-2);font-size:14px;line-height:1.7;margin-bottom:12px">将非核心数据调成低饱和度灰色，让重点数据自然浮现。</p>
+        <p style="color:var(--text-on-light-3);font-size:13px;line-height:1.6;font-style:italic">↗ 悬停右侧柱子体验效果</p>
+      </div>
+      <div class="go-svg-wrap"></div>
+    </div>`;
 
   const cats=['一月','二月','三月','四月','五月','六月'];
   const vals=[42,68,55,80,63,91];
@@ -1352,17 +1473,19 @@ function initGreyOut(el) {
 function initStepReveal(el) {
   if (!el) return;
   el.innerHTML = `
-    <div style="margin-bottom:20px">
-      <span style="font-size:11px;font-family:var(--font-code);color:var(--accent);text-transform:uppercase;letter-spacing:0.1em">方法四</span>
-      <h3 style="font:700 1.4rem var(--font-display);color:var(--text-on-light);margin:6px 0">分步揭示</h3>
-      <p style="color:var(--text-on-light-2);font-size:14px;line-height:1.7;max-width:480px">按时间顺序或分析步骤逐步展示数据，引导读者跟随叙事节奏理解趋势。</p>
-    </div>
-    <div style="display:flex;gap:12px;margin-bottom:16px;align-items:center">
-      <button id="sr-play-btn" style="padding:8px 20px;min-height:40px;background:var(--accent);color:#1d1d1f;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">▶ 播放</button>
-      <button id="sr-reset-btn" style="padding:8px 16px;min-height:40px;background:transparent;border:1px solid var(--border-light);border-radius:8px;cursor:pointer;font-size:13px;color:var(--text-on-light-2)">重置</button>
-      <span id="sr-step-label" style="font-size:13px;color:var(--text-on-light-3);font-family:var(--font-code)">0 / 10</span>
-    </div>
-    <div class="sr-svg-wrap" style="max-width:500px"></div>`;
+    <div class="story-grid">
+      <div>
+        <span style="font-size:11px;font-family:var(--font-code);color:var(--accent);text-transform:uppercase;letter-spacing:0.1em">方法四</span>
+        <h3 style="font:700 1.4rem var(--font-display);color:var(--text-on-light);margin:6px 0 12px">分步揭示</h3>
+        <p style="color:var(--text-on-light-2);font-size:14px;line-height:1.7;margin-bottom:20px">按时间顺序或分析步骤逐步展示数据，引导读者跟随叙事节奏理解趋势。</p>
+        <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+          <button id="sr-play-btn" style="padding:8px 20px;min-height:40px;background:var(--accent);color:#1d1d1f;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:600">▶ 播放</button>
+          <button id="sr-reset-btn" style="padding:8px 16px;min-height:40px;background:transparent;border:1px solid var(--border-light);border-radius:8px;cursor:pointer;font-size:13px;color:var(--text-on-light-2)">重置</button>
+          <span id="sr-step-label" style="font-size:13px;color:var(--text-on-light-3);font-family:var(--font-code)">0 / 10</span>
+        </div>
+      </div>
+      <div class="sr-svg-wrap"></div>
+    </div>`;
 
   const data=[12,28,22,45,38,62,55,75,68,88];
   const W=480, H=250;
@@ -1423,7 +1546,7 @@ function initStoryCompare(el) {
       <h3 style="font:700 1.3rem var(--font-display);color:var(--text-on-light);margin-bottom:8px">好/差标注对比</h3>
       <p style="color:var(--text-on-light-2);font-size:14px;line-height:1.7;margin-bottom:20px">同样的折线图，标注质量决定可读性。</p>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:720px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
       <div>
         <div style="text-align:center;margin-bottom:8px;font-size:13px;color:#E07A7A;font-weight:600">✗ 标注混乱</div>
         <div class="sc-bad-wrap"></div>
