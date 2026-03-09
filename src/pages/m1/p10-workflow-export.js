@@ -1826,7 +1826,7 @@ function initWorkflowDesktop() {
 function initFormatSection() {
   // Tab switching
   const tabs = document.querySelectorAll('.p10-format-tab');
-  const contents = document.querySelectorAll('.p10-format-panel, .p10-format-content');
+  const contents = document.querySelectorAll('.p10-format-panel');
 
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
