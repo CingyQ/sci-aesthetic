@@ -7,6 +7,12 @@ import { navigateTo } from '../../utils/router.js';
 import * as d3 from 'd3';
 
 // ══════════════════════════════════════════════════════
+//  模块级状态
+// ══════════════════════════════════════════════════════
+let _scrollHandler = null;
+let _codeEditors = [];
+
+// ══════════════════════════════════════════════════════
 //  工作流步骤数据
 // ══════════════════════════════════════════════════════
 
@@ -1653,11 +1659,157 @@ export function render() {
 }
 
 // ══════════════════════════════════════════════════════
-//  init() — 将在 Task 2 实现
+//  init()
 // ══════════════════════════════════════════════════════
-export function init() {}
+export function init() {
+  // 1. quicknav 点击跳转
+  document.querySelectorAll('#p10-quicknav .hero-quicknav__item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = document.querySelector(btn.dataset.target);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // 2. Hero GSAP 入场 (gsap is available as window.gsap from CDN)
+  const gsap = window.gsap;
+  if (gsap) {
+    gsap.fromTo('#p10-hero .hero-eyebrow',
+      { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.1, ease: 'power3.out' });
+    gsap.fromTo('#p10-hero .page-hero-title',
+      { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.25, ease: 'power3.out' });
+    gsap.fromTo('#p10-hero .page-hero-sub',
+      { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.4, ease: 'power3.out' });
+    gsap.fromTo('#p10-hero .p10-hero-tagline',
+      { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.55, ease: 'power3.out' });
+    gsap.fromTo('#p10-quicknav',
+      { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.7, ease: 'power3.out' });
+  }
+
+  // 3. Footer 导航
+  document.getElementById('p10-prev-btn')?.addEventListener('click', () => navigateTo('m1-p9'));
+  document.getElementById('p10-next-btn')?.addEventListener('click', () => navigateTo('m2-p1'));
+
+  // 4. 初始化工作流（其他模块 Task 3/4 会添加）
+  initWorkflow();
+
+  // 5. ScrollTrigger section 入场动画（桌面端）
+  if (gsap && window.ScrollTrigger && window.innerWidth >= 769) {
+    const ScrollTrigger = window.ScrollTrigger;
+    const sections = ['#p10-workflow', '#p10-format', '#p10-dpi', '#p10-calc', '#p10-journal'];
+    sections.forEach(sel => {
+      const el = document.querySelector(sel);
+      if (!el) return;
+      const targets = el.querySelectorAll('.p10-section-eyebrow, .p10-section-title, .p10-section-sub');
+      if (targets.length) {
+        gsap.from(targets, {
+          scrollTrigger: { trigger: el, start: 'top 85%' },
+          opacity: 0, y: 40, duration: 0.8, stagger: 0.12, ease: 'power3.out'
+        });
+      }
+    });
+  }
+}
 
 // ══════════════════════════════════════════════════════
-//  destroy() — 将在 Task 2 实现
+//  destroy()
 // ══════════════════════════════════════════════════════
-export function destroy() {}
+export function destroy() {
+  killAll();
+  if (_scrollHandler) {
+    window.removeEventListener('scroll', _scrollHandler);
+    _scrollHandler = null;
+  }
+  _codeEditors.forEach(e => { try { e.destroy(); } catch(_) {} });
+  _codeEditors = [];
+}
+
+// ══════════════════════════════════════════════════════
+//  initWorkflow() — 工作流步骤初始化
+// ══════════════════════════════════════════════════════
+function initWorkflow() {
+  const isMobile = window.innerWidth <= 900;
+
+  // Initialize CodeMirror for each workflow step (read-only display)
+  WORKFLOW_STEPS.forEach((step, i) => {
+    const container = document.getElementById(`p10-wf-code-${i}`);
+    if (!container) return;
+    try {
+      const editor = createCodeEditor(container, {
+        code: step.code, language: 'r', readOnly: true
+      });
+      if (editor && editor.destroy) _codeEditors.push(editor);
+    } catch(e) {
+      // Fallback to pre element if CodeMirror fails
+      container.innerHTML = `<pre style="background:#1a1a2e;padding:16px;border-radius:8px;font-family:var(--font-code);font-size:0.78rem;color:#a1a1a6;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:break-word;overflow:hidden;">${step.code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre>`;
+    }
+  });
+
+  if (isMobile) {
+    initWorkflowMobile();
+  } else {
+    initWorkflowDesktop();
+  }
+}
+
+function initWorkflowMobile() {
+  const dots = document.querySelectorAll('.p10-wf-dot');
+  const panels = document.querySelectorAll('.p10-wf-panel');
+
+  function setStep(idx) {
+    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    panels.forEach((p, i) => {
+      p.style.display = i === idx ? 'flex' : 'none';
+    });
+  }
+
+  // Show first step, hide others
+  setStep(0);
+  panels.forEach((p, i) => { if (i > 0) p.style.display = 'none'; });
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => setStep(i));
+  });
+}
+
+function initWorkflowDesktop() {
+  const body = document.getElementById('p10-wf-body');
+  const left = document.getElementById('p10-wf-left');
+  if (!body || !left) return;
+
+  let currentStep = 0;
+  const TOTAL = WORKFLOW_STEPS.length;
+
+  function updateStep(idx) {
+    currentStep = idx;
+    document.querySelectorAll('.p10-wf-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === idx);
+    });
+    // Update connector "passed" state
+    document.querySelectorAll('.p10-wf-connector').forEach((c, i) => {
+      c.classList.toggle('passed', i < idx);
+    });
+  }
+
+  function updateSticky() {
+    const bodyRect = body.getBoundingClientRect();
+    const scrolledPast = Math.max(0, -bodyRect.top);
+    const maxTranslate = Math.max(0, body.offsetHeight - left.offsetHeight);
+    left.style.transform = `translateY(${Math.min(scrolledPast, maxTranslate)}px)`;
+
+    // Step detection: each step occupies 100vh
+    const stepIdx = Math.min(TOTAL - 1, Math.max(0, Math.floor(scrolledPast / window.innerHeight)));
+    if (stepIdx !== currentStep) updateStep(stepIdx);
+  }
+
+  _scrollHandler = updateSticky;
+  window.addEventListener('scroll', updateSticky, { passive: true });
+  updateSticky();
+
+  // Click dot to scroll to corresponding panel
+  document.querySelectorAll('.p10-wf-dot').forEach((dot, i) => {
+    dot.addEventListener('click', () => {
+      const panel = document.getElementById(`p10-wf-panel-${i}`);
+      if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+}
