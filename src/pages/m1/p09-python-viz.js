@@ -1386,11 +1386,11 @@ export function render() {
 <!-- ══════════════════ FOOTER CTA ══════════════════ -->
 <section class="page-footer-cta">
   <p class="page-footer-num">09 / 10</p>
-  <h2 class="page-footer-quote">"好图表不是装饰，而是论点本身的延伸。"</h2>
+  <h2 class="page-footer-quote">好图表不是装饰，而是论点本身的延伸</h2>
   <p class="page-footer-desc">下一页：科研绘图工作流与导出 — 从数据到出版级图表的完整流程</p>
   <div class="page-footer-nav">
-    <button class="btn-ghost" id="p9-prev-btn">← 上一页</button>
-    <button class="btn-primary" id="p9-next-btn">下一页 →</button>
+    <button class="btn-ghost" id="p9-prev-btn">← R 配色方案</button>
+    <button class="btn-primary" id="p9-next-btn">工作流与导出 →</button>
   </div>
 </section>
 

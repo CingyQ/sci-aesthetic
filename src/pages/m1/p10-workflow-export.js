@@ -2096,13 +2096,13 @@ export function render() {
      ══════════════════════════════════════════════════════ -->
 <section class="page-footer-cta">
   <p class="page-footer-num">10 / 10</p>
-  <p class="page-footer-quote">"每一张顶刊图表的背后，都是一套被反复验证的工作流。"</p>
+  <h2 class="page-footer-quote">每一张顶刊图表的背后，都是一套被反复验证的工作流</h2>
   <p class="page-footer-desc">
     模块一「科研数据可视化」到此完结。你已掌握色彩理论、R/Python 绘图、图表选择与导出规范。<br>
     模块二将介绍 AI 辅助科研绘图——用 Midjourney、Stable Diffusion 与 ChatGPT 加速你的科研视觉创作。
   </p>
   <div class="page-footer-nav">
-    <button class="btn-ghost" id="p10-prev-btn">← 上一页：Python 可视化</button>
+    <button class="btn-ghost" id="p10-prev-btn">← Python 可视化</button>
     <button class="btn-primary" id="p10-next-btn">进入模块二 →</button>
   </div>
 </section>

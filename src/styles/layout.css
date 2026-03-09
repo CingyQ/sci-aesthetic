@@ -678,6 +678,16 @@
   color: var(--text-on-dark);
 }
 
+.page-footer-quote::before {
+  content: "\201C";
+  margin-right: 0.1em;
+}
+
+.page-footer-quote::after {
+  content: "\201D";
+  margin-left: 0.05em;
+}
+
 .page-footer-desc {
   font-size: 1rem;
   color: var(--text-on-dark-2);

@@ -215,7 +215,7 @@ export function render() {
   <!-- ====== Section 5: Footer CTA ====== -->
   <section class="page-footer-cta">
     <p class="page-footer-num">01 / 10</p>
-    <h2 class="page-footer-quote">"色彩是数据最直接的语言"</h2>
+    <h2 class="page-footer-quote">色彩是数据最直接的语言</h2>
     <p class="page-footer-desc">掌握 HSL 模型与混色原理后，你就拥有了精准控制配色的能力。下一步：用色彩和谐原理构建科研配色方案。</p>
     <div class="page-footer-nav">
       <button class="btn-primary m1p1-nav-link" data-route="m1-p2">色彩和谐 →</button>

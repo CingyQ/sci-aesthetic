@@ -1133,7 +1133,7 @@ export function render() {
   <!-- ══ Section 5: Footer CTA ══ -->
   <section class="page-footer-cta" id="p3-footer">
     <p class="page-footer-num">03 / 10</p>
-    <h2 class="page-footer-quote">"好的配色让数据自己说话"</h2>
+    <h2 class="page-footer-quote">好的配色让数据自己说话</h2>
     <p class="page-footer-desc">下一步：学习色觉无障碍设计，让更多人看懂你的图表</p>
     <div class="page-footer-nav">
       <button class="btn-ghost" id="p3-prev-btn">← 色彩和谐</button>

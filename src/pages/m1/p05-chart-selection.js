@@ -533,8 +533,8 @@ export function render() {
   <h2 class="page-footer-quote">选好图表，让数据开口说话</h2>
   <p class="page-footer-desc">掌握了图表选择的原则，接下来学习 ggplot2 的图层语法——精准控制图表每一个视觉细节。</p>
   <div class="page-footer-nav">
-    <button class="btn-ghost" onclick="window._p5nav('m1-p4')">← 色彩与阅读无障碍</button>
-    <button class="btn-primary" onclick="window._p5nav('m1-p6')">ggplot2 图层语法 →</button>
+    <button class="btn-ghost" id="p5-prev-btn">← 色彩与阅读无障碍</button>
+    <button class="btn-primary" id="p5-next-btn">ggplot2 图层语法 →</button>
   </div>
 </section>
 
@@ -545,7 +545,11 @@ export function render() {
 // init()
 // ─────────────────────────────────────────────
 export function init() {
-  window._p5nav = navigateTo;
+  // Footer nav buttons
+  const prevBtn = document.getElementById('p5-prev-btn');
+  const nextBtn = document.getElementById('p5-next-btn');
+  if (prevBtn) prevBtn.addEventListener('click', () => navigateTo('m1-p4'));
+  if (nextBtn) nextBtn.addEventListener('click', () => navigateTo('m1-p6'));
 
   // Hero 入场
   gsap.fromTo('#p5-eyebrow',      { opacity:0, y:20 }, { opacity:1, y:0, duration:0.6, delay:0.1,  ease:'power3.out' });
@@ -1416,5 +1420,4 @@ export function destroy() {
   state.resizeHandlers.forEach(fn => window.removeEventListener('resize', fn));
   state.resizeHandlers = [];
   state.treePath = [];
-  if (window._p5nav) delete window._p5nav;
 }

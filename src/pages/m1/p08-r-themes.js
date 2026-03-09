@@ -1567,11 +1567,11 @@ export function render() {
 <!-- ═══════════ Footer CTA ═══════════ -->
 <section class="page-footer-cta">
   <p class="page-footer-num">08 / 10</p>
-  <h2 class="page-footer-quote">"图表的颜色不是装饰，是数据的语言。"</h2>
+  <h2 class="page-footer-quote">图表的颜色不是装饰，是数据的语言</h2>
   <p class="page-footer-desc">下一页：Python 可视化与数据叙事 — matplotlib、seaborn 与标注技巧</p>
   <div class="page-footer-nav">
-    <button class="btn-ghost" id="p8-prev-btn">← 上一页</button>
-    <button class="btn-primary" id="p8-next-btn">下一页 →</button>
+    <button class="btn-ghost" id="p8-prev-btn">← ggplot2 工作坊</button>
+    <button class="btn-primary" id="p8-next-btn">Python 可视化 →</button>
   </div>
 </section>
 
