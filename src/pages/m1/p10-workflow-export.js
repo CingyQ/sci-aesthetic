@@ -512,6 +512,9 @@ export function render() {
   background: var(--border-light);
   margin-left: 21px;
 }
+.p10-wf-connector.passed {
+  background: var(--accent);
+}
 
 /* 工作流面板 */
 .p10-wf-panel {
@@ -1399,7 +1402,7 @@ export function render() {
       <button class="hero-quicknav__item" data-target="#p10-calc">分辨率计算器</button>
       <button class="hero-quicknav__item" data-target="#p10-journal">期刊速查</button>
     </nav>
-    <p class="scroll-hint" id="p10-scroll-hint">↓ 向下探索</p>
+    <p class="scroll-hint" id="p10-scroll-hint" style="opacity:0">↓ 向下探索</p>
   </div>
 </section>
 
@@ -1683,6 +1686,8 @@ export function init() {
       { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.55, ease: 'power3.out' });
     gsap.fromTo('#p10-quicknav',
       { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.7, ease: 'power3.out' });
+    gsap.fromTo('#p10-hero .scroll-hint',
+      { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, delay: 0.85, ease: 'power3.out' });
   }
 
   // 3. Footer 导航
@@ -1694,7 +1699,6 @@ export function init() {
 
   // 5. ScrollTrigger section 入场动画（桌面端）
   if (gsap && window.ScrollTrigger && window.innerWidth >= 769) {
-    const ScrollTrigger = window.ScrollTrigger;
     const sections = ['#p10-workflow', '#p10-format', '#p10-dpi', '#p10-calc', '#p10-journal'];
     sections.forEach(sel => {
       const el = document.querySelector(sel);
