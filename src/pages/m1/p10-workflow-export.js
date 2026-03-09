@@ -1,7 +1,7 @@
 // p10-workflow-export.js — 科研工作流与导出规范
 // 工作流步骤 + 格式对比 + DPI 对比器 + 分辨率计算器 + 期刊速查
 
-import { fadeIn, killAll } from '../../components/ScrollAnimations.js';
+import { fadeIn, killAll, gsap, ScrollTrigger } from '../../components/ScrollAnimations.js';
 import { createCodeEditor } from '../../components/CodeEditor.js';
 import { navigateTo } from '../../utils/router.js';
 import * as d3 from 'd3';
@@ -2034,17 +2034,14 @@ export function init() {
     });
   });
 
-  // 2. Hero GSAP 入场 (gsap is available as window.gsap from CDN)
-  const gsap = window.gsap;
-  if (gsap) {
-    const heroTl = gsap.timeline({ delay: 0.2 });
-    heroTl.fromTo('#p10-hero .hero-eyebrow', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0);
-    heroTl.fromTo('#p10-hero .page-hero-title', { y: 30, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.15);
-    heroTl.fromTo('#p10-hero .page-hero-sub', { y: 20, opacity: 0 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
-    heroTl.fromTo('#p10-hero .p10-hero-tagline', { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
-    heroTl.fromTo('#p10-hero #p10-quicknav', { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
-    heroTl.fromTo('#p10-hero .p10-scroll-hint', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.75);
-  }
+  // 2. Hero GSAP 入场
+  const heroTl = gsap.timeline({ delay: 0.2 });
+  heroTl.fromTo('#p10-hero .hero-eyebrow', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0);
+  heroTl.fromTo('#p10-hero .page-hero-title', { y: 30, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.15);
+  heroTl.fromTo('#p10-hero .page-hero-sub', { y: 20, opacity: 0 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
+  heroTl.fromTo('#p10-hero .p10-hero-tagline', { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
+  heroTl.fromTo('#p10-hero #p10-quicknav', { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
+  heroTl.fromTo('#p10-hero .p10-scroll-hint', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.75);
 
   // 3. Footer 导航
   document.getElementById('p10-prev-btn')?.addEventListener('click', () => navigateTo('m1-p9'));
@@ -2058,7 +2055,7 @@ export function init() {
   initJournalLookup();
 
   // 5. ScrollTrigger section 入场动画（桌面端）
-  if (gsap && window.ScrollTrigger && window.innerWidth >= 769) {
+  if (gsap && ScrollTrigger && window.innerWidth >= 769) {
     const sections = ['#p10-workflow', '#p10-format', '#p10-dpi', '#p10-calc', '#p10-journal'];
     sections.forEach(sel => {
       const el = document.querySelector(sel);
@@ -2725,7 +2722,6 @@ function initJournalLookup() {
     result.classList.add('visible');
 
     // GSAP entrance animation
-    const gsap = window.gsap;
     if (gsap) {
       gsap.fromTo(card, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' });
     }
