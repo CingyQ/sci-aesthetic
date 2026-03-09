@@ -62,7 +62,7 @@
 - [x] **Bug Fix（m1-p2~p7）**：Hero 版式统一（eyebrow 英文 Module 0X/Page 0X + 英文副标题 + 中文 tagline）；各页独特动态光晕（CSS keyframe 漂移动画）；m1-p7 gallery padding 压缩；12 种图表 R 代码加示例数据
 - [x] **Bug Fix（m1-p1~p7）**：统一 hero eyebrow 样式（全局 `.hero-eyebrow` 类）；p01 补加「↓ 向下探索」；p07 gallery SVG 图标（IntersectionObserver 取代 GSAP 避免闪白）；移动端 scroll hint 移入 flex 流（quicknav 下方，不再 position:absolute）；p07 移动端三 tab 布局
 - [x] **统一 Footer CTA（m1-p1~p7）**：新增全局 `.page-footer-cta` / `.page-footer-num` / `.page-footer-quote` / `.page-footer-desc` / `.page-footer-nav` CSS；所有页面末尾统一风格（纯黑背景 + 页码 + 金句 + 标准按钮）；修复 p03 next/prev 按钮顺序颠倒；修复 p03/p05 中「无障碍色彩」→「色彩与阅读无障碍」对齐 p04 实际标题
-- [ ] m1-p8 R 配色与出版级图表（配色包浏览器列表+预览 + 主题定制器滑块+D3+theme()代码 + ggsave 期刊代码生成器 + patchwork 4 种布局）
+- [x] m1-p8 R 配色与出版级图表（配色包浏览器列表+预览 + 主题定制器滑块+D3+theme()代码 + ggsave 期刊代码生成器 + patchwork 4 种布局）
 - [ ] m1-p9 Python 可视化与数据叙事（matplotlib 层次图解 + seaborn 10 种图表参数面板 + matplotlib vs ggplot2 对照 + annotate Canvas 拖拽 + 叙事 4 种方法动画）
 - [ ] m1-p10 科研绘图工作流与导出（6 步粘性时间线 + 格式原理动画 + DPI 对比器 BeforeAfter + 分辨率计算器 + 期刊速查）
 
@@ -113,7 +113,7 @@
 | Phase 1 设计系统 | ✅ 完成 | |
 | Phase 2 组件库 | ✅ 完成 | |
 | Phase 3 首页 | ✅ 完成 | |
-| Phase 4 模块一 | 🔄 7/10 | m1-p1~p7（含全部12种图表）完成，p8~p10 待开发 |
+| Phase 4 模块一 | 🔄 8/10 | m1-p1~p8 完成，p9~p10 待开发 |
 | Phase 5 模块二 | ⏳ 待开始 | |
 | Phase 6 模块三 | ⏳ 待开始 | |
 | Phase 7 模块四 | ⏳ 待开始 | |
