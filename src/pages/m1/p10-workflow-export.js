@@ -380,6 +380,54 @@ export function render() {
   50%       { transform: translateY(6px); opacity: 1; }
 }
 
+/* ── Hero Stats ── */
+.p10-hero-stats {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  margin: var(--space-md) 0;
+}
+
+.p10-hero-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.p10-hero-stat-num {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.p10-hero-stat-label {
+  font-family: var(--font-code);
+  font-size: var(--text-caption);
+  color: var(--text-on-dark-3);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.p10-hero-stat-divider {
+  width: 1px;
+  height: 40px;
+  background: rgba(255,255,255,0.12);
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .p10-hero-stats {
+    gap: var(--space-md);
+  }
+  .p10-hero-stat-num {
+    font-size: 2rem;
+  }
+}
+
 /* ── Workflow Section ── */
 .p10-workflow-section {
   background: var(--bg-light);
@@ -1410,6 +1458,23 @@ export function render() {
       从原始数据到顶刊图表，掌握每一步的决策与规范——<br>
       让你的图表在第一次提交时就符合期刊要求。
     </p>
+    <!-- Hero stats -->
+    <div class="p10-hero-stats" id="p10-hero-stats" style="opacity:0;">
+      <div class="p10-hero-stat">
+        <span class="p10-hero-stat-num" data-target="6">6</span>
+        <span class="p10-hero-stat-label">核心步骤</span>
+      </div>
+      <div class="p10-hero-stat-divider"></div>
+      <div class="p10-hero-stat">
+        <span class="p10-hero-stat-num" data-target="5">5</span>
+        <span class="p10-hero-stat-label">导出格式</span>
+      </div>
+      <div class="p10-hero-stat-divider"></div>
+      <div class="p10-hero-stat">
+        <span class="p10-hero-stat-num" data-target="6">6</span>
+        <span class="p10-hero-stat-label">期刊速查</span>
+      </div>
+    </div>
     <nav class="hero-quicknav" id="p10-quicknav" style="opacity:0;">
       <button class="hero-quicknav__item" data-target="#p10-workflow">工作流六步</button>
       <button class="hero-quicknav__item" data-target="#p10-format">格式对比</button>
@@ -1699,10 +1764,25 @@ export function init() {
       { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.4, ease: 'power3.out' });
     gsap.fromTo('#p10-hero .p10-hero-tagline',
       { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.55, ease: 'power3.out' });
+    gsap.fromTo('#p10-hero-stats',
+      { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.65, ease: 'power3.out',
+        onComplete: () => {
+          document.querySelectorAll('.p10-hero-stat-num').forEach(el => {
+            const target = parseInt(el.dataset.target) || 0;
+            let current = 0;
+            const step = () => {
+              current++;
+              el.textContent = current;
+              if (current < target) requestAnimationFrame(step);
+            };
+            requestAnimationFrame(step);
+          });
+        }
+      });
     gsap.fromTo('#p10-quicknav',
-      { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.7, ease: 'power3.out' });
+      { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.72, ease: 'power3.out' });
     gsap.fromTo('#p10-hero .scroll-hint',
-      { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, delay: 0.85, ease: 'power3.out' });
+      { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, delay: 0.9, ease: 'power3.out' });
   }
 
   // 3. Footer 导航
