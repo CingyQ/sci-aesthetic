@@ -1460,15 +1460,15 @@ export function render() {
      ══════════════════════════════════════════════════════ -->
 <section class="section-dark section-hero-full p10-hero" id="p10-hero">
   <div class="p10-hero-content">
-    <p class="hero-eyebrow" style="opacity:0;" id="p10-eyebrow">Module 01 / Page 10</p>
-    <h1 class="page-hero-title" style="color:var(--text-on-dark);opacity:0;" id="p10-hero-title">工作流与导出</h1>
-    <p class="page-hero-sub" style="opacity:0;" id="p10-hero-sub">Research Workflow &amp; Export</p>
-    <p class="p10-hero-tagline" style="opacity:0;" id="p10-hero-tagline">
+    <p class="hero-eyebrow" id="p10-eyebrow">Module 01 / Page 10</p>
+    <h1 class="page-hero-title" style="color:var(--text-on-dark);" id="p10-hero-title">工作流与导出</h1>
+    <p class="page-hero-sub" id="p10-hero-sub">Research Workflow &amp; Export</p>
+    <p class="p10-hero-tagline" id="p10-hero-tagline">
       从原始数据到顶刊图表，掌握每一步的决策与规范——<br>
       让你的图表在第一次提交时就符合期刊要求。
     </p>
     <!-- Hero stats -->
-    <div class="p10-hero-stats" id="p10-hero-stats" style="opacity:0;">
+    <div class="p10-hero-stats" id="p10-hero-stats">
       <div class="p10-hero-stat">
         <span class="p10-hero-stat-num" data-target="6">6</span>
         <span class="p10-hero-stat-label">核心步骤</span>
@@ -1484,14 +1484,14 @@ export function render() {
         <span class="p10-hero-stat-label">期刊速查</span>
       </div>
     </div>
-    <nav class="hero-quicknav" id="p10-quicknav" style="opacity:0;">
+    <nav class="hero-quicknav" id="p10-quicknav">
       <button class="hero-quicknav__item" data-target="#p10-workflow">工作流六步</button>
       <button class="hero-quicknav__item" data-target="#p10-format">格式对比</button>
       <button class="hero-quicknav__item" data-target="#p10-dpi">DPI 对比</button>
       <button class="hero-quicknav__item" data-target="#p10-calc">分辨率计算器</button>
       <button class="hero-quicknav__item" data-target="#p10-journal">期刊速查</button>
     </nav>
-    <p class="scroll-hint" id="p10-scroll-hint" style="opacity:0">↓ 向下探索</p>
+    <p class="scroll-hint" id="p10-scroll-hint">↓ 向下探索</p>
   </div>
 </section>
 
