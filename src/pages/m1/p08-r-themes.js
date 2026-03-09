@@ -275,6 +275,21 @@ p1 / p2 + plot_layout(heights = c(2, 1))`,
 ];
 
 // ══════════════════════════════════════════════════════
+//  主题定制器 — 预设配色方案（mini palette selector）
+// ══════════════════════════════════════════════════════
+
+const MINI_PALETTES = [
+  { name: 'Default',    colors: ['#7EC8E3','#F0B27A','#95D5B2'] },
+  { name: 'NPG',        colors: ['#E64B35','#4DBBD5','#00A087'] },
+  { name: 'Viridis',    colors: ['#440154','#21918C','#FDE725'] },
+  { name: 'D3 Classic', colors: ['#1F77B4','#FF7F0E','#2CA02C'] },
+  { name: 'Warm',       colors: ['#D53E4F','#FC8D59','#FEE08B'] },
+  { name: 'Cool',       colors: ['#2166AC','#67A9CF','#B8B8E8'] },
+  { name: 'Hiroshige',  colors: ['#E76254','#AAD3D3','#476F84'] },
+  { name: 'Pastel',     colors: ['#A6CEE3','#B2DF8A','#FB9A99'] },
+];
+
+// ══════════════════════════════════════════════════════
 //  图表数据（固定种子）
 // ══════════════════════════════════════════════════════
 
@@ -327,12 +342,24 @@ let state = {
   activePal: null,       // { name, colors }
   chartType: 'bar',      // bar | scatter | line
   themeParams: {
-    baseTheme: 'minimal',
-    fontSize: 12,
-    gridLines: 'both',
-    bgColor: '#ffffff',
-    axisLines: 'line',
-    legend: 'right',
+    baseTheme:   'minimal',
+    bgColor:     '#ffffff',
+    fontFamily:  'sans',
+    fontSize:    12,
+    paletteIdx:  0,
+    gridLines:   'major',
+    gridColor:   'light',
+    axisLines:   'show',
+    axisTicks:   'outside',
+    axisAngle:    0,
+    legendPos:   'right',
+    legendDir:   'vertical',
+    legendBox:   'none',
+    legendKey:   'medium',
+    showTitle:   true,
+    titleAlign:  'left',
+    showCaption: false,
+    showRegline: true,
   },
   ggsaveParams: {
     journal: 'nature',
@@ -460,6 +487,7 @@ export function render() {
 .p8-browser-right {
   flex: 1;
   min-width: 0;
+  overflow: hidden;
 }
 .p8-browser-sticky {
   position: sticky;
@@ -533,7 +561,8 @@ export function render() {
   font-family: var(--font-code);
   font-size: 0.8rem;
   color: var(--text-on-light-2);
-  min-width: 110px;
+  min-width: 90px;
+  flex-shrink: 0;
 }
 .p8-pal-swatches {
   display: flex;
@@ -611,6 +640,7 @@ export function render() {
   font-size: 0.78rem;
   color: var(--text-on-light-2);
   flex: 1;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -681,50 +711,87 @@ export function render() {
 }
 .p8-theme-layout {
   display: grid;
-  grid-template-columns: 280px 1fr;
+  grid-template-columns: 320px 1fr;
   gap: var(--space-lg);
   align-items: flex-start;
 }
+/* Controls panel */
 .p8-theme-controls {
   background: var(--bg-dark-elevated);
   border-radius: var(--radius-lg);
-  padding: var(--space-md);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-md);
+  overflow: hidden;
+  min-width: 0;
 }
-.p8-ctrl-group { display: flex; flex-direction: column; gap: 8px; }
-.p8-ctrl-label {
-  font-size: 0.8rem;
-  color: var(--text-on-dark-2);
+/* Tab strip */
+.p8-ctrl-tabs {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--border-dark);
+}
+.p8-ctrl-tabs::-webkit-scrollbar { display: none; }
+.p8-ctrl-tab {
+  flex: 1 1 0;
+  padding: 11px 8px;
+  font-size: 0.76rem;
   font-family: var(--font-heading);
   font-weight: 500;
+  color: var(--text-on-dark-3);
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: all var(--t-fast);
+  min-height: 40px;
 }
-.p8-ctrl-label span {
+.p8-ctrl-tab:hover { color: var(--text-on-dark); }
+.p8-ctrl-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+/* Group panels */
+.p8-ctrl-group-panel {
+  display: none;
+  padding: var(--space-md);
+  flex-direction: column;
+  gap: 16px;
+}
+.p8-ctrl-group-panel.active { display: flex; }
+/* Control row */
+.p8-ctrl-group { display: flex; flex-direction: column; gap: 8px; }
+.p8-ctrl-label {
+  font-size: 0.78rem;
+  color: var(--text-on-dark-3);
+  font-family: var(--font-heading);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.p8-ctrl-label-val {
   font-family: var(--font-code);
   color: var(--accent);
-  font-size: 0.82rem;
+  font-size: 0.8rem;
 }
+/* Button group */
 .p8-btn-group {
   display: flex;
   gap: 4px;
   flex-wrap: wrap;
 }
 .p8-btn-opt {
-  padding: 6px 12px;
+  padding: 5px 10px;
   border-radius: var(--radius-sm);
   background: transparent;
   border: 1.5px solid var(--border-dark);
   color: var(--text-on-dark-3);
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-family: var(--font-code);
   cursor: pointer;
   transition: all var(--t-fast);
-  min-height: 36px;
+  min-height: 32px;
 }
 .p8-btn-opt:hover { border-color: var(--accent); color: var(--text-on-dark); }
 .p8-btn-opt.active { background: var(--accent); border-color: var(--accent); color: #1d1d1f; font-weight: 600; }
-
+/* Range slider */
 .p8-range-slider {
   -webkit-appearance: none;
   appearance: none;
@@ -749,15 +816,80 @@ export function render() {
   width: 20px; height: 20px; border-radius: 50%;
   background: var(--accent); border: 2px solid var(--bg-dark); cursor: pointer;
 }
-
-.p8-theme-preview-wrap { display: flex; flex-direction: column; gap: var(--space-md); }
+/* Mini palette grid */
+.p8-mini-pals {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.p8-mini-pal {
+  border-radius: var(--radius-sm);
+  border: 2px solid transparent;
+  cursor: pointer;
+  padding: 4px;
+  transition: all var(--t-fast);
+  background: rgba(255,255,255,0.04);
+}
+.p8-mini-pal:hover { border-color: var(--accent); }
+.p8-mini-pal.active { border-color: var(--accent); background: rgba(126,200,227,0.12); }
+.p8-mini-pal-dots { display: flex; gap: 2px; margin-bottom: 3px; }
+.p8-mini-pal-dot { flex: 1; height: 8px; border-radius: 2px; }
+.p8-mini-pal-name {
+  font-size: 0.6rem;
+  font-family: var(--font-code);
+  color: var(--text-on-dark-3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+/* Background swatches */
+.p8-bg-swatches { display: flex; gap: 6px; flex-wrap: wrap; }
+.p8-bg-swatch {
+  width: 34px; height: 34px;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--border-dark);
+  cursor: pointer;
+  transition: all var(--t-fast);
+}
+.p8-bg-swatch:hover { border-color: var(--accent); transform: scale(1.1); }
+.p8-bg-swatch.active { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(126,200,227,0.4); }
+/* Toggle switch */
+.p8-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.p8-toggle-label { font-size: 0.78rem; color: var(--text-on-dark-3); font-family: var(--font-heading); }
+.p8-toggle { position: relative; width: 36px; height: 20px; flex-shrink: 0; }
+.p8-toggle input { opacity: 0; width: 0; height: 0; }
+.p8-toggle-track {
+  position: absolute; inset: 0;
+  background: var(--border-dark);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background var(--t-fast);
+}
+.p8-toggle input:checked + .p8-toggle-track { background: var(--accent); }
+.p8-toggle-track::after {
+  content: '';
+  position: absolute;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  top: 3px; left: 3px;
+  transition: transform var(--t-fast);
+}
+.p8-toggle input:checked + .p8-toggle-track::after { transform: translateX(16px); }
+/* Preview area */
+.p8-theme-preview-wrap { display: flex; flex-direction: column; gap: var(--space-md); min-width: 0; }
 .p8-theme-chart-box {
   border-radius: var(--radius-lg);
   overflow: hidden;
   border: 1px solid var(--border-dark);
 }
 .p8-theme-chart-box svg { display: block; width: 100%; }
-
 .p8-code-box {
   background: var(--bg-dark-elevated);
   border-radius: var(--radius-lg);
@@ -777,7 +909,7 @@ export function render() {
   color: var(--text-on-dark-3);
   letter-spacing: 0.05em;
 }
-.p8-code-editor-wrap { min-height: 180px; }
+.p8-code-editor-wrap { min-height: 200px; }
 
 /* ── ggsave section (Section 3) ── */
 .p8-ggsave-section {
@@ -963,6 +1095,9 @@ export function render() {
 }
 
 /* ── Responsive ── */
+@media (max-width: 1024px) {
+  .p8-theme-layout { grid-template-columns: 280px 1fr; }
+}
 @media (max-width: 900px) {
   .p8-browser-layout { flex-direction: column; }
   .p8-browser-left { flex: none; width: 100%; max-height: 380px; }
@@ -977,14 +1112,43 @@ export function render() {
   .p8-theme-section,
   .p8-ggsave-section,
   .p8-patchwork-section { padding: var(--space-xl) var(--space-sm); }
+
+  /* Browser section fixes */
+  .p8-browser-left, .p8-browser-right { min-width: 0; overflow: hidden; }
+  .p8-pal-info { min-width: 0; overflow: hidden; }
+  .p8-pal-name { min-width: 70px; font-size: 0.74rem; }
+  /* Scale row: wrap on mobile so code fits */
+  .p8-scale-row { flex-wrap: wrap; gap: 6px; align-items: center; }
+  .p8-scale-code {
+    flex: 1 1 100%;       /* take full row on wrap */
+    white-space: normal;
+    word-break: break-all;
+    overflow-wrap: break-word;
+    overflow: visible;
+    text-overflow: clip;
+    font-size: 0.72rem;
+    padding: 2px 0;
+  }
+  .p8-copy-btn { margin-left: auto; }
+  /* Scale cards */
+  .p8-scale-card code { word-break: break-all; }
+
+  /* ggsave section */
   .p8-specs-row { grid-template-columns: repeat(2, 1fr); }
-  .p8-range-slider { min-height: 32px; }
+
+  /* Theme customizer */
+  .p8-range-slider { min-height: 36px; }
   .p8-range-slider::-webkit-slider-thumb { width: 24px; height: 24px; }
   .p8-range-slider::-moz-range-thumb { width: 24px; height: 24px; }
+  .p8-mini-pals { grid-template-columns: repeat(4, 1fr); }
+  .p8-ctrl-tab { padding: 11px 6px; font-size: 0.7rem; }
 }
 @media (max-width: 480px) {
   .p8-specs-row { grid-template-columns: 1fr 1fr; }
   .p8-journal-btn { padding: 8px 16px; font-size: 0.82rem; }
+  .p8-bg-swatch { width: 30px; height: 30px; }
+  .p8-pal-name { min-width: 60px; }
+  .p8-scale-badge { font-size: 0.65rem; padding: 2px 6px; }
 }
 </style>
 
@@ -1095,63 +1259,174 @@ export function render() {
       <span class="p8-sec-label">出版级调整</span>
       <h2 class="p8-sec-title">主题定制器</h2>
       <p class="p8-sec-desc" style="color:var(--text-on-dark-2);">
-        调节参数，实时预览图表效果，右侧同步显示对应的 <code style="font-family:var(--font-code);color:var(--accent);font-size:0.9em;">theme()</code> R 代码。
+        调节 15+ 参数，实时预览图表效果，同步生成完整的 <code style="font-family:var(--font-code);color:var(--accent);font-size:0.9em;">theme()</code> R 代码。
       </p>
     </div>
 
     <div class="p8-theme-layout">
-      <!-- Left controls -->
+      <!-- Left: tabbed controls -->
       <div class="p8-theme-controls">
-        <!-- 基础主题 -->
-        <div class="p8-ctrl-group">
-          <span class="p8-ctrl-label">基础主题</span>
-          <div class="p8-btn-group" id="p8-base-theme-btns">
-            <button class="p8-btn-opt active" data-theme="minimal">minimal</button>
-            <button class="p8-btn-opt" data-theme="classic">classic</button>
-            <button class="p8-btn-opt" data-theme="bw">bw</button>
-            <button class="p8-btn-opt" data-theme="void">void</button>
+        <div class="p8-ctrl-tabs" id="p8-ctrl-tabs">
+          <button class="p8-ctrl-tab active" data-panel="base">主题基础</button>
+          <button class="p8-ctrl-tab" data-panel="grid">坐标&amp;网格</button>
+          <button class="p8-ctrl-tab" data-panel="legend">图例</button>
+          <button class="p8-ctrl-tab" data-panel="text">标注</button>
+        </div>
+
+        <!-- Panel 1: 主题基础 -->
+        <div class="p8-ctrl-group-panel active" data-panel="base">
+          <div class="p8-ctrl-group">
+            <span class="p8-ctrl-label">基础主题 theme_*()</span>
+            <div class="p8-btn-group" id="p8-base-theme-btns">
+              <button class="p8-btn-opt active" data-theme="minimal">minimal</button>
+              <button class="p8-btn-opt" data-theme="classic">classic</button>
+              <button class="p8-btn-opt" data-theme="bw">bw</button>
+              <button class="p8-btn-opt" data-theme="void">void</button>
+              <button class="p8-btn-opt" data-theme="dark2">dark2</button>
+            </div>
+          </div>
+          <div class="p8-ctrl-group">
+            <span class="p8-ctrl-label">配色方案 <span class="p8-ctrl-label-val" id="p8-palette-name-val">Default</span></span>
+            <div class="p8-mini-pals" id="p8-mini-pals">
+              ${MINI_PALETTES.map((p, i) => `
+              <button class="p8-mini-pal${i === 0 ? ' active' : ''}" data-pal-idx="${i}" title="${p.name}">
+                <div class="p8-mini-pal-dots">
+                  ${p.colors.map(c => `<span class="p8-mini-pal-dot" style="background:${c}"></span>`).join('')}
+                </div>
+                <div class="p8-mini-pal-name">${p.name}</div>
+              </button>`).join('')}
+            </div>
+          </div>
+          <div class="p8-ctrl-group">
+            <span class="p8-ctrl-label">背景色 panel.background</span>
+            <div class="p8-bg-swatches" id="p8-bg-swatches">
+              <button class="p8-bg-swatch active" data-bg="#ffffff" style="background:#ffffff;" title="white"></button>
+              <button class="p8-bg-swatch" data-bg="#fafafa" style="background:#fafafa;" title="grey98"></button>
+              <button class="p8-bg-swatch" data-bg="#f5f5f5" style="background:#f5f5f5;" title="grey97"></button>
+              <button class="p8-bg-swatch" data-bg="#f0f4f8" style="background:#f0f4f8;" title="#f0f4f8"></button>
+              <button class="p8-bg-swatch" data-bg="#fffbf0" style="background:#fffbf0;" title="warm white"></button>
+              <button class="p8-bg-swatch" data-bg="#1d1d1f" style="background:#1d1d1f;border-color:#555;" title="dark"></button>
+            </div>
+          </div>
+          <div class="p8-ctrl-group">
+            <span class="p8-ctrl-label">字体族 base_family</span>
+            <div class="p8-btn-group" id="p8-font-family-btns">
+              <button class="p8-btn-opt active" data-font="sans">无衬线</button>
+              <button class="p8-btn-opt" data-font="serif">衬线</button>
+              <button class="p8-btn-opt" data-font="mono">等宽</button>
+            </div>
+          </div>
+          <div class="p8-ctrl-group">
+            <span class="p8-ctrl-label">基础字号 base_size <span class="p8-ctrl-label-val" id="p8-fontsize-val">12</span> pt</span>
+            <input type="range" class="p8-range-slider" id="p8-fontsize" min="8" max="20" value="12" step="1">
           </div>
         </div>
-        <!-- 字号 -->
-        <div class="p8-ctrl-group">
-          <span class="p8-ctrl-label">base_size：<span id="p8-fontsize-val">12</span> pt</span>
-          <input type="range" class="p8-range-slider" id="p8-fontsize" min="8" max="20" value="12" step="1">
-        </div>
-        <!-- 网格线 -->
-        <div class="p8-ctrl-group">
-          <span class="p8-ctrl-label">网格线 panel.grid</span>
-          <div class="p8-btn-group" id="p8-grid-btns">
-            <button class="p8-btn-opt active" data-grid="both">主次</button>
-            <button class="p8-btn-opt" data-grid="major">主要</button>
-            <button class="p8-btn-opt" data-grid="none">无</button>
+
+        <!-- Panel 2: 坐标与网格 -->
+        <div class="p8-ctrl-group-panel" data-panel="grid">
+          <div class="p8-ctrl-group">
+            <span class="p8-ctrl-label">网格线 panel.grid</span>
+            <div class="p8-btn-group" id="p8-grid-btns">
+              <button class="p8-btn-opt" data-grid="both">主+次</button>
+              <button class="p8-btn-opt active" data-grid="major">仅主</button>
+              <button class="p8-btn-opt" data-grid="none">无</button>
+            </div>
+          </div>
+          <div class="p8-ctrl-group">
+            <span class="p8-ctrl-label">网格颜色</span>
+            <div class="p8-btn-group" id="p8-grid-color-btns">
+              <button class="p8-btn-opt active" data-gridcolor="light">浅灰 grey90</button>
+              <button class="p8-btn-opt" data-gridcolor="medium">中灰 grey80</button>
+              <button class="p8-btn-opt" data-gridcolor="white">白色 white</button>
+            </div>
+          </div>
+          <div class="p8-ctrl-group">
+            <span class="p8-ctrl-label">坐标轴线 axis.line</span>
+            <div class="p8-btn-group" id="p8-axis-btns">
+              <button class="p8-btn-opt active" data-axis="show">显示</button>
+              <button class="p8-btn-opt" data-axis="none">隐藏</button>
+            </div>
+          </div>
+          <div class="p8-ctrl-group">
+            <span class="p8-ctrl-label">刻度方向 axis.ticks</span>
+            <div class="p8-btn-group" id="p8-ticks-btns">
+              <button class="p8-btn-opt active" data-ticks="outside">向外</button>
+              <button class="p8-btn-opt" data-ticks="inside">向内</button>
+              <button class="p8-btn-opt" data-ticks="none">无刻度</button>
+            </div>
+          </div>
+          <div class="p8-ctrl-group">
+            <span class="p8-ctrl-label">X 轴标签旋转 <span class="p8-ctrl-label-val" id="p8-axis-angle-val">0°</span></span>
+            <input type="range" class="p8-range-slider" id="p8-axis-angle" min="0" max="90" value="0" step="15">
           </div>
         </div>
-        <!-- 背景色 -->
-        <div class="p8-ctrl-group">
-          <span class="p8-ctrl-label">背景色 panel.background</span>
-          <div class="p8-btn-group" id="p8-bg-btns">
-            <button class="p8-btn-opt active" data-bg="#ffffff">白色</button>
-            <button class="p8-btn-opt" data-bg="#f5f5f5">浅灰</button>
-            <button class="p8-btn-opt" data-bg="#f0f4f8">冷灰</button>
-            <button class="p8-btn-opt" data-bg="#1d1d1f">深色</button>
+
+        <!-- Panel 3: 图例 -->
+        <div class="p8-ctrl-group-panel" data-panel="legend">
+          <div class="p8-ctrl-group">
+            <span class="p8-ctrl-label">图例位置 legend.position</span>
+            <div class="p8-btn-group" id="p8-legend-pos-btns">
+              <button class="p8-btn-opt active" data-legendpos="right">右侧</button>
+              <button class="p8-btn-opt" data-legendpos="bottom">底部</button>
+              <button class="p8-btn-opt" data-legendpos="top">顶部</button>
+              <button class="p8-btn-opt" data-legendpos="left">左侧</button>
+              <button class="p8-btn-opt" data-legendpos="none">隐藏</button>
+            </div>
+          </div>
+          <div class="p8-ctrl-group">
+            <span class="p8-ctrl-label">排列方向 legend.direction</span>
+            <div class="p8-btn-group" id="p8-legend-dir-btns">
+              <button class="p8-btn-opt active" data-legenddir="vertical">垂直</button>
+              <button class="p8-btn-opt" data-legenddir="horizontal">水平</button>
+            </div>
+          </div>
+          <div class="p8-ctrl-group">
+            <span class="p8-ctrl-label">图例框 legend.box.background</span>
+            <div class="p8-btn-group" id="p8-legend-box-btns">
+              <button class="p8-btn-opt active" data-legendbox="none">无边框</button>
+              <button class="p8-btn-opt" data-legendbox="rect">加边框</button>
+            </div>
+          </div>
+          <div class="p8-ctrl-group">
+            <span class="p8-ctrl-label">图例键大小 legend.key.size</span>
+            <div class="p8-btn-group" id="p8-legend-key-btns">
+              <button class="p8-btn-opt" data-legendkey="small">小 0.8×</button>
+              <button class="p8-btn-opt active" data-legendkey="medium">中 1×</button>
+              <button class="p8-btn-opt" data-legendkey="large">大 1.4×</button>
+            </div>
           </div>
         </div>
-        <!-- 坐标轴 -->
-        <div class="p8-ctrl-group">
-          <span class="p8-ctrl-label">坐标轴线 axis.line</span>
-          <div class="p8-btn-group" id="p8-axis-btns">
-            <button class="p8-btn-opt active" data-axis="line">显示</button>
-            <button class="p8-btn-opt" data-axis="none">隐藏</button>
+
+        <!-- Panel 4: 文字标注 -->
+        <div class="p8-ctrl-group-panel" data-panel="text">
+          <div class="p8-toggle-row">
+            <span class="p8-toggle-label">显示标题 plot.title</span>
+            <label class="p8-toggle">
+              <input type="checkbox" id="p8-show-title" checked>
+              <span class="p8-toggle-track"></span>
+            </label>
           </div>
-        </div>
-        <!-- 图例 -->
-        <div class="p8-ctrl-group">
-          <span class="p8-ctrl-label">图例位置 legend.position</span>
-          <div class="p8-btn-group" id="p8-legend-btns">
-            <button class="p8-btn-opt active" data-legend="right">右</button>
-            <button class="p8-btn-opt" data-legend="bottom">下</button>
-            <button class="p8-btn-opt" data-legend="top">上</button>
-            <button class="p8-btn-opt" data-legend="none">隐藏</button>
+          <div class="p8-ctrl-group" id="p8-title-align-group">
+            <span class="p8-ctrl-label">标题对齐 hjust</span>
+            <div class="p8-btn-group" id="p8-title-align-btns">
+              <button class="p8-btn-opt active" data-align="left">左对齐</button>
+              <button class="p8-btn-opt" data-align="center">居中</button>
+              <button class="p8-btn-opt" data-align="right">右对齐</button>
+            </div>
+          </div>
+          <div class="p8-toggle-row">
+            <span class="p8-toggle-label">显示图注 plot.caption</span>
+            <label class="p8-toggle">
+              <input type="checkbox" id="p8-show-caption">
+              <span class="p8-toggle-track"></span>
+            </label>
+          </div>
+          <div class="p8-toggle-row">
+            <span class="p8-toggle-label">趋势回归线 geom_smooth()</span>
+            <label class="p8-toggle">
+              <input type="checkbox" id="p8-show-regline" checked>
+              <span class="p8-toggle-track"></span>
+            </label>
           </div>
         </div>
       </div>
@@ -1161,7 +1436,7 @@ export function render() {
         <div class="p8-theme-chart-box" id="p8-theme-chart-box"></div>
         <div class="p8-code-box">
           <div class="p8-code-box-header">
-            <span class="p8-code-box-title">theme() 代码</span>
+            <span class="p8-code-box-title">theme() 完整代码</span>
             <button class="p8-copy-btn" id="p8-theme-copy-btn">复制</button>
           </div>
           <div class="p8-code-editor-wrap" id="p8-theme-editor"></div>
@@ -1545,12 +1820,66 @@ function updatePalInfo() {
 function initThemeCustomizer() {
   const tp = state.themeParams;
 
-  // Base theme buttons
-  document.querySelectorAll('#p8-base-theme-btns .p8-btn-opt').forEach(btn => {
+  // Helper: wire up a btn-group
+  function wireGroup(selector, stateKey, dataAttr) {
+    document.querySelectorAll(`${selector} .p8-btn-opt`).forEach(btn => {
+      const fn = () => {
+        document.querySelectorAll(`${selector} .p8-btn-opt`).forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        tp[stateKey] = btn.dataset[dataAttr];
+        updateThemeChart(); updateThemeCode();
+      };
+      btn.addEventListener('click', fn);
+      state.cleanupFns.push(() => btn.removeEventListener('click', fn));
+    });
+  }
+
+  // Tab switching
+  document.querySelectorAll('#p8-ctrl-tabs .p8-ctrl-tab').forEach(tab => {
     const fn = () => {
-      document.querySelectorAll('#p8-base-theme-btns .p8-btn-opt').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('#p8-ctrl-tabs .p8-ctrl-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.p8-ctrl-group-panel').forEach(p => p.classList.remove('active'));
+      tab.classList.add('active');
+      const panel = document.querySelector(`.p8-ctrl-group-panel[data-panel="${tab.dataset.panel}"]`);
+      if (panel) panel.classList.add('active');
+    };
+    tab.addEventListener('click', fn);
+    state.cleanupFns.push(() => tab.removeEventListener('click', fn));
+  });
+
+  // Wire all button groups
+  wireGroup('#p8-base-theme-btns', 'baseTheme', 'theme');
+  wireGroup('#p8-font-family-btns', 'fontFamily', 'font');
+  wireGroup('#p8-grid-btns', 'gridLines', 'grid');
+  wireGroup('#p8-grid-color-btns', 'gridColor', 'gridcolor');
+  wireGroup('#p8-axis-btns', 'axisLines', 'axis');
+  wireGroup('#p8-ticks-btns', 'axisTicks', 'ticks');
+  wireGroup('#p8-legend-pos-btns', 'legendPos', 'legendpos');
+  wireGroup('#p8-legend-dir-btns', 'legendDir', 'legenddir');
+  wireGroup('#p8-legend-box-btns', 'legendBox', 'legendbox');
+  wireGroup('#p8-legend-key-btns', 'legendKey', 'legendkey');
+  wireGroup('#p8-title-align-btns', 'titleAlign', 'align');
+
+  // Mini palette selector
+  document.querySelectorAll('#p8-mini-pals .p8-mini-pal').forEach(btn => {
+    const fn = () => {
+      document.querySelectorAll('#p8-mini-pals .p8-mini-pal').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
-      tp.baseTheme = btn.dataset.theme;
+      tp.paletteIdx = parseInt(btn.dataset.palIdx);
+      const nameEl = document.getElementById('p8-palette-name-val');
+      if (nameEl) nameEl.textContent = MINI_PALETTES[tp.paletteIdx].name;
+      updateThemeChart(); updateThemeCode();
+    };
+    btn.addEventListener('click', fn);
+    state.cleanupFns.push(() => btn.removeEventListener('click', fn));
+  });
+
+  // Background swatches
+  document.querySelectorAll('#p8-bg-swatches .p8-bg-swatch').forEach(btn => {
+    const fn = () => {
+      document.querySelectorAll('#p8-bg-swatches .p8-bg-swatch').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      tp.bgColor = btn.dataset.bg;
       updateThemeChart(); updateThemeCode();
     };
     btn.addEventListener('click', fn);
@@ -1561,63 +1890,60 @@ function initThemeCustomizer() {
   const fsSlider = document.getElementById('p8-fontsize');
   const fsVal    = document.getElementById('p8-fontsize-val');
   if (fsSlider) {
-    const fn = () => { tp.fontSize = parseInt(fsSlider.value); if (fsVal) fsVal.textContent = tp.fontSize; updateThemeChart(); updateThemeCode(); };
+    const fn = () => {
+      tp.fontSize = parseInt(fsSlider.value);
+      if (fsVal) fsVal.textContent = tp.fontSize;
+      updateThemeChart(); updateThemeCode();
+    };
     fsSlider.addEventListener('input', fn);
     state.cleanupFns.push(() => fsSlider.removeEventListener('input', fn));
   }
 
-  // Grid buttons
-  document.querySelectorAll('#p8-grid-btns .p8-btn-opt').forEach(btn => {
+  // Axis angle slider
+  const angleSlider = document.getElementById('p8-axis-angle');
+  const angleVal    = document.getElementById('p8-axis-angle-val');
+  if (angleSlider) {
     const fn = () => {
-      document.querySelectorAll('#p8-grid-btns .p8-btn-opt').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      tp.gridLines = btn.dataset.grid;
+      tp.axisAngle = parseInt(angleSlider.value);
+      if (angleVal) angleVal.textContent = tp.axisAngle + '°';
       updateThemeChart(); updateThemeCode();
     };
-    btn.addEventListener('click', fn);
-    state.cleanupFns.push(() => btn.removeEventListener('click', fn));
-  });
+    angleSlider.addEventListener('input', fn);
+    state.cleanupFns.push(() => angleSlider.removeEventListener('input', fn));
+  }
 
-  // Bg buttons
-  document.querySelectorAll('#p8-bg-btns .p8-btn-opt').forEach(btn => {
+  // Toggle: show title
+  const titleChk = document.getElementById('p8-show-title');
+  if (titleChk) {
     const fn = () => {
-      document.querySelectorAll('#p8-bg-btns .p8-btn-opt').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      tp.bgColor = btn.dataset.bg;
+      tp.showTitle = titleChk.checked;
+      const ag = document.getElementById('p8-title-align-group');
+      if (ag) ag.style.opacity = tp.showTitle ? '1' : '0.4';
       updateThemeChart(); updateThemeCode();
     };
-    btn.addEventListener('click', fn);
-    state.cleanupFns.push(() => btn.removeEventListener('click', fn));
-  });
+    titleChk.addEventListener('change', fn);
+    state.cleanupFns.push(() => titleChk.removeEventListener('change', fn));
+  }
 
-  // Axis buttons
-  document.querySelectorAll('#p8-axis-btns .p8-btn-opt').forEach(btn => {
-    const fn = () => {
-      document.querySelectorAll('#p8-axis-btns .p8-btn-opt').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      tp.axisLines = btn.dataset.axis;
-      updateThemeChart(); updateThemeCode();
-    };
-    btn.addEventListener('click', fn);
-    state.cleanupFns.push(() => btn.removeEventListener('click', fn));
-  });
+  // Toggle: show caption
+  const captionChk = document.getElementById('p8-show-caption');
+  if (captionChk) {
+    const fn = () => { tp.showCaption = captionChk.checked; updateThemeChart(); updateThemeCode(); };
+    captionChk.addEventListener('change', fn);
+    state.cleanupFns.push(() => captionChk.removeEventListener('change', fn));
+  }
 
-  // Legend buttons
-  document.querySelectorAll('#p8-legend-btns .p8-btn-opt').forEach(btn => {
-    const fn = () => {
-      document.querySelectorAll('#p8-legend-btns .p8-btn-opt').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      tp.legend = btn.dataset.legend;
-      updateThemeChart(); updateThemeCode();
-    };
-    btn.addEventListener('click', fn);
-    state.cleanupFns.push(() => btn.removeEventListener('click', fn));
-  });
+  // Toggle: regression line
+  const reglineChk = document.getElementById('p8-show-regline');
+  if (reglineChk) {
+    const fn = () => { tp.showRegline = reglineChk.checked; updateThemeChart(); updateThemeCode(); };
+    reglineChk.addEventListener('change', fn);
+    state.cleanupFns.push(() => reglineChk.removeEventListener('change', fn));
+  }
 
-  // CodeMirror editor (read-only display of theme() code)
+  // CodeMirror editor
   const editorEl = document.getElementById('p8-theme-editor');
   if (editorEl) {
-    const isMobile = window.innerWidth < 768;
     state.codeEditor = createCodeEditor(editorEl, {
       code: buildThemeCode(),
       language: 'r',
@@ -1638,147 +1964,313 @@ function updateThemeChart() {
   const tp = state.themeParams;
   box.innerHTML = '';
 
-  const W = 520, H = 300;
+  const W = 580, H = 390;
   const svg = d3.select(box).append('svg')
     .attr('viewBox', `0 0 ${W} ${H}`)
     .attr('preserveAspectRatio', 'xMidYMid meet');
 
-  const isDark = tp.bgColor === '#1d1d1f';
+  const isDark = tp.bgColor === '#1d1d1f' || tp.baseTheme === 'dark2';
   const textColor  = isDark ? '#e8e8e8' : '#222222';
   const textColor2 = isDark ? '#aaaaaa' : '#555555';
 
+  const palColors = MINI_PALETTES[tp.paletteIdx].colors;
+  const nGroups = Math.min(palColors.length, 4);
+
+  const fontFamilyMap = {
+    sans:  'Helvetica, Arial, sans-serif',
+    serif: 'Georgia, "Times New Roman", serif',
+    mono:  '"Courier New", monospace',
+  };
+  const fontFam = fontFamilyMap[tp.fontFamily] || fontFamilyMap.sans;
+
   // Per-theme visual rules
   const themeRules = {
-    minimal:  { border: false, gridMajorColor: isDark ? 'rgba(255,255,255,0.1)' : '#e5e5e5', gridMajorW: 0.7, gridMinorColor: isDark ? 'rgba(255,255,255,0.05)' : '#f2f2f2', gridMinorW: 0.4, axisLineColor: 'none', outerBorder: false },
-    classic:  { border: false, gridMajorColor: 'none', gridMajorW: 0, gridMinorColor: 'none', gridMinorW: 0, axisLineColor: isDark ? '#aaaaaa' : '#333333', outerBorder: false },
-    bw:       { border: true,  gridMajorColor: isDark ? 'rgba(255,255,255,0.12)' : '#dddddd', gridMajorW: 0.6, gridMinorColor: 'none', gridMinorW: 0, axisLineColor: 'none', outerBorder: true, borderColor: isDark ? '#888888' : '#333333' },
-    void:     { border: false, gridMajorColor: 'none', gridMajorW: 0, gridMinorColor: 'none', gridMinorW: 0, axisLineColor: 'none', outerBorder: false },
+    minimal: { plotBg: tp.bgColor, gridMajC: isDark ? 'rgba(255,255,255,0.1)' : '#e5e5e5', gridMinC: isDark ? 'rgba(255,255,255,0.05)' : '#f2f2f2', axisLineC: 'none', outerBorder: false },
+    classic: { plotBg: tp.bgColor, gridMajC: 'none', gridMinC: 'none', axisLineC: isDark ? '#aaaaaa' : '#333333', outerBorder: false },
+    bw:      { plotBg: tp.bgColor, gridMajC: isDark ? 'rgba(255,255,255,0.14)' : '#dddddd', gridMinC: 'none', axisLineC: 'none', outerBorder: true, borderColor: isDark ? '#888888' : '#444444' },
+    void:    { plotBg: tp.bgColor, gridMajC: 'none', gridMinC: 'none', axisLineC: 'none', outerBorder: false },
+    dark2:   { plotBg: '#2a2a2e', gridMajC: 'rgba(255,255,255,0.1)', gridMinC: 'rgba(255,255,255,0.04)', axisLineC: 'none', outerBorder: false },
   };
   const rules = themeRules[tp.baseTheme] || themeRules.minimal;
 
-  // Canvas background (outer)
-  svg.append('rect').attr('width', W).attr('height', H).attr('fill', isDark ? '#2a2a2e' : '#f0f0f0');
+  // Grid color override
+  const gridColorMap = {
+    light:  isDark ? 'rgba(255,255,255,0.1)' : '#e8e8e8',
+    medium: isDark ? 'rgba(255,255,255,0.2)' : '#cccccc',
+    white:  'rgba(255,255,255,0.9)',
+  };
+  const gridMajC = rules.gridMajC === 'none' ? 'none' : (gridColorMap[tp.gridColor] || rules.gridMajC);
+  const gridMinC = rules.gridMinC === 'none' ? 'none' : (tp.gridColor === 'white' ? 'rgba(255,255,255,0.5)' : (isDark ? 'rgba(255,255,255,0.05)' : '#f2f2f2'));
 
-  const m = { top: 28, right: 24, bottom: 44, left: 52 };
+  // Layout dimensions
+  const legendIsHoriz = tp.legendDir === 'horizontal';
+  const legendNone = tp.legendPos === 'none';
+  const lgLabelSize = Math.max(7, tp.fontSize * 0.65);
+  const lgKeySize = { small: 7, medium: 9, large: 13 }[tp.legendKey] || 9;
+  const labels = ['Group A', 'Group B', 'Group C', 'Group D'].slice(0, nGroups);
+  const lgItemW = 62, lgItemH = lgKeySize + 10;
+  const lgTotalW = legendIsHoriz ? labels.length * lgItemW : 74;
+  const lgTotalH = legendIsHoriz ? lgItemH + 4 : labels.length * lgItemH + 4;
+
+  const hasTitle   = tp.showTitle;
+  const hasCaption = tp.showCaption;
+  const titleH   = hasTitle   ? 32 : 0;
+  const captionH = hasCaption ? 18 : 0;
+  const extraBottomForAngle = tp.axisAngle > 30 ? 14 : 0;
+
+  const m = {
+    top:    14 + titleH + (tp.legendPos === 'top'    && !legendNone ? lgTotalH + 6 : 0),
+    right:  (tp.legendPos === 'right' && !legendNone ? lgTotalW + 10 : 16),
+    bottom: 36 + captionH + extraBottomForAngle + (tp.legendPos === 'bottom' && !legendNone ? lgTotalH + 8 : 0),
+    left:   (tp.legendPos === 'left'  && !legendNone ? lgTotalW + 10 : 46),
+  };
   const iW = W - m.left - m.right;
   const iH = H - m.top - m.bottom;
+
+  // Outer canvas bg
+  const outerBg = tp.baseTheme === 'dark2' ? '#1a1a2e' : (isDark ? '#2a2a2e' : '#f0f0f0');
+  svg.append('rect').attr('width', W).attr('height', H).attr('fill', outerBg);
+
   const g = svg.append('g').attr('transform', `translate(${m.left},${m.top})`);
 
-  // Panel background (inner plot area)
-  g.append('rect').attr('width', iW).attr('height', iH).attr('fill', tp.bgColor)
-    .attr('stroke', rules.outerBorder ? rules.borderColor : 'none').attr('stroke-width', rules.outerBorder ? 1.2 : 0);
+  // Panel background
+  g.append('rect').attr('width', iW).attr('height', iH)
+    .attr('fill', rules.plotBg)
+    .attr('stroke', rules.outerBorder ? rules.borderColor : 'none')
+    .attr('stroke-width', rules.outerBorder ? 1 : 0);
 
-  const yScale = d3.scaleLinear().domain([0, 100]).range([iH, 0]);
-  const xScale = d3.scaleLinear().domain([0, 14]).range([0, iW]);
+  const xScale = d3.scaleLinear().domain([0, 9]).range([0, iW]);
+  const yScale = d3.scaleLinear().domain([0, 10]).range([iH, 0]);
 
-  // Grid — respect both the theme rule AND the user's gridLines toggle
-  const showGridMajor = tp.gridLines !== 'none' && rules.gridMajorColor !== 'none';
-  const showGridMinor = tp.gridLines === 'both'  && rules.gridMinorColor !== 'none';
-  if (showGridMajor) {
+  // Grid
+  if (tp.gridLines !== 'none' && gridMajC !== 'none') {
     g.append('g').call(d3.axisLeft(yScale).tickSize(-iW).tickFormat('').ticks(5))
-      .call(a => { a.select('.domain').remove(); a.selectAll('line').attr('stroke', rules.gridMajorColor).attr('stroke-width', rules.gridMajorW); });
+      .call(a => { a.select('.domain').remove(); a.selectAll('line').attr('stroke', gridMajC).attr('stroke-width', 0.7); });
+    g.append('g').attr('transform', `translate(0,${iH})`).call(d3.axisBottom(xScale).tickSize(-iH).tickFormat('').ticks(5))
+      .call(a => { a.select('.domain').remove(); a.selectAll('line').attr('stroke', gridMajC).attr('stroke-width', 0.7); });
   }
-  if (showGridMinor) {
+  if (tp.gridLines === 'both' && gridMinC !== 'none') {
     g.append('g').call(d3.axisLeft(yScale).tickSize(-iW).tickFormat('').ticks(10))
-      .call(a => { a.select('.domain').remove(); a.selectAll('line').attr('stroke', rules.gridMinorColor).attr('stroke-width', rules.gridMinorW).attr('stroke-dasharray', '2,3'); });
+      .call(a => { a.select('.domain').remove(); a.selectAll('line').attr('stroke', gridMinC).attr('stroke-width', 0.35).attr('stroke-dasharray', '2,3'); });
   }
 
-  // Axis lines — respect both theme rule AND user toggle
-  const showAxisLine = tp.axisLines === 'line' && rules.axisLineColor !== 'none';
-  if (showAxisLine) {
-    g.append('line').attr('x1', 0).attr('y1', iH).attr('x2', iW).attr('y2', iH).attr('stroke', rules.axisLineColor).attr('stroke-width', 1.2);
-    g.append('line').attr('x1', 0).attr('y1', 0).attr('x2', 0).attr('y2', iH).attr('stroke', rules.axisLineColor).attr('stroke-width', 1.2);
+  // Axis lines
+  const showAxisLine = tp.axisLines === 'show' && rules.axisLineC !== 'none';
+  if (showAxisLine || tp.baseTheme === 'classic') {
+    const alC = rules.axisLineC !== 'none' ? rules.axisLineC : (isDark ? '#888' : '#444');
+    g.append('line').attr('x1', 0).attr('y1', iH).attr('x2', iW).attr('y2', iH).attr('stroke', alC).attr('stroke-width', 0.9);
+    g.append('line').attr('x1', 0).attr('y1', 0).attr('x2', 0).attr('y2', iH).attr('stroke', alC).attr('stroke-width', 0.9);
   }
-  // bw/classic always show border or axis bottom/left for the minimal structure
-  if (tp.baseTheme === 'classic' && !showAxisLine) {
-    g.append('line').attr('x1', 0).attr('y1', iH).attr('x2', iW).attr('y2', iH).attr('stroke', rules.axisLineColor !== 'none' ? rules.axisLineColor : (isDark ? '#888' : '#333')).attr('stroke-width', 1.2);
-    g.append('line').attr('x1', 0).attr('y1', 0).attr('x2', 0).attr('y2', iH).attr('stroke', rules.axisLineColor !== 'none' ? rules.axisLineColor : (isDark ? '#888' : '#333')).attr('stroke-width', 1.2);
+  // bw top/right border
+  if (tp.baseTheme === 'bw') {
+    g.append('line').attr('x1', iW).attr('y1', 0).attr('x2', iW).attr('y2', iH).attr('stroke', rules.borderColor).attr('stroke-width', 0.8);
+    g.append('line').attr('x1', 0).attr('y1', 0).attr('x2', iW).attr('y2', 0).attr('stroke', rules.borderColor).attr('stroke-width', 0.8);
   }
 
-  // Data: scatter groups
-  const palColors = ['#7EC8E3','#F0B27A','#95D5B2','#B8B8E8'];
-  const ptR = Math.max(3.5, Math.min(6, tp.fontSize * 0.28));
-  SCATTER_PTS.filter(d => d.g < 4).forEach(d => {
+  // Regression lines
+  if (tp.showRegline) {
+    for (let gi = 0; gi < nGroups; gi++) {
+      const pts = SCATTER_PTS.filter(d => d.g === gi);
+      if (pts.length < 2) continue;
+      const n = pts.length;
+      const sumX = pts.reduce((s, p) => s + p.x, 0);
+      const sumY = pts.reduce((s, p) => s + p.y, 0);
+      const sumXX = pts.reduce((s, p) => s + p.x * p.x, 0);
+      const sumXY = pts.reduce((s, p) => s + p.x * p.y, 0);
+      const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+      const intercept = (sumY - slope * sumX) / n;
+      const x1 = 0, x2 = 9;
+      const y1c = Math.max(0, Math.min(10, slope * x1 + intercept));
+      const y2c = Math.max(0, Math.min(10, slope * x2 + intercept));
+      g.append('line')
+        .attr('x1', xScale(x1)).attr('y1', yScale(y1c))
+        .attr('x2', xScale(x2)).attr('y2', yScale(y2c))
+        .attr('stroke', palColors[gi % palColors.length])
+        .attr('stroke-width', 1.2)
+        .attr('stroke-dasharray', '5,3')
+        .attr('opacity', 0.55);
+    }
+  }
+
+  // Data points
+  const ptR = Math.max(3, Math.min(5.5, tp.fontSize * 0.28));
+  SCATTER_PTS.filter(d => d.g < nGroups).forEach(d => {
     g.append('circle')
-      .attr('cx', xScale(d.x)).attr('cy', yScale(d.y * 10))
-      .attr('r', ptR).attr('fill', palColors[d.g]).attr('opacity', 0.82)
-      .attr('stroke', tp.bgColor).attr('stroke-width', 0.8);
+      .attr('cx', xScale(d.x)).attr('cy', yScale(d.y))
+      .attr('r', ptR).attr('fill', palColors[d.g % palColors.length]).attr('opacity', 0.85)
+      .attr('stroke', rules.plotBg).attr('stroke-width', 0.5);
   });
 
-  // Axes labels & ticks (hide for void)
-  const showOuter = tp.baseTheme !== 'void';
+  // Axis ticks & labels (hide for void)
+  const axisColor = isDark ? '#666' : '#aaa';
   const tickFontSize = Math.max(8, tp.fontSize * 0.72) + 'px';
-  if (showOuter) {
-    g.append('g').attr('transform', `translate(0,${iH})`).call(d3.axisBottom(xScale).ticks(5))
-      .call(a => {
-        a.select('.domain').attr('stroke', isDark ? '#666' : '#aaa');
-        a.selectAll('text').attr('fill', textColor2).attr('font-size', tickFontSize);
-        a.selectAll('line').attr('stroke', isDark ? '#666' : '#aaa');
-      });
-    g.append('g').call(d3.axisLeft(yScale).ticks(5))
-      .call(a => {
-        a.select('.domain').attr('stroke', isDark ? '#666' : '#aaa');
-        a.selectAll('text').attr('fill', textColor2).attr('font-size', tickFontSize);
-        a.selectAll('line').attr('stroke', isDark ? '#666' : '#aaa');
-      });
+  const tickLen = { outside: 4, inside: -4, none: 0 }[tp.axisTicks] || 4;
+  if (tp.baseTheme !== 'void') {
+    const axBottom = g.append('g').attr('transform', `translate(0,${iH})`)
+      .call(d3.axisBottom(xScale).ticks(5).tickSize(tickLen));
+    axBottom.select('.domain').attr('stroke', axisColor);
+    axBottom.selectAll('text').attr('fill', textColor2).attr('font-size', tickFontSize).attr('font-family', fontFam);
+    axBottom.selectAll('line').attr('stroke', axisColor);
+    if (tp.axisTicks === 'none') axBottom.selectAll('line').remove();
+    if (tp.axisAngle > 0) {
+      axBottom.selectAll('text')
+        .attr('transform', `rotate(${tp.axisAngle})`)
+        .attr('text-anchor', 'start').attr('dx', '0.4em');
+    }
+
+    const axLeft = g.append('g').call(d3.axisLeft(yScale).ticks(5).tickSize(tickLen));
+    axLeft.select('.domain').attr('stroke', axisColor);
+    axLeft.selectAll('text').attr('fill', textColor2).attr('font-size', tickFontSize).attr('font-family', fontFam);
+    axLeft.selectAll('line').attr('stroke', axisColor);
+    if (tp.axisTicks === 'none') axLeft.selectAll('line').remove();
+
     const axLabelSize = Math.max(9, tp.fontSize * 0.82) + 'px';
-    svg.append('text').attr('x', m.left + iW / 2).attr('y', H - 3)
+    svg.append('text').attr('x', m.left + iW / 2).attr('y', H - captionH - 3)
       .attr('text-anchor', 'middle').attr('font-size', axLabelSize)
-      .attr('fill', textColor).attr('font-family', 'Helvetica, Arial, sans-serif').text('X Variable');
+      .attr('fill', textColor).attr('font-family', fontFam).text('X Variable');
     svg.append('text').attr('transform', `translate(12,${m.top + iH / 2}) rotate(-90)`)
       .attr('text-anchor', 'middle').attr('font-size', axLabelSize)
-      .attr('fill', textColor).attr('font-family', 'Helvetica, Arial, sans-serif').text('Y Variable');
+      .attr('fill', textColor).attr('font-family', fontFam).text('Y Variable');
+  }
+
+  // Title
+  if (hasTitle) {
+    const hjustMap = { left: m.left, center: W / 2, right: W - m.right };
+    const hAnchorMap = { left: 'start', center: 'middle', right: 'end' };
+    const titleSize = Math.max(11, tp.fontSize * 1.05) + 'px';
+    svg.append('text')
+      .attr('x', hjustMap[tp.titleAlign] || m.left)
+      .attr('y', 12 + titleH * 0.55)
+      .attr('text-anchor', hAnchorMap[tp.titleAlign] || 'start')
+      .attr('font-size', titleSize).attr('font-weight', 700)
+      .attr('fill', textColor).attr('font-family', fontFam)
+      .text('Gene Expression vs. Treatment');
+  }
+
+  // Caption
+  if (hasCaption) {
+    svg.append('text')
+      .attr('x', W - m.right).attr('y', H - 3)
+      .attr('text-anchor', 'end')
+      .attr('font-size', Math.max(7, tp.fontSize * 0.6) + 'px')
+      .attr('fill', textColor2).attr('font-family', fontFam)
+      .text('Source: Gene Expression Dataset, 2024');
   }
 
   // Legend
-  if (tp.legend !== 'none') {
-    const lgLabels = ['Group A','Group B','Group C'];
-    const lgItemH = Math.max(16, tp.fontSize * 1.4);
-    const lgW = 70, lgH = lgLabels.length * lgItemH + 8;
-    let lgX = W - lgW - 6, lgY = m.top + 8;
-    if (tp.legend === 'bottom') { lgX = m.left + (iW - lgLabels.length * 72) / 2; lgY = H - 16; }
-    if (tp.legend === 'top')    { lgX = W - lgW - 6; lgY = 6; }
+  if (!legendNone) {
+    let lgX, lgY;
+    if (tp.legendPos === 'right')  { lgX = m.left + iW + 8;           lgY = m.top + (iH - lgTotalH) / 2; }
+    else if (tp.legendPos === 'bottom') { lgX = m.left + (iW - lgTotalW) / 2; lgY = m.top + iH + 28; }
+    else if (tp.legendPos === 'top')    { lgX = m.left + (iW - lgTotalW) / 2; lgY = m.top - lgTotalH - 6; }
+    else if (tp.legendPos === 'left')   { lgX = 4;                         lgY = m.top + (iH - lgTotalH) / 2; }
+    else { lgX = m.left + iW - lgTotalW; lgY = m.top + 8; }
+
     const lg = svg.append('g').attr('transform', `translate(${lgX},${lgY})`);
-    lgLabels.forEach((label, i) => {
-      const yOff = i * lgItemH + lgItemH * 0.5;
-      if (tp.legend === 'bottom') {
-        lg.append('circle').attr('cx', i * 72 + 5).attr('cy', 5).attr('r', Math.max(3, ptR * 0.8)).attr('fill', palColors[i]);
-        lg.append('text').attr('x', i * 72 + 14).attr('y', 9)
-          .attr('font-size', Math.max(7, tp.fontSize * 0.65) + 'px').attr('fill', textColor).attr('font-family', 'Helvetica, Arial, sans-serif').text(label);
-      } else {
-        lg.append('circle').attr('cx', 5).attr('cy', yOff).attr('r', Math.max(3, ptR * 0.8)).attr('fill', palColors[i]);
-        lg.append('text').attr('x', 13).attr('y', yOff + 4)
-          .attr('font-size', Math.max(7, tp.fontSize * 0.65) + 'px').attr('fill', textColor).attr('font-family', 'Helvetica, Arial, sans-serif').text(label);
-      }
+    if (tp.legendBox === 'rect') {
+      lg.append('rect')
+        .attr('x', -4).attr('y', -4).attr('width', lgTotalW + 4).attr('height', lgTotalH + 4)
+        .attr('fill', 'none').attr('stroke', isDark ? '#555' : '#ccc').attr('stroke-width', 0.8).attr('rx', 3);
+    }
+    labels.forEach((label, i) => {
+      const ox = legendIsHoriz ? i * lgItemW : 0;
+      const oy = legendIsHoriz ? 0 : i * lgItemH;
+      lg.append('circle')
+        .attr('cx', ox + lgKeySize / 2).attr('cy', oy + lgKeySize / 2)
+        .attr('r', Math.max(3, lgKeySize / 2)).attr('fill', palColors[i % palColors.length]);
+      lg.append('text')
+        .attr('x', ox + lgKeySize + 4).attr('y', oy + lgKeySize / 2 + 3.5)
+        .attr('font-size', lgLabelSize + 'px').attr('fill', textColor).attr('font-family', fontFam)
+        .text(label);
     });
   }
 }
 
 function buildThemeCode() {
   const tp = state.themeParams;
-  const bgR = tp.bgColor === '#ffffff' ? '"white"' : tp.bgColor === '#f5f5f5' ? '"grey97"' : tp.bgColor === '#f0f4f8' ? '"#f0f4f8"' : '"#1d1d1f"';
-  const gridMajor = tp.gridLines === 'none' ? 'element_blank()' : 'element_line(color = "grey90", linewidth = 0.4)';
-  const gridMinor = tp.gridLines === 'both'  ? 'element_line(color = "grey95", linewidth = 0.2)' : 'element_blank()';
-  const axisLine  = tp.axisLines === 'line'  ? 'element_line(color = "grey70", linewidth = 0.5)' : 'element_blank()';
-  const legPos    = `"${tp.legend}"`;
+  const bgMap = {
+    '#ffffff': '"white"', '#fafafa': '"grey98"', '#f5f5f5': '"grey97"',
+    '#f0f4f8': '"#f0f4f8"', '#fffbf0': '"#fffbf0"', '#1d1d1f': '"#1d1d1f"',
+  };
+  const bgR = bgMap[tp.bgColor] || `"${tp.bgColor}"`;
+  const fontFamR = { sans: '"Helvetica"', serif: '"Georgia"', mono: '"Courier New"' }[tp.fontFamily] || '"Helvetica"';
 
-  return `ggplot(df, aes(x, y, color = group)) +
-  geom_point(size = 2.5, alpha = 0.8) +
-  labs(x = "X Variable", y = "Y Variable") +
-  theme_${tp.baseTheme}(base_size = ${tp.fontSize}) +
+  const palColors = MINI_PALETTES[tp.paletteIdx].colors;
+  const palR = palColors.map(c => `"${c}"`).join(', ');
+
+  const gridMajR = tp.gridLines === 'none' ? 'element_blank()' :
+    tp.gridColor === 'light'  ? 'element_line(color = "grey90",  linewidth = 0.4)' :
+    tp.gridColor === 'medium' ? 'element_line(color = "grey80",  linewidth = 0.5)' :
+                                'element_line(color = "white",   linewidth = 0.5)';
+  const gridMinR = tp.gridLines === 'both' ?
+    'element_line(color = "grey95", linewidth = 0.2)' : 'element_blank()';
+  const axisLineR = tp.axisLines === 'show' ?
+    'element_line(color = "grey70", linewidth = 0.5)' : 'element_blank()';
+  const axisTicksR = tp.axisTicks === 'none' ? 'element_blank()' :
+    'element_line(color = "grey70", linewidth = 0.4)';
+  const axisTickLenR = tp.axisTicks === 'inside' ? 'unit(-0.15, "cm")' : 'unit(0.15, "cm")';
+  const axisTextXR = tp.axisAngle > 0 ?
+    `element_text(angle = ${tp.axisAngle}, hjust = 1, vjust = 1)` : 'element_text()';
+
+  const legPosR  = `"${tp.legendPos}"`;
+  const legDirR  = `"${tp.legendDir}"`;
+  const legBoxR  = tp.legendBox === 'rect' ?
+    'element_rect(color = "grey70", linewidth = 0.5)' : 'element_blank()';
+  const legKeySizeR = { small: 'unit(0.8, "lines")', medium: 'unit(1, "lines")', large: 'unit(1.4, "lines")' }[tp.legendKey] || 'unit(1, "lines")';
+
+  const hjust = tp.titleAlign === 'left' ? 0 : tp.titleAlign === 'center' ? 0.5 : 1;
+  const titleR = tp.showTitle ?
+    `element_text(size = ${Math.round(tp.fontSize * 1.1)}, face = "bold", hjust = ${hjust})` :
+    'element_blank()';
+  const captionR = tp.showCaption ?
+    `element_text(size = ${Math.round(tp.fontSize * 0.7)}, hjust = 1, color = "grey50")` :
+    'element_blank()';
+
+  const reglLine = tp.showRegline ?
+    '\n  geom_smooth(method = "lm", se = FALSE,\n              linetype = "dashed", alpha = 0.6) +' : '';
+
+  return `library(ggplot2)
+
+# 配色方案：${MINI_PALETTES[tp.paletteIdx].name}
+palette_colors <- c(${palR})
+
+ggplot(df, aes(x, y, color = group)) +
+  geom_point(size = ${(tp.fontSize * 0.28).toFixed(1)}, alpha = 0.85) +${reglLine}
+  scale_color_manual(values = palette_colors) +
+  labs(
+    title   = "Gene Expression vs. Treatment",
+    x       = "X Variable",
+    y       = "Y Variable",
+    caption = "Source: Gene Expression Dataset"
+  ) +
+  theme_${tp.baseTheme}(
+    base_size   = ${tp.fontSize},
+    base_family = ${fontFamR}
+  ) +
   theme(
-    panel.background  = element_rect(fill = ${bgR}),
-    panel.grid.major  = ${gridMajor},
-    panel.grid.minor  = ${gridMinor},
-    axis.line         = ${axisLine},
-    legend.position   = ${legPos},
-    axis.text         = element_text(
+    panel.background      = element_rect(fill = ${bgR}, color = NA),
+    panel.grid.major      = ${gridMajR},
+    panel.grid.minor      = ${gridMinR},
+    axis.line             = ${axisLineR},
+    axis.ticks            = ${axisTicksR},
+    axis.ticks.length     = ${axisTickLenR},
+    axis.text.x           = ${axisTextXR},
+    axis.text             = element_text(
       size  = ${Math.round(tp.fontSize * 0.75)},
       color = "grey40"
     ),
-    axis.title        = element_text(
+    axis.title            = element_text(
       size  = ${Math.round(tp.fontSize * 0.85)},
       color = "grey20"
+    ),
+    plot.title            = ${titleR},
+    plot.caption          = ${captionR},
+    legend.position       = ${legPosR},
+    legend.direction      = ${legDirR},
+    legend.box.background = ${legBoxR},
+    legend.key.size       = ${legKeySizeR},
+    legend.text           = element_text(
+      size = ${Math.round(tp.fontSize * 0.75)}
     )
   )`;
 }

@@ -851,6 +851,108 @@ canvas.addEventListener('touchmove', (e) => {
 }
 ```
 
+### 复杂参数控制面板（Tab 分组面板）
+
+适用于参数数量 ≥ 10 的交互组件（如主题定制器、参数编辑器）。
+
+**核心原则：**
+1. 桌面端：参数面板固定宽度（280–320px），右侧为预览+代码区
+2. 移动端：整体转为纵向堆叠（`grid-template-columns: 1fr`），面板置顶
+3. Tab 分组：将参数按功能分为 3–5 组，每次只显示一组，减少视觉拥挤
+4. Tab 横向滚动：允许 Tab 数量超出容器宽度，用 `overflow-x: auto; scrollbar-width: none` 隐藏滚动条
+5. 控件尺寸：移动端所有可交互元素保持 min-height ≥ 32px，滑块拇指 ≥ 24×24px
+6. 防止内容溢出：控制面板必须设置 `min-width: 0; overflow: hidden`
+
+```css
+/* 桌面端：左控制面板 + 右预览 */
+.p-customizer-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: var(--space-lg);
+  align-items: flex-start;
+}
+
+/* Tab 分组容器 */
+.p-ctrl-panel {
+  background: var(--bg-dark-elevated);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  min-width: 0;       /* 防止溢出 */
+}
+
+/* Tab 条：横向滚动，隐藏滚动条 */
+.p-ctrl-tabs {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--border-dark);
+}
+.p-ctrl-tabs::-webkit-scrollbar { display: none; }
+
+.p-ctrl-tab {
+  flex: 1 1 0;        /* 等宽分配，溢出时可滚动 */
+  padding: 10px 8px;
+  font-size: 0.76rem;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  min-height: 40px;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  transition: all var(--t-fast);
+}
+.p-ctrl-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* 分组内容面板 */
+.p-ctrl-group-panel {
+  display: none;
+  padding: var(--space-md);
+  flex-direction: column;
+  gap: 16px;
+}
+.p-ctrl-group-panel.active { display: flex; }
+
+/* 预览区：防止溢出 */
+.p-preview-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  min-width: 0;       /* 防止溢出 */
+}
+
+/* Tablet (1024px): 缩小控制面板 */
+@media (max-width: 1024px) {
+  .p-customizer-layout { grid-template-columns: 280px 1fr; }
+}
+
+/* ≤900px: 单列布局，控制面板置顶 */
+@media (max-width: 900px) {
+  .p-customizer-layout { grid-template-columns: 1fr; }
+}
+
+/* ≤768px: 进一步压缩 */
+@media (max-width: 768px) {
+  .p-ctrl-tab { font-size: 0.70rem; padding: 10px 6px; }
+}
+```
+
+**切换控件类型适配：**
+
+| 控件 | 桌面端 | 移动端 |
+|------|--------|--------|
+| 按钮组 | `flex-wrap: wrap; gap: 4px` | 同，但 min-height ≥ 32px |
+| 范围滑块 | 正常，拇指 20×20px | 拇指 24×24px，加高 track |
+| 颜色色块 | 34×34px | 30×30px |
+| Mini 调色板网格 | 4列 | 4列（保持不变）|
+| 开关 Toggle | 36×20px | 同 |
+
+**使用示例（p08-r-themes.js 主题定制器）：**
+- 4 个 Tab：主题基础 / 坐标&网格 / 图例 / 标注
+- 每 Tab 3–5 个控件
+- 响应式：≤900px 时控制面板宽度变为 100%，置于预览区上方
+
+---
+
 ### 列表+预览浏览器布局（如配色方案库）
 ```css
 /* 桌面端：左列表 + 右 sticky 预览 */

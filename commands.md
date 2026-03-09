@@ -15,49 +15,184 @@
 ### 规范文件
 - 开始任何 Step 前，先读取 `CLAUDE.md`、`design-spec.md`、`content-outline.md` 三份规范文件
 
-### 设计规范
-- 请使用 **frontend-design skill** 来设计页面视觉（在 prompt 中触发）
-- Apple.com 产品页审美标杆：全屏叙事节奏、超大排版、明暗交替、极简配色
-- 每个页面第一个 section（Hero）必须用 `section-hero-full` class，所有分辨率 100vh/100dvh
-- Hero 底部包含 `.hero-quicknav` 快捷导航按钮，GSAP 延迟入场
-- 深色段放交互组件、浅色段放理论内容、代码编辑器始终深色
-- 禁止卡片网格平铺、gradient blob、backdrop-filter 满屏、静态截图替代交互
-- 彩色只出现在数据区域（配色展示/图表预览/色轮），主体黑白灰 + 强调色 #7EC8E3
-- 代码块必须 `white-space: pre-wrap`，禁止 `white-space: pre`
+---
 
-### 响应式适配（★★★）
-- **五级断点**：>1200px（Desktop）/ 1024-1200px（Laptop）/ 768-1024px（Tablet）/ 480-768px（Mobile）/ <480px（Small）
-- 移动端 section `min-height: auto`，Hero 保持 `100vh/100dvh`
-- 所有 `section[id]` 设置 `scroll-margin-top: 56px`（移动端顶部栏不遮挡锚点）
-- 按钮/可交互元素最小触控尺寸 **44×44px**
-- 滑块移动端 thumb 放大到 24px，`min-height: 32px`
-- Tab 切换器移动端 `overflow-x: auto` + 隐藏滚动条
-- 双栏布局 ≤900px 转单列（`flex-direction: column`）
-- 代码块移动端字号 13px + `pre-wrap` + `word-wrap: break-word`
-- 图片/SVG `max-width: 100%; height: auto`
-- 列表+预览布局：桌面端左列表+右 sticky 预览；≤900px 纵向堆叠，列表限高 400px
-- 工作坊三面板：桌面端 CSS Grid（280px/1fr/360px）；移动端垂直手风琴折叠
+### 设计规范
+
+**视觉风格**
+- 请使用 **frontend-design skill** 来设计页面视觉（在 prompt 中触发）
+- 审美标杆：Apple.com 产品页——全屏叙事节奏、超大排版、明暗交替、极简配色
+- 主体黑白灰 + 唯一强调色 `#7EC8E3`，彩色只出现在数据区域（图表/配色/色轮）
+- 禁止：卡片网格平铺、gradient blob 堆砌、`backdrop-filter` 满屏滥用、静态截图替代交互
+
+**段落节奏**
+- 明暗交替：Hero（深色）→ 理论内容（浅色）→ 交互组件（深色）→ 案例/对比（浅色）→ Footer CTA（深色）
+- 交互组件放深色段，让彩色内容更醒目；代码编辑器始终深色主题
+- 代码块必须 `white-space: pre-wrap; word-wrap: break-word`，**禁止** `white-space: pre`（会撑破容器）
+
+---
+
+### Hero 版式规范（每页必须统一）
+
+每个页面 Hero 必须包含以下结构，顺序固定：
+
+```html
+<!-- eyebrow：模块编号 / 页码，全英文，font-code 字体，accent 颜色 -->
+<p class="hero-eyebrow">Module 0X / Page 0X</p>
+
+<!-- 主标题：中文，大字号，深色背景下白色 -->
+<h1 class="page-hero-title">页面中文标题</h1>
+
+<!-- 副标题：英文全称，较小字号，text-on-dark-2 -->
+<p class="page-hero-sub">English Subtitle</p>
+
+<!-- tagline：一句话概括，中文，font-body 字体，text-on-dark-2，max-width:520px -->
+<p class="page-hero-tagline">一句话介绍本页核心内容……</p>
+
+<!-- quicknav：本页各 section 快捷跳转，hero-quicknav__item 按钮 -->
+<nav class="hero-quicknav" id="pXX-quicknav">
+  <button class="hero-quicknav__item" data-target="#section-id">按钮文字</button>
+  …
+</nav>
+
+<!-- scroll hint：↓ 向下探索，移动端放在 flex 流内，不用 position:absolute -->
+<p class="scroll-hint">↓ 向下探索</p>
+```
+
+- `section-hero-full` class：全分辨率 `min-height: 100vh; min-height: 100dvh`
+- Hero 背景：深色 `var(--bg-dark)` + 独特径向光晕（每页不同颜色/位置，CSS keyframe 漂移）
+- GSAP 入场：eyebrow→title→sub→tagline→quicknav 依次 fadeIn，delay 递增 0.15s
+- `.hero-quicknav` 移动端：按钮自动换行，极窄屏（<400px）纵向排列
+- 每页光晕颜色和动画参数必须与其他页面不同，体现独特性
+
+---
+
+### Footer CTA 规范（每页必须统一）
+
+每个页面结尾必须用全局 `.page-footer-cta` 组件，结构固定：
+
+```html
+<section class="page-footer-cta">
+  <!-- 页码：当前页/总页数，font-code，accent 颜色 -->
+  <p class="page-footer-num">0X / 10</p>
+
+  <!-- 金句：与本页主题强相关的一句话，双引号，font-display，大字号 -->
+  <h2 class="page-footer-quote">"与本页主题相关的一句话。"</h2>
+
+  <!-- 过渡描述：介绍下一页内容，font-body，text-on-dark-2 -->
+  <p class="page-footer-desc">下一页：XXX — 简短描述下一页核心内容</p>
+
+  <!-- 导航按钮：上一页（btn-ghost）+ 下一页（btn-primary）-->
+  <div class="page-footer-nav">
+    <button class="btn-ghost" id="pXX-prev-btn">← 上一页</button>
+    <button class="btn-primary" id="pXX-next-btn">下一页 →</button>
+  </div>
+</section>
+```
+
+- 背景 `var(--bg-dark-deep)`，纯黑，与上方 section 形成明显层次
+- 金句必须是**有意义的原创句子**，与页面主题直接相关，不能用通用语
+- 按钮顺序：上一页在左（ghost），下一页在右（primary）
+
+---
+
+### 移动端适配（★★★ 逐条执行，完成后逐条核查）
+
+**防溢出三原则（每个容器必须检查）**
+1. 所有 flex/grid 子项设置 `min-width: 0`（防止内容撑破 flex 容器）
+2. 所有包含文本的容器设置 `overflow: hidden`（或 `overflow-wrap: break-word`）
+3. `white-space: nowrap` 的元素必须配合 `overflow: hidden; text-overflow: ellipsis` 或在移动端改为 `white-space: normal`
+
+**断点响应规则**
+
+| 断点 | 典型变化 |
+|------|---------|
+| ≤1200px | 侧边栏收窄到 220px |
+| ≤1024px | 复杂参数面板宽度缩小（320px→280px） |
+| ≤900px | 所有双栏布局转单列；列表+预览布局纵向堆叠（列表限高 400px）；参数控制面板全宽 |
+| ≤768px | section padding 压缩；代码块 13px + pre-wrap；所有 min-width 收紧 |
+| ≤480px | 进一步压缩字号、padding；grid 从 3 列降到 2 列 |
+
+**交互元素触控规范**
+- 所有可点击元素 `min-height: 44px`（按钮、Tab、手风琴头部、列表行）
+- 滑块 thumb ≥ 24×24px，`min-height: 32px`（防误触）
+- Tab 切换器：`overflow-x: auto; scrollbar-width: none`，Tab 不得 `flex-shrink: 0` 挤压（改用 `flex: 1 1 0` 或 `flex: 0 0 auto` 加横滚）
+- 颜色选择器、色块：移动端尺寸缩小但不低于 28×28px
+
+**代码与文本换行**
+- `pre` / `.p-code` 块：`white-space: pre-wrap; word-break: break-all; overflow-wrap: break-word`
+- 行内代码（`code` 标签）：`word-break: break-all`
+- 单行截断（badge、标签）：只在明确知道父容器宽度时用 `text-overflow: ellipsis`，移动端改为允许换行
+
+**layout 降级方案**
+
+| 桌面布局 | 移动端降级 |
+|---------|----------|
+| 左参数面板（320px）+ 右预览 | 参数面板全宽置顶，预览在下 |
+| 三面板工作坊 | 垂直手风琴，一次展开一个面板 |
+| 列表+Sticky 预览 | 纵向堆叠，列表限高 400px 内滚动 |
+| 多图表并排 | 纵向堆叠 / 横向滑动切换 |
+| Tab 分组控制面板 | Tab 横向滚动，内容区单列 |
+
+**Hero 移动端**
+- `min-height: 100vh; min-height: 100dvh`（必须两行，兼容不支持 dvh 的旧系统）
+- `padding` 压缩：桌面 `var(--space-xl)` → 移动端 `var(--space-md) var(--space-sm)`
+- `.hero-quicknav` 换行：`flex-wrap: wrap; justify-content: center; gap: 8px`
+- 极窄屏（<400px）quicknav 纵向排列：`flex-direction: column; align-items: center`
+- scroll-hint 位于 flex 流内（不用 `position: absolute`），在 quicknav 之后
+
+**Footer 移动端**
+- 按钮组 `flex-direction: row; gap: 12px`（不要纵向堆叠，保持左右布局）
+- 金句字号：`clamp(1.2rem, 4vw, 2rem)`，避免超出容器
+
+---
 
 ### GSAP 动画
 - 滚动动画必须用 GSAP ScrollTrigger，不用 CSS-only IntersectionObserver
 - 使用 `ScrollTrigger.matchMedia()` 为移动端设置简化参数（减少 y 偏移、缩短 stagger、移动端不 pin）
 - `destroy()` 必须调用 `ScrollTrigger.getAll().forEach(t => t.kill())`
+- Hero 入场动画：`gsap.fromTo` + delay 依次递增（不用 ScrollTrigger，页面加载即播放）
+
+---
 
 ### Canvas / D3
 - Canvas 使用 Pointer Events API（`pointerdown/pointermove/pointerup`），设置 `touch-action: none`
 - Canvas HiDPI 适配：`devicePixelRatio` 缩放
-- D3 SVG 使用 `viewBox` + `preserveAspectRatio: xMidYMid meet` 实现响应式
-- 图表深色画布背景 `#1a1a2e`
+- D3 SVG 使用 `viewBox` + `preserveAspectRatio: xMidYMid meet`，外层容器 `width: 100%`
+- SVG 外层容器禁止设置 fixed `width`，改用 `max-width` 或百分比
+
+---
 
 ### CodeMirror
 - 移动端 `window.innerWidth < 768` 时默认只读 + 显示"点击编辑"按钮
 - 始终 oneDark 深色主题
+- `createCodeEditor` 返回 `{ view, getCode, setCode, destroy }`，更新代码用 `.setCode()`，**不要**操作 `.view.dispatch()`
 
-### 质量检查
-- 所有交互完整可用，**不允许 placeholder**
-- 控制台零报错
-- 完成后用 Chrome DevTools 在 375px / 390px / 768px / 1440px 宽度下验证
-- 每步完成后更新 `todo.md` 勾选状态并 git commit
+---
+
+### 质量检查清单（每步完成后逐项确认）
+
+**功能**
+- [ ] 所有交互完整可用，**不允许 placeholder**
+- [ ] 控制台零报错（F12 检查）
+- [ ] `destroy()` 能清理所有事件监听器、ScrollTrigger、CodeMirror 实例
+
+**响应式验证（Chrome DevTools）**
+- [ ] 375px（iPhone SE）：无水平滚动条，所有内容可见，文字不溢出
+- [ ] 390px（iPhone 14）：同上
+- [ ] 768px（iPad mini 竖屏）：双栏已折叠为单列
+- [ ] 1440px（Desktop）：布局完整，间距正常
+
+**Hero & Footer 一致性**
+- [ ] Hero eyebrow 格式：`Module 0X / Page 0X`（全英文，正确编号）
+- [ ] Hero 有独特光晕（颜色/位置/动画与其他页面不同）
+- [ ] Footer 有页码、金句、过渡描述、上一页/下一页按钮
+- [ ] Footer 金句与页面主题直接相关（不通用）
+- [ ] 上一页 btn-ghost 在左，下一页 btn-primary 在右
+
+**其他**
+- [ ] 更新 `todo.md` 勾选状态
+- [ ] `git commit` 提交当前进度
 
 ---
 
