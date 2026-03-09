@@ -1775,7 +1775,7 @@ export function init() {
               el.textContent = current;
               if (current < target) requestAnimationFrame(step);
             };
-            requestAnimationFrame(step);
+            if (target > 0) requestAnimationFrame(step);
           });
         }
       });
