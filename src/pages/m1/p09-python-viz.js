@@ -7,6 +7,30 @@ import { navigateTo } from '../../utils/router.js';
 import * as d3 from 'd3';
 
 // ══════════════════════════════════════════════════════
+//  matplotlib 层次结构数据
+// ══════════════════════════════════════════════════════
+
+const MPL_HIERARCHY = {
+  id: 'Figure', label: 'Figure', color: '#7EC8E3',
+  desc: '整个图形的顶层容器，对应一张图片文件。',
+  api: 'plt.figure(figsize=(8,6), dpi=150)',
+  children: [
+    { id: 'Axes', label: 'Axes', color: '#95D5B2',
+      desc: '单个坐标系，包含所有绘图元素。一个 Figure 可有多个 Axes。',
+      api: 'fig.add_subplot(1,1,1)  # 或 plt.subplots()',
+      children: [
+        { id: 'Title', label: 'Title', color: '#B8B8E8', desc: '图表标题文本对象。', api: 'ax.set_title("标题", fontsize=14)', children: [] },
+        { id: 'XAxis', label: 'XAxis', color: '#B8B8E8', desc: 'X 轴（含刻度、标签、刻度线）。', api: 'ax.set_xlabel("X轴")\nax.xaxis.set_tick_params()', children: [] },
+        { id: 'YAxis', label: 'YAxis', color: '#B8B8E8', desc: 'Y 轴（含刻度、标签、刻度线）。', api: 'ax.set_ylabel("Y轴")\nax.yaxis.set_tick_params()', children: [] },
+        { id: 'Line2D', label: 'Line2D', color: '#F0B27A', desc: '折线/散点等绘图元素（Artist）。', api: 'line, = ax.plot(x, y, color="#7EC8E3", lw=2)', children: [] },
+        { id: 'Legend', label: 'Legend', color: '#F0B27A', desc: '图例容器，管理标签和句柄。', api: 'ax.legend(loc="upper right", framealpha=0.8)', children: [] },
+        { id: 'Text', label: 'Annotation', color: '#F0D264', desc: '任意文字标注，支持箭头。', api: 'ax.annotate("峰值", xy=(x,y), xytext=(x+1,y+2),\n  arrowprops=dict(arrowstyle="->"))', children: [] },
+      ]
+    }
+  ]
+};
+
+// ══════════════════════════════════════════════════════
 //  状态
 // ══════════════════════════════════════════════════════
 
@@ -14,6 +38,82 @@ let state = {
   cleanupFns: [],
   resizeObservers: [],
 };
+
+// ══════════════════════════════════════════════════════
+//  initMatplotlibHierarchy()
+// ══════════════════════════════════════════════════════
+
+function initMatplotlibHierarchy(container) {
+  const svgWrap = container.querySelector('.mpl-hierarchy-svg');
+  const infoPanel = container.querySelector('.mpl-info-panel');
+  if (!svgWrap) return;
+
+  const W = svgWrap.clientWidth || 420;
+  const H = 380;
+
+  const svg = d3.select(svgWrap).append('svg')
+    .attr('viewBox', `0 0 ${W} ${H}`)
+    .attr('preserveAspectRatio', 'xMidYMid meet')
+    .style('width', '100%')
+    .style('height', 'auto');
+
+  const root = d3.hierarchy(MPL_HIERARCHY);
+  const treeLayout = d3.tree().size([W - 80, H - 80]);
+  treeLayout(root);
+
+  // Draw links
+  svg.selectAll('.mpl-link').data(root.links()).join('path')
+    .attr('class', 'mpl-link')
+    .attr('d', d3.linkVertical().x(d => d.x + 40).y(d => d.y + 40))
+    .attr('fill', 'none')
+    .attr('stroke', '#424245')
+    .attr('stroke-width', 1.5);
+
+  // Draw nodes
+  const node = svg.selectAll('.mpl-node').data(root.descendants()).join('g')
+    .attr('class', 'mpl-node')
+    .attr('transform', d => `translate(${d.x + 40},${d.y + 40})`)
+    .style('cursor', 'pointer');
+
+  node.append('circle')
+    .attr('r', 22)
+    .attr('fill', d => d.data.color || '#7EC8E3')
+    .attr('stroke', '#1d1d1f')
+    .attr('stroke-width', 2)
+    .attr('opacity', 0.9);
+
+  node.append('text')
+    .attr('text-anchor', 'middle')
+    .attr('dy', '0.35em')
+    .attr('fill', '#1d1d1f')
+    .attr('font-size', 9)
+    .attr('font-weight', 700)
+    .attr('font-family', 'JetBrains Mono, monospace')
+    .text(d => d.data.label.length > 8 ? d.data.label.slice(0,7)+'…' : d.data.label);
+
+  // Click handler
+  node.on('click', (event, d) => {
+    // Reset all highlights
+    node.selectAll('circle').attr('stroke', '#1d1d1f').attr('stroke-width', 2);
+    // Highlight clicked
+    d3.select(event.currentTarget).select('circle')
+      .attr('stroke', d.data.color || '#7EC8E3')
+      .attr('stroke-width', 3.5);
+
+    if (infoPanel) {
+      infoPanel.innerHTML = `
+        <div style="margin-bottom:8px">
+          <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${d.data.color};margin-right:8px;vertical-align:middle"></span>
+          <strong style="color:${d.data.color};font-size:16px;font-family:var(--font-code)">${d.data.label}</strong>
+        </div>
+        <p style="color:var(--text-on-light-2);font-size:14px;line-height:1.6;margin:0 0 12px">${d.data.desc}</p>
+        <pre style="background:#1d1d1f;color:#f5f5f7;padding:12px 14px;border-radius:8px;font-size:12px;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:break-word;margin:0;font-family:var(--font-code);line-height:1.5">${d.data.api}</pre>`;
+    }
+  });
+
+  // Auto-click Figure node on init to show initial info
+  node.filter(d => d.data.id === 'Figure').dispatch('click');
+}
 
 // ══════════════════════════════════════════════════════
 //  render()
@@ -240,7 +340,7 @@ export function init() {
   }
 
   // Section init stubs (to be filled by later tasks)
-  // initMatplotlibHierarchy(...)
+  initMatplotlibHierarchy(document.getElementById('s1-matplotlib-hierarchy'));
   // initSeabornGallery(...)
   // initCompareTable(...)
   // initAnnotateCanvas(...)
@@ -255,6 +355,8 @@ export function destroy() {
   killAll(); // kills all ScrollTriggers
   state.cleanupFns.forEach(fn => { try { fn(); } catch {} });
   state.cleanupFns = [];
+  const mplSvg = document.querySelector('#s1-matplotlib-hierarchy .mpl-hierarchy-svg svg');
+  if (mplSvg) mplSvg.remove();
   state.resizeObservers.forEach(ro => ro.disconnect());
   state.resizeObservers = [];
 }
