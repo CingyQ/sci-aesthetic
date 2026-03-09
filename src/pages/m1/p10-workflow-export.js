@@ -2033,6 +2033,7 @@ function initDpiComparison() {
 
   if (mobileCanvas) {
     drawDpiCanvas(mobileCanvas, 72);
+    if (mobileLabel) mobileLabel.textContent = `72 DPI — ${DPI_LABELS[72]}`;
   }
 
   mobileTabs.forEach(tab => {
@@ -2040,7 +2041,7 @@ function initDpiComparison() {
       const dpi = parseInt(tab.dataset.dpi);
       mobileTabs.forEach(t => t.classList.toggle('active', t.dataset.dpi == dpi));
       if (mobileCanvas) drawDpiCanvas(mobileCanvas, dpi);
-      if (mobileLabel) mobileLabel.textContent = DPI_LABELS[dpi] || '';
+      if (mobileLabel) mobileLabel.textContent = `${dpi} DPI — ${DPI_LABELS[dpi] || ''}`;
     });
   });
 }

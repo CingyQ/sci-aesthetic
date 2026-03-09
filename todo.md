@@ -64,7 +64,7 @@
 - [x] **统一 Footer CTA（m1-p1~p7）**：新增全局 `.page-footer-cta` / `.page-footer-num` / `.page-footer-quote` / `.page-footer-desc` / `.page-footer-nav` CSS；所有页面末尾统一风格（纯黑背景 + 页码 + 金句 + 标准按钮）；修复 p03 next/prev 按钮顺序颠倒；修复 p03/p05 中「无障碍色彩」→「色彩与阅读无障碍」对齐 p04 实际标题
 - [x] m1-p8 R 配色与出版级图表（配色包浏览器列表+预览 + 主题定制器滑块+D3+theme()代码 + ggsave 期刊代码生成器 + patchwork 4 种布局）
 - [x] m1-p9 Python 可视化与数据叙事（matplotlib 层次图解 + seaborn 10 种图表参数面板 + matplotlib vs ggplot2 对照 + annotate Canvas 拖拽 + 叙事 4 种方法动画）
-- [ ] m1-p10 科研绘图工作流与导出（6 步粘性时间线 + 格式原理动画 + DPI 对比器 BeforeAfter + 分辨率计算器 + 期刊速查）
+- [x] m1-p10 科研绘图工作流与导出（6 步粘性时间线 + 格式原理动画 + DPI 对比器 + 分辨率计算器 + 期刊速查）
 
 ## Phase 5: 模块二 — AI 辅助科研绘图（m2-p1 ~ m2-p6）
 - [ ] m2-p1 AI 工具全景（D3 决策树选工具 + 工具矩阵可排序筛选 + 传统vsAI 时间对比动画 + 5 个合理应用场景）
@@ -113,7 +113,7 @@
 | Phase 1 设计系统 | ✅ 完成 | |
 | Phase 2 组件库 | ✅ 完成 | |
 | Phase 3 首页 | ✅ 完成 | |
-| Phase 4 模块一 | 🔄 8/10 | m1-p1~p8 完成，p9~p10 待开发 |
+| Phase 4 模块一 | ✅ 10/10 | m1-p1~p10 全部完成 |
 | Phase 5 模块二 | ⏳ 待开始 | |
 | Phase 6 模块三 | ⏳ 待开始 | |
 | Phase 7 模块四 | ⏳ 待开始 | |
