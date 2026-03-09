@@ -1240,8 +1240,9 @@ export function render() {
 .hero-quicknav { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:32px; }
 .hero-quicknav__item { padding:8px 18px; min-height:44px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:99px; color:var(--text-on-dark); cursor:pointer; font-size:14px; font-family:var(--font-body); transition:background 0.2s; white-space:nowrap; }
 .hero-quicknav__item:hover { background:rgba(255,255,255,0.15); }
-.p9-scroll-hint { color:var(--text-on-dark-3); font-size:13px; margin-top:24px; }
-.page-hero-tagline { color:var(--text-on-dark-2); font-family:var(--font-body); font-size:var(--text-body); line-height:1.7; margin-top:12px; }
+.p9-scroll-hint { font-size:var(--text-caption); color:var(--text-on-dark-3); animation:p9-float 2s ease-in-out infinite; white-space:nowrap; margin-top:var(--space-sm); }
+@keyframes p9-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+.p9-hero-tagline { font-family:var(--font-body); font-size:var(--text-body); color:var(--text-on-dark-2); max-width:540px; line-height:1.8; margin-top:var(--space-sm); }
 .page-hero-title { font:700 var(--text-display) var(--font-display); color:var(--text-on-dark); letter-spacing:-0.02em; line-height:1.1; margin:0; }
 .page-hero-sub { font-size:var(--text-body); color:var(--text-on-dark-2); margin-top:8px; font-weight:300; }
 
@@ -1288,18 +1289,20 @@ export function render() {
 
 <!-- ══════════════════ HERO ══════════════════ -->
 <section class="section-dark section-hero-full p9-hero">
-  <p class="hero-eyebrow">Module 01 / Page 09</p>
-  <h1 class="page-hero-title">Python 可视化与数据叙事</h1>
-  <p class="page-hero-sub">Python Visualization &amp; Data Storytelling</p>
-  <p class="page-hero-tagline" style="max-width:540px">用 matplotlib 与 seaborn 制作出版级图表，让数据开口说话。</p>
-  <nav class="hero-quicknav" id="p09-quicknav">
-    <button class="hero-quicknav__item" data-target="#s1-matplotlib-hierarchy">matplotlib 层次</button>
-    <button class="hero-quicknav__item" data-target="#s2-seaborn-gallery">seaborn 速查</button>
-    <button class="hero-quicknav__item" data-target="#s3-mpl-vs-ggplot">语法对照</button>
-    <button class="hero-quicknav__item" data-target="#s4-annotate-canvas">标注演示</button>
-    <button class="hero-quicknav__item" data-target="#s5-storytelling">数据叙事</button>
-  </nav>
-  <p class="p9-scroll-hint">↓ 向下探索</p>
+  <div class="flex-col-center" style="gap:var(--space-md);text-align:center;position:relative;z-index:1;">
+    <p class="hero-eyebrow" style="opacity:0;">Module 01 / Page 09</p>
+    <h1 class="page-hero-title" style="color:var(--text-on-dark);opacity:0;">Python 可视化与数据叙事</h1>
+    <p class="page-hero-sub" style="opacity:0;">Python Visualization &amp; Data Storytelling</p>
+    <p class="p9-hero-tagline" style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;margin-top:var(--space-sm);opacity:0;">用 matplotlib 与 seaborn 制作出版级图表，让数据开口说话。</p>
+    <nav class="hero-quicknav" id="p09-quicknav" style="opacity:0;">
+      <button class="hero-quicknav__item" data-target="#s1-matplotlib-hierarchy">matplotlib 层次</button>
+      <button class="hero-quicknav__item" data-target="#s2-seaborn-gallery">seaborn 速查</button>
+      <button class="hero-quicknav__item" data-target="#s3-mpl-vs-ggplot">语法对照</button>
+      <button class="hero-quicknav__item" data-target="#s4-annotate-canvas">标注演示</button>
+      <button class="hero-quicknav__item" data-target="#s5-storytelling">数据叙事</button>
+    </nav>
+    <div class="p9-scroll-hint" style="opacity:0;">↓ 向下探索</div>
+  </div>
 </section>
 
 <!-- ══════════════════ SECTION 01: matplotlib 层次结构 ══════════════════ -->
@@ -1752,13 +1755,13 @@ export function init() {
   state.resizeObservers = [];
 
   // Hero GSAP入场
-  const tl = gsap.timeline();
-  tl.fromTo('#p9-root .hero-eyebrow', {opacity:0,y:20},{opacity:1,y:0,duration:0.5}, 0.1)
-    .fromTo('#p9-root .page-hero-title', {opacity:0,y:30},{opacity:1,y:0,duration:0.6}, 0.25)
-    .fromTo('#p9-root .page-hero-sub', {opacity:0,y:20},{opacity:1,y:0,duration:0.5}, 0.4)
-    .fromTo('#p9-root .page-hero-tagline', {opacity:0,y:20},{opacity:1,y:0,duration:0.5}, 0.55)
-    .fromTo('#p9-root .hero-quicknav', {opacity:0,y:15},{opacity:1,y:0,duration:0.5}, 0.7)
-    .fromTo('#p9-root .p9-scroll-hint', {opacity:0},{opacity:1,duration:0.4}, 0.9);
+  const heroTl = gsap.timeline({ delay: 0.2 });
+  heroTl.fromTo('#p9-root .hero-eyebrow', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0);
+  heroTl.fromTo('#p9-root .page-hero-title', { y: 30, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.15);
+  heroTl.fromTo('#p9-root .page-hero-sub', { y: 20, opacity: 0 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
+  heroTl.fromTo('#p9-root .p9-hero-tagline', { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
+  heroTl.fromTo('#p9-root #p09-quicknav', { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
+  heroTl.fromTo('#p9-root .p9-scroll-hint', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.75);
 
   // quicknav 平滑滚动
   document.querySelectorAll('#p09-quicknav .hero-quicknav__item').forEach(btn => {

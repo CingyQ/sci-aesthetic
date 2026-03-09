@@ -524,7 +524,7 @@ export function render() {
 
 <!-- Hero -->
 <section class="p6-hero section-dark section-hero-full" id="p6-hero">
-  <div class="p6-hero-inner">
+  <div class="flex-col-center" style="gap:var(--space-md);text-align:center;position:relative;z-index:1;">
     <p class="hero-eyebrow p6-eyebrow" style="opacity:0;">Module 01 / Page 06</p>
     <h1 class="page-hero-title p6-hero-title" style="color:var(--text-on-dark);opacity:0;">ggplot2<br>图层语法与分面</h1>
     <p class="page-hero-sub p6-hero-sub" style="opacity:0;">ggplot2 Grammar of Graphics</p>
@@ -535,7 +535,7 @@ export function render() {
       <button class="hero-quicknav__item" data-target="#p6-coord">坐标变换</button>
       <button class="hero-quicknav__item" data-target="#p6-axis">自定义坐标轴</button>
     </nav>
-    <div class="p6-scroll-hint">↓ 向下探索</div>
+    <div class="p6-scroll-hint" style="opacity:0;">↓ 向下探索</div>
   </div>
 </section>
 
@@ -1059,12 +1059,12 @@ export function init() {
       if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
-  const tl6 = gsap.timeline({ delay: 0.1 });
-  tl6.fromTo('.p6-eyebrow',     { opacity: 0, y: 20 }, { opacity: 1,   y: 0, duration: 0.7, ease: 'power3.out' }, 0);
-  tl6.fromTo('.p6-hero-title',  { opacity: 0, y: 40 }, { opacity: 1,   y: 0, duration: 0.9, ease: 'power3.out' }, 0.15);
-  tl6.fromTo('.p6-hero-sub',    { opacity: 0, y: 30 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
-  tl6.fromTo('.p6-hero-tagline',{ opacity: 0, y: 20 }, { opacity: 1,   y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
-  tl6.fromTo('#p6-hero-nav',    { opacity: 0, y: 20 }, { opacity: 1,   y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
+  const tl6 = gsap.timeline({ delay: 0.2 });
+  tl6.fromTo('.p6-eyebrow',     { opacity: 0, y: 20 }, { opacity: 1,   y: 0, duration: 0.6, ease: 'power3.out' }, 0);
+  tl6.fromTo('.p6-hero-title',  { y: 30, opacity: 0 }, { opacity: 1,   y: 0, duration: 0.8, ease: 'power3.out' }, 0.15);
+  tl6.fromTo('.p6-hero-sub',    { y: 20, opacity: 0 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
+  tl6.fromTo('.p6-hero-tagline',{ y: 20, opacity: 0 }, { opacity: 1,   y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
+  tl6.fromTo('#p6-hero-nav',    { y: 20, opacity: 0 }, { opacity: 1,   y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
   tl6.fromTo('.p6-scroll-hint', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.75);
 
   // ── 桌面端：JS-sticky 模拟（transform:translateY，不依赖 CSS sticky）──

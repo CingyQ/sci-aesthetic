@@ -2669,7 +2669,7 @@ export function render() {
       <button class="hero-quicknav__item" data-target="#p7-gallery">图表类型库</button>
       <button class="hero-quicknav__item" data-target="#p7-workshop">交互工作坊</button>
     </nav>
-    <div class="p7-scroll-hint">↓ 向下探索</div>
+    <div class="p7-scroll-hint" style="opacity:0;">↓ 向下探索</div>
   </div>
 </section>
 
@@ -2865,11 +2865,11 @@ function initMobileAccordion() {
 // ─────────────────────────────────────────────
 function initAnimations() {
   const tl7 = gsap.timeline({ delay: 0.2 });
-  tl7.to('#p7-hero-eyebrow',    { opacity: 1,   y: 0, duration: 0.7, ease: 'power3.out' }, 0);
-  tl7.fromTo('.p7-hero-title',  { y: 30 }, { opacity: 1,   y: 0, duration: 0.9, ease: 'power3.out' }, 0.15);
-  tl7.fromTo('.p7-hero-sub',    { y: 20 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
-  tl7.fromTo('.p7-hero-tagline',{ y: 20 }, { opacity: 1,   y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
-  tl7.fromTo('#p7-hero-nav',    { y: 20 }, { opacity: 1,   y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
+  tl7.fromTo('#p7-hero-eyebrow', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0);
+  tl7.fromTo('.p7-hero-title',  { y: 30, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.15);
+  tl7.fromTo('.p7-hero-sub',    { y: 20, opacity: 0 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
+  tl7.fromTo('.p7-hero-tagline',{ y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
+  tl7.fromTo('#p7-hero-nav',    { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
   tl7.fromTo('.p7-scroll-hint', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.75);
 
   gsap.from('#p7-gallery-hdr', {

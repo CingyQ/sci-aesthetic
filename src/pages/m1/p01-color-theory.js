@@ -572,11 +572,11 @@ export function destroy() {
 // ============================================================
 function initHeroAnimations() {
   const tl = gsap.timeline({ delay: 0.2 });
-  tl.to('.m1p1-hero-eyebrow', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0);
-  tl.fromTo('.m1p1-hero-title', { y: 30 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.15);
-  tl.fromTo('.m1p1-hero-sub', { y: 20 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
-  tl.fromTo('.m1p1-hero-tagline', { y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
-  tl.fromTo('.m1p1-hero-nav', { y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
+  tl.fromTo('.m1p1-hero-eyebrow', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0);
+  tl.fromTo('.m1p1-hero-title', { y: 30, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.15);
+  tl.fromTo('.m1p1-hero-sub', { y: 20, opacity: 0 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
+  tl.fromTo('.m1p1-hero-tagline', { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
+  tl.fromTo('.m1p1-hero-nav', { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
   tl.fromTo('.m1p1-scroll-hint', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.75);
   // 快捷导航点击
   initHeroQuickNav();

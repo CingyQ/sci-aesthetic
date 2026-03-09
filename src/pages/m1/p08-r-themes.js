@@ -428,12 +428,13 @@ export function render() {
 }
 
 .p8-scroll-hint {
-  font-family: var(--font-code);
-  font-size: var(--text-small);
+  font-size: var(--text-caption);
   color: var(--text-on-dark-3);
-  letter-spacing: 0.1em;
-  margin-top: var(--space-md);
+  animation: p8-float 2s ease-in-out infinite;
+  white-space: nowrap;
+  margin-top: var(--space-sm);
 }
+@keyframes p8-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
 
 /* ── Section headers ── */
 .p8-sec-header {
@@ -1162,19 +1163,21 @@ export function render() {
 
 <!-- ═══════════ HERO ═══════════ -->
 <section class="section-dark section-hero-full p8-hero" id="p8-hero">
-  <p class="hero-eyebrow" style="opacity:0;">Module 01 / Page 08</p>
-  <h1 class="page-hero-title" style="color:var(--text-on-dark);position:relative;">R 配色与出版级图表</h1>
-  <p class="page-hero-sub">R Color Packages &amp; Publication-Ready Figures</p>
-  <p class="p8-hero-tagline" style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;margin-top:var(--space-sm);position:relative;opacity:0;">
-    掌握 RColorBrewer、viridis、ggsci 等专业配色包，将图表调整到顶刊投稿标准。
-  </p>
-  <nav class="hero-quicknav" id="p8-quicknav" style="position:relative;opacity:0;">
-    <button class="hero-quicknav__item" data-target="#p8-browser">配色包浏览器</button>
-    <button class="hero-quicknav__item" data-target="#p8-theme">主题定制器</button>
-    <button class="hero-quicknav__item" data-target="#p8-ggsave">ggsave 生成器</button>
-    <button class="hero-quicknav__item" data-target="#p8-patchwork">patchwork 布局</button>
-  </nav>
-  <div class="p8-scroll-hint" style="opacity:0;">↓ 向下探索</div>
+  <div class="flex-col-center" style="gap:var(--space-md);text-align:center;position:relative;z-index:1;">
+    <p class="hero-eyebrow" style="opacity:0;">Module 01 / Page 08</p>
+    <h1 class="page-hero-title" style="color:var(--text-on-dark);opacity:0;">R 配色与出版级图表</h1>
+    <p class="page-hero-sub" style="opacity:0;">R Color Packages &amp; Publication-Ready Figures</p>
+    <p class="p8-hero-tagline" style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;margin-top:var(--space-sm);opacity:0;">
+      掌握 RColorBrewer、viridis、ggsci 等专业配色包，将图表调整到顶刊投稿标准。
+    </p>
+    <nav class="hero-quicknav" id="p8-quicknav" style="opacity:0;">
+      <button class="hero-quicknav__item" data-target="#p8-browser">配色包浏览器</button>
+      <button class="hero-quicknav__item" data-target="#p8-theme">主题定制器</button>
+      <button class="hero-quicknav__item" data-target="#p8-ggsave">ggsave 生成器</button>
+      <button class="hero-quicknav__item" data-target="#p8-patchwork">patchwork 布局</button>
+    </nav>
+    <div class="p8-scroll-hint" style="opacity:0;">↓ 向下探索</div>
+  </div>
 </section>
 
 <!-- ═══════════ Section 1: 配色包浏览器 ═══════════ -->
@@ -1597,12 +1600,13 @@ export function init() {
   state.patchworkLayout = 'h2';
 
   // GSAP scroll animations
-  gsap.fromTo('#p8-hero .hero-eyebrow', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: 0.1 });
-  gsap.fromTo('#p8-hero .page-hero-title', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 0.25 });
-  gsap.fromTo('#p8-hero .page-hero-sub',  { opacity: 0, y: 30 }, { opacity: 0.5, y: 0, duration: 0.7, ease: 'power3.out', delay: 0.4 });
-  gsap.fromTo('#p8-hero .p8-hero-tagline', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 0.55 });
-  gsap.fromTo('#p8-quicknav',             { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', delay: 0.6 });
-  gsap.fromTo('#p8-hero .p8-scroll-hint', { opacity: 0 },        { opacity: 1, duration: 0.5, ease: 'power3.out', delay: 0.8 });
+  const heroTl = gsap.timeline({ delay: 0.2 });
+  heroTl.fromTo('#p8-hero .hero-eyebrow', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0);
+  heroTl.fromTo('#p8-hero .page-hero-title', { y: 30, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.15);
+  heroTl.fromTo('#p8-hero .page-hero-sub', { y: 20, opacity: 0 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
+  heroTl.fromTo('#p8-hero .p8-hero-tagline', { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
+  heroTl.fromTo('#p8-hero #p8-quicknav', { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
+  heroTl.fromTo('#p8-hero .p8-scroll-hint', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.75);
 
   // Quicknav smooth scroll
   document.querySelectorAll('#p8-quicknav .hero-quicknav__item').forEach(btn => {

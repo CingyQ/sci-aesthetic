@@ -494,20 +494,20 @@ export function render() {
      ════════════════════════════════════════════ -->
 <section class="p4-hero section-dark section-hero-full">
   <div class="flex-col-center" style="gap:var(--space-md);text-align:center;position:relative;z-index:1;">
-    <p class="hero-eyebrow p4-eyebrow p4-anim-0">Module 01 / Page 04</p>
-    <h1 class="page-hero-title p4-hero-title p4-anim-1" style="color:var(--text-on-dark);">色彩与阅读无障碍</h1>
-    <p class="page-hero-sub p4-hero-sub p4-anim-2">Color Accessibility</p>
-    <p class="p4-hero-tagline p4-anim-3">
+    <p class="hero-eyebrow p4-eyebrow" style="opacity:0;">Module 01 / Page 04</p>
+    <h1 class="page-hero-title p4-hero-title" style="color:var(--text-on-dark);opacity:0;">色彩与阅读无障碍</h1>
+    <p class="page-hero-sub p4-hero-sub" style="opacity:0;">Color Accessibility</p>
+    <p class="p4-hero-tagline" style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;margin-top:var(--space-sm);opacity:0;">
       好的科研图表不只是"好看"——它需要被每一位读者清晰阅读。<br>
       从对比度到字号，从配色到排版，让你的研究触达所有人。
     </p>
-    <nav class="hero-quicknav p4-anim-4" id="p4-hero-nav">
+    <nav class="hero-quicknav" id="p4-hero-nav" style="opacity:0;">
       <button class="hero-quicknav__item" data-target=".p4-contrast-section">WCAG 对比度</button>
       <button class="hero-quicknav__item" data-target=".p4-typo-section">图表排版规范</button>
       <button class="hero-quicknav__item" data-target=".p4-font-section">字体与可读性</button>
       <button class="hero-quicknav__item" data-target=".p4-check-section">设计检查清单</button>
     </nav>
-    <div class="p4-scroll-hint">↓ 向下探索</div>
+    <div class="p4-scroll-hint" style="opacity:0;">↓ 向下探索</div>
   </div>
 </section>
 
@@ -869,12 +869,13 @@ export function render() {
 
 export function init() {
   // Hero animations
-  gsap.fromTo('.p4-anim-0', { opacity: 0, y: 20 }, { opacity: 1,   y: 0, duration: 0.7, delay: 0.1,  ease: 'power3.out' });
-  gsap.fromTo('.p4-anim-1', { opacity: 0, y: 40 }, { opacity: 1,   y: 0, duration: 0.9, delay: 0.25, ease: 'power3.out' });
-  gsap.fromTo('.p4-anim-2', { opacity: 0, y: 30 }, { opacity: 0.5, y: 0, duration: 0.8, delay: 0.4,  ease: 'power3.out' });
-  gsap.fromTo('.p4-anim-3', { opacity: 0, y: 20 }, { opacity: 1,   y: 0, duration: 0.8, delay: 0.55, ease: 'power3.out' });
-  gsap.fromTo('.p4-anim-4', { opacity: 0, y: 20 }, { opacity: 1,   y: 0, duration: 0.8, delay: 0.7,  ease: 'power3.out' });
-  gsap.fromTo('.p4-scroll-hint', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, delay: 0.85, ease: 'power3.out' });
+  const tl = gsap.timeline({ delay: 0.2 });
+  tl.fromTo('.p4-eyebrow', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0);
+  tl.fromTo('.page-hero-title', { y: 30, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.15);
+  tl.fromTo('.page-hero-sub', { y: 20, opacity: 0 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
+  tl.fromTo('.p4-hero-tagline', { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
+  tl.fromTo('#p4-hero-nav', { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
+  tl.fromTo('.p4-scroll-hint', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.75);
 
   // Scroll reveals
   fadeIn('.p4-contrast-card', { y: 40 });

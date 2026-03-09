@@ -480,86 +480,17 @@ export function render() {
   to   { transform: translate(-50px, -30px) scale(1.1); }
 }
 
-.p10-hero-content {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-md);
-  text-align: center;
-  padding: 0 var(--space-lg);
-}
-
-.p10-hero-tagline {
-  font-family: var(--font-body);
-  font-size: var(--text-body);
-  color: var(--text-on-dark-2);
-  max-width: 540px;
-  line-height: 1.8;
+.p10-scroll-hint {
+  font-size: var(--text-caption);
+  color: var(--text-on-dark-3);
+  animation: p10-float 2s ease-in-out infinite;
+  white-space: nowrap;
   margin-top: var(--space-sm);
 }
 
-.p10-scroll-hint {
-  font-family: var(--font-code);
-  font-size: var(--text-small);
-  color: var(--text-on-dark-3);
-  letter-spacing: 0.1em;
-  margin-top: var(--space-lg);
-  animation: p10-bounce 2.5s ease-in-out infinite;
-}
-
-@keyframes p10-bounce {
-  0%, 100% { transform: translateY(0); opacity: 0.5; }
-  50%       { transform: translateY(6px); opacity: 1; }
-}
-
-/* ── Hero Stats ── */
-.p10-hero-stats {
-  display: flex;
-  align-items: center;
-  gap: var(--space-lg);
-  margin: var(--space-md) 0;
-}
-
-.p10-hero-stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-
-.p10-hero-stat-num {
-  font-family: var(--font-display);
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 700;
-  color: var(--accent);
-  line-height: 1;
-  letter-spacing: -0.03em;
-}
-
-.p10-hero-stat-label {
-  font-family: var(--font-code);
-  font-size: var(--text-caption);
-  color: var(--text-on-dark-3);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.p10-hero-stat-divider {
-  width: 1px;
-  height: 40px;
-  background: rgba(255,255,255,0.12);
-  flex-shrink: 0;
-}
-
-@media (max-width: 480px) {
-  .p10-hero-stats {
-    gap: var(--space-md);
-  }
-  .p10-hero-stat-num {
-    font-size: 2rem;
-  }
+@keyframes p10-float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(6px); }
 }
 
 /* ── Workflow Section ── */
@@ -1790,9 +1721,6 @@ export function render() {
 }
 
 @media (max-width: 480px) {
-  .p10-hero-content {
-    padding: 0 var(--space-sm);
-  }
   .p10-format-tabs {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1820,39 +1748,22 @@ export function render() {
      Section 1: Hero
      ══════════════════════════════════════════════════════ -->
 <section class="section-dark section-hero-full p10-hero" id="p10-hero">
-  <div class="p10-hero-content">
-    <p class="hero-eyebrow" id="p10-eyebrow">Module 01 / Page 10</p>
-    <h1 class="page-hero-title" style="color:var(--text-on-dark);" id="p10-hero-title">工作流与导出</h1>
-    <p class="page-hero-sub" id="p10-hero-sub">Research Workflow &amp; Export</p>
-    <p class="p10-hero-tagline" id="p10-hero-tagline">
+  <div class="flex-col-center" style="gap:var(--space-md);text-align:center;position:relative;z-index:1;">
+    <p class="hero-eyebrow" id="p10-eyebrow" style="opacity:0;">Module 01 / Page 10</p>
+    <h1 class="page-hero-title" style="color:var(--text-on-dark);opacity:0;" id="p10-hero-title">工作流与导出</h1>
+    <p class="page-hero-sub" id="p10-hero-sub" style="opacity:0;">Research Workflow &amp; Export</p>
+    <p class="p10-hero-tagline" id="p10-hero-tagline" style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;margin-top:var(--space-sm);opacity:0;">
       从原始数据到顶刊图表，掌握每一步的决策与规范——<br>
       让你的图表在第一次提交时就符合期刊要求。
     </p>
-    <!-- Hero stats -->
-    <div class="p10-hero-stats" id="p10-hero-stats">
-      <div class="p10-hero-stat">
-        <span class="p10-hero-stat-num" data-target="6">6</span>
-        <span class="p10-hero-stat-label">核心步骤</span>
-      </div>
-      <div class="p10-hero-stat-divider"></div>
-      <div class="p10-hero-stat">
-        <span class="p10-hero-stat-num" data-target="5">5</span>
-        <span class="p10-hero-stat-label">导出格式</span>
-      </div>
-      <div class="p10-hero-stat-divider"></div>
-      <div class="p10-hero-stat">
-        <span class="p10-hero-stat-num" data-target="6">6</span>
-        <span class="p10-hero-stat-label">期刊速查</span>
-      </div>
-    </div>
-    <nav class="hero-quicknav" id="p10-quicknav">
+    <nav class="hero-quicknav" id="p10-quicknav" style="opacity:0;">
       <button class="hero-quicknav__item" data-target="#p10-workflow">工作流六步</button>
       <button class="hero-quicknav__item" data-target="#p10-format">格式对比</button>
       <button class="hero-quicknav__item" data-target="#p10-dpi">DPI 对比</button>
       <button class="hero-quicknav__item" data-target="#p10-calc">分辨率计算器</button>
       <button class="hero-quicknav__item" data-target="#p10-journal">期刊速查</button>
     </nav>
-    <p class="p10-scroll-hint" id="p10-scroll-hint">↓ 向下探索</p>
+    <div class="p10-scroll-hint" id="p10-scroll-hint" style="opacity:0;">↓ 向下探索</div>
   </div>
 </section>
 
@@ -2126,33 +2037,13 @@ export function init() {
   // 2. Hero GSAP 入场 (gsap is available as window.gsap from CDN)
   const gsap = window.gsap;
   if (gsap) {
-    gsap.fromTo('#p10-hero .hero-eyebrow',
-      { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.1, ease: 'power3.out' });
-    gsap.fromTo('#p10-hero .page-hero-title',
-      { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.25, ease: 'power3.out' });
-    gsap.fromTo('#p10-hero .page-hero-sub',
-      { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.4, ease: 'power3.out' });
-    gsap.fromTo('#p10-hero .p10-hero-tagline',
-      { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.55, ease: 'power3.out' });
-    gsap.fromTo('#p10-hero-stats',
-      { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.65, ease: 'power3.out',
-        onComplete: () => {
-          document.querySelectorAll('.p10-hero-stat-num').forEach(el => {
-            const target = parseInt(el.dataset.target) || 0;
-            let current = 0;
-            const step = () => {
-              current++;
-              el.textContent = current;
-              if (current < target) requestAnimationFrame(step);
-            };
-            if (target > 0) requestAnimationFrame(step);
-          });
-        }
-      });
-    gsap.fromTo('#p10-quicknav',
-      { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.72, ease: 'power3.out' });
-    gsap.fromTo('#p10-hero .p10-scroll-hint',
-      { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, delay: 0.9, ease: 'power3.out' });
+    const heroTl = gsap.timeline({ delay: 0.2 });
+    heroTl.fromTo('#p10-hero .hero-eyebrow', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0);
+    heroTl.fromTo('#p10-hero .page-hero-title', { y: 30, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.15);
+    heroTl.fromTo('#p10-hero .page-hero-sub', { y: 20, opacity: 0 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
+    heroTl.fromTo('#p10-hero .p10-hero-tagline', { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
+    heroTl.fromTo('#p10-hero #p10-quicknav', { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
+    heroTl.fromTo('#p10-hero .p10-scroll-hint', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.75);
   }
 
   // 3. Footer 导航

@@ -463,7 +463,7 @@ export function render() {
       <button class="hero-quicknav__item" data-target="#p5-gallery">图表类型全览</button>
       <button class="hero-quicknav__item" data-target="#p5-misuse">误用案例合集</button>
     </nav>
-    <p class="p5-scroll-hint">↓ 向下探索</p>
+    <div class="p5-scroll-hint" style="opacity:0;">↓ 向下探索</div>
   </div>
 </section>
 
@@ -552,12 +552,13 @@ export function init() {
   if (nextBtn) nextBtn.addEventListener('click', () => navigateTo('m1-p6'));
 
   // Hero 入场
-  gsap.fromTo('#p5-eyebrow',      { opacity:0, y:20 }, { opacity:1, y:0, duration:0.6, delay:0.1,  ease:'power3.out' });
-  gsap.fromTo('#p5-hero-title',   { opacity:0, y:30 }, { opacity:1, y:0, duration:0.8, delay:0.25, ease:'power3.out' });
-  gsap.fromTo('#p5-hero-sub',     { opacity:0, y:20 }, { opacity:0.5, y:0, duration:0.8, delay:0.4, ease:'power3.out' });
-  gsap.fromTo('#p5-hero-tagline', { opacity:0, y:20 }, { opacity:1, y:0, duration:0.8, delay:0.55, ease:'power3.out' });
-  gsap.fromTo('#p5-quicknav',     { opacity:0, y:20 }, { opacity:1, y:0, duration:0.8, delay:0.7,  ease:'power3.out' });
-  gsap.fromTo('.p5-scroll-hint', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, delay: 0.85, ease: 'power3.out' });
+  const heroTl = gsap.timeline({ delay: 0.2 });
+  heroTl.fromTo('#p5-eyebrow', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0);
+  heroTl.fromTo('#p5-hero-title', { y: 30, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.15);
+  heroTl.fromTo('#p5-hero-sub', { y: 20, opacity: 0 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
+  heroTl.fromTo('#p5-hero-tagline', { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
+  heroTl.fromTo('#p5-quicknav', { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
+  heroTl.fromTo('.p5-scroll-hint', { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.75);
 
   // 快捷导航
   document.querySelectorAll('#p5-quicknav .hero-quicknav__item').forEach(btn => {
