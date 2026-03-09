@@ -1893,15 +1893,23 @@ function initWorkflowDesktop() {
     });
   }
 
-  function updateSticky() {
-    const bodyRect = body.getBoundingClientRect();
-    const scrolledPast = Math.max(0, -bodyRect.top);
-    const maxTranslate = Math.max(0, body.offsetHeight - left.offsetHeight);
-    left.style.transform = `translateY(${Math.min(scrolledPast, maxTranslate)}px)`;
+  // 缓存不变量（DOM 渲染后不再改变），避免每帧触发 layout reflow
+  const cachedBodyHeight = body.offsetHeight;
+  const cachedLeftHeight = left.offsetHeight;
+  const maxTranslate = Math.max(0, cachedBodyHeight - cachedLeftHeight);
 
-    // Step detection: each step occupies 100vh
-    const stepIdx = Math.min(TOTAL - 1, Math.max(0, Math.floor(scrolledPast / window.innerHeight)));
-    if (stepIdx !== currentStep) updateStep(stepIdx);
+  let ticking = false;
+
+  function updateSticky() {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      const scrolledPast = Math.max(0, -body.getBoundingClientRect().top);
+      left.style.transform = `translateY(${Math.min(scrolledPast, maxTranslate)}px)`;
+      const stepIdx = Math.min(TOTAL - 1, Math.max(0, Math.floor(scrolledPast / window.innerHeight)));
+      if (stepIdx !== currentStep) updateStep(stepIdx);
+      ticking = false;
+    });
   }
 
   _scrollHandler = updateSticky;
