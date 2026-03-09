@@ -225,8 +225,8 @@ export function render() {
   padding: 4px 14px; border-radius: var(--radius-full);
   font-size: var(--text-small); font-weight: 600; letter-spacing: 0.02em;
 }
-.p4-badge--pass { background: rgba(52,199,89,0.12); color: #34c759; }
-.p4-badge--fail { background: rgba(255,59,48,0.12); color: #ff3b30; }
+.p4-badge--pass { background: rgba(52,199,89,0.12); color: var(--color-success); }
+.p4-badge--fail { background: rgba(255,59,48,0.12); color: var(--color-error); }
 .p4-contrast-bar-wrap { margin-top: var(--space-sm); }
 .p4-contrast-bar-track {
   height: 8px; background: var(--bg-light-alt); border-radius: 4px;
@@ -391,8 +391,8 @@ export function render() {
   font-size: 0.7rem; padding: 2px 10px; border-radius: var(--radius-full);
   font-weight: 600;
 }
-.p4-lh-tag--bad { background: rgba(255,59,48,0.1); color: #ff3b30; }
-.p4-lh-tag--good { background: rgba(52,199,89,0.1); color: #34c759; }
+.p4-lh-tag--bad { background: rgba(255,59,48,0.1); color: var(--color-error); }
+.p4-lh-tag--good { background: rgba(52,199,89,0.1); color: var(--color-success); }
 .p4-lh-text {
   font-size: 0.9rem; color: var(--text-on-light-2);
 }
@@ -454,7 +454,7 @@ export function render() {
   font-size: 0.65rem; font-family: var(--font-code);
   font-weight: 600; letter-spacing: 0.05em; margin-bottom: 4px;
 }
-.p4-check-ex-tag.bad { color: #FF6B6B; }
+.p4-check-ex-tag.bad { color: var(--color-error); }
 .p4-check-ex-tag.good { color: #4CAF50; }
 .p4-check-ex-content {
   font-size: 0.8rem; color: var(--text-on-dark-2); line-height: 1.5;
@@ -939,7 +939,7 @@ function setupContrastChecker() {
     const barEl = document.getElementById('p4-bar-fill');
     if (barEl) {
       barEl.style.width = pct + '%';
-      barEl.style.background = ratio >= 4.5 ? 'var(--color-success)' : ratio >= 3 ? '#F0B27A' : '#ff3b30';
+      barEl.style.background = ratio >= 4.5 ? 'var(--color-success)' : ratio >= 3 ? '#F0B27A' : 'var(--color-error)';
     }
 
     // Preview box
