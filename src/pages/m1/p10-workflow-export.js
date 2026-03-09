@@ -1696,6 +1696,8 @@ export function init() {
 
   // 4. 初始化工作流（其他模块 Task 3/4 会添加）
   initWorkflow();
+  initFormatSection();
+  initDpiComparison();
 
   // 5. ScrollTrigger section 入场动画（桌面端）
   if (gsap && window.ScrollTrigger && window.innerWidth >= 769) {
@@ -1814,6 +1816,214 @@ function initWorkflowDesktop() {
     dot.addEventListener('click', () => {
       const panel = document.getElementById(`p10-wf-panel-${i}`);
       if (panel) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  initFormatSection() — 格式对比标签页
+// ══════════════════════════════════════════════════════
+function initFormatSection() {
+  // Tab switching
+  const tabs = document.querySelectorAll('.p10-format-tab');
+  const contents = document.querySelectorAll('.p10-format-panel, .p10-format-content');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const idx = parseInt(tab.dataset.fmt);
+      tabs.forEach((t, i) => t.classList.toggle('active', i === idx));
+      contents.forEach((c, i) => c.classList.toggle('active', i === idx));
+      requestAnimationFrame(() => renderFormatVisual(idx));
+    });
+  });
+
+  // Render first format visual
+  renderFormatVisual(0);
+
+  // Initialize CodeMirror for all format code containers (read-only)
+  FORMAT_DATA.forEach((f, i) => {
+    const container = document.getElementById(`p10-fmt-code-${i}`);
+    if (!container) return;
+    try {
+      const editor = createCodeEditor(container, {
+        code: f.code, language: 'r', readOnly: true
+      });
+      if (editor && editor.destroy) _codeEditors.push(editor);
+    } catch(e) {
+      container.innerHTML = `<pre style="background:#0d1117;padding:14px;border-radius:8px;font-size:0.75rem;color:#a1a1a6;white-space:pre-wrap;word-wrap:break-word;overflow-wrap:break-word;overflow:hidden;">${f.code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</pre>`;
+    }
+  });
+}
+
+function renderFormatVisual(idx) {
+  const f = FORMAT_DATA[idx];
+  const container = document.getElementById(`p10-fmt-svg-${idx}`);
+  if (!container || container._rendered) return;
+  container._rendered = true;
+
+  if (f.type === 'vector') {
+    renderVectorAnimation(container, f);
+  } else {
+    renderRasterAnimation(container, f);
+  }
+}
+
+function renderVectorAnimation(container, f) {
+  const svg = d3.select(container).append('svg')
+    .attr('viewBox', '0 0 400 200')
+    .attr('preserveAspectRatio', 'xMidYMid meet')
+    .style('width', '100%').style('height', '100%');
+
+  svg.append('rect').attr('width', 400).attr('height', 200).attr('fill', '#0d1117');
+
+  svg.append('text').attr('x', 200).attr('y', 30).attr('text-anchor', 'middle')
+    .attr('fill', f.color).attr('font-size', 13).attr('font-family', 'JetBrains Mono, monospace')
+    .text('矢量：数学路径描述');
+
+  const pathData = 'M 60 150 C 100 60, 180 60, 200 100 C 220 140, 300 60, 340 100';
+  svg.append('path').attr('d', pathData)
+    .attr('fill', 'none').attr('stroke', f.color).attr('stroke-width', 2.5)
+    .attr('stroke-dasharray', '0,1000')
+    .transition().duration(1500).ease(d3.easeCubicOut)
+    .attrTween('stroke-dasharray', () => t => `${t * 1000},1000`);
+
+  [[60,150],[200,100],[340,100]].forEach(([x,y]) => {
+    svg.append('circle').attr('cx', x).attr('cy', y).attr('r', 0)
+      .attr('fill', f.color).attr('stroke', 'white').attr('stroke-width', 1.5)
+      .transition().delay(1200).duration(400).attr('r', 5);
+    svg.append('text').attr('x', x).attr('y', y + 18)
+      .attr('text-anchor', 'middle').attr('fill', '#6e6e73')
+      .attr('font-size', 9).attr('font-family', 'JetBrains Mono, monospace')
+      .text(`(${x}, ${y})`);
+  });
+
+  svg.append('text').attr('x', 200).attr('y', 185).attr('text-anchor', 'middle')
+    .attr('fill', '#6e6e73').attr('font-size', 10)
+    .text('路径在任意分辨率下精确重绘 → 无损缩放');
+}
+
+function renderRasterAnimation(container, f) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 400; canvas.height = 200;
+  canvas.style.width = '100%'; canvas.style.height = '100%';
+  container.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#0d1117';
+  ctx.fillRect(0, 0, 400, 200);
+
+  ctx.fillStyle = f.color;
+  ctx.font = '13px JetBrains Mono, monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('位图：像素网格存储', 200, 28);
+
+  const gridSize = 22;
+  const cols = 12, rows = 6;
+  const startX = 40, startY = 50;
+  const pixelColors = [
+    '#0d1117','#7EC8E3','#7EC8E3','#0d1117','#0d1117','#0d1117','#95D5B2','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117',
+    '#0d1117','#7EC8E3','#95D5B2','#0d1117','#0d1117','#7EC8E3','#7EC8E3','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117',
+    '#0d1117','#0d1117','#0d1117','#0d1117','#95D5B2','#7EC8E3','#95D5B2','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117',
+    '#0d1117','#0d1117','#0d1117','#7EC8E3','#7EC8E3','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117',
+    '#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117',
+    '#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117',
+  ];
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const color = pixelColors[r * cols + c] || '#0d1117';
+      ctx.fillStyle = color;
+      ctx.fillRect(startX + c * gridSize, startY + r * gridSize, gridSize - 1, gridSize - 1);
+    }
+  }
+
+  ctx.fillStyle = '#6e6e73';
+  ctx.font = '10px JetBrains Mono, monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('放大后可见像素格子（锯齿）', 200, 188);
+}
+
+// ══════════════════════════════════════════════════════
+//  initDpiComparison() — DPI 对比器
+// ══════════════════════════════════════════════════════
+function initDpiComparison() {
+  const DPI_VALS = [72, 150, 300, 600];
+  const DPI_LABELS = {
+    72: '屏幕显示（模糊）',
+    150: '一般印刷',
+    300: '期刊标准 ✓',
+    600: '顶刊线条图 ✓'
+  };
+
+  function drawDpiCanvas(canvas, dpi) {
+    const size = 300;
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, size, size);
+
+    // Simulate DPI: lower DPI = larger pixel blocks (more jagged appearance)
+    const offCanvas = document.createElement('canvas');
+    const offSize = Math.max(8, Math.round(size * dpi / 300 / 4));
+    offCanvas.width = offSize;
+    offCanvas.height = offSize;
+    const offCtx = offCanvas.getContext('2d');
+
+    offCtx.fillStyle = '#ffffff';
+    offCtx.fillRect(0, 0, offSize, offSize);
+
+    // Draw content on small canvas
+    offCtx.beginPath();
+    offCtx.arc(offSize * 0.35, offSize * 0.4, offSize * 0.22, 0, Math.PI * 2);
+    offCtx.fillStyle = '#7EC8E3';
+    offCtx.fill();
+    offCtx.lineWidth = Math.max(0.5, offSize * 0.02);
+    offCtx.strokeStyle = '#1d1d1f';
+    offCtx.stroke();
+
+    offCtx.beginPath();
+    offCtx.moveTo(offSize * 0.1, offSize * 0.75);
+    offCtx.lineTo(offSize * 0.6, offSize * 0.55);
+    offCtx.lineTo(offSize * 0.9, offSize * 0.7);
+    offCtx.strokeStyle = '#95D5B2';
+    offCtx.lineWidth = Math.max(0.5, offSize * 0.025);
+    offCtx.stroke();
+
+    offCtx.font = `${Math.max(4, offSize * 0.15)}px Arial`;
+    offCtx.fillStyle = '#1d1d1f';
+    offCtx.fillText('ABC', offSize * 0.55, offSize * 0.4);
+
+    // Scale to target size, lower DPI shows pixelation (imageSmoothingEnabled=false)
+    ctx.imageSmoothingEnabled = dpi >= 300;
+    ctx.drawImage(offCanvas, 0, 0, size, size);
+
+    // DPI label
+    ctx.fillStyle = '#1d1d1f';
+    ctx.font = 'bold 20px Inter, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${dpi} DPI`, size / 2, size - 16);
+  }
+
+  // Desktop: draw all 4 canvases
+  DPI_VALS.forEach(dpi => {
+    const canvas = document.getElementById(`p10-dpi-canvas-${dpi}`);
+    if (canvas) drawDpiCanvas(canvas, dpi);
+  });
+
+  // Mobile: tab switching
+  const mobileTabs = document.querySelectorAll('.p10-dpi-mobile-tab');
+  const mobileCanvas = document.getElementById('p10-dpi-mobile-canvas');
+  const mobileLabel = document.getElementById('p10-dpi-mobile-label');
+
+  if (mobileCanvas) {
+    drawDpiCanvas(mobileCanvas, 72);
+  }
+
+  mobileTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const dpi = parseInt(tab.dataset.dpi);
+      mobileTabs.forEach(t => t.classList.toggle('active', t.dataset.dpi == dpi));
+      if (mobileCanvas) drawDpiCanvas(mobileCanvas, dpi);
+      if (mobileLabel) mobileLabel.textContent = DPI_LABELS[dpi] || '';
     });
   });
 }
