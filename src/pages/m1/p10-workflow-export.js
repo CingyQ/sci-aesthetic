@@ -1032,6 +1032,21 @@ export function render() {
   font-weight: 400;
 }
 
+.p10-calc-result-value {
+  font-family: var(--font-code);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.2;
+}
+
+.p10-calc-result-note {
+  font-size: var(--text-caption);
+  color: var(--text-on-dark-3);
+  margin: 4px 0 0;
+  line-height: 1.4;
+}
+
 .p10-calc-code-wrap {
   background: var(--bg-dark-deep);
   border-radius: var(--radius-md);
@@ -1571,7 +1586,7 @@ export function render() {
           <option value="png">PNG（无损位图）</option>
           <option value="tiff">TIFF（无损位图，LZW）</option>
           <option value="jpeg">JPEG（有损位图）</option>
-          <option value="svg">SVG（矢量，尺寸无关）</option>
+          <option value="svg">PDF / SVG（矢量，ggsave 生成 PDF）</option>
         </select>
       </div>
     </div>
@@ -2044,8 +2059,9 @@ function initResolutionCalc() {
   const resHEl  = document.getElementById('p10-res-h');
   const mpEl    = document.getElementById('p10-res-mp');
   const sizeEl  = document.getElementById('p10-res-size');
-  const codeEl  = document.getElementById('p10-calc-code');
-  const warnEl  = document.getElementById('p10-calc-warning');
+  const codeEl     = document.getElementById('p10-calc-code');
+  const warnEl     = document.getElementById('p10-calc-warning');
+  const warnTextEl = document.getElementById('p10-calc-warning-text');
 
   if (!wInput || !resWEl) return;
 
@@ -2074,14 +2090,26 @@ function initResolutionCalc() {
 
     const sizeMB = bytesEst > 0 ? (bytesEst / 1024 / 1024).toFixed(1) : '—';
 
+    // Compute size note for user context
+    let sizeNote = '';
+    if (fmt === 'png') {
+      sizeNote = '无损压缩，适合网页与演示文稿';
+    } else if (fmt === 'tiff') {
+      sizeNote = 'LZW 无损压缩，期刊提交首选';
+    } else if (fmt === 'jpeg') {
+      sizeNote = '有损压缩，不建议用于期刊投稿';
+    } else {
+      sizeNote = '矢量格式，ggsave 生成 PDF 文件';
+    }
+
     // Update result cards — each card has a value + unit span
     // Replace inner content while preserving the unit span structure
     if (resWEl) resWEl.innerHTML = `${pxW.toLocaleString()} <span class="p10-calc-result-unit">px</span>`;
     if (resHEl) resHEl.innerHTML = `${pxH.toLocaleString()} <span class="p10-calc-result-unit">px</span>`;
     if (mpEl)   mpEl.innerHTML   = `${megaPx} <span class="p10-calc-result-unit">MP</span>`;
     if (sizeEl) sizeEl.innerHTML = bytesEst > 0
-      ? `${sizeMB} <span class="p10-calc-result-unit">MB</span>`
-      : `— <span class="p10-calc-result-unit">矢量</span>`;
+      ? `<span class="p10-calc-result-value">${sizeMB} MB</span><p class="p10-calc-result-note">${sizeNote}</p>`
+      : `<span class="p10-calc-result-value">矢量</span><p class="p10-calc-result-note">${sizeNote}</p>`;
 
     // Generate ggsave code
     const fmtStr = (fmt === 'svg') ? 'pdf' : fmt;
@@ -2094,9 +2122,8 @@ function initResolutionCalc() {
     if (warnEl) {
       const showWarn = bytesEst > 10 * 1024 * 1024;
       warnEl.classList.toggle('visible', showWarn);
-      const warnText = document.getElementById('p10-calc-warning-text');
-      if (warnText && showWarn) {
-        warnText.textContent = `⚠️ 估算文件大小约 ${sizeMB} MB，超过 10MB。建议使用 LZW 压缩（TIFF）或改用矢量格式（PDF/SVG）。`;
+      if (warnTextEl && showWarn) {
+        warnTextEl.textContent = `⚠️ 估算文件大小约 ${sizeMB} MB，超过 10MB。建议使用 LZW 压缩（TIFF）或改用矢量格式（PDF/SVG）。`;
       }
     }
   }
