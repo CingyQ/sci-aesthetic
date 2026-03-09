@@ -1984,75 +1984,226 @@ function renderFormatVisual(idx) {
 
 function renderVectorAnimation(container, f) {
   const svg = d3.select(container).append('svg')
-    .attr('viewBox', '0 0 400 200')
+    .attr('viewBox', '0 0 420 230')
     .attr('preserveAspectRatio', 'xMidYMid meet')
     .style('width', '100%').style('height', '100%');
 
-  svg.append('rect').attr('width', 400).attr('height', 200).attr('fill', '#0d1117');
+  // 背景
+  svg.append('rect').attr('width', 420).attr('height', 230).attr('fill', '#0d1117');
 
-  svg.append('text').attr('x', 200).attr('y', 30).attr('text-anchor', 'middle')
-    .attr('fill', f.color).attr('font-size', 13).attr('font-family', 'JetBrains Mono, monospace')
-    .text('矢量：数学路径描述');
+  // 顶部标题
+  svg.append('text').attr('x', 210).attr('y', 22)
+    .attr('text-anchor', 'middle').attr('fill', f.color)
+    .attr('font-size', 12).attr('font-family', 'JetBrains Mono, monospace')
+    .text('矢量格式：无限缩放不失真');
 
-  const pathData = 'M 60 150 C 100 60, 180 60, 200 100 C 220 140, 300 60, 340 100';
-  svg.append('path').attr('d', pathData)
-    .attr('fill', 'none').attr('stroke', f.color).attr('stroke-width', 2.5)
-    .attr('stroke-dasharray', '0,1000')
-    .transition().duration(1500).ease(d3.easeCubicOut)
-    .attrTween('stroke-dasharray', () => t => `${t * 1000},1000`);
+  // 中心分隔线
+  svg.append('line').attr('x1', 210).attr('y1', 34).attr('x2', 210).attr('y2', 210)
+    .attr('stroke', '#2a2a3a').attr('stroke-width', 1).attr('stroke-dasharray', '4,3');
 
-  [[60,150],[200,100],[340,100]].forEach(([x,y]) => {
-    svg.append('circle').attr('cx', x).attr('cy', y).attr('r', 0)
-      .attr('fill', f.color).attr('stroke', 'white').attr('stroke-width', 1.5)
-      .transition().delay(1200).duration(400).attr('r', 5);
-    svg.append('text').attr('x', x).attr('y', y + 18)
-      .attr('text-anchor', 'middle').attr('fill', '#6e6e73')
-      .attr('font-size', 9).attr('font-family', 'JetBrains Mono, monospace')
-      .text(`(${x}, ${y})`);
+  // ── 左侧：100% 原始大小 ──
+  const lData = [0,1,2,3,4,5].map((i) => ({ x: i, y: [2.1,3.8,2.9,4.5,3.2,5.1][i] }));
+  const lX = d3.scaleLinear().domain([0,5]).range([32, 188]);
+  const lY = d3.scaleLinear().domain([0,6]).range([195, 46]);
+
+  // 坐标轴
+  svg.append('line').attr('x1', 32).attr('y1', 195).attr('x2', 188).attr('y2', 195)
+    .attr('stroke', '#3a3a4a').attr('stroke-width', 1);
+  svg.append('line').attr('x1', 32).attr('y1', 46).attr('x2', 32).attr('y2', 195)
+    .attr('stroke', '#3a3a4a').attr('stroke-width', 1);
+
+  // Y 轴刻度（简易）
+  [1,3,5].forEach(v => {
+    svg.append('line')
+      .attr('x1', 28).attr('y1', lY(v)).attr('x2', 32).attr('y2', lY(v))
+      .attr('stroke', '#3a3a4a').attr('stroke-width', 1);
   });
 
-  svg.append('text').attr('x', 200).attr('y', 185).attr('text-anchor', 'middle')
-    .attr('fill', '#6e6e73').attr('font-size', 10)
-    .text('路径在任意分辨率下精确重绘 → 无损缩放');
+  // 折线（动画绘制）
+  const lLine = d3.line().x(d => lX(d.x)).y(d => lY(d.y)).curve(d3.curveMonotoneX);
+  const lPath = svg.append('path').attr('d', lLine(lData))
+    .attr('fill', 'none').attr('stroke', f.color).attr('stroke-width', 2)
+    .attr('stroke-dasharray', function() { return this.getTotalLength(); })
+    .attr('stroke-dashoffset', function() { return this.getTotalLength(); });
+  lPath.transition().duration(1200).ease(d3.easeCubicOut).attr('stroke-dashoffset', 0);
+
+  // 数据点
+  lData.forEach(d => {
+    svg.append('circle').attr('cx', lX(d.x)).attr('cy', lY(d.y)).attr('r', 0)
+      .attr('fill', f.color).attr('stroke', '#0d1117').attr('stroke-width', 1)
+      .transition().delay(1000).duration(300).attr('r', 3.5);
+  });
+
+  // 底部标签
+  svg.append('text').attr('x', 110).attr('y', 215)
+    .attr('text-anchor', 'middle').attr('fill', '#555').attr('font-size', 10)
+    .attr('font-family', 'JetBrains Mono, monospace').text('100% 原始大小');
+
+  // ── 右侧：×4 放大视图（同等清晰）──
+  // 裁剪区域背景
+  svg.append('rect').attr('x', 222).attr('y', 38).attr('width', 174).attr('height', 162)
+    .attr('fill', '#111520').attr('rx', 4);
+
+  // 同一数据，只展示中间 3 个区间，坐标范围放大
+  const rData = lData.slice(1, 5);
+  const rX = d3.scaleLinear().domain([1,4]).range([234, 382]);
+  const rY = d3.scaleLinear().domain([2,6]).range([185, 50]);
+
+  // 放大区域的轴（极简）
+  svg.append('line').attr('x1', 234).attr('y1', 185).attr('x2', 382).attr('y2', 185)
+    .attr('stroke', '#3a3a4a').attr('stroke-width', 0.8);
+  svg.append('line').attr('x1', 234).attr('y1', 50).attr('x2', 234).attr('y2', 185)
+    .attr('stroke', '#3a3a4a').attr('stroke-width', 0.8);
+
+  // 放大的折线（带动画延迟）
+  const rLine = d3.line().x(d => rX(d.x)).y(d => rY(d.y)).curve(d3.curveMonotoneX);
+  const rPath = svg.append('path').attr('d', rLine(rData))
+    .attr('fill', 'none').attr('stroke', f.color).attr('stroke-width', 2.8)
+    .attr('stroke-dasharray', function() { return this.getTotalLength(); })
+    .attr('stroke-dashoffset', function() { return this.getTotalLength(); });
+  rPath.transition().delay(300).duration(1000).ease(d3.easeCubicOut).attr('stroke-dashoffset', 0);
+
+  // 放大区域的数据点（更大）
+  rData.forEach(d => {
+    svg.append('circle').attr('cx', rX(d.x)).attr('cy', rY(d.y)).attr('r', 0)
+      .attr('fill', f.color).attr('stroke', '#0d1117').attr('stroke-width', 1.5)
+      .transition().delay(1200).duration(300).attr('r', 6);
+  });
+
+  // ×4 zoom 标签
+  svg.append('rect').attr('x', 222).attr('y', 38).attr('width', 48).attr('height', 18)
+    .attr('fill', f.color).attr('rx', 3);
+  svg.append('text').attr('x', 246).attr('y', 51)
+    .attr('text-anchor', 'middle').attr('fill', '#000')
+    .attr('font-size', 10).attr('font-weight', 'bold')
+    .attr('font-family', 'JetBrains Mono, monospace').text('×4 zoom');
+
+  // 底部结论标签
+  svg.append('text').attr('x', 309).attr('y', 215)
+    .attr('text-anchor', 'middle').attr('fill', f.color)
+    .attr('font-size', 10).attr('font-family', 'JetBrains Mono, monospace')
+    .text('依然清晰 ✓');
 }
 
 function renderRasterAnimation(container, f) {
   const canvas = document.createElement('canvas');
-  canvas.width = 400; canvas.height = 200;
+  const W = 420, H = 230;
+  canvas.width = W; canvas.height = H;
   canvas.style.width = '100%'; canvas.style.height = '100%';
   container.appendChild(canvas);
   const ctx = canvas.getContext('2d');
+
+  // roundRect polyfill for older browsers
+  if (!ctx.roundRect) {
+    ctx.roundRect = function(x, y, w, h, r) {
+      this.beginPath();
+      this.moveTo(x+r, y);
+      this.arcTo(x+w, y, x+w, y+h, r);
+      this.arcTo(x+w, y+h, x, y+h, r);
+      this.arcTo(x, y+h, x, y, r);
+      this.arcTo(x, y, x+w, y, r);
+      this.closePath();
+    };
+  }
+
+  // 背景
   ctx.fillStyle = '#0d1117';
-  ctx.fillRect(0, 0, 400, 200);
+  ctx.fillRect(0, 0, W, H);
 
+  // 顶部标题
   ctx.fillStyle = f.color;
-  ctx.font = '13px JetBrains Mono, monospace';
+  ctx.font = '12px "JetBrains Mono", monospace';
   ctx.textAlign = 'center';
-  ctx.fillText('位图：像素网格存储', 200, 28);
+  ctx.fillText('位图格式：放大后像素化', W / 2, 22);
 
-  const gridSize = 22;
-  const cols = 12, rows = 6;
-  const startX = 40, startY = 50;
-  const pixelColors = [
-    '#0d1117','#7EC8E3','#7EC8E3','#0d1117','#0d1117','#0d1117','#95D5B2','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117',
-    '#0d1117','#7EC8E3','#95D5B2','#0d1117','#0d1117','#7EC8E3','#7EC8E3','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117',
-    '#0d1117','#0d1117','#0d1117','#0d1117','#95D5B2','#7EC8E3','#95D5B2','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117',
-    '#0d1117','#0d1117','#0d1117','#7EC8E3','#7EC8E3','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117',
-    '#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117',
-    '#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117','#0d1117',
+  // 中心分隔线（虚线）
+  ctx.strokeStyle = '#2a2a3a';
+  ctx.setLineDash([4, 3]);
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(210, 34); ctx.lineTo(210, 210); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // ── 左侧：100% 清晰视图 ──
+  // 绘制迷你折线图 + 坐标轴
+  const offX = 10, offY = 36;
+  // 坐标轴
+  ctx.strokeStyle = '#3a3a4a'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(36+offX, 36+offY); ctx.lineTo(36+offX, 158+offY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(36+offX, 158+offY); ctx.lineTo(168+offX, 158+offY); ctx.stroke();
+
+  // 折线数据点
+  const pts = [
+    [36, 120], [58, 88], [80, 108], [102, 68], [124, 84], [146, 54]
+  ].map(([x,y]) => [x+offX, y+offY]);
+
+  ctx.strokeStyle = f.color; ctx.lineWidth = 2;
+  ctx.beginPath();
+  pts.forEach(([x,y], i) => i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y));
+  ctx.stroke();
+
+  // 数据点圆圈
+  pts.forEach(([x, y]) => {
+    ctx.beginPath(); ctx.arc(x, y, 3, 0, Math.PI * 2);
+    ctx.fillStyle = f.color; ctx.fill();
+    ctx.strokeStyle = '#0d1117'; ctx.lineWidth = 1; ctx.stroke();
+  });
+
+  // 底部标签
+  ctx.fillStyle = '#555'; ctx.font = '10px "JetBrains Mono", monospace';
+  ctx.textAlign = 'center'; ctx.fillText('100% 原始大小', 107, 215);
+
+  // ── 右侧：×4 放大（像素块）──
+  // 背景
+  ctx.fillStyle = '#111520';
+  ctx.beginPath();
+  ctx.roundRect(222, 38, 174, 162, 4);
+  ctx.fill();
+
+  // 模拟放大后的像素块：绘制中间一段折线的 "像素版本"
+  // 使用大方块 + 锯齿感颜色渐变模拟 bicubic 放大后的边缘
+  const bSize = 13; // 每个 "像素" 的尺寸
+  const bX0 = 228, bY0 = 48;
+
+  // 预设的像素颜色图（模拟折线路径经过的像素块）
+  const dark = '#0d1117', accent = f.color, blend = f.color + '88', faint = f.color + '33';
+  const pixMap = [
+    [dark,  dark,  dark,  blend, accent,accent,blend, dark,  dark,  dark,  dark,  dark],
+    [dark,  dark,  blend, accent,accent,blend, dark,  dark,  dark,  dark,  dark,  dark],
+    [dark,  blend, accent,accent,blend, dark,  dark,  dark,  dark,  dark,  dark,  dark],
+    [blend, accent,accent,faint, dark,  dark,  dark,  dark,  dark,  dark,  dark,  dark],
+    [accent,accent,faint, dark,  dark,  dark,  blend, accent,blend, dark,  dark,  dark],
+    [accent,faint, dark,  dark,  dark,  blend, accent,accent,blend, dark,  dark,  dark],
+    [faint, dark,  dark,  dark,  blend, accent,accent,faint, dark,  dark,  dark,  dark],
+    [dark,  dark,  dark,  blend, accent,accent,faint, dark,  dark,  dark,  dark,  dark],
+    [dark,  dark,  blend, accent,faint, dark,  dark,  dark,  blend, accent,blend, dark],
+    [dark,  blend, accent,faint, dark,  dark,  dark,  dark,  blend, accent,blend, dark],
   ];
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      const color = pixelColors[r * cols + c] || '#0d1117';
-      ctx.fillStyle = color;
-      ctx.fillRect(startX + c * gridSize, startY + r * gridSize, gridSize - 1, gridSize - 1);
+
+  for (let row = 0; row < pixMap.length; row++) {
+    for (let col = 0; col < pixMap[row].length; col++) {
+      ctx.fillStyle = pixMap[row][col];
+      ctx.fillRect(bX0 + col * bSize, bY0 + row * bSize, bSize - 1, bSize - 1);
     }
   }
 
-  ctx.fillStyle = '#6e6e73';
-  ctx.font = '10px JetBrains Mono, monospace';
-  ctx.textAlign = 'center';
-  ctx.fillText('放大后可见像素格子（锯齿）', 200, 188);
+  // 像素格子网格线（强调锯齿感）
+  ctx.strokeStyle = 'rgba(255,255,255,0.05)'; ctx.lineWidth = 0.5;
+  for (let i = 0; i <= 12; i++) {
+    ctx.beginPath(); ctx.moveTo(bX0 + i*bSize, bY0); ctx.lineTo(bX0 + i*bSize, bY0 + pixMap.length*bSize); ctx.stroke();
+  }
+  for (let j = 0; j <= pixMap.length; j++) {
+    ctx.beginPath(); ctx.moveTo(bX0, bY0 + j*bSize); ctx.lineTo(bX0 + 12*bSize, bY0 + j*bSize); ctx.stroke();
+  }
+
+  // ×4 zoom 标签
+  ctx.fillStyle = f.color;
+  ctx.beginPath(); ctx.roundRect(222, 38, 48, 18, 3); ctx.fill();
+  ctx.fillStyle = '#000'; ctx.font = 'bold 10px "JetBrains Mono", monospace';
+  ctx.textAlign = 'center'; ctx.fillText('×4 zoom', 246, 51);
+
+  // 底部结论标签
+  ctx.fillStyle = '#E07A7A'; ctx.font = '10px "JetBrains Mono", monospace';
+  ctx.textAlign = 'center'; ctx.fillText('像素化 ✗', 309, 215);
 }
 
 // ══════════════════════════════════════════════════════
