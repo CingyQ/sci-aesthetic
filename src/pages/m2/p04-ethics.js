@@ -127,8 +127,8 @@ async function renderMermaid(code, containerId) {
     container.innerHTML = svg;
     container.querySelector('svg')?.setAttribute('style', 'max-width:100%;height:auto;');
   } catch(e) {
-    const c = document.getElementById(containerId);
-    if (c) c.innerHTML = `<pre style="color:var(--text-on-dark-2);font-size:0.78rem;padding:var(--space-md);white-space:pre-wrap;word-wrap:break-word;">${code}</pre>`;
+    // Use already-resolved reference instead of re-querying DOM
+    if (container) container.innerHTML = `<pre style="color:var(--text-on-dark-2);font-size:0.78rem;padding:var(--space-md);white-space:pre-wrap;word-wrap:break-word;">${code}</pre>`;
   }
 }
 
@@ -458,9 +458,11 @@ export function init() {
       setTimeout(() => detailEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
     };
 
+    const keyHandler = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handler(); } };
     card.addEventListener('click', handler);
-    card.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handler(); } });
+    card.addEventListener('keydown', keyHandler);
     _scrollHandlers.push({ el: card, type: 'click', fn: handler });
+    _scrollHandlers.push({ el: card, type: 'keydown', fn: keyHandler });
   });
 
   // ScrollTrigger fadeIn for S1 cards
@@ -503,7 +505,7 @@ export function init() {
 
   // Scene tabs
   document.querySelectorAll('.p04-scene-tab').forEach((tab, i) => {
-    const handler = () => setScene(i);
+    const handler = () => setScene(i).catch(e => console.warn('p04 scene switch failed:', e));
     tab.addEventListener('click', handler);
     _scrollHandlers.push({ el: tab, type: 'click', fn: handler });
   });
@@ -537,7 +539,7 @@ export function init() {
   }
 
   // Init mermaid and render first scene
-  initMermaid().then(() => setScene(0));
+  initMermaid().then(() => setScene(0)).catch(e => console.warn('p04 init failed:', e));
 
   // ── S3 collab cards scroll animation ─────────────────────────────────────
   const obs2 = new IntersectionObserver((entries) => {
