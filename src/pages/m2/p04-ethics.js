@@ -125,7 +125,12 @@ async function renderMermaid(code, containerId) {
     const uid = 'mg-' + Math.random().toString(36).slice(2, 8);
     const { svg } = await mermaidApi.render(uid, code);
     container.innerHTML = svg;
-    container.querySelector('svg')?.setAttribute('style', 'max-width:100%;height:auto;');
+    const svgEl = container.querySelector('svg');
+    if (svgEl) {
+      svgEl.style.display = 'block';
+      svgEl.style.height = 'auto';
+      // 不设 max-width：LR 流程图保持天然宽度，可横向滚动阅读；TD 流程图纵向可滚动
+    }
   } catch(e) {
     // Use already-resolved reference instead of re-querying DOM
     if (container) container.innerHTML = `<pre style="color:var(--text-on-dark-2);font-size:0.78rem;padding:var(--space-md);white-space:pre-wrap;word-wrap:break-word;">${code}</pre>`;
@@ -266,12 +271,16 @@ export function render() {
 .p04-scene-tab { padding:10px 24px; border-radius:var(--radius-full); border:1.5px solid rgba(184,184,232,0.3); background:transparent; color:var(--text-on-dark-2); font-size:0.85rem; cursor:pointer; transition:all 0.25s; min-height:44px; font-family:var(--font-heading); }
 .p04-scene-tab:hover { border-color:var(--module-2); color:var(--text-on-dark); }
 .p04-scene-tab.active { background:rgba(184,184,232,0.12); border-color:var(--module-2); color:var(--module-2); }
-.p04-mermaid-wrap { background:var(--bg-dark-elevated); border-radius:var(--radius-lg); padding:var(--space-lg); border:1px solid var(--border-dark); min-height:200px; margin-bottom:var(--space-lg); overflow:auto; }
+.p04-mermaid-wrap { background:var(--bg-dark-elevated); border-radius:var(--radius-lg); padding:var(--space-lg); border:1px solid var(--border-dark); min-height:200px; max-height:600px; margin-bottom:var(--space-lg); overflow:auto; -webkit-overflow-scrolling:touch; }
 .p04-code-wrap { background:var(--bg-dark); border-radius:var(--radius-md); border:1px solid var(--border-dark); position:relative; }
 .p04-code-copy { position:absolute; top:var(--space-sm); right:var(--space-sm); padding:6px 14px; border-radius:var(--radius-full); background:rgba(184,184,232,0.15); color:var(--module-2); border:1px solid rgba(184,184,232,0.3); font-size:0.78rem; cursor:pointer; font-family:var(--font-heading); transition:all 0.2s; }
 .p04-code-copy:hover { background:rgba(184,184,232,0.25); }
 .p04-code-copy.copied { background:#22c55e20; color:#22c55e; border-color:#22c55e; }
 .p04-code-pre { font-family:var(--font-code); font-size:0.78rem; color:var(--text-on-dark-2); line-height:1.8; padding:var(--space-lg); padding-right:80px; white-space:pre-wrap; word-wrap:break-word; margin:0; }
+
+/* ── Mermaid scroll hint ── */
+.p04-mermaid-hint { display:none; }
+@media (max-width:768px) { .p04-mermaid-hint { display:block; text-align:center; font-size:var(--text-caption); color:var(--text-on-dark-3); margin-bottom:var(--space-sm); } }
 
 /* ── S3 collab steps ── */
 .p04-collab-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:var(--space-md); max-width:1200px; margin:0 auto; }
@@ -297,6 +306,7 @@ export function render() {
   #p04-s1, #p04-s2, #p04-s3, #p04-s4 { scroll-margin-top:56px; }
   .p04-type-grid { grid-template-columns:repeat(2,1fr); }
   .p04-collab-grid { grid-template-columns:1fr; }
+  .p04-mermaid-wrap { max-height:320px; }
 }
 </style>
 
@@ -352,6 +362,7 @@ export function render() {
     <div class="p04-mermaid-wrap" id="p04-mermaid-output">
       <div style="display:flex;align-items:center;justify-content:center;min-height:180px;color:var(--text-on-dark-3);font-size:0.85rem;">加载图解渲染引擎…</div>
     </div>
+    <p class="p04-mermaid-hint">← 可滑动查看完整流程图 →</p>
     <div class="p04-code-wrap">
       <button class="p04-code-copy" id="p04-copy-btn">复制代码</button>
       <pre class="p04-code-pre" id="p04-code-display"></pre>
