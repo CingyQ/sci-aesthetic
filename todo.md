@@ -80,13 +80,21 @@
 - [x] P10 debug：三个 p10 专属 fix（window.gsap / rAF ticking / countUp zero guard）在审计过程中识别并修复
 - [x] 规范同步：CLAUDE.md / design-spec.md / commands.md 补充 rAF ticking 模式、countUp 零值保护、Hero 不放统计数字三条新规范
 
-## Phase 5: 模块二 — AI 辅助科研绘图（m2-p1 ~ m2-p6）
-- [ ] m2-p1 AI 工具全景（D3 决策树选工具 + 工具矩阵可排序筛选 + 传统vsAI 时间对比动画 + 5 个合理应用场景）
-- [ ] m2-p2 Prompt 工程（质量评分器 0-100 四维分析 + 3 组好差对比 + Prompt 模板库按场景分类 CopyButton）
-- [ ] m2-p3 AI 矢量化（Image Trace 4 滑块参数模拟器 + BeforeAfter 对比 + 格式兼容矩阵 + 3 个陷阱解决方案）
-- [ ] m2-p4 AI 伦理版权（期刊政策对比表可排序 + 情景判断练习交互反馈 + AI 声明模板生成器 CopyButton）
-- [ ] m2-p5 AI 辅助科研流程图（5 步粘性滚动工作流 + 5 种流程图类型 Prompt 模板 + 3 个完整案例 BeforeAfter）
-- [ ] m2-p6 AI 绘图实战案例集（3 个端到端案例：Graphical Abstract/实验示意图/综述概念图 + StickySteps + BeforeAfter）
+## Phase 5: 模块二 — AI 辅助科研绘图（m2-p1 ~ m2-p6）工作流驱动，环境科学主题
+> 先完成所有页面的交互、功能模块和布局，AI 生成图位置用占位符。
+> Phase 5.5 统一使用 Nano Banana 生成素材后替换占位符。
+- [x] m2-p1 AI 与科研绘图新范式（D3 双时间线传统vsAI 工作流对比 + 场景判断器6-8题 + 能力矩阵按任务分类 + 5场景切换展示组件[占位符]）
+- [x] m2-p2 Prompt 的艺术（CDTF 粘性滚动解剖 + 3 组好差 BeforeAfter 对比[占位符] + 4 步迭代时间线[占位符] + Prompt 模板库列表+预览 CopyButton）
+- [x] m2-p3 AI 输出后处理（5 问题卡片滚动[占位符] + 矢量化三路径 Tab + Image Trace 4 滑块模拟器 + 5 步精修 StickySteps BeforeAfter[占位符]）
+- [x] m2-p4 AI 辅助科研图解（5 种图解类型学 D3 + Mermaid 文生图解 3 场景演示 + AI+精修 5 步协作 StickySteps[占位符] + 5 种图解切换展示[占位符]）
+- [x] m2-p5 伦理版权学术规范（期刊政策交互对比表✅⚠️❌ + 5 层合规光谱 D3 + 8-10 题情景判断练习 + AI 声明模板生成器中英文 CopyButton）
+- [x] m2-p6 端到端实战三案例（案例选择器 + 水污染GA StickySteps[占位符] + 微塑料迁移方法图 Mermaid+AI[占位符] + 碳循环综述概念图[占位符] + 经验总结对比表）
+
+## Phase 5.5: M2 素材生成与替换（Nano Banana 统一批次）
+- [ ] 用 Nano Banana (Gemini on OpenRouter) 按 content-outline.md 中的素材规划批量生成 ~53 张环境科学主题图
+- [ ] 替换 m2-p1 ~ m2-p6 中所有占位符为实际 AI 生成图
+- [ ] 每张图保存对应 prompt 文本（存入 assets 或 md 备注）
+- [ ] 视觉一致性检查：风格/配色/尺寸统一，不合格的重新生成
 
 ## Phase 6: 模块三 — 矢量绘图与设计（m3-p1 ~ m3-p7）
 - [ ] m3-p1 矢量 vs 位图（Canvas+SVG 缩放对比到 800% + D3 格式选择决策树 + 文件大小vs质量权衡）
@@ -129,9 +137,10 @@
 | Phase 3 首页 | ✅ 完成 | |
 | Phase 4 模块一 | ✅ 10/10 | m1-p1~p10 全部完成 |
 | Phase 4.5 M1 审计 | ✅ 完成 | Hero/Footer/CSS/动画统一 + 文档更新 |
-| Phase 5 模块二 | ⏳ 待开始 | |
+| Phase 5 模块二 | ✅ 完成 | 6/6 页完成，占位符待 Phase 5.5 替换 |
+| Phase 5.5 M2 素材 | ⏳ 待开始 | Nano Banana 批量生成 ~53 张环境科学图 |
 | Phase 6 模块三 | ⏳ 待开始 | |
 | Phase 7 模块四 | ⏳ 待开始 | |
 | Phase 8 收尾 | ⏳ 待开始 | |
 
-**下一步**：`commands.md` Step 8 — m2-p1 AI 工具全景 + m2-p2 Prompt 工程
+**下一步**：Phase 6 — m3-p1~m3-p7 矢量绘图与设计（可选：先执行 Phase 5.5 AI 素材生成）
