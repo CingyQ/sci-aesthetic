@@ -1,8 +1,8 @@
-import { fadeIn, scaleReveal, killAll, gsap } from '../../components/ScrollAnimations.js';
+import { fadeIn, killAll, gsap } from '../../components/ScrollAnimations.js';
 import { navigateTo } from '../../utils/router.js';
-import * as d3 from 'd3';
 
 let _scrollHandlers = [];
+let _observers = [];
 
 export function render() {
   return `<div class="page-scroll">
@@ -81,6 +81,7 @@ export function render() {
   .p01-quiz-grid { grid-template-columns:1fr; }
   .p01-sc-tabs { gap:6px; }
   .p01-sc-tab { padding:8px 14px; font-size:0.78rem; }
+  #p01-s1, #p01-s2, #p01-s3, #p01-s4 { scroll-margin-top:56px; }
 }
 </style>
 
@@ -237,6 +238,7 @@ export function init() {
       if (e.isIntersecting) { step.classList.add('active'); io.disconnect(); }
     }, { threshold: 0.4 });
     io.observe(step);
+    _observers.push(io);
   });
   fadeIn(document.querySelectorAll('#p01-s1 .reading-wrapper'), { stagger:0.1, y:30 });
 
@@ -429,4 +431,6 @@ export function destroy() {
   killAll();
   _scrollHandlers.forEach(({ fn, el }) => (el || window).removeEventListener('scroll', fn));
   _scrollHandlers = [];
+  _observers.forEach(io => io.disconnect());
+  _observers = [];
 }
