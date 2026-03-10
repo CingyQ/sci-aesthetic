@@ -242,7 +242,7 @@ export function render() {
 .p06-steps-grid { display:grid; gap:var(--space-md); max-width:1100px; margin:0 auto var(--space-2xl); }
 .p06-steps-grid.cols-4 { grid-template-columns:repeat(4,1fr); }
 .p06-steps-grid.cols-5 { grid-template-columns:repeat(5,1fr); }
-.p06-step-card { border-radius:var(--radius-lg); padding:var(--space-lg); }
+.p06-step-card { border-radius:var(--radius-lg); padding:var(--space-lg); min-width:0; }
 .p06-step-card.light { background:var(--bg-light-elevated,#fff); border:1px solid var(--border-light); }
 .p06-step-card.dark  { background:var(--bg-dark-elevated); border:1px solid var(--border-dark); }
 .p06-step-icon { font-size:1.8rem; margin-bottom:var(--space-sm); }
