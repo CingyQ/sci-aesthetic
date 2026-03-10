@@ -352,31 +352,31 @@ export function init() {
 
   // ── 5. S4: 展示切换 ──
   const SHOWCASE = [
-    { id:'water',  label:'水污染处理工艺',   desc:'城市污水从进水到达标排放的完整处理流程，包含物化和生化处理单元',
+    { id:'water',  label:'水污染处理工艺',   img:'/assets/m2/p01-s4-01-water.png',   desc:'城市污水从进水到达标排放的完整处理流程，包含物化和生化处理单元',
       prompt:`环境工程示意图，风格：科技蓝色调，白色背景
 主题：城市污水处理工艺流程
 内容：进水格栅→沉砂池→初沉池→活性污泥池→二沉池→过滤消毒→出水
 要求：每个处理单元用简洁图标表示，箭头连接，标注主要去除污染物`,
       review:'构图清晰，流程逻辑正确，颜色区分度高。需修正：活性污泥池内微生物示意比例需调整。' },
-    { id:'carbon', label:'碳循环机制',       desc:'森林生态系统碳固存与释放的自然循环机制，含大气-植物-土壤三界面',
+    { id:'carbon', label:'碳循环机制',       img:'/assets/m2/p01-s4-02-carbon.png', desc:'森林生态系统碳固存与释放的自然循环机制，含大气-植物-土壤三界面',
       prompt:`生态系统示意图，科普风格，绿棕配色
 主题：森林生态系统碳循环
 内容：大气CO2→光合作用→植物固碳→凋落物→土壤有机碳→微生物分解→呼吸释放→大气
 要求：自然主义风格，展示碳通量方向和大致比例`,
       review:'色彩自然，有机感强。需调整：土壤层碳通量箭头宽度应反映实际碳流量比例。' },
-    { id:'remote', label:'遥感分析 Pipeline', desc:'从卫星获取影像到最终地表分类结果的技术分析流程',
+    { id:'remote', label:'遥感分析 Pipeline', img:'/assets/m2/p01-s4-03-remote.png', desc:'从卫星获取影像到最终地表分类结果的技术分析流程',
       prompt:`技术流程图，深色科技风格，蓝紫色调
 主题：遥感影像地表分类分析流程
 内容：卫星获取→大气校正→几何配准→特征提取→机器学习分类→精度评估→产品输出
 每步配对应图标和简短说明`,
       review:'科技感强，图标设计清晰。建议增加：各步骤的典型软件工具标注（ENVI/GEE等）。' },
-    { id:'micro',  label:'微塑料迁移路径',   desc:'微塑料从塑料制品源头经陆地-水体传输到达海洋的完整迁移过程',
+    { id:'micro',  label:'微塑料迁移路径',   img:'/assets/m2/p01-s4-04-micro.png',  desc:'微塑料从塑料制品源头经陆地-水体传输到达海洋的完整迁移过程',
       prompt:`环境科学示意图，蓝绿配色，自然风格
 主题：微塑料从陆地到海洋的迁移路径
 内容：塑料制品→风化破碎→径流携带→土壤渗漏→地下水→河流→近海→深海
 标注：迁移速率、积累热点、采样位置`,
       review:'路径叙事完整，视觉引导性强。需修正：深海积累区域颜色深度梯度需更明显。' },
-    { id:'eco',    label:'生态系统服务评估', desc:'森林生态系统提供调节/供给/文化/支撑四类服务及其价值框架',
+    { id:'eco',    label:'生态系统服务评估', img:'/assets/m2/p01-s4-05-eco.png',    desc:'森林生态系统提供调节/供给/文化/支撑四类服务及其价值框架',
       prompt:`综述框架图，学术风格，绿色主调
 主题：森林生态系统服务价值评估框架
 四类服务：调节服务（气候/水文/固碳）、供给服务（木材/食物/水资源）、文化服务（休闲/教育/精神）、支撑服务（土壤/营养循环/生物多样性）
@@ -396,13 +396,7 @@ export function init() {
       panel.className = `p01-sc-panel${i === 0 ? ' active' : ''}`;
       panel.id = `p01-panel-${i}`;
       panel.innerHTML = `
-        <div class="m2-placeholder" style="aspect-ratio:4/3;">
-          <div class="m2-placeholder-inner">
-            <div class="m2-ph-icon">🌿</div>
-            <p class="m2-ph-label">AI 生成图占位符</p>
-            <p class="m2-ph-desc">${sc.desc}</p>
-          </div>
-        </div>
+        <img src="${sc.img}" alt="${sc.label}" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
         <div>
           <div class="p01-sc-prompt-box">
             <h4>Prompt</h4>

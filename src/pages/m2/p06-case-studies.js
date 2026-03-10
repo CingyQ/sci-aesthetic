@@ -348,14 +348,14 @@ export function render() {
     <div class="p06-ba-row">
       <div>
         <p class="p06-ba-label light">初稿草图</p>
-        <div style="aspect-ratio:16/9;">
-          ${buildPlaceholder('🖊️', '原始草图 / 参考图占位符', 'AI生成前的手绘构图草稿或文字描述截图')}
+        <div style="aspect-ratio:16/9;overflow:hidden;border-radius:var(--radius-md);">
+          <img src="/assets/m2/p06-case1-draft.png" alt="Case 1 draft graphical abstract" style="width:100%;height:100%;object-fit:cover;display:block;">
         </div>
       </div>
       <div>
         <p class="p06-ba-label light">最终成果</p>
-        <div style="aspect-ratio:16/9;">
-          ${buildPlaceholder('🌊', '最终成果 GA 占位符', '经矢量化精修、符合期刊投稿要求的 Graphical Abstract')}
+        <div style="aspect-ratio:16/9;overflow:hidden;border-radius:var(--radius-md);">
+          <img src="/assets/m2/p06-case1-final-ga.png" alt="Case 1 final graphical abstract" style="width:100%;height:100%;object-fit:cover;display:block;">
         </div>
       </div>
     </div>
@@ -388,8 +388,8 @@ export function render() {
     <!-- 最终图成果占位 -->
     <div class="p06-ph-wrap">
       <p class="p06-ba-label dark" style="max-width:900px;margin:0 auto var(--space-sm);">精修后最终图</p>
-      <div style="max-width:900px;margin:0 auto;aspect-ratio:4/3;">
-        ${buildPlaceholder('🔬', '微塑料迁移方法图 — 最终成果占位符', '经 Illustrator 精修、配色统一后的 SVG 方法流程图')}
+      <div style="max-width:900px;margin:0 auto;">
+        <img src="/assets/m2/p06-case2-microplastic.png" alt="Microplastic migration methodology figure" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
       </div>
     </div>
   </div>
@@ -412,8 +412,8 @@ export function render() {
     <!-- 最终成果占位 -->
     <div class="p06-ph-wrap">
       <p class="p06-ba-label light" style="max-width:1100px;margin:0 auto var(--space-sm);">最终成果</p>
-      <div style="max-width:1100px;margin:0 auto;aspect-ratio:4/3;">
-        ${buildPlaceholder('🌳', '碳循环综述概念图 — 最终成果占位符', '同心圆层级概念图，双栏宽度（176mm），附碳通量数字标注')}
+      <div style="max-width:800px;margin:0 auto;">
+        <img src="/assets/m2/p06-case3-carbon.png" alt="Carbon cycle review conceptual figure" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
       </div>
     </div>
   </div>

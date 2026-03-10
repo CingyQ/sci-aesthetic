@@ -100,10 +100,10 @@
 - [x] p03：举一反三检查同类问题 — 已无需修改
 
 ## Phase 5.5: M2 素材生成与替换（Nano Banana 统一批次）
-- [ ] 用 Nano Banana (Gemini on OpenRouter) 按 content-outline.md 中的素材规划批量生成 ~53 张环境科学主题图
-- [ ] 替换 m2-p1 ~ m2-p6 中所有占位符为实际 AI 生成图
-- [ ] 每张图保存对应 prompt 文本（存入 assets 或 md 备注）
-- [ ] 视觉一致性检查：风格/配色/尺寸统一，不合格的重新生成
+- [x] 用 Nano Banana 2 (google/gemini-3.1-flash-image-preview on OpenRouter) 生成 19 张环境科学主题图（覆盖 23 个 UI 占位槽）
+- [x] 替换 m2-p1/p2/p6 中所有占位符为 <img> 标签（p3/p4/p5 无图片占位符）
+- [x] 每张图 prompt 存入 E:\Claude-project\fig-nanobanana\generate.py，review 记录存入 review_log.md
+- [x] 全部 19 张 Claude 视觉模态 review 通过（PASS），比例按内容设计（16:9/4:3/3:4/1:1），2K 分辨率
 
 ## Phase 6: 模块三 — 矢量绘图与设计（m3-p1 ~ m3-p7）
 - [ ] m3-p1 矢量 vs 位图（Canvas+SVG 缩放对比到 800% + D3 格式选择决策树 + 文件大小vs质量权衡）
@@ -148,7 +148,7 @@
 | Phase 4.5 M1 审计 | ✅ 完成 | Hero/Footer/CSS/动画统一 + 文档更新 |
 | Phase 5 模块二 | ✅ 完成 | 6/6 页完成，占位符待 Phase 5.5 替换 |
 | Phase 5.1 M2 Bug Fix | ✅ 完成 | 移动端适配 + Mermaid 优化 + 工具矩阵补充 |
-| Phase 5.5 M2 素材 | ⏳ 待开始 | Nano Banana 批量生成 ~53 张环境科学图 |
+| Phase 5.5 M2 素材 | ✅ 完成 | Nano Banana 2 生成 19 张图，全部 review PASS，占位符全替换 |
 | Phase 6 模块三 | ⏳ 待开始 | |
 | Phase 7 模块四 | ⏳ 待开始 | |
 | Phase 8 收尾 | ⏳ 待开始 | |

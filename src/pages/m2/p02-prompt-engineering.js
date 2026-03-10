@@ -321,6 +321,8 @@ export function init() {
   const COMPARES = [
     {
       title: '流域水质监测流程图',
+      badImg: '/assets/m2/p02-bad-01-watershed.png',
+      goodImg: '/assets/m2/p02-good-01-watershed.png',
       bad: `画一个水质监测的流程图
 用蓝色画
 要好看`,
@@ -333,6 +335,8 @@ export function init() {
     },
     {
       title: '土壤重金属修复机制',
+      badImg: '/assets/m2/p02-bad-02-soil.png',
+      goodImg: '/assets/m2/p02-good-02-soil.png',
       bad: `土壤修复示意图
 显示重金属去除的过程
 科学风格`,
@@ -346,6 +350,8 @@ export function init() {
     },
     {
       title: '大气颗粒物来源解析',
+      badImg: '/assets/m2/p02-bad-03-atmo.png',
+      goodImg: '/assets/m2/p02-good-03-atmo.png',
       bad: `PM2.5来源分析图
 包含工业、交通和其他来源
 圆形布局`,
@@ -369,18 +375,14 @@ export function init() {
           <div class="p02-compare-col">
             <h4 class="p02-bad-label">❌ 差 Prompt</h4>
             <div class="p02-compare-img">
-              <div class="m2-placeholder" style="aspect-ratio:4/3;">
-                <div class="m2-placeholder-inner"><div class="m2-ph-icon">🖼</div><p class="m2-ph-label">AI 生成图（差）</p></div>
-              </div>
+              <img src="${c.badImg}" alt="Bad prompt example" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
             </div>
             <div class="p02-prompt-diff">${c.bad.split('\n').map(l => `<span class="p02-diff-del">${escapeHtml(l)}</span>`).join('\n')}</div>
           </div>
           <div class="p02-compare-col">
             <h4 class="p02-good-label">✅ 好 Prompt</h4>
             <div class="p02-compare-img">
-              <div class="m2-placeholder" style="aspect-ratio:4/3;">
-                <div class="m2-placeholder-inner"><div class="m2-ph-icon">🖼</div><p class="m2-ph-label">AI 生成图（好）</p></div>
-              </div>
+              <img src="${c.goodImg}" alt="Good prompt example" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
             </div>
             <div class="p02-prompt-diff">${c.good.split('\n').map(l => `<span class="p02-diff-add">${escapeHtml(l)}</span>`).join('\n')}</div>
           </div>
@@ -394,25 +396,25 @@ export function init() {
   // ── S3: 迭代时间线 ──
   const ITERATIONS = [
     {
-      ver: 'v1', label: '初始构图', icon: '🎯',
+      ver: 'v1', label: '初始构图', icon: '🎯', img: '/assets/m2/p02-iter-v1-wetland.png',
       change: '构图优化', detail: '从散乱的元素堆砌改为层级分明的同心圆布局，四类服务用象限区分。',
       next: '配色调整 →',
       prompt: '环境科学框架图，展示湿地生态系统四类服务（调节/供给/文化/支撑）'
     },
     {
-      ver: 'v2', label: '配色调整', icon: '🎨',
+      ver: 'v2', label: '配色调整', icon: '🎨', img: '/assets/m2/p02-iter-v2-wetland.png',
       change: '色彩系统化', detail: '从默认混色改为统一的绿色系（调节=深绿，供给=浅绿，文化=青绿，支撑=灰绿）。',
       next: '细节增加 →',
       prompt: '…同上，配色：调节服务用#1B5E20，供给用#4CAF50，文化用#80CBC4，支撑用#B2DFDB，白色背景'
     },
     {
-      ver: 'v3', label: '细节增加', icon: '🔬',
+      ver: 'v3', label: '细节增加', icon: '🔬', img: '/assets/m2/p02-iter-v3-wetland.png',
       change: '科学细节', detail: '为每类服务添加代表性子服务图标和简短标签（如碳封存、水净化、候鸟栖息地、土壤形成）。',
       next: '标注完善 →',
       prompt: '…同上，每类服务列举3个子服务，配小图标，字体Helvetica，字号10pt'
     },
     {
-      ver: 'v4', label: '标注完善', icon: '✨',
+      ver: 'v4', label: '标注完善', icon: '✨', img: '/assets/m2/p02-iter-v4-wetland.png',
       change: '出版级标注', detail: '添加图题、箭头说明生态系统服务流方向、增加定量价值标注（如碳封存价值 $240/tC）。最终达到Nature投稿标准。',
       next: '完成',
       prompt: '…同上，加图题"Wetland Ecosystem Services Framework"，添加服务流方向箭头，标注代表性价值量，300 DPI RGB'
@@ -429,9 +431,7 @@ export function init() {
       <h3>${it.ver}: ${it.label}</h3>
       <div class="p02-iter-detail-grid">
         <div>
-          <div class="m2-placeholder" style="aspect-ratio:4/3;">
-            <div class="m2-placeholder-inner"><div class="m2-ph-icon">🌿</div><p class="m2-ph-label">迭代版本 ${it.ver}</p><p class="m2-ph-desc">${it.label}</p></div>
-          </div>
+          <img src="${it.img}" alt="Iteration ${it.ver}: ${it.label}" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
         </div>
         <div>
           <div class="p02-iter-change">
@@ -453,9 +453,7 @@ export function init() {
       item.dataset.idx = i;
       item.innerHTML = `
         <div class="p02-iter-thumb">
-          <div class="m2-placeholder" style="aspect-ratio:4/3;min-height:120px;">
-            <div class="m2-placeholder-inner"><div class="m2-ph-icon">${it.icon}</div></div>
-          </div>
+          <img src="${it.img}" alt="Iteration ${it.ver}" style="width:100%;height:auto;display:block;">
         </div>
         <div class="p02-iter-ver">${it.ver}</div>
         <div class="p02-iter-label">${it.label}</div>`;
