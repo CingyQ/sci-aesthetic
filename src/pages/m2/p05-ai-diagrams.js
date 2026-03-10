@@ -2,7 +2,12 @@ import { fadeIn, killAll, gsap } from '../../components/ScrollAnimations.js';
 import { navigateTo } from '../../utils/router.js';
 
 let _scrollHandlers = [];
-let _observers = [];
+let _observers = []; // reserved for IntersectionObserver instances
+
+// ── XSS safety helper ──────────────────────────────────────────────────────────
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 
 // ── 数据常量 ──────────────────────────────────────────────────────────────────
 
@@ -332,12 +337,12 @@ function drawSpectrum() {
       <div class="p05-spectrum-main">
         <div class="p05-spectrum-dot" style="background:${layer.color};"></div>
         <div style="flex:1;min-width:0;">
-          <div class="p05-spectrum-label" style="color:${layer.color};">${layer.label}</div>
-          <div class="p05-spectrum-example">${layer.example}</div>
+          <div class="p05-spectrum-label" style="color:${layer.color};">${escHtml(layer.label)}</div>
+          <div class="p05-spectrum-example">${escHtml(layer.example)}</div>
         </div>
         <div class="p05-spectrum-toggle">▼</div>
       </div>
-      <div class="p05-spectrum-detail" style="display:none;">${layer.desc}</div>`;
+      <div class="p05-spectrum-detail" style="display:none;">${escHtml(layer.desc)}</div>`;
     container.appendChild(row);
 
     const mainEl = row.querySelector('.p05-spectrum-main');
@@ -554,7 +559,7 @@ export function init() {
 
 export function destroy() {
   killAll();
-  _scrollHandlers.forEach(({ el, type, fn }) => (el || window).removeEventListener(type || 'click', fn));
+  _scrollHandlers.forEach(({ el, type, fn }) => el.removeEventListener(type, fn));
   _scrollHandlers = [];
   _observers.forEach(obs => obs.disconnect());
   _observers = [];
