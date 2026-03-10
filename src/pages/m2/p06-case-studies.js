@@ -2,7 +2,7 @@ import { fadeIn, killAll, gsap } from '../../components/ScrollAnimations.js';
 import { navigateTo } from '../../utils/router.js';
 
 let _scrollHandlers = [];
-let _observers = [];
+let _observers = []; // reserved for future IntersectionObserver instances
 
 // ─── Mermaid ────────────────────────────────────────────────────────────────
 let mermaidApi = null;
@@ -15,7 +15,7 @@ async function initMermaid() {
     mermaidApi.initialize({
       startOnLoad: false,
       theme: 'dark',
-      securityLevel: 'loose',
+      securityLevel: 'strict',
       themeVariables: {
         primaryColor: '#2d2d4a',
         primaryTextColor: '#f5f5f7',
@@ -156,7 +156,7 @@ function esc(str) {
 function buildStepCard(step, theme /* 'light' | 'dark' */) {
   return `
     <div class="p06-step-card ${theme}">
-      <div class="p06-step-icon">${step.icon}</div>
+      <div class="p06-step-icon">${esc(step.icon)}</div>
       <div class="p06-step-num">STEP ${step.num}</div>
       <div class="p06-step-title ${theme}">${esc(step.title)}</div>
       <div class="p06-step-desc ${theme}">${esc(step.desc)}</div>
@@ -207,7 +207,7 @@ export function render() {
   // S5 — takeaway cards
   const takeawayCardsHtml = TAKEAWAYS.map(t => `
     <div class="p06-takeaway-card">
-      <div class="p06-takeaway-icon">${t.icon}</div>
+      <div class="p06-takeaway-icon">${esc(t.icon)}</div>
       <div class="p06-takeaway-title">${esc(t.title)}</div>
       <div class="p06-takeaway-desc">${esc(t.desc)}</div>
     </div>`).join('');
@@ -506,15 +506,16 @@ export function init() {
     .then(() => renderMermaid(CASE2_MERMAID, 'p06-mermaid-output'))
     .catch(e => console.warn('p06 mermaid failed:', e));
 
-  // ── Scroll-triggered fadeIn for step cards and takeaway cards ──
-  const fadeTargets = [
-    ...document.querySelectorAll('.p06-step-card'),
-    ...document.querySelectorAll('.p06-case-card'),
-    ...document.querySelectorAll('.p06-takeaway-card'),
-  ];
-  fadeTargets.forEach((el, i) => {
-    fadeIn(el, { delay: (i % 4) * 0.08, y: 24, duration: 0.7 });
-  });
+  // ── Scroll-triggered fadeIn — separate loops per group so delay resets per section ──
+  document.querySelectorAll('.p06-case-card').forEach((el, i) =>
+    fadeIn(el, { delay: i * 0.1, y: 24, duration: 0.7 })
+  );
+  document.querySelectorAll('.p06-step-card').forEach((el, i) =>
+    fadeIn(el, { delay: (i % 4) * 0.08, y: 24, duration: 0.7 })
+  );
+  document.querySelectorAll('.p06-takeaway-card').forEach((el, i) =>
+    fadeIn(el, { delay: i * 0.12, y: 24, duration: 0.7 })
+  );
 
   // ── Footer nav buttons ──
   const prevBtn = document.getElementById('p06-prev-btn');
