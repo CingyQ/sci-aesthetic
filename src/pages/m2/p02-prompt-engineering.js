@@ -271,6 +271,10 @@ export function init() {
       const PANEL_COUNT = panels.length; // 4
       let ticking = false;
       let currentPanel = 0;
+      // Cache once after DOM render to avoid repeated layout reflows on scroll
+      const cachedBodyH = bodyEl.offsetHeight;
+      const cachedLeftH = leftEl.offsetHeight;
+      const maxTrans = Math.max(0, cachedBodyH - cachedLeftH);
 
       function updateCDTF() {
         if (ticking) return;
@@ -278,15 +282,13 @@ export function init() {
         requestAnimationFrame(() => {
           const bodyRect = bodyEl.getBoundingClientRect();
           const scrolledPast = Math.max(0, -bodyRect.top);
-          const cachedBodyH = bodyEl.offsetHeight;
-          const cachedLeftH = leftEl.offsetHeight;
-          const maxTrans = Math.max(0, cachedBodyH - cachedLeftH);
           leftEl.style.transform = `translateY(${Math.min(scrolledPast, maxTrans)}px)`;
           const panelIdx = Math.min(PANEL_COUNT - 1, Math.max(0, Math.floor(scrolledPast / window.innerHeight)));
           if (panelIdx !== currentPanel) {
             currentPanel = panelIdx;
             panels.forEach((p, i) => p.classList.toggle('active', i === panelIdx));
-            segs.forEach((s, i) => s.classList.toggle('active', i === panelIdx));
+            // segs[0] = intro line, segs[1..4] = C/D/T/F — offset by 1
+            segs.forEach((s, i) => s.classList.toggle('active', i === panelIdx + 1));
           }
           ticking = false;
         });
@@ -353,7 +355,7 @@ export function init() {
                 <div class="m2-placeholder-inner"><div class="m2-ph-icon">🖼</div><p class="m2-ph-label">AI 生成图（差）</p></div>
               </div>
             </div>
-            <div class="p02-prompt-diff">${escapeHtml(c.bad)}</div>
+            <div class="p02-prompt-diff">${c.bad.split('\n').map(l => `<span class="p02-diff-del">${escapeHtml(l)}</span>`).join('\n')}</div>
           </div>
           <div class="p02-compare-col">
             <h4 class="p02-good-label">✅ 好 Prompt</h4>
@@ -362,7 +364,7 @@ export function init() {
                 <div class="m2-placeholder-inner"><div class="m2-ph-icon">🖼</div><p class="m2-ph-label">AI 生成图（好）</p></div>
               </div>
             </div>
-            <div class="p02-prompt-diff">${escapeHtml(c.good)}</div>
+            <div class="p02-prompt-diff">${c.good.split('\n').map(l => `<span class="p02-diff-add">${escapeHtml(l)}</span>`).join('\n')}</div>
           </div>
         </div>
         <div style="margin-top:var(--space-md);padding:12px 16px;background:var(--bg-light-alt,#f5f5f7);border-radius:var(--radius-sm);font-size:0.85rem;color:var(--text-on-light-2);line-height:1.6;border-left:3px solid var(--module-2);">💬 ${c.reason}</div>`;
