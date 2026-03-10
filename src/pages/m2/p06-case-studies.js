@@ -40,7 +40,12 @@ async function renderMermaid(code, containerId) {
     const uid = 'mg-' + Math.random().toString(36).slice(2, 8);
     const { svg } = await mermaidApi.render(uid, code);
     container.innerHTML = svg;
-    container.querySelector('svg')?.setAttribute('style', 'max-width:100%;height:auto;');
+    const svgEl = container.querySelector('svg');
+    if (svgEl) {
+      svgEl.style.display = 'block';
+      svgEl.style.height = 'auto';
+      // 不设 max-width：SVG 保持天然宽度，容器 overflow:auto 负责滚动
+    }
   } catch (e) {
     if (container) {
       container.innerHTML = `<pre style="color:var(--text-on-dark-2);font-size:0.78rem;padding:var(--space-md);white-space:pre-wrap;word-wrap:break-word;">${code}</pre>`;
@@ -252,7 +257,9 @@ export function render() {
 .p06-step-tip.dark  { background:rgba(184,184,232,0.08); color:var(--text-on-dark-2); }
 
 /* ── S3 Mermaid ── */
-.p06-mermaid-wrap { background:var(--bg-dark-elevated); border-radius:var(--radius-lg); padding:var(--space-lg); border:1px solid var(--border-dark); min-height:200px; overflow:auto; max-width:900px; margin:0 auto var(--space-2xl); }
+.p06-mermaid-wrap { background:var(--bg-dark-elevated); border-radius:var(--radius-lg); padding:var(--space-lg); border:1px solid var(--border-dark); min-height:200px; max-height:500px; overflow:auto; -webkit-overflow-scrolling:touch; max-width:900px; margin:0 auto var(--space-2xl); }
+.p06-mermaid-hint { display:none; }
+@media (max-width:768px) { .p06-mermaid-hint { display:block; text-align:center; font-size:var(--text-caption); color:var(--text-on-dark-3); margin-top:calc(-1 * var(--space-md)); margin-bottom:var(--space-md); } }
 
 /* ── before/after placeholder row ── */
 .p06-ba-row { display:grid; grid-template-columns:1fr 1fr; gap:var(--space-lg); max-width:1100px; margin:0 auto var(--space-2xl); }
@@ -287,6 +294,7 @@ export function render() {
   #p06-s1, #p06-s2, #p06-s3, #p06-s4, #p06-s5 { scroll-margin-top:56px; }
   .p06-steps-grid.cols-4 { grid-template-columns:1fr; }
   .p06-steps-grid.cols-5 { grid-template-columns:1fr; }
+  .p06-mermaid-wrap { max-height:360px; }
 }
 </style>
 
@@ -340,13 +348,13 @@ export function render() {
     <div class="p06-ba-row">
       <div>
         <p class="p06-ba-label light">初稿草图</p>
-        <div style="aspect-ratio:4/3;">
+        <div style="aspect-ratio:16/9;">
           ${buildPlaceholder('🖊️', '原始草图 / 参考图占位符', 'AI生成前的手绘构图草稿或文字描述截图')}
         </div>
       </div>
       <div>
         <p class="p06-ba-label light">最终成果</p>
-        <div style="aspect-ratio:4/3;">
+        <div style="aspect-ratio:16/9;">
           ${buildPlaceholder('🌊', '最终成果 GA 占位符', '经矢量化精修、符合期刊投稿要求的 Graphical Abstract')}
         </div>
       </div>
@@ -375,6 +383,7 @@ export function render() {
     <div class="p06-mermaid-wrap" id="p06-mermaid-output">
       <div style="color:var(--text-on-dark-3);font-size:0.85rem;text-align:center;padding:var(--space-lg);">正在加载 Mermaid 流程图…</div>
     </div>
+    <p class="p06-mermaid-hint">← 可滑动浏览完整流程图 →</p>
 
     <!-- 最终图成果占位 -->
     <div class="p06-ph-wrap">
