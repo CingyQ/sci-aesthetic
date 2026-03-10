@@ -250,7 +250,7 @@ export function render() {
 .p06-step-title { font-size:0.95rem; font-weight:700; margin-bottom:var(--space-sm); }
 .p06-step-title.light { color:var(--text-on-light); }
 .p06-step-title.dark  { color:var(--text-on-dark); }
-.p06-step-desc { font-size:0.82rem; line-height:1.7; margin-bottom:var(--space-sm); white-space:pre-wrap; word-wrap:break-word; }
+.p06-step-desc { font-size:0.82rem; line-height:1.7; margin-bottom:var(--space-sm); white-space:pre-wrap; word-wrap:break-word; overflow-wrap:break-word; }
 .p06-step-desc.light { color:var(--text-on-light-2); }
 .p06-step-desc.dark  { color:var(--text-on-dark-2); }
 .p06-step-tip { font-size:0.75rem; line-height:1.6; padding:8px 12px; border-radius:var(--radius-sm); border-left:3px solid var(--module-2); }
@@ -296,7 +296,24 @@ export function render() {
   #p06-s1, #p06-s2, #p06-s3, #p06-s4, #p06-s5 { scroll-margin-top:56px; }
   .p06-steps-grid.cols-4 { grid-template-columns:1fr; }
   .p06-steps-grid.cols-5 { grid-template-columns:1fr; }
-  .p06-mermaid-wrap { max-height:360px; }
+  /* 步骤卡片移动端减少内边距，防止内容溢出 */
+  .p06-step-card { padding:var(--space-md); }
+  /* Mermaid 容器：限制高度，内部横向滚动 */
+  .p06-mermaid-wrap { max-height:260px; padding:var(--space-sm); }
+  .p06-mermaid-wrap svg { min-height:120px; }
+  /* 规律总结表格：全宽展开，第一列允许换行 */
+  .p06-summary-wrap {
+    margin-left: calc(-1 * var(--space-xl));
+    margin-right: calc(-1 * var(--space-xl));
+    width: calc(100% + 2 * var(--space-xl));
+    max-width: 100vw;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+  .p06-summary-table th,
+  .p06-summary-table td { padding:8px 10px; font-size:0.78rem; }
+  .p06-summary-table td:first-child { white-space:normal; font-size:0.78rem; }
 }
 </style>
 

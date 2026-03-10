@@ -182,13 +182,19 @@ export function render() {
 @media (max-width:768px) {
   #p05-s1, #p05-s2, #p05-s3, #p05-s4 { scroll-margin-top:56px; }
   .p05-quiz-grid { grid-template-columns:1fr; }
+  /* 表格全宽展开：负边距 = 父 section 的水平 padding，精确抵消偏移 */
   .p05-table-wrap {
-    margin-left: -32px;
-    margin-right: -32px;
+    margin-left: calc(-1 * var(--space-xl));
+    margin-right: calc(-1 * var(--space-xl));
     border-radius: 0;
     border-left: none;
     border-right: none;
+    width: calc(100% + 2 * var(--space-xl));
+    max-width: 100vw;
   }
+  .p05-policy-table th,
+  .p05-policy-table td { padding:8px 10px; font-size:0.75rem; }
+  .p05-policy-table th { font-size:0.72rem; }
 }
 </style>
 
