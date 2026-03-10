@@ -103,17 +103,18 @@ const CASE2_STEPS = [
     tip: 'Mermaid是开源工具，声明中注明即可，通常不需要额外的期刊批准。' },
 ];
 
-const CASE2_MERMAID = `flowchart TD
-  A["🏭 塑料制品\\n（包装/农膜/轮胎）"] --> B["风化与破碎\\n（UV/机械摩擦）"]
-  B --> C{"粒径判断"}
-  C --> |"<5mm"| D["微塑料\\n表层土壤积累"]
-  C --> |"<1μm"| E["纳米塑料\\n深层渗漏"]
-  D --> F["地表径流\\n携带"]
-  E --> G["地下水\\n污染"]
-  F & G --> H["河流\\n（浓度峰值采样点）"]
-  H --> I["河口\\n过渡带"]
-  I --> J["近岸海洋\\n底泥积累"]
-  J --> K["深海\\n最终汇集"]`;
+const CASE2_MERMAID = `flowchart LR
+  A["🏭 塑料制品\n(包装/农膜/轮胎)"] --> B["⚡ 风化破碎\n(UV/机械摩擦)"]
+  B --> C{"粒径\n分类"}
+  C -->|"< 5 mm\n微塑料"| D["🌱 表层土壤\n积累"]
+  C -->|"< 1 μm\n纳米塑料"| E["💧 深层渗漏\n污染"]
+  D --> F["🌊 地表径流\n携带迁移"]
+  E --> G["🔩 地下水\n污染扩散"]
+  F --> H["🏞️ 河流\n浓度峰值采样"]
+  G --> H
+  H --> I["🌀 河口\n过渡带"]
+  I --> J["🐚 近岸海洋\n底泥积累"]
+  J --> K["🌑 深海\n最终汇集"]`;
 
 const CASE3_STEPS = [
   { num: '01', title: '梳理综述框架', icon: '🗺',
@@ -257,7 +258,8 @@ export function render() {
 .p06-step-tip.dark  { background:rgba(184,184,232,0.08); color:var(--text-on-dark-2); }
 
 /* ── S3 Mermaid ── */
-.p06-mermaid-wrap { background:var(--bg-dark-elevated); border-radius:var(--radius-lg); padding:var(--space-lg); border:1px solid var(--border-dark); min-height:200px; max-height:500px; overflow:auto; -webkit-overflow-scrolling:touch; max-width:900px; margin:0 auto var(--space-2xl); }
+.p06-mermaid-wrap { background:var(--bg-dark-elevated); border-radius:var(--radius-lg); padding:var(--space-lg); border:1px solid var(--border-dark); min-height:180px; max-height:400px; overflow:auto; -webkit-overflow-scrolling:touch; max-width:1100px; margin:0 auto var(--space-2xl); }
+.p06-mermaid-wrap svg { width:auto !important; max-width:none; height:auto; min-height:160px; }
 .p06-mermaid-hint { display:none; }
 @media (max-width:768px) { .p06-mermaid-hint { display:block; text-align:center; font-size:var(--text-caption); color:var(--text-on-dark-3); margin-top:calc(-1 * var(--space-md)); margin-bottom:var(--space-md); } }
 
@@ -349,13 +351,13 @@ export function render() {
       <div>
         <p class="p06-ba-label light">初稿草图</p>
         <div style="aspect-ratio:16/9;overflow:hidden;border-radius:var(--radius-md);">
-          <img src="/assets/m2/p06-case1-draft.png" alt="Case 1 draft graphical abstract" style="width:100%;height:100%;object-fit:cover;display:block;">
+          <img src="${import.meta.env.BASE_URL}assets/m2/p06-case1-draft.png" alt="Case 1 draft graphical abstract" style="width:100%;height:100%;object-fit:cover;display:block;">
         </div>
       </div>
       <div>
         <p class="p06-ba-label light">最终成果</p>
         <div style="aspect-ratio:16/9;overflow:hidden;border-radius:var(--radius-md);">
-          <img src="/assets/m2/p06-case1-final-ga.png" alt="Case 1 final graphical abstract" style="width:100%;height:100%;object-fit:cover;display:block;">
+          <img src="${import.meta.env.BASE_URL}assets/m2/p06-case1-final-ga.png" alt="Case 1 final graphical abstract" style="width:100%;height:100%;object-fit:cover;display:block;">
         </div>
       </div>
     </div>
@@ -389,7 +391,7 @@ export function render() {
     <div class="p06-ph-wrap">
       <p class="p06-ba-label dark" style="max-width:900px;margin:0 auto var(--space-sm);">精修后最终图</p>
       <div style="max-width:900px;margin:0 auto;">
-        <img src="/assets/m2/p06-case2-microplastic.png" alt="Microplastic migration methodology figure" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
+        <img src="${import.meta.env.BASE_URL}assets/m2/p06-case2-microplastic.png" alt="Microplastic migration methodology figure" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
       </div>
     </div>
   </div>
@@ -413,7 +415,7 @@ export function render() {
     <div class="p06-ph-wrap">
       <p class="p06-ba-label light" style="max-width:1100px;margin:0 auto var(--space-sm);">最终成果</p>
       <div style="max-width:800px;margin:0 auto;">
-        <img src="/assets/m2/p06-case3-carbon.png" alt="Carbon cycle review conceptual figure" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
+        <img src="${import.meta.env.BASE_URL}assets/m2/p06-case3-carbon.png" alt="Carbon cycle review conceptual figure" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
       </div>
     </div>
   </div>

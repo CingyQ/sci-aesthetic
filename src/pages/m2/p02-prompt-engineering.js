@@ -23,7 +23,7 @@ export function render() {
 
 /* S1 CDTF 粘性滚动 */
 .p02-cdtf-body { display:flex; align-items:flex-start; position:relative; gap:var(--space-xl); max-width:1100px; margin:0 auto; }
-.p02-cdtf-left { width:45%; flex-shrink:0; will-change:transform; }
+.p02-cdtf-left { width:45%; flex-shrink:0; position:sticky; top:0; height:100vh; display:flex; align-items:center; }
 .p02-cdtf-right { flex:1; min-width:0; }
 .p02-cdtf-prompt-box { background:var(--bg-dark-elevated); border-radius:var(--radius-md); padding:var(--space-md); border:1px solid var(--border-dark); position:relative; }
 .p02-cdtf-prompt-box h3 { color:var(--module-2); font-size:var(--text-small); font-weight:600; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:var(--space-sm); }
@@ -91,7 +91,7 @@ export function render() {
 /* 响应式 */
 @media (max-width:900px) {
   .p02-cdtf-body { flex-direction:column; }
-  .p02-cdtf-left { width:100%; position:static; transform:none !important; }
+  .p02-cdtf-left { width:100%; position:static; height:auto; }
   .p02-cdtf-panel { min-height:auto; opacity:1; padding:var(--space-lg) 0; }
   .p02-compare-row { grid-template-columns:1fr; }
   .p02-iter-detail-grid { grid-template-columns:1fr; }
@@ -260,47 +260,22 @@ export function init() {
     });
   });
 
-  // ── S1: CDTF 粘性滚动 ──
-  // 仅在桌面宽度下启用 JS sticky，移动端 CSS 已重置 transform
+  // ── S1: CDTF 面板切换（左侧通过 CSS sticky 固定，无需 JS translateY）──
   if (window.innerWidth > 900) {
     const bodyEl = document.getElementById('p02-cdtf-body');
-    const leftEl = document.getElementById('p02-cdtf-left');
     const panels = document.querySelectorAll('.p02-cdtf-panel');
     const segs   = document.querySelectorAll('.p02-seg');
-    if (bodyEl && leftEl && panels.length) {
-      const PANEL_COUNT = panels.length; // 4
-      const TOP_OFFSET = 80; // px from viewport top when panel is "stuck"
+    if (bodyEl && panels.length) {
+      const PANEL_COUNT = panels.length;
       let ticking = false;
       let currentPanel = 0;
-      // Cache once after DOM render to avoid repeated layout reflows on scroll
-      let cachedBodyH = bodyEl.offsetHeight;
-      let cachedLeftH = leftEl.offsetHeight;
-      // Subtract TOP_OFFSET so panel bottom never exceeds body bottom
-      let maxTrans = Math.max(0, cachedBodyH - cachedLeftH - TOP_OFFSET);
-
-      // Recompute on resize so sticky scroll stays correct after viewport changes
-      let resizeTimer = null;
-      const onResize = () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-          cachedBodyH = bodyEl.offsetHeight;
-          cachedLeftH = leftEl.offsetHeight;
-          maxTrans = Math.max(0, cachedBodyH - cachedLeftH - TOP_OFFSET);
-        }, 150);
-      };
-      window.addEventListener('resize', onResize, { passive: true });
-      _scrollHandlers.push({ fn: onResize, el: window, event: 'resize' });
 
       function updateCDTF() {
         if (ticking) return;
         ticking = true;
         requestAnimationFrame(() => {
           const bodyRect = bodyEl.getBoundingClientRect();
-          // scrolledPast > 0 when body top has crossed viewport top (sticky active)
           const scrolledPast = Math.max(0, -bodyRect.top);
-          // TOP_OFFSET: always added so panel appears 80px below viewport top during sticky.
-          // Before sticky, element is below the fold so the offset has no visible effect.
-          leftEl.style.transform = `translateY(${TOP_OFFSET + Math.min(scrolledPast, maxTrans)}px)`;
           const panelIdx = Math.min(PANEL_COUNT - 1, Math.max(0, Math.floor(scrolledPast / window.innerHeight)));
           if (panelIdx !== currentPanel) {
             currentPanel = panelIdx;
@@ -321,47 +296,72 @@ export function init() {
   const COMPARES = [
     {
       title: '流域水质监测流程图',
-      badImg: '/assets/m2/p02-bad-01-watershed.png',
-      goodImg: '/assets/m2/p02-good-01-watershed.png',
+      badImg: 'assets/m2/p02-bad-01-watershed.png',
+      goodImg: 'assets/m2/p02-good-01-watershed.png',
       bad: `画一个水质监测的流程图
 用蓝色画
 要好看`,
-      good: `环境工程流程图，白色背景，学术风格
-[C] 中国南方流域水质综合监测体系，用于Environmental Pollution期刊
-[D] 监测流程：采样点布设（网格法，3km间距）→现场理化测定（pH/DO/EC/温度）→样品保存运输→实验室分析（重金属/营养盐/有机物）→数据质控→报告输出
-[T] 从左到右线性流程，每步配对应仪器图标，蓝绿配色，标注关键指标和分析方法
-[F] 300 DPI，RGB，3:1宽高比，PNG`,
+      good: `Environmental engineering flowchart, white background, academic style,
+prepared for Environmental Pollution journal.
+[Context] Comprehensive water quality monitoring system for a river basin
+in southern China, supporting water pollution source tracking research.
+[Description] Left-to-right linear flow:
+  Sampling Site Layout → Field Physicochemical Measurement (pH/DO/EC/Temperature)
+  → Sample Preservation & Transport → Laboratory Analysis
+  (Heavy metals ICP-MS / Nutrients / Organics) → Data Quality Control
+  → Report Output (GIS-based heatmap)
+[Technique] Blue-green palette (blue=#2980b9, green=#27ae60),
+  each step has instrument icon, key parameters annotated below each node.
+[Format] 2K resolution, 300 DPI, RGB, academic publication standard.`,
       reason: '差 Prompt 缺乏科学术语和具体参数，AI 无法判断监测什么污染物、用什么方法。好 Prompt 明确了采样策略、分析指标和期刊要求。'
     },
     {
       title: '土壤重金属修复机制',
-      badImg: '/assets/m2/p02-bad-02-soil.png',
-      goodImg: '/assets/m2/p02-good-02-soil.png',
+      badImg: 'assets/m2/p02-bad-02-soil.png',
+      goodImg: 'assets/m2/p02-good-02-soil.png',
       bad: `土壤修复示意图
 显示重金属去除的过程
 科学风格`,
-      good: `土壤剖面剖视图，科学期刊插图风格，白色背景
-[C] EDTA辅助植物修复重金属污染土壤，投稿Science of The Total Environment
-[D] 从上到下展示：EDTA施加于土壤表面→螯合游离态Cd²⁺/Pb²⁺→形成EDTA-金属螯合物（增强植物可利用性）→植物根系主动吸收→韧皮部运输→地上部积累→收割移除
-定量：修复效率约65-82%，土壤pH维持6.0-6.5
-[T] 土壤层次清晰（0-20cm耕作层，20-40cm犁底层），植物根系详细，螯合物用分子式标注，绿色植株+棕色土壤
-[F] 300 DPI，CMYK，1:1.5（宽:高），EPS+PNG`,
+      good: `Soil profile cross-section scientific illustration, white background,
+Nature series journal style.
+[Context] EDTA-assisted phytoremediation mechanism for heavy metal contaminated soil,
+submitted to Science of The Total Environment.
+[Description] Vertical cross-section:
+  Aboveground: sunflower hyperaccumulator (Helianthus annuus), EDTA solution spray
+  0–20 cm tillage layer: EDTA chelates Cd²⁺/Pb²⁺, plant availability +65%,
+    HMA4 transporter (P₁B-type ATPase) shown at root surface
+  20–40 cm plow pan: Pb 487 mg/kg, 30x over standard
+  >40 cm clean subsoil
+  Right panel: Phytoremediation Efficiency bar chart — Cd removal 78%, Pb removal 54%
+[Technique] Soil layer gradient (dark brown → yellow-brown),
+  green plants + brown soil dominant, chemical symbols clearly labeled.
+[Format] 2K resolution, 300 DPI, white background, academic figure standard.`,
       reason: '差 Prompt 没有指定修复机制类型、具体重金属、定量指标。好 Prompt 包含了化学过程（EDTA螯合）、定量效率和完整的视觉规格。'
     },
     {
-      title: '大气颗粒物来源解析',
-      badImg: '/assets/m2/p02-bad-03-atmo.png',
-      goodImg: '/assets/m2/p02-good-03-atmo.png',
-      bad: `PM2.5来源分析图
-包含工业、交通和其他来源
-圆形布局`,
-      good: `受体模型结果可视化，学术图表风格，深色背景
-[C] 中国华北工业城市PM2.5来源解析，PMF模型结果，用于Atmospheric Environment
-[D] 6个来源及占比：交通排放28%（机动车尾气+轮胎/刹车磨损）、工业源35%（钢铁/化工/电力）、扬尘源18%（道路/建筑/农业）、生物质燃烧9%、二次生成8%、其他2%
-标注各来源的化学示踪物（交通:BC/EC比值；工业:V/Ni/As；扬尘:Si/Al/Ca）
-[T] 左侧饼图展示占比，右侧各来源展开显示示踪物特征，配色与来源类型对应（灰=工业，红=交通，棕=扬尘）
-[F] 300 DPI，RGB，2:1，PNG`,
-      reason: '差 Prompt 用了模糊的"其他来源"和"圆形布局"，没有PMF模型数据。好 Prompt 包含6个来源的精确百分比和化学示踪物，AI 能生成专业图表。'
+      title: 'PM2.5 大气传输与形成机制',
+      badImg: 'assets/m2/p02-bad-03-atmo.png',
+      goodImg: 'assets/m2/p02-good-03-atmo.png',
+      bad: `Draw a picture of air pollution in a city.`,
+      good: `Scientific conceptual illustration of PM2.5 formation and transport mechanisms,
+white background, Atmospheric Environment journal style.
+NO charts, NO graphs — purely illustrative diagram.
+[Context] Urban air pollution mechanisms, northern China industrial city.
+[Description] Urban cross-section landscape:
+  Left — Primary emission sources with labeled icons:
+    Industrial stack (SO₂, NOₓ, PM) · Vehicle exhaust (BC, EC, Pb)
+    Construction dust (Si, Al, Ca) · Biomass burning (K, levoglucosan)
+  Center — Atmospheric transformation:
+    SO₂ + OH → H₂SO₄ → SO₄²⁻ (secondary sulfate)
+    NOₓ + VOCs + sunlight → O₃ → NO₃⁻ (secondary nitrate)
+    Photochemical reaction zone with UV arrows
+  Right — Receptor monitoring station:
+    Instrument tower icon, particle size legend (PM10 / PM2.5 / PM1)
+    Atmospheric boundary layer (dashed horizontal line)
+[Technique] Blue sky background, gray/brown emission plumes,
+  orange photochemical zone, green ground vegetation. All English labels.
+[Format] 2K resolution, 300 DPI, white background, academic publication standard.`,
+      reason: '差 Prompt 没有说明科学主题和视觉规格，AI 输出了卡通插图风格。好 Prompt 明确了[Context]期刊背景、[Description]图示内容（化学反应路径+源头图标）、[Technique]配色和[Format]规格，且特别说明"NO charts"避免 AI 生成不适合的数据图表。'
     },
   ];
 
@@ -375,14 +375,14 @@ export function init() {
           <div class="p02-compare-col">
             <h4 class="p02-bad-label">❌ 差 Prompt</h4>
             <div class="p02-compare-img">
-              <img src="${c.badImg}" alt="Bad prompt example" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
+              <img src="${import.meta.env.BASE_URL}${c.badImg}" alt="Bad prompt example" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
             </div>
             <div class="p02-prompt-diff">${c.bad.split('\n').map(l => `<span class="p02-diff-del">${escapeHtml(l)}</span>`).join('\n')}</div>
           </div>
           <div class="p02-compare-col">
             <h4 class="p02-good-label">✅ 好 Prompt</h4>
             <div class="p02-compare-img">
-              <img src="${c.goodImg}" alt="Good prompt example" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
+              <img src="${import.meta.env.BASE_URL}${c.goodImg}" alt="Good prompt example" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
             </div>
             <div class="p02-prompt-diff">${c.good.split('\n').map(l => `<span class="p02-diff-add">${escapeHtml(l)}</span>`).join('\n')}</div>
           </div>
@@ -396,28 +396,54 @@ export function init() {
   // ── S3: 迭代时间线 ──
   const ITERATIONS = [
     {
-      ver: 'v1', label: '初始构图', icon: '🎯', img: '/assets/m2/p02-iter-v1-wetland.png',
+      ver: 'v1', label: '初始构图', icon: '🎯', img: 'assets/m2/p02-iter-v1-wetland.png',
       change: '构图优化', detail: '从散乱的元素堆砌改为层级分明的同心圆布局，四类服务用象限区分。',
       next: '配色调整 →',
-      prompt: '环境科学框架图，展示湿地生态系统四类服务（调节/供给/文化/支撑）'
+      prompt: `[v1 — Initial rough draft, intentionally low quality]
+A crude wetland ecosystem services assessment framework diagram:
+Chaotic layout (rectangles of random sizes placed haphazardly),
+single font size, random oversaturated colors (default red/yellow/green/blue),
+no icons — text labels only, thin black connectors in inconsistent directions.
+Four service categories: Regulating / Provisioning / Cultural / Supporting.`
     },
     {
-      ver: 'v2', label: '配色调整', icon: '🎨', img: '/assets/m2/p02-iter-v2-wetland.png',
+      ver: 'v2', label: '配色调整', icon: '🎨', img: 'assets/m2/p02-iter-v2-wetland.png',
       change: '色彩系统化', detail: '从默认混色改为统一的绿色系（调节=深绿，供给=浅绿，文化=青绿，支撑=灰绿）。',
       next: '细节增加 →',
-      prompt: '…同上，配色：调节服务用#1B5E20，供给用#4CAF50，文化用#80CBC4，支撑用#B2DFDB，白色背景'
+      prompt: `[v2 — Added color coding, medium quality, still has issues]
+Wetland ecosystem services assessment framework diagram (second AI iteration):
+Symmetric four-quadrant layout but cramped spacing,
+four service categories have distinct colors but saturation is too high,
+icons inconsistent in style (mix of emoji-style and line-art style),
+only two font sizes used, center circle overly bright, no quantitative values.`
     },
     {
-      ver: 'v3', label: '细节增加', icon: '🔬', img: '/assets/m2/p02-iter-v3-wetland.png',
+      ver: 'v3', label: '细节增加', icon: '🔬', img: 'assets/m2/p02-iter-v3-wetland.png',
       change: '科学细节', detail: '为每类服务添加代表性子服务图标和简短标签（如碳封存、水净化、候鸟栖息地、土壤形成）。',
       next: '标注完善 →',
-      prompt: '…同上，每类服务列举3个子服务，配小图标，字体Helvetica，字号10pt'
+      prompt: `[v3 — Refined details, near publication quality]
+Wetland ecosystem services assessment framework diagram (third AI iteration):
+Clean four-quadrant layout on white background with ample whitespace,
+desaturated palette (Regulating=#1B5E20, Provisioning=#4CAF50,
+Cultural=#80CBC4, Supporting=#B2DFDB),
+unified minimal line-art icons (3 sub-services per category),
+three-level font hierarchy (title / service name / sub-item).`
     },
     {
-      ver: 'v4', label: '标注完善', icon: '✨', img: '/assets/m2/p02-iter-v4-wetland.png',
-      change: '出版级标注', detail: '添加图题、箭头说明生态系统服务流方向、增加定量价值标注（如碳封存价值 $240/tC）。最终达到Nature投稿标准。',
+      ver: 'v4', label: '标注完善', icon: '✨', img: 'assets/m2/p02-iter-v4-wetland.png',
+      change: '出版级标注', detail: '添加图题、箭头说明生态系统服务流方向、增加定量价值标注（$12,120/ha/yr）。最终达到Nature投稿标准。',
       next: '完成',
-      prompt: '…同上，加图题"Wetland Ecosystem Services Framework"，添加服务流方向箭头，标注代表性价值量，300 DPI RGB'
+      prompt: `[v4 — Publication-ready final version, Nature journal submission standard]
+Wetland ecosystem services assessment framework diagram, polished final.
+Layout: two concentric rings on white background.
+Inner circle: wetland illustration icon labeled 'Wetland Ecosystem'.
+Middle ring: four equal quadrants — Regulating / Provisioning / Cultural / Supporting,
+  each with 3 bullet-point sub-services.
+Outer ring: four arc segments with value labels:
+  $8,460/ha/yr · $1,240/ha/yr · $320/ha/yr · $2,100/ha/yr
+Total value box: 'Total: $12,120/ha/yr (2023 USD)'.
+Figure title: 'Wetland Ecosystem Services Framework'.
+Footnote: 'Source: Millennium Ecosystem Assessment (MA 2005)'.`
     },
   ];
 
@@ -431,7 +457,7 @@ export function init() {
       <h3>${it.ver}: ${it.label}</h3>
       <div class="p02-iter-detail-grid">
         <div>
-          <img src="${it.img}" alt="Iteration ${it.ver}: ${it.label}" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
+          <img src="${import.meta.env.BASE_URL}${it.img}" alt="Iteration ${it.ver}: ${it.label}" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
         </div>
         <div>
           <div class="p02-iter-change">
@@ -453,7 +479,7 @@ export function init() {
       item.dataset.idx = i;
       item.innerHTML = `
         <div class="p02-iter-thumb">
-          <img src="${it.img}" alt="Iteration ${it.ver}" style="width:100%;height:auto;display:block;">
+          <img src="${import.meta.env.BASE_URL}${it.img}" alt="Iteration ${it.ver}" style="width:100%;height:auto;display:block;">
         </div>
         <div class="p02-iter-ver">${it.ver}</div>
         <div class="p02-iter-label">${it.label}</div>`;

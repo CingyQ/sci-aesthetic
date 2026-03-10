@@ -352,36 +352,65 @@ export function init() {
 
   // ── 5. S4: 展示切换 ──
   const SHOWCASE = [
-    { id:'water',  label:'水污染处理工艺',   img:'/assets/m2/p01-s4-01-water.png',   desc:'城市污水从进水到达标排放的完整处理流程，包含物化和生化处理单元',
-      prompt:`环境工程示意图，风格：科技蓝色调，白色背景
-主题：城市污水处理工艺流程
-内容：进水格栅→沉砂池→初沉池→活性污泥池→二沉池→过滤消毒→出水
-要求：每个处理单元用简洁图标表示，箭头连接，标注主要去除污染物`,
-      review:'构图清晰，流程逻辑正确，颜色区分度高。需修正：活性污泥池内微生物示意比例需调整。' },
-    { id:'carbon', label:'碳循环机制',       img:'/assets/m2/p01-s4-02-carbon.png', desc:'森林生态系统碳固存与释放的自然循环机制，含大气-植物-土壤三界面',
-      prompt:`生态系统示意图，科普风格，绿棕配色
-主题：森林生态系统碳循环
-内容：大气CO2→光合作用→植物固碳→凋落物→土壤有机碳→微生物分解→呼吸释放→大气
-要求：自然主义风格，展示碳通量方向和大致比例`,
-      review:'色彩自然，有机感强。需调整：土壤层碳通量箭头宽度应反映实际碳流量比例。' },
-    { id:'remote', label:'遥感分析 Pipeline', img:'/assets/m2/p01-s4-03-remote.png', desc:'从卫星获取影像到最终地表分类结果的技术分析流程',
-      prompt:`技术流程图，深色科技风格，蓝紫色调
-主题：遥感影像地表分类分析流程
-内容：卫星获取→大气校正→几何配准→特征提取→机器学习分类→精度评估→产品输出
-每步配对应图标和简短说明`,
-      review:'科技感强，图标设计清晰。建议增加：各步骤的典型软件工具标注（ENVI/GEE等）。' },
-    { id:'micro',  label:'微塑料迁移路径',   img:'/assets/m2/p01-s4-04-micro.png',  desc:'微塑料从塑料制品源头经陆地-水体传输到达海洋的完整迁移过程',
-      prompt:`环境科学示意图，蓝绿配色，自然风格
-主题：微塑料从陆地到海洋的迁移路径
-内容：塑料制品→风化破碎→径流携带→土壤渗漏→地下水→河流→近海→深海
-标注：迁移速率、积累热点、采样位置`,
-      review:'路径叙事完整，视觉引导性强。需修正：深海积累区域颜色深度梯度需更明显。' },
-    { id:'eco',    label:'生态系统服务评估', img:'/assets/m2/p01-s4-05-eco.png',    desc:'森林生态系统提供调节/供给/文化/支撑四类服务及其价值框架',
-      prompt:`综述框架图，学术风格，绿色主调
-主题：森林生态系统服务价值评估框架
-四类服务：调节服务（气候/水文/固碳）、供给服务（木材/食物/水资源）、文化服务（休闲/教育/精神）、支撑服务（土壤/营养循环/生物多样性）
-要求：同心圆或四象限布局，各类型有代表性图标`,
-      review:'框架层次清晰，图标识别性好。建议：四类服务的相互关联箭头可增强，体现整体性。' },
+    { id:'water',  label:'水污染处理工艺',   img:'assets/m2/p01-s4-01-water.png',   desc:'城市污水从进水到达标排放的完整处理流程，包含物化和生化处理单元',
+      prompt:`Environmental engineering process diagram, tech blue color scheme, white background.
+Topic: Urban wastewater treatment process flow.
+Layout: left-to-right linear flow with 7 nodes:
+① Influent Screen → ② Grit Chamber (HRT 15 min) → ③ Primary Clarifier (SS removal 60%)
+→ ④ Aeration Tank / Activated Sludge (BOD removal 92%) → ⑤ Secondary Clarifier (sludge recycle)
+→ ⑥ Filtration + UV Disinfection → ⑦ Effluent Discharge (GB18918 Class 1A).
+Each node has a professional icon. Thick blue arrows between nodes.
+Inlet: COD 350 mg/L, SS 280 mg/L. Outlet: COD ≤50 mg/L.
+Bottom branch: sludge treatment (Thickening → Digestion → Dewatering → Disposal).
+Style: clean English labels, white background, vector-art style, #1a5276 / #27ae60 palette.` },
+    { id:'carbon', label:'碳循环机制',       img:'assets/m2/p01-s4-02-carbon.png', desc:'森林生态系统碳固存与释放的自然循环机制，含大气-植物-土壤三界面',
+      prompt:`Ecosystem conceptual diagram, natural science style, green-brown palette.
+Topic: Carbon cycle in a temperate forest ecosystem.
+Scene: horizontal cross-section — left: atmosphere, center: tall broadleaf trees, right: soil profile.
+Carbon flux arrows (width proportional to magnitude):
+• Atmosphere CO₂ (415 ppm) → Photosynthesis → Plant biomass (GPP = 120 GtC/yr)
+• Plant Respiration → Atmosphere (60 GtC/yr)
+• Litterfall → Soil Organic Carbon (SOC)
+• Microbial Decomposition → Atmosphere (60 GtC/yr)
+• Net Ecosystem Production NEP = 2.6 GtC/yr (net carbon sink)
+Soil layers labeled: 0–20 cm (humus), 20–60 cm (mineral), >60 cm (parent material).
+Style: naturalistic green vegetation, brown soil, flux values annotated on each arrow.` },
+    { id:'remote', label:'遥感分析 Pipeline', img:'assets/m2/p01-s4-03-remote.png', desc:'从卫星获取影像到最终地表分类结果的技术分析流程',
+      prompt:`Technical flowchart, dark blue-purple tech style (dark background #1a1a2e, light text).
+Topic: Remote sensing image land cover classification workflow.
+Vertical flow (top to bottom), 7 steps:
+① Satellite Image Acquisition (Landsat-9 / Sentinel-2)
+→ ② Atmospheric Correction (6S model / FLAASH, aerosol removal)
+→ ③ Geometric Rectification (RMS < 0.5 pixel)
+→ ④ Feature Extraction (NDVI, EVI, MNDWI, texture)
+→ ⑤ Random Forest Classification (OOB accuracy 94.2%)
+→ ⑥ Accuracy Assessment (confusion matrix, Kappa = 0.91)
+→ ⑦ Thematic Map Output (6 classes: Forest / Grassland / Cropland / Water / Urban / Bare)
+Each step in a rounded rectangle with small icon. Tools annotated: ENVI / Google Earth Engine.` },
+    { id:'micro',  label:'微塑料迁移路径',   img:'assets/m2/p01-s4-04-micro.png',  desc:'微塑料从塑料制品源头经陆地-水体传输到达海洋的完整迁移过程',
+      prompt:`Environmental science diagram, blue-green palette, natural style, white background.
+Topic: Microplastic migration pathway from terrestrial sources to deep ocean.
+Scene: wide horizontal landscape cross-section (left shore to right deep sea).
+Left zone — Urban source: buildings, plastic waste, factory discharge.
+Center zone — Terrestrial transport: weathering/fragmentation → surface runoff
+  → soil infiltration → groundwater → river transport.
+Right zone — Marine accumulation: estuarine convergence → surface water floating
+  → settling to deep-sea sediment.
+Annotations: microplastic size categories (<1 mm, 1–5 mm, nano), 5 sampling hotspots (star markers).
+Blue-green gradient from land to ocean. Microplastics shown as orange particles.` },
+    { id:'eco',    label:'生态系统服务评估', img:'assets/m2/p01-s4-05-eco.png',    desc:'森林生态系统提供调节/供给/文化/支撑四类服务及其价值框架',
+      prompt:`Academic framework diagram, green color theme, white background.
+Topic: Forest Ecosystem Services Valuation Framework.
+Layout: four-quadrant design with concentric elements, center shows forest ecosystem icon.
+Four quadrants:
+① Provisioning Services (top-left, light green): Timber, Freshwater, Food, Genetic resources
+② Regulating Services (top-right, dark green): Carbon sequestration, Climate regulation,
+   Hydrological regulation, Air purification
+③ Cultural Services (bottom-right, cyan-green): Recreation & tourism, Research & education,
+   Spiritual & aesthetic values
+④ Supporting Services (bottom-left, olive green): Soil formation, Nutrient cycling,
+   Primary production, Biodiversity
+Outer ring: service flow arrows to society, annotated total value $12,100/ha/yr.` },
   ];
   const tabsEl   = document.getElementById('p01-sc-tabs');
   const panelsEl = document.getElementById('p01-sc-panels');
@@ -396,13 +425,12 @@ export function init() {
       panel.className = `p01-sc-panel${i === 0 ? ' active' : ''}`;
       panel.id = `p01-panel-${i}`;
       panel.innerHTML = `
-        <img src="${sc.img}" alt="${sc.label}" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
+        <img src="${import.meta.env.BASE_URL}${sc.img}" alt="${sc.label}" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
         <div>
           <div class="p01-sc-prompt-box">
             <h4>Prompt</h4>
             <pre>${sc.prompt}</pre>
           </div>
-          <div class="p01-sc-review">💬 ${sc.review}</div>
         </div>`;
       panelsEl.appendChild(panel);
     });
