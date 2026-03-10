@@ -355,6 +355,16 @@ function renderTraceSim(threshold, pathPct, corners, noise) {
 // ─── init ────────────────────────────────────────────────────────────────────
 
 export function init() {
+  // ── 动态加载 D3 ──
+  // renderTraceSim 依赖 window.d3，若 D3 未加载则先注入 <script> 再初始化
+  if (!window.d3) {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js';
+    script.onload = () => _initSim();
+    script.onerror = () => console.warn('p03: D3 加载失败，Image Trace 模拟器不可用');
+    document.head.appendChild(script);
+  }
+
   // ── Hero timeline ──
   const heroTl = gsap.timeline({ delay: 0.2 });
   heroTl.fromTo('.p03-hero .hero-eyebrow',    { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0);
@@ -409,7 +419,7 @@ export function init() {
     });
   });
 
-  // ── S3 slider handlers ──
+  // ── S3 slider handlers（不依赖 D3，绑定事件；实际渲染在 _initSim 中）──
   const sliderIds = [
     { id: 'p03-threshold', valId: 'p03-val-threshold', key: 'threshold' },
     { id: 'p03-paths',     valId: 'p03-val-paths',     key: 'paths' },
@@ -419,30 +429,37 @@ export function init() {
   const simState = { threshold: 80, paths: 50, corners: 50, noise: 30 };
   let simRafId = null;
 
-  sliderIds.forEach(({ id, valId, key }) => {
-    const el = document.getElementById(id);
-    const valEl = document.getElementById(valId);
-    if (!el) return;
+  // 将 simState / sliderIds 暴露给 _initSim（通过闭包共享）
+  function _initSim() {
+    // 注册 slider input 事件（若 D3 此时才就绪，也是在这里完成注册）
+    sliderIds.forEach(({ id, valId, key }) => {
+      const el = document.getElementById(id);
+      const valEl = document.getElementById(valId);
+      if (!el) return;
 
-    const handler = () => {
-      const v = parseInt(el.value, 10);
-      simState[key] = v;
-      if (valEl) valEl.textContent = v;
-      // rAF debounce: cancel previous frame to avoid flooding D3 with 7500 DOM mutations per event
-      if (simRafId) cancelAnimationFrame(simRafId);
-      simRafId = requestAnimationFrame(() => {
-        renderTraceSim(simState.threshold, simState.paths, simState.corners, simState.noise);
-        simRafId = null;
-      });
-    };
+      const handler = () => {
+        const v = parseInt(el.value, 10);
+        simState[key] = v;
+        if (valEl) valEl.textContent = v;
+        // rAF debounce: cancel previous frame to avoid flooding D3 with 7500 DOM mutations per event
+        if (simRafId) cancelAnimationFrame(simRafId);
+        simRafId = requestAnimationFrame(() => {
+          renderTraceSim(simState.threshold, simState.paths, simState.corners, simState.noise);
+          simRafId = null;
+        });
+      };
 
-    el.addEventListener('input', handler);
-    // 存储以便 destroy 清理
-    _scrollHandlers.push({ fn: handler, el });
-  });
+      el.addEventListener('input', handler);
+      // 存储以便 destroy 清理
+      _scrollHandlers.push({ fn: handler, el });
+    });
 
-  // 初始渲染
-  renderTraceSim(simState.threshold, simState.paths, simState.corners, simState.noise);
+    // 初始渲染
+    renderTraceSim(simState.threshold, simState.paths, simState.corners, simState.noise);
+  }
+
+  // 若 D3 已存在，立即初始化模拟器；否则等待 onload 回调
+  if (window.d3) _initSim();
 
   // ── S4 refine cards fadeIn ──
   fadeIn('.p03-refine-card', { stagger: 0.1, y: 40 });

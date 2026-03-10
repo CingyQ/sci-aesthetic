@@ -78,19 +78,82 @@ const COLLAB_STEPS = [
 const SHOWCASE_TABS = [
   { id:'show-flowchart', label:'实验流程图', color:'#7EC8E3',
     title:'污水处理工艺流程', subtitle:'Mermaid AI 生成 → SVG 导出 → Illustrator 标注优化',
-    desc:'使用 Mermaid flowchart LR 语法，AI 一次性生成完整工艺流程。节点标注经人工核查，箭头连接符合实际水处理工艺顺序。最终导出 SVG 后在 Illustrator 中统一字体和线宽。' },
+    desc:'使用 Mermaid flowchart LR 语法，AI 一次性生成完整工艺流程。节点标注经人工核查，箭头连接符合实际水处理工艺顺序。最终导出 SVG 后在 Illustrator 中统一字体和线宽。',
+    mermaidCode: `flowchart LR
+  A[进水] --> B[格栅间]
+  B --> C[沉砂池]
+  C --> D[初沉池]
+  D --> E[曝气池\\n活性污泥]
+  E --> F[二沉池]
+  F --> G{达标?}
+  G -->|是| H[消毒池]
+  G -->|否| E
+  H --> I[排放]
+  D --> J[污泥处理]
+  F --> J
+  J --> K[污泥消化]
+  K --> L[脱水填埋]` },
   { id:'show-roadmap', label:'技术路线图', color:'#95D5B2',
     title:'PM2.5来源解析技术路线', subtitle:'Mermaid TD 布局 → 层级优化',
-    desc:'复杂的多分支技术路线通过 Mermaid flowchart TD 实现，&并行连接语法简洁表达了多输入汇聚到受体模型的流程。结果分支用不同颜色区分来源类别。' },
+    desc:'复杂的多分支技术路线通过 Mermaid flowchart TD 实现，&并行连接语法简洁表达了多输入汇聚到受体模型的流程。结果分支用不同颜色区分来源类别。',
+    mermaidCode: `flowchart TD
+  A[环境样品采集\\nPM2.5滤膜] --> B[化学组分分析]
+  B --> C[离子色谱\\nSO4/NO3/NH4]
+  B --> D[ICP-MS\\n重金属元素]
+  B --> E[碳分析仪\\nOC/EC]
+  C & D & E --> F[受体模型]
+  F --> G[PMF模型\\nPositive Matrix Factorization]
+  G --> H{源解析结果}
+  H --> I[交通源 28%]
+  H --> J[工业源 35%]
+  H --> K[扬尘源 18%]
+  H --> L[二次生成 19%]` },
   { id:'show-mechanism', label:'机制示意图', color:'#B8B8E8',
     title:'生态系统碳通量监测体系', subtitle:'涡度相关法完整数据处理链路',
-    desc:'从传感器采集到最终碳收支计算，涡度相关法数据处理链路跨越多个软件和算法节点。Mermaid 流程图清晰展示了质量控制的条件判断分支和最终数据融合环节。' },
+    desc:'从传感器采集到最终碳收支计算，涡度相关法数据处理链路跨越多个软件和算法节点。Mermaid 流程图清晰展示了质量控制的条件判断分支和最终数据融合环节。',
+    mermaidCode: `flowchart LR
+  A[涡度相关塔] --> B[超声风速仪\\n三维风速]
+  A --> C[CO2/H2O\\n红外分析仪]
+  B & C --> D[10Hz原始数据]
+  D --> E[EddyPro软件\\n数据质控]
+  E --> F{质量标志}
+  F -->|优| G[净生态系统\\n生产力NEP]
+  F -->|差| H[插补处理\\nRF/ANN]
+  H --> G
+  G --> I[年度碳收支\\n±gC/m²/yr]
+  I --> J[与遥感GPP\\n数据融合]` },
   { id:'show-pipeline', label:'数据分析管线', color:'#F0B27A',
     title:'基因组数据分析管线', subtitle:'带条件判断的分析流程',
-    desc:'数据分析管线的特点是包含多个质控检查点和条件分支。AI 能够从方法文本直接生成带有菱形判断节点的流程图，显著降低了从文字到图形的转化成本。' },
+    desc:'数据分析管线的特点是包含多个质控检查点和条件分支。AI 能够从方法文本直接生成带有菱形判断节点的流程图，显著降低了从文字到图形的转化成本。',
+    mermaidCode: `flowchart TD
+  A[原始测序数据\\nFASTQ] --> B[质量控制\\nFastQC]
+  B --> C{质量达标?}
+  C -->|否| D[修剪过滤\\nTrimmomatic]
+  D --> B
+  C -->|是| E[参考基因组比对\\nBWA-MEM]
+  E --> F[BAM排序去重\\nSamtools/Picard]
+  F --> G[变异检测\\nGATK HaplotypeCaller]
+  G --> H{变异过滤}
+  H -->|VQSR通过| I[功能注释\\nANNOVAR]
+  H -->|过滤失败| J[排除]
+  I --> K[下游分析\\n关联/通路富集]` },
   { id:'show-framework', label:'概念框架图', color:'#E07A7A',
     title:'生态系统服务评估框架', subtitle:'概念关系网络可视化',
-    desc:'综述文章中的概念框架图需要展示非线性的概念关系网络。AI 能够从概念描述文本中识别主要节点和关联关系，生成初始框架后再由作者调整重要性排序和视觉层级。' },
+    desc:'综述文章中的概念框架图需要展示非线性的概念关系网络。AI 能够从概念描述文本中识别主要节点和关联关系，生成初始框架后再由作者调整重要性排序和视觉层级。',
+    mermaidCode: `flowchart TD
+  A[生态系统结构与过程] --> B[供给服务]
+  A --> C[调节服务]
+  A --> D[文化服务]
+  A --> E[支持服务]
+  B --> F[粮食/淡水/木材]
+  C --> G[气候调节/水净化]
+  D --> H[休闲/美学/精神]
+  E --> I[土壤形成/养分循环]
+  F & G & H & I --> J[人类福祉]
+  J --> K{驱动力}
+  K -->|直接| L[土地利用变化]
+  K -->|间接| M[气候变化/政策]
+  L & M --> A` },
 ];
 
 // ─── Mermaid 动态加载 ───────────────────────────────────────────────────────
@@ -229,12 +292,8 @@ export function render() {
           <p style="font-size:0.8rem;color:var(--text-on-dark-3);">${t.subtitle}</p>
         </div>
         <div style="padding:var(--space-lg);">
-          <div style="background:${t.color}0d;border-radius:var(--radius-md);padding:var(--space-lg);border:1px dashed ${t.color}44;display:flex;align-items:center;justify-content:center;min-height:160px;margin-bottom:var(--space-lg);">
-            <div style="text-align:center;">
-              <div style="font-size:3rem;margin-bottom:var(--space-sm);opacity:0.4;">${i===0?'⬡':i===1?'⬢':i===2?'◎':i===3?'◇':'◉'}</div>
-              <p style="font-size:0.8rem;color:${t.color};font-weight:600;">示例图解区域</p>
-              <p style="font-size:0.72rem;color:var(--text-on-dark-3);margin-top:4px;">实际项目中替换为导出的 SVG / PNG</p>
-            </div>
+          <div id="p04-showcase-mermaid-${i}" style="background:${t.color}0d;border-radius:var(--radius-md);border:1px solid ${t.color}22;min-height:160px;margin-bottom:var(--space-lg);overflow:auto;-webkit-overflow-scrolling:touch;max-height:400px;">
+            <div style="display:flex;align-items:center;justify-content:center;min-height:160px;color:var(--text-on-dark-3);font-size:0.82rem;">加载图解中…</div>
           </div>
           <p style="font-size:0.88rem;color:var(--text-on-dark-2);line-height:1.75;">${t.desc}</p>
         </div>
@@ -549,7 +608,8 @@ export function init() {
     _scrollHandlers.push({ el: copyBtn, type: 'click', fn: copyHandler });
   }
 
-  // Init mermaid and render first scene
+  // Init mermaid and render first scene (S2 viewer)
+  // showcase panel (S4) 在下方 renderShowcaseMermaid 定义后再触发
   initMermaid().then(() => setScene(0)).catch(e => console.warn('p04 init failed:', e));
 
   // ── S3 collab cards scroll animation ─────────────────────────────────────
@@ -569,6 +629,18 @@ export function init() {
   _observers.push(obs2);
 
   // ── S4 showcase tabs ──────────────────────────────────────────────────────
+  // 记录哪些 showcase panel 已渲染过 Mermaid（懒加载）
+  const _showcaseRendered = new Set();
+
+  // 渲染指定 showcase panel 的 Mermaid 图
+  const renderShowcaseMermaid = async (idx) => {
+    if (_showcaseRendered.has(idx)) return;
+    _showcaseRendered.add(idx);
+    const tab = SHOWCASE_TABS[idx];
+    if (!tab || !tab.mermaidCode) return;
+    await renderMermaid(tab.mermaidCode, `p04-showcase-mermaid-${idx}`);
+  };
+
   document.querySelectorAll('.p04-showcase-tab').forEach((tab, i) => {
     const handler = () => {
       document.querySelectorAll('.p04-showcase-tab').forEach((t, ti) => {
@@ -587,10 +659,28 @@ export function init() {
       document.querySelectorAll('.p04-showcase-panel').forEach((p, pi) => {
         p.classList.toggle('active', pi === i);
       });
+      // 懒加载当前切换到的 tab 的 Mermaid 图
+      renderShowcaseMermaid(i).catch(e => console.warn('p04 showcase mermaid render failed:', e));
     };
     tab.addEventListener('click', handler);
     _scrollHandlers.push({ el: tab, type: 'click', fn: handler });
   });
+
+  // 等待 Mermaid 就绪后渲染第一个 showcase panel（index 0）
+  // renderShowcaseMermaid 在此处已定义，可安全引用
+  if (mermaidReady) {
+    renderShowcaseMermaid(0).catch(e => console.warn('p04 showcase render failed:', e));
+  } else {
+    // Mermaid 尚未加载完成，等待其 ready 后再渲染
+    const waitForMermaid = () => {
+      if (mermaidReady) {
+        renderShowcaseMermaid(0).catch(e => console.warn('p04 showcase render failed:', e));
+      } else {
+        setTimeout(waitForMermaid, 100);
+      }
+    };
+    waitForMermaid();
+  }
 
   // ── Section heading scroll animations ────────────────────────────────────
   document.querySelectorAll('#p04-s1 h2, #p04-s2 h2, #p04-s3 h2, #p04-s4 h2').forEach(el => {
