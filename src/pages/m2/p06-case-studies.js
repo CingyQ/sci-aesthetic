@@ -377,13 +377,13 @@ export function render() {
       <div>
         <p class="p06-ba-label light">初稿草图</p>
         <div style="aspect-ratio:16/9;overflow:hidden;border-radius:var(--radius-md);">
-          <img src="${import.meta.env.BASE_URL}assets/m2/p06-case1-draft.png" alt="Case 1 draft graphical abstract" style="width:100%;height:100%;object-fit:cover;display:block;">
+          <img loading="lazy" src="${import.meta.env.BASE_URL}assets/m2/p06-case1-draft.webp" alt="Case 1 draft graphical abstract" style="width:100%;height:100%;object-fit:cover;display:block;">
         </div>
       </div>
       <div>
         <p class="p06-ba-label light">最终成果</p>
         <div style="aspect-ratio:16/9;overflow:hidden;border-radius:var(--radius-md);">
-          <img src="${import.meta.env.BASE_URL}assets/m2/p06-case1-final-ga.png" alt="Case 1 final graphical abstract" style="width:100%;height:100%;object-fit:cover;display:block;">
+          <img loading="lazy" src="${import.meta.env.BASE_URL}assets/m2/p06-case1-final-ga.webp" alt="Case 1 final graphical abstract" style="width:100%;height:100%;object-fit:cover;display:block;">
         </div>
       </div>
     </div>
@@ -417,7 +417,7 @@ export function render() {
     <div class="p06-ph-wrap">
       <p class="p06-ba-label dark" style="max-width:900px;margin:0 auto var(--space-sm);">精修后最终图</p>
       <div style="max-width:900px;margin:0 auto;">
-        <img src="${import.meta.env.BASE_URL}assets/m2/p06-case2-microplastic.png" alt="Microplastic migration methodology figure" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
+        <img loading="lazy" src="${import.meta.env.BASE_URL}assets/m2/p06-case2-microplastic.webp" alt="Microplastic migration methodology figure" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
       </div>
     </div>
   </div>
@@ -441,7 +441,7 @@ export function render() {
     <div class="p06-ph-wrap">
       <p class="p06-ba-label light" style="max-width:1100px;margin:0 auto var(--space-sm);">最终成果</p>
       <div style="max-width:800px;margin:0 auto;">
-        <img src="${import.meta.env.BASE_URL}assets/m2/p06-case3-carbon.png" alt="Carbon cycle review conceptual figure" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
+        <img loading="lazy" src="${import.meta.env.BASE_URL}assets/m2/p06-case3-carbon.webp" alt="Carbon cycle review conceptual figure" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
       </div>
     </div>
   </div>

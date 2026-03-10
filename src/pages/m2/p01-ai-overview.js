@@ -352,7 +352,7 @@ export function init() {
 
   // ── 5. S4: 展示切换 ──
   const SHOWCASE = [
-    { id:'water',  label:'水污染处理工艺',   img:'assets/m2/p01-s4-01-water.png',   desc:'城市污水从进水到达标排放的完整处理流程，包含物化和生化处理单元',
+    { id:'water',  label:'水污染处理工艺',   img:'assets/m2/p01-s4-01-water.webp',   desc:'城市污水从进水到达标排放的完整处理流程，包含物化和生化处理单元',
       prompt:`Environmental engineering process diagram, tech blue color scheme, white background.
 Topic: Urban wastewater treatment process flow.
 Layout: left-to-right linear flow with 7 nodes:
@@ -363,7 +363,7 @@ Each node has a professional icon. Thick blue arrows between nodes.
 Inlet: COD 350 mg/L, SS 280 mg/L. Outlet: COD ≤50 mg/L.
 Bottom branch: sludge treatment (Thickening → Digestion → Dewatering → Disposal).
 Style: clean English labels, white background, vector-art style, #1a5276 / #27ae60 palette.` },
-    { id:'carbon', label:'碳循环机制',       img:'assets/m2/p01-s4-02-carbon.png', desc:'森林生态系统碳固存与释放的自然循环机制，含大气-植物-土壤三界面',
+    { id:'carbon', label:'碳循环机制',       img:'assets/m2/p01-s4-02-carbon.webp', desc:'森林生态系统碳固存与释放的自然循环机制，含大气-植物-土壤三界面',
       prompt:`Ecosystem conceptual diagram, natural science style, green-brown palette.
 Topic: Carbon cycle in a temperate forest ecosystem.
 Scene: horizontal cross-section — left: atmosphere, center: tall broadleaf trees, right: soil profile.
@@ -375,7 +375,7 @@ Carbon flux arrows (width proportional to magnitude):
 • Net Ecosystem Production NEP = 2.6 GtC/yr (net carbon sink)
 Soil layers labeled: 0–20 cm (humus), 20–60 cm (mineral), >60 cm (parent material).
 Style: naturalistic green vegetation, brown soil, flux values annotated on each arrow.` },
-    { id:'remote', label:'遥感分析 Pipeline', img:'assets/m2/p01-s4-03-remote.png', desc:'从卫星获取影像到最终地表分类结果的技术分析流程',
+    { id:'remote', label:'遥感分析 Pipeline', img:'assets/m2/p01-s4-03-remote.webp', desc:'从卫星获取影像到最终地表分类结果的技术分析流程',
       prompt:`Technical flowchart, dark blue-purple tech style (dark background #1a1a2e, light text).
 Topic: Remote sensing image land cover classification workflow.
 Vertical flow (top to bottom), 7 steps:
@@ -387,7 +387,7 @@ Vertical flow (top to bottom), 7 steps:
 → ⑥ Accuracy Assessment (confusion matrix, Kappa = 0.91)
 → ⑦ Thematic Map Output (6 classes: Forest / Grassland / Cropland / Water / Urban / Bare)
 Each step in a rounded rectangle with small icon. Tools annotated: ENVI / Google Earth Engine.` },
-    { id:'micro',  label:'微塑料迁移路径',   img:'assets/m2/p01-s4-04-micro.png',  desc:'微塑料从塑料制品源头经陆地-水体传输到达海洋的完整迁移过程',
+    { id:'micro',  label:'微塑料迁移路径',   img:'assets/m2/p01-s4-04-micro.webp',  desc:'微塑料从塑料制品源头经陆地-水体传输到达海洋的完整迁移过程',
       prompt:`Environmental science diagram, blue-green palette, natural style, white background.
 Topic: Microplastic migration pathway from terrestrial sources to deep ocean.
 Scene: wide horizontal landscape cross-section (left shore to right deep sea).
@@ -398,7 +398,7 @@ Right zone — Marine accumulation: estuarine convergence → surface water floa
   → settling to deep-sea sediment.
 Annotations: microplastic size categories (<1 mm, 1–5 mm, nano), 5 sampling hotspots (star markers).
 Blue-green gradient from land to ocean. Microplastics shown as orange particles.` },
-    { id:'eco',    label:'生态系统服务评估', img:'assets/m2/p01-s4-05-eco.png',    desc:'森林生态系统提供调节/供给/文化/支撑四类服务及其价值框架',
+    { id:'eco',    label:'生态系统服务评估', img:'assets/m2/p01-s4-05-eco.webp',    desc:'森林生态系统提供调节/供给/文化/支撑四类服务及其价值框架',
       prompt:`Academic framework diagram, green color theme, white background.
 Topic: Forest Ecosystem Services Valuation Framework.
 Layout: four-quadrant design with concentric elements, center shows forest ecosystem icon.
@@ -425,7 +425,7 @@ Outer ring: service flow arrows to society, annotated total value $12,100/ha/yr.
       panel.className = `p01-sc-panel${i === 0 ? ' active' : ''}`;
       panel.id = `p01-panel-${i}`;
       panel.innerHTML = `
-        <img src="${import.meta.env.BASE_URL}${sc.img}" alt="${sc.label}" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
+        <img loading="lazy" src="${import.meta.env.BASE_URL}${sc.img}" alt="${sc.label}" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
         <div>
           <div class="p01-sc-prompt-box">
             <h4>Prompt</h4>

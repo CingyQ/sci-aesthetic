@@ -321,8 +321,8 @@ export function init() {
   const COMPARES = [
     {
       title: '流域水质监测流程图',
-      badImg: 'assets/m2/p02-bad-01-watershed.png',
-      goodImg: 'assets/m2/p02-good-01-watershed.png',
+      badImg: 'assets/m2/p02-bad-01-watershed.webp',
+      goodImg: 'assets/m2/p02-good-01-watershed.webp',
       bad: `画一个水质监测的流程图
 用蓝色画
 要好看`,
@@ -342,8 +342,8 @@ in southern China, supporting water pollution source tracking research.
     },
     {
       title: '土壤重金属修复机制',
-      badImg: 'assets/m2/p02-bad-02-soil.png',
-      goodImg: 'assets/m2/p02-good-02-soil.png',
+      badImg: 'assets/m2/p02-bad-02-soil.webp',
+      goodImg: 'assets/m2/p02-good-02-soil.webp',
       bad: `土壤修复示意图
 显示重金属去除的过程
 科学风格`,
@@ -365,8 +365,8 @@ submitted to Science of The Total Environment.
     },
     {
       title: 'PM2.5 大气传输与形成机制',
-      badImg: 'assets/m2/p02-bad-03-atmo.png',
-      goodImg: 'assets/m2/p02-good-03-atmo.png',
+      badImg: 'assets/m2/p02-bad-03-atmo.webp',
+      goodImg: 'assets/m2/p02-good-03-atmo.webp',
       bad: `Draw a picture of air pollution in a city.`,
       good: `Scientific conceptual illustration of PM2.5 formation and transport mechanisms,
 white background, Atmospheric Environment journal style.
@@ -400,14 +400,14 @@ NO charts, NO graphs — purely illustrative diagram.
           <div class="p02-compare-col">
             <h4 class="p02-bad-label">❌ 差 Prompt</h4>
             <div class="p02-compare-img">
-              <img src="${import.meta.env.BASE_URL}${c.badImg}" alt="Bad prompt example" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
+              <img loading="lazy" src="${import.meta.env.BASE_URL}${c.badImg}" alt="Bad prompt example" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
             </div>
             <div class="p02-prompt-diff">${c.bad.split('\n').map(l => `<span class="p02-diff-del">${escapeHtml(l)}</span>`).join('\n')}</div>
           </div>
           <div class="p02-compare-col">
             <h4 class="p02-good-label">✅ 好 Prompt</h4>
             <div class="p02-compare-img">
-              <img src="${import.meta.env.BASE_URL}${c.goodImg}" alt="Good prompt example" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
+              <img loading="lazy" src="${import.meta.env.BASE_URL}${c.goodImg}" alt="Good prompt example" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
             </div>
             <div class="p02-prompt-diff">${c.good.split('\n').map(l => `<span class="p02-diff-add">${escapeHtml(l)}</span>`).join('\n')}</div>
           </div>
@@ -421,7 +421,7 @@ NO charts, NO graphs — purely illustrative diagram.
   // ── S3: 迭代时间线 ──
   const ITERATIONS = [
     {
-      ver: 'v1', label: '初始构图', icon: '🎯', img: 'assets/m2/p02-iter-v1-wetland.png',
+      ver: 'v1', label: '初始构图', icon: '🎯', img: 'assets/m2/p02-iter-v1-wetland.webp',
       change: '构图优化', detail: '从散乱的元素堆砌改为层级分明的同心圆布局，四类服务用象限区分。',
       next: '配色调整 →',
       prompt: `[v1 — Initial rough draft, intentionally low quality]
@@ -432,7 +432,7 @@ no icons — text labels only, thin black connectors in inconsistent directions.
 Four service categories: Regulating / Provisioning / Cultural / Supporting.`
     },
     {
-      ver: 'v2', label: '配色调整', icon: '🎨', img: 'assets/m2/p02-iter-v2-wetland.png',
+      ver: 'v2', label: '配色调整', icon: '🎨', img: 'assets/m2/p02-iter-v2-wetland.webp',
       change: '色彩系统化', detail: '从默认混色改为统一的绿色系（调节=深绿，供给=浅绿，文化=青绿，支撑=灰绿）。',
       next: '细节增加 →',
       prompt: `[v2 — Added color coding, medium quality, still has issues]
@@ -443,7 +443,7 @@ icons inconsistent in style (mix of emoji-style and line-art style),
 only two font sizes used, center circle overly bright, no quantitative values.`
     },
     {
-      ver: 'v3', label: '细节增加', icon: '🔬', img: 'assets/m2/p02-iter-v3-wetland.png',
+      ver: 'v3', label: '细节增加', icon: '🔬', img: 'assets/m2/p02-iter-v3-wetland.webp',
       change: '科学细节', detail: '为每类服务添加代表性子服务图标和简短标签（如碳封存、水净化、候鸟栖息地、土壤形成）。',
       next: '标注完善 →',
       prompt: `[v3 — Refined details, near publication quality]
@@ -455,7 +455,7 @@ unified minimal line-art icons (3 sub-services per category),
 three-level font hierarchy (title / service name / sub-item).`
     },
     {
-      ver: 'v4', label: '标注完善', icon: '✨', img: 'assets/m2/p02-iter-v4-wetland.png',
+      ver: 'v4', label: '标注完善', icon: '✨', img: 'assets/m2/p02-iter-v4-wetland.webp',
       change: '出版级标注', detail: '添加图题、箭头说明生态系统服务流方向、增加定量价值标注（$12,120/ha/yr）。最终达到Nature投稿标准。',
       next: '完成',
       prompt: `[v4 — Publication-ready final version, Nature journal submission standard]
@@ -482,7 +482,7 @@ Footnote: 'Source: Millennium Ecosystem Assessment (MA 2005)'.`
       <h3>${it.ver}: ${it.label}</h3>
       <div class="p02-iter-detail-grid">
         <div>
-          <img src="${import.meta.env.BASE_URL}${it.img}" alt="Iteration ${it.ver}: ${it.label}" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
+          <img loading="lazy" src="${import.meta.env.BASE_URL}${it.img}" alt="Iteration ${it.ver}: ${it.label}" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
         </div>
         <div>
           <div class="p02-iter-change">
@@ -504,7 +504,7 @@ Footnote: 'Source: Millennium Ecosystem Assessment (MA 2005)'.`
       item.dataset.idx = i;
       item.innerHTML = `
         <div class="p02-iter-thumb">
-          <img src="${import.meta.env.BASE_URL}${it.img}" alt="Iteration ${it.ver}" style="width:100%;height:auto;display:block;">
+          <img loading="lazy" src="${import.meta.env.BASE_URL}${it.img}" alt="Iteration ${it.ver}" style="width:100%;height:auto;display:block;">
         </div>
         <div class="p02-iter-ver">${it.ver}</div>
         <div class="p02-iter-label">${it.label}</div>`;
