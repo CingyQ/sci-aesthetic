@@ -269,12 +269,14 @@ export function init() {
     const segs   = document.querySelectorAll('.p02-seg');
     if (bodyEl && leftEl && panels.length) {
       const PANEL_COUNT = panels.length; // 4
+      const TOP_OFFSET = 80; // px from viewport top when panel is "stuck"
       let ticking = false;
       let currentPanel = 0;
       // Cache once after DOM render to avoid repeated layout reflows on scroll
       let cachedBodyH = bodyEl.offsetHeight;
       let cachedLeftH = leftEl.offsetHeight;
-      let maxTrans = Math.max(0, cachedBodyH - cachedLeftH);
+      // Subtract TOP_OFFSET so panel bottom never exceeds body bottom
+      let maxTrans = Math.max(0, cachedBodyH - cachedLeftH - TOP_OFFSET);
 
       // Recompute on resize so sticky scroll stays correct after viewport changes
       let resizeTimer = null;
@@ -283,7 +285,7 @@ export function init() {
         resizeTimer = setTimeout(() => {
           cachedBodyH = bodyEl.offsetHeight;
           cachedLeftH = leftEl.offsetHeight;
-          maxTrans = Math.max(0, cachedBodyH - cachedLeftH);
+          maxTrans = Math.max(0, cachedBodyH - cachedLeftH - TOP_OFFSET);
         }, 150);
       };
       window.addEventListener('resize', onResize, { passive: true });
@@ -294,8 +296,11 @@ export function init() {
         ticking = true;
         requestAnimationFrame(() => {
           const bodyRect = bodyEl.getBoundingClientRect();
+          // scrolledPast > 0 when body top has crossed viewport top (sticky active)
           const scrolledPast = Math.max(0, -bodyRect.top);
-          leftEl.style.transform = `translateY(${Math.min(scrolledPast, maxTrans)}px)`;
+          // TOP_OFFSET: always added so panel appears 80px below viewport top during sticky.
+          // Before sticky, element is below the fold so the offset has no visible effect.
+          leftEl.style.transform = `translateY(${TOP_OFFSET + Math.min(scrolledPast, maxTrans)}px)`;
           const panelIdx = Math.min(PANEL_COUNT - 1, Math.max(0, Math.floor(scrolledPast / window.innerHeight)));
           if (panelIdx !== currentPanel) {
             currentPanel = panelIdx;
