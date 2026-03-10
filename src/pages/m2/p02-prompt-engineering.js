@@ -272,9 +272,22 @@ export function init() {
       let ticking = false;
       let currentPanel = 0;
       // Cache once after DOM render to avoid repeated layout reflows on scroll
-      const cachedBodyH = bodyEl.offsetHeight;
-      const cachedLeftH = leftEl.offsetHeight;
-      const maxTrans = Math.max(0, cachedBodyH - cachedLeftH);
+      let cachedBodyH = bodyEl.offsetHeight;
+      let cachedLeftH = leftEl.offsetHeight;
+      let maxTrans = Math.max(0, cachedBodyH - cachedLeftH);
+
+      // Recompute on resize so sticky scroll stays correct after viewport changes
+      let resizeTimer = null;
+      const onResize = () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          cachedBodyH = bodyEl.offsetHeight;
+          cachedLeftH = leftEl.offsetHeight;
+          maxTrans = Math.max(0, cachedBodyH - cachedLeftH);
+        }, 150);
+      };
+      window.addEventListener('resize', onResize, { passive: true });
+      _scrollHandlers.push({ fn: onResize, el: window, event: 'resize' });
 
       function updateCDTF() {
         if (ticking) return;
@@ -593,8 +606,9 @@ export function init() {
 
 export function destroy() {
   killAll();
-  _scrollHandlers.forEach(({ fn, el }) => (el || window).removeEventListener('scroll', fn));
+  _scrollHandlers.forEach(({ fn, el, event }) => (el || window).removeEventListener(event || 'scroll', fn));
   _scrollHandlers = [];
+  // _observers reserved for future IntersectionObserver instances
   _observers.forEach(io => io.disconnect());
   _observers = [];
 }
