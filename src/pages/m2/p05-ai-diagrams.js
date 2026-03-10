@@ -175,18 +175,22 @@ export function render() {
 .p05-copy-btn:hover { opacity:0.85; }
 .p05-copy-btn.copied { background:#22c55e; color:#fff; }
 
+/* section padding（桌面端） */
+#p05-s1, #p05-s2, #p05-s3, #p05-s4 { padding: var(--space-3xl) var(--space-xl); }
 /* 全局溢出防护 */
-#p05-s1 { overflow-x:hidden; }
+#p05-s1, #p05-s2, #p05-s3, #p05-s4 { overflow-x:hidden; }
 
 /* 响应式 */
 @media (max-width:900px) {
   .p05-gen-selects { grid-template-columns:1fr; }
 }
 @media (max-width:768px) {
-  #p05-s1, #p05-s2, #p05-s3, #p05-s4 { scroll-margin-top:56px; }
+  #p05-s1, #p05-s2, #p05-s3, #p05-s4 { scroll-margin-top:56px; padding:var(--space-xl) var(--space-sm); }
+  /* flex 子元素 margin:auto 会取消 stretch，强制 100% 宽度 */
+  #p05-s1 > div, #p05-s2 > div, #p05-s3 > div, #p05-s4 > div { width:100%; min-width:0; max-width:100%; }
   .p05-quiz-grid { grid-template-columns:1fr; }
   /* 表格在 section padding 范围内水平滚动，保留圆角和边框，不做全宽展开 */
-  .p05-table-wrap { box-sizing:border-box; }
+  .p05-table-wrap { box-sizing:border-box; max-width:100%; }
   .p05-policy-table th,
   .p05-policy-table td { padding:8px 10px; font-size:0.75rem; }
   .p05-policy-table th { font-size:0.72rem; }
@@ -211,7 +215,7 @@ export function render() {
 </section>
 
 <!-- ── S1 期刊政策全景 ──────────────────────────────────────────────────── -->
-<section class="section-light" id="p05-s1" style="padding:var(--space-3xl) var(--space-xl);">
+<section class="section-light" id="p05-s1">
   <div style="max-width:900px;margin:0 auto;">
     <p class="section-eyebrow" style="color:var(--module-2);">期刊政策全景</p>
     <h2 class="section-title">主流期刊 AI 政策对比</h2>
@@ -245,7 +249,7 @@ export function render() {
 </div>
 
 <!-- ── S2 合规使用边界 ──────────────────────────────────────────────────── -->
-<section class="section-dark" id="p05-s2" style="padding:var(--space-3xl) var(--space-xl);">
+<section class="section-dark" id="p05-s2">
   <div style="max-width:760px;margin:0 auto;">
     <p class="section-eyebrow" style="color:var(--module-2);">合规使用边界</p>
     <h2 class="section-title" style="color:var(--text-on-dark);">使用 AI 的五个层级</h2>
@@ -257,7 +261,7 @@ export function render() {
 </section>
 
 <!-- ── S3 情景判断练习 ──────────────────────────────────────────────────── -->
-<section class="section-light" id="p05-s3" style="padding:var(--space-3xl) var(--space-xl);">
+<section class="section-light" id="p05-s3">
   <div style="max-width:980px;margin:0 auto;">
     <p class="section-eyebrow" style="color:var(--module-2);">情景判断练习</p>
     <h2 class="section-title">在实践中判断边界</h2>
@@ -271,7 +275,7 @@ export function render() {
 </section>
 
 <!-- ── S4 AI声明模板生成器 ─────────────────────────────────────────────── -->
-<section class="section-dark" id="p05-s4" style="padding:var(--space-3xl) var(--space-xl);">
+<section class="section-dark" id="p05-s4">
   <div class="p05-gen-layout">
     <p class="section-eyebrow" style="color:var(--module-2);text-align:center;">声明模板生成器</p>
     <h2 class="section-title" style="color:var(--text-on-dark);text-align:center;">一键生成合规声明文本</h2>

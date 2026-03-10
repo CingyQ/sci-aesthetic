@@ -284,8 +284,10 @@ export function render() {
 .p06-takeaway-title { font-size:var(--text-body); font-weight:700; color:var(--text-on-dark); margin-bottom:var(--space-sm); }
 .p06-takeaway-desc { font-size:0.85rem; color:var(--text-on-dark-2); line-height:1.7; }
 
+/* ── section padding（桌面端） ── */
+#p06-s1, #p06-s2, #p06-s3, #p06-s4, #p06-s5 { padding: var(--space-3xl) var(--space-xl); }
 /* ── 全局溢出防护（任何宽度下）── */
-#p06-s3, #p06-s5 { overflow-x:hidden; }
+#p06-s1, #p06-s2, #p06-s3, #p06-s4, #p06-s5 { overflow-x:hidden; }
 
 /* ── responsive ── */
 @media (max-width:900px) {
@@ -296,7 +298,9 @@ export function render() {
   .p06-ba-row { grid-template-columns:1fr; }
 }
 @media (max-width:768px) {
-  #p06-s1, #p06-s2, #p06-s3, #p06-s4, #p06-s5 { scroll-margin-top:56px; }
+  #p06-s1, #p06-s2, #p06-s3, #p06-s4, #p06-s5 { scroll-margin-top:56px; padding:var(--space-xl) var(--space-sm); }
+  /* flex 子元素 margin:auto 会取消 stretch，强制 100% 宽度 */
+  #p06-s1 > div, #p06-s2 > div, #p06-s3 > div, #p06-s4 > div, #p06-s5 > div { width:100%; min-width:0; max-width:100%; }
   /* 案例 02：步骤卡片减少内边距 */
   .p06-steps-grid.cols-4 { grid-template-columns:1fr; }
   .p06-steps-grid.cols-5 { grid-template-columns:1fr; }
@@ -306,11 +310,13 @@ export function render() {
   .p06-step-desc  { font-size:0.8rem; }
   .p06-step-tip   { font-size:0.72rem; }
   /* 案例 02：Mermaid 固定高度+横向滚动，防 SVG 撑破外层 */
-  .p06-mermaid-wrap { max-height:220px; min-height:120px; padding:var(--space-sm); }
+  .p06-mermaid-wrap { max-height:220px; min-height:120px; padding:var(--space-sm); max-width:100%; box-sizing:border-box; }
   .p06-mermaid-wrap svg { height:180px !important; width:auto !important; min-height:unset; min-width:360px; }
   /* 案例 02：最终图片容器全宽 */
   .p06-ph-wrap { margin:0 0 var(--space-xl); }
   /* 规律总结：表格在 section 内水平滚动，无需全宽展开 */
+  .p06-steps-grid { max-width:100%; box-sizing:border-box; }
+  .p06-ba-row { max-width:100%; box-sizing:border-box; }
   .p06-summary-wrap { box-sizing:border-box; max-width:100%; }
   .p06-summary-table th,
   .p06-summary-table td { padding:7px 8px; font-size:0.76rem; }
@@ -339,7 +345,7 @@ export function render() {
 </section>
 
 <!-- ══ S1 案例选择器（深色） ═══════════════════════════════════════════════ -->
-<section class="section-dark" id="p06-s1" style="padding:var(--space-3xl) var(--space-xl);">
+<section class="section-dark" id="p06-s1">
   <div style="max-width:1100px;margin:0 auto;">
     <p class="section-eyebrow" style="color:var(--module-2);">三个完整案例</p>
     <h2 class="section-title" style="color:var(--text-on-dark);">选择一个案例开始探索</h2>
@@ -353,7 +359,7 @@ export function render() {
 </section>
 
 <!-- ══ S2 案例一：水污染 GA（浅色） ════════════════════════════════════════ -->
-<section class="section-light" id="p06-s2" style="padding:var(--space-3xl) var(--space-xl);">
+<section class="section-light" id="p06-s2">
   <div style="max-width:1100px;margin:0 auto;">
     <p class="section-eyebrow" style="color:var(--module-2);">案例 01</p>
     <h2 class="section-title">案例一：水污染流域 Graphical Abstract</h2>
@@ -385,7 +391,7 @@ export function render() {
 </section>
 
 <!-- ══ S3 案例二：微塑料迁移方法图（深色） ════════════════════════════════ -->
-<section class="section-dark" id="p06-s3" style="padding:var(--space-3xl) var(--space-xl);">
+<section class="section-dark" id="p06-s3">
   <div style="max-width:1100px;margin:0 auto;">
     <p class="section-eyebrow" style="color:var(--module-2);">案例 02</p>
     <h2 class="section-title" style="color:var(--text-on-dark);">案例二：微塑料迁移方法图</h2>
@@ -418,7 +424,7 @@ export function render() {
 </section>
 
 <!-- ══ S4 案例三：碳循环综述概念图（浅色） ═══════════════════════════════ -->
-<section class="section-light" id="p06-s4" style="padding:var(--space-3xl) var(--space-xl);">
+<section class="section-light" id="p06-s4">
   <div style="max-width:1100px;margin:0 auto;">
     <p class="section-eyebrow" style="color:var(--module-2);">案例 03</p>
     <h2 class="section-title">案例三：碳循环综述概念图</h2>
@@ -442,7 +448,7 @@ export function render() {
 </section>
 
 <!-- ══ S5 经验总结（深色） ════════════════════════════════════════════════ -->
-<section class="section-dark" id="p06-s5" style="padding:var(--space-3xl) var(--space-xl);">
+<section class="section-dark" id="p06-s5">
   <div style="max-width:1100px;margin:0 auto;">
     <p class="section-eyebrow" style="color:var(--module-2);">规律总结</p>
     <h2 class="section-title" style="color:var(--text-on-dark);">经验总结与效率提升</h2>
@@ -539,8 +545,12 @@ export function init() {
     .catch(e => console.warn('p06 mermaid failed:', e));
 
   // ── Scroll-triggered fadeIn — separate loops per group so delay resets per section ──
+  // 案例卡片：不用 fadeIn（ScrollTrigger 在移动端可能不触发），直接 gsap.fromTo 确保可见
   document.querySelectorAll('.p06-case-card').forEach((el, i) =>
-    fadeIn(el, { delay: i * 0.1, y: 24, duration: 0.7 })
+    gsap.fromTo(el,
+      { opacity: 0, y: 24 },
+      { opacity: 1, y: 0, duration: 0.7, delay: 0.3 + i * 0.1, ease: 'power3.out' }
+    )
   );
   document.querySelectorAll('.p06-step-card').forEach((el, i) =>
     fadeIn(el, { delay: (i % 4) * 0.08, y: 24, duration: 0.7 })

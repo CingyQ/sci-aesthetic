@@ -13,10 +13,13 @@
   top: 0;
   width: 260px;
   height: 100vh;
-  background: rgba(250, 250, 250, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-right: 1px solid var(--border-light);
+  /* 更通透的玻璃面板 */
+  background: rgba(252, 252, 252, 0.88);
+  backdrop-filter: saturate(180%) blur(24px);
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  /* Shadow 替代 border-right */
+  box-shadow: 1px 0 0 rgba(0, 0, 0, 0.05),
+              4px 0 24px rgba(0, 0, 0, 0.02);
   z-index: 100;
   overflow-y: auto;
   transition: transform var(--t-base);
@@ -53,15 +56,18 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--space-sm);
-  border-bottom: 1px solid var(--border-light);
+  /* 微妙分隔替代 border */
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.04);
 }
 
 .sidebar-logo {
   font-family: var(--font-display);
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: var(--text-on-light);
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
+  /* 微妙光晕增加层次 */
+  text-shadow: 0 0 24px rgba(126, 200, 227, 0.1);
 }
 
 .sidebar-close-btn {
@@ -80,7 +86,10 @@
 /* 侧边栏导航项 */
 .nav-module-group {
   padding: var(--space-xs) 0;
-  border-bottom: 1px solid var(--border-light);
+}
+
+.nav-module-group + .nav-module-group {
+  box-shadow: 0 -1px 0 rgba(0, 0, 0, 0.04);
 }
 
 .nav-module-title {
@@ -149,9 +158,24 @@
   display: flex !important;
   align-items: center;
   gap: 8px;
-  padding: 8px var(--space-sm) 8px 28px !important;
-  font-size: 0.85rem !important;
+  padding: 7px var(--space-sm) 7px 28px;
+  font-size: 0.84rem;
   text-decoration: none;
+  color: var(--text-on-light-2);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin-right: 8px;
+  transition: all 0.2s ease;
+}
+
+.nav-page-item:hover {
+  color: var(--text-on-light);
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.nav-page-item.active {
+  color: var(--accent);
+  background: rgba(126, 200, 227, 0.06);
+  font-weight: 500;
 }
 
 .nav-page-num {
@@ -192,25 +216,28 @@
 
 .nav-item {
   padding: 10px var(--space-sm) 10px 16px;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   color: var(--text-on-light-2);
   cursor: pointer;
-  transition: all var(--t-fast);
   display: flex;
   align-items: center;
   gap: 8px;
   text-decoration: none;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin-right: 8px;
+  transition: all 0.2s ease;
 }
 
 .nav-item.active {
   color: var(--accent);
-  border-left: 3px solid var(--accent);
-  font-weight: 500;
+  background: rgba(126, 200, 227, 0.06);
+  border-left: 2px solid var(--accent);
+  font-weight: 600;
 }
 
 .nav-item:hover {
   color: var(--text-on-light);
-  background: var(--bg-light-alt);
+  background: rgba(0, 0, 0, 0.025);
 }
 
 .nav-item-icon {
