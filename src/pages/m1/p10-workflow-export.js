@@ -2014,6 +2014,7 @@ export function render() {
   </p>
   <div class="page-footer-nav">
     <button class="btn-ghost" id="p10-prev-btn">← Python 可视化</button>
+    <button class="btn-ghost" id="p10-home-btn">返回模块首页</button>
     <button class="btn-primary" id="p10-next-btn">进入模块二 →</button>
   </div>
 </section>
@@ -2045,6 +2046,7 @@ export function init() {
 
   // 3. Footer 导航
   document.getElementById('p10-prev-btn')?.addEventListener('click', () => navigateTo('m1-p9'));
+  document.getElementById('p10-home-btn')?.addEventListener('click', () => navigateTo('m1-p1'));
   document.getElementById('p10-next-btn')?.addEventListener('click', () => navigateTo('m2-p1'));
 
   // 4. 初始化工作流（其他模块 Task 3/4 会添加）

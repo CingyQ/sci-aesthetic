@@ -462,7 +462,8 @@ export function render() {
   <p class="page-footer-desc">恭喜完成 AI 辅助科研绘图模块！你现在已经掌握了从 Prompt 到出版级图像的完整工作流。</p>
   <div class="page-footer-nav">
     <button class="btn-ghost" id="p06-prev-btn">← 伦理与合规</button>
-    <button class="btn-primary" id="p06-next-btn">返回模块首页 →</button>
+    <button class="btn-ghost" id="p06-home-btn">返回模块首页</button>
+    <button class="btn-primary" id="p06-next-btn">进入模块三 →</button>
   </div>
 </section>
 
@@ -537,8 +538,14 @@ export function init() {
     prevBtn.addEventListener('click', prevFn);
     _scrollHandlers.push({ el: prevBtn, type: 'click', fn: prevFn });
   }
+  const homeBtn = document.getElementById('p06-home-btn');
+  if (homeBtn) {
+    const homeFn = () => navigateTo('m2-p1');
+    homeBtn.addEventListener('click', homeFn);
+    _scrollHandlers.push({ el: homeBtn, type: 'click', fn: homeFn });
+  }
   if (nextBtn) {
-    const nextFn = () => navigateTo('m2-p1');
+    const nextFn = () => navigateTo('m3-p1');
     nextBtn.addEventListener('click', nextFn);
     _scrollHandlers.push({ el: nextBtn, type: 'click', fn: nextFn });
   }

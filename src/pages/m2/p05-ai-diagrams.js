@@ -138,13 +138,15 @@ export function render() {
 .p05-policy-popup-close { float:right; cursor:pointer; color:var(--text-on-light-3,#999); font-size:1.1rem; line-height:1; background:none; border:none; padding:0; }
 
 /* S2 合规光谱 */
-.p05-spectrum-row { border-radius:var(--radius-md); margin-bottom:var(--space-sm); cursor:pointer; border-left:4px solid; transition:opacity 0.2s; overflow:hidden; box-sizing:border-box; width:100%; }
+.p05-spectrum-row { border-radius:var(--radius-md); margin-bottom:var(--space-sm); cursor:pointer; border-left:4px solid; transition:opacity 0.2s; box-sizing:border-box; width:100%; }
 .p05-spectrum-main { display:flex; align-items:center; gap:var(--space-md); padding:var(--space-md); }
 .p05-spectrum-dot { width:12px; height:12px; border-radius:50%; flex-shrink:0; }
 .p05-spectrum-label { font-weight:700; font-size:0.95rem; }
 .p05-spectrum-example { font-size:0.82rem; color:var(--text-on-dark-3); margin-top:2px; }
-.p05-spectrum-toggle { margin-left:auto; font-size:0.8rem; color:var(--text-on-dark-3); transition:transform 0.3s; }
-.p05-spectrum-detail { padding:0 var(--space-md) var(--space-md); font-size:0.88rem; color:var(--text-on-dark-2); line-height:1.7; border-top:1px solid rgba(255,255,255,0.08); overflow-wrap:break-word; word-break:break-word; box-sizing:border-box; }
+.p05-spectrum-toggle { margin-left:auto; font-size:0.8rem; color:var(--text-on-dark-3); transition:transform 0.3s; flex-shrink:0; }
+.p05-spectrum-detail { max-height:0; overflow:hidden; transition:max-height 0.35s ease; font-size:0.88rem; color:var(--text-on-dark-2); line-height:1.7; box-sizing:border-box; }
+.p05-spectrum-detail.open { max-height:200px; }
+.p05-spectrum-detail-inner { padding:0 var(--space-md) var(--space-md); border-top:1px solid rgba(255,255,255,0.08); overflow-wrap:break-word; word-break:break-word; }
 
 /* S3 情景练习 */
 .p05-quiz-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:var(--space-md); max-width:960px; margin:0 auto; }
@@ -349,7 +351,7 @@ function drawSpectrum() {
         </div>
         <div class="p05-spectrum-toggle">▼</div>
       </div>
-      <div class="p05-spectrum-detail" style="display:none;">${escHtml(layer.desc)}</div>`;
+      <div class="p05-spectrum-detail"><div class="p05-spectrum-detail-inner">${escHtml(layer.desc)}</div></div>`;
     container.appendChild(row);
 
     const mainEl = row.querySelector('.p05-spectrum-main');
@@ -357,8 +359,8 @@ function drawSpectrum() {
     const toggleEl = row.querySelector('.p05-spectrum-toggle');
 
     const handler = () => {
-      const isOpen = detailEl.style.display !== 'none';
-      detailEl.style.display = isOpen ? 'none' : 'block';
+      const isOpen = detailEl.classList.contains('open');
+      detailEl.classList.toggle('open', !isOpen);
       toggleEl.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
     };
     mainEl.addEventListener('click', handler);

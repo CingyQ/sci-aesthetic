@@ -23,7 +23,7 @@ export function render() {
 
 /* S1 CDTF 粘性滚动 */
 .p02-cdtf-body { display:flex; align-items:flex-start; position:relative; gap:var(--space-xl); max-width:1100px; margin:0 auto; }
-.p02-cdtf-left { width:45%; flex-shrink:0; position:sticky; top:0; height:100vh; display:flex; align-items:center; }
+.p02-cdtf-left { width:45%; flex-shrink:0; will-change:transform; }
 .p02-cdtf-right { flex:1; min-width:0; }
 .p02-cdtf-prompt-box { background:var(--bg-dark-elevated); border-radius:var(--radius-md); padding:var(--space-md); border:1px solid var(--border-dark); position:relative; }
 .p02-cdtf-prompt-box h3 { color:var(--module-2); font-size:var(--text-small); font-weight:600; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:var(--space-sm); }
@@ -91,7 +91,7 @@ export function render() {
 /* 响应式 */
 @media (max-width:900px) {
   .p02-cdtf-body { flex-direction:column; }
-  .p02-cdtf-left { width:100%; position:static; height:auto; }
+  .p02-cdtf-left { width:100%; transform:none !important; }
   .p02-cdtf-panel { min-height:auto; opacity:1; padding:var(--space-lg) 0; }
   .p02-compare-row { grid-template-columns:1fr; }
   .p02-iter-detail-grid { grid-template-columns:1fr; }
@@ -260,22 +260,47 @@ export function init() {
     });
   });
 
-  // ── S1: CDTF 面板切换（左侧通过 CSS sticky 固定，无需 JS translateY）──
+  // ── S1: CDTF 粘性滚动 ──
+  // 仅在桌面宽度下启用 JS sticky，移动端 CSS 已重置 transform
   if (window.innerWidth > 900) {
     const bodyEl = document.getElementById('p02-cdtf-body');
+    const leftEl = document.getElementById('p02-cdtf-left');
     const panels = document.querySelectorAll('.p02-cdtf-panel');
     const segs   = document.querySelectorAll('.p02-seg');
-    if (bodyEl && panels.length) {
-      const PANEL_COUNT = panels.length;
+    if (bodyEl && leftEl && panels.length) {
+      const PANEL_COUNT = panels.length; // 4
+      const MIN_OFFSET = 40; // 最小顶部间距（px），防止紧贴视口顶部
       let ticking = false;
       let currentPanel = 0;
+      // Cache once after DOM render to avoid repeated layout reflows on scroll
+      let cachedBodyH  = bodyEl.offsetHeight;
+      let cachedLeftH  = leftEl.offsetHeight;
+      // 居中偏移：使面板垂直居中于视口，不低于 MIN_OFFSET
+      let cachedOffset = Math.max(MIN_OFFSET, (window.innerHeight - cachedLeftH) / 2);
+      let maxTrans     = Math.max(0, cachedBodyH - cachedLeftH - cachedOffset);
+
+      // Recompute on resize so sticky scroll stays correct after viewport changes
+      let resizeTimer = null;
+      const onResize = () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          cachedBodyH  = bodyEl.offsetHeight;
+          cachedLeftH  = leftEl.offsetHeight;
+          cachedOffset = Math.max(MIN_OFFSET, (window.innerHeight - cachedLeftH) / 2);
+          maxTrans     = Math.max(0, cachedBodyH - cachedLeftH - cachedOffset);
+        }, 150);
+      };
+      window.addEventListener('resize', onResize, { passive: true });
+      _scrollHandlers.push({ fn: onResize, el: window, event: 'resize' });
 
       function updateCDTF() {
         if (ticking) return;
         ticking = true;
         requestAnimationFrame(() => {
           const bodyRect = bodyEl.getBoundingClientRect();
+          // scrolledPast > 0 when body top has crossed viewport top (sticky active)
           const scrolledPast = Math.max(0, -bodyRect.top);
+          leftEl.style.transform = `translateY(${cachedOffset + Math.min(scrolledPast, maxTrans)}px)`;
           const panelIdx = Math.min(PANEL_COUNT - 1, Math.max(0, Math.floor(scrolledPast / window.innerHeight)));
           if (panelIdx !== currentPanel) {
             currentPanel = panelIdx;
