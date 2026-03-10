@@ -144,7 +144,7 @@ export function render() {
   <div class="content-wrapper">
     <div class="reading-wrapper" style="text-align:center;margin-bottom:var(--space-2xl);">
       <h2 style="font-family:var(--font-display);font-size:var(--text-title);font-weight:700;letter-spacing:-0.02em;color:var(--text-on-dark);">工具生态速览（2026）</h2>
-      <p style="color:var(--text-on-dark-2);margin-top:var(--space-sm);font-size:var(--text-body);line-height:1.6;">按任务类型理解工具能力，不是逐工具介绍</p>
+      <p style="color:var(--text-on-dark-2);margin-top:var(--space-sm);font-size:var(--text-body);line-height:1.6;">按任务类型理解各工具的能力边界</p>
     </div>
     <div class="p01-matrix-wrap"><div id="p01-matrix"></div></div>
     <div id="p01-tooltip" class="p01-matrix-tooltip"></div>
@@ -295,9 +295,9 @@ export function init() {
   fadeIn(document.querySelectorAll('#p01-s2 .reading-wrapper, #p01-s2 .p01-quiz-card'), { stagger:0.07, y:30 });
 
   // ── 4. S3: 能力矩阵 ──
-  const TOOLS = ['GPT Image 1.5','Midjourney v7','FLUX 1.1 Pro','Recraft V3 SVG','StarVector','Mermaid AI'];
+  const TOOLS = ['GPT Image 1.5','Midjourney v7','FLUX 1.1 Pro','Recraft V3 SVG','StarVector','Mermaid AI','Nano Banana'];
   const TASKS = ['概念示意图','流程图','数据图辅助','图标/素材'];
-  const SCORES = [[2,1,0,2],[2,0,0,2],[2,0,0,2],[2,1,1,2],[1,2,0,1],[0,2,0,0]];
+  const SCORES = [[2,1,0,2],[2,0,0,2],[2,0,0,2],[2,1,1,2],[1,2,0,1],[0,2,0,0],[2,1,0,2]];
   const DESCS = [
     ['优秀的概念图生成，风格多样','能生成流程图但精确度有限','不建议生成精确数据图','可生成精美图标'],
     ['艺术风格强，适合综述封面','不擅长结构化流程图','不适合','高质量图标素材'],
@@ -305,6 +305,7 @@ export function init() {
     ['支持SVG直出，概念图效果佳','可生成简单流程图SVG','有限支持，仍需处理','直接输出矢量，最适合图标'],
     ['专注位图转矢量，概念图能力有限','擅长转换流程图为SVG','不适合','可将位图图标转矢量'],
     ['不适合非结构化概念图','最强流程图工具，自然语言→可编辑图','不适合','不适合'],
+    ['基于 Gemini 模型，特别擅长环境科学场景概念图生成，本项目主要使用工具','可生成结构化流程图，结果稳定可控','不适合生成含精确数值的数据图表','可生成高质量科研图标和场景素材'],
   ];
   const EMOJI = ['❌','⚠️','✅'];
   const matrixEl = document.getElementById('p01-matrix');
