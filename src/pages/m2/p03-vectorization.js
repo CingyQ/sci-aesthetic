@@ -319,7 +319,10 @@ function renderTraceSim(threshold, pathPct, corners, noise) {
   const container = document.getElementById('p03-trace-preview');
   if (!container) return;
   const d3 = window.d3;
-  if (!d3) return;
+  if (!d3) {
+    container.innerHTML = '<p style="color:rgba(255,255,255,0.4);text-align:center;padding:2rem;font-size:0.85rem;">D3 未加载，无法渲染预览</p>';
+    return;
+  }
   const W = 400, H = 300;
   while (container.firstChild) container.removeChild(container.firstChild);
   const svg = d3.select(container).append('svg')
@@ -414,6 +417,7 @@ export function init() {
     { id: 'p03-noise',     valId: 'p03-val-noise',     key: 'noise' },
   ];
   const simState = { threshold: 80, paths: 50, corners: 50, noise: 30 };
+  let simRafId = null;
 
   sliderIds.forEach(({ id, valId, key }) => {
     const el = document.getElementById(id);
@@ -424,7 +428,12 @@ export function init() {
       const v = parseInt(el.value, 10);
       simState[key] = v;
       if (valEl) valEl.textContent = v;
-      renderTraceSim(simState.threshold, simState.paths, simState.corners, simState.noise);
+      // rAF debounce: cancel previous frame to avoid flooding D3 with 7500 DOM mutations per event
+      if (simRafId) cancelAnimationFrame(simRafId);
+      simRafId = requestAnimationFrame(() => {
+        renderTraceSim(simState.threshold, simState.paths, simState.corners, simState.noise);
+        simRafId = null;
+      });
     };
 
     el.addEventListener('input', handler);
