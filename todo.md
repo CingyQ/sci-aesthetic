@@ -90,6 +90,15 @@
 - [x] m2-p5 伦理版权学术规范（期刊政策交互对比表✅⚠️❌ + 5 层合规光谱 D3 + 8-10 题情景判断练习 + AI 声明模板生成器中英文 CopyButton）
 - [x] m2-p6 端到端实战三案例（案例选择器 + 水污染GA StickySteps[占位符] + 微塑料迁移方法图 Mermaid+AI[占位符] + 碳循环综述概念图[占位符] + 经验总结对比表）
 
+## Phase 5.1: M2 Bug Fix（移动端适配 + Mermaid + 矩阵 + 折叠框）
+
+- [x] p01：工具矩阵副标题清理 + 补充 Nano Banana
+- [x] p02：CDTF 粘性左面板顶部偏移修复（80px）
+- [x] p04：Mermaid 图 max-height + 移除 max-width 限制，移动端可滚动
+- [x] p05：期刊政策表移动端全宽 + 折叠框宽度稳定
+- [x] p06：Mermaid 流程图 max-height + GA 占位符改为 16/9
+- [x] p03：举一反三检查同类问题 — 已无需修改
+
 ## Phase 5.5: M2 素材生成与替换（Nano Banana 统一批次）
 - [ ] 用 Nano Banana (Gemini on OpenRouter) 按 content-outline.md 中的素材规划批量生成 ~53 张环境科学主题图
 - [ ] 替换 m2-p1 ~ m2-p6 中所有占位符为实际 AI 生成图
@@ -138,6 +147,7 @@
 | Phase 4 模块一 | ✅ 10/10 | m1-p1~p10 全部完成 |
 | Phase 4.5 M1 审计 | ✅ 完成 | Hero/Footer/CSS/动画统一 + 文档更新 |
 | Phase 5 模块二 | ✅ 完成 | 6/6 页完成，占位符待 Phase 5.5 替换 |
+| Phase 5.1 M2 Bug Fix | ✅ 完成 | 移动端适配 + Mermaid 优化 + 工具矩阵补充 |
 | Phase 5.5 M2 素材 | ⏳ 待开始 | Nano Banana 批量生成 ~53 张环境科学图 |
 | Phase 6 模块三 | ⏳ 待开始 | |
 | Phase 7 模块四 | ⏳ 待开始 | |
