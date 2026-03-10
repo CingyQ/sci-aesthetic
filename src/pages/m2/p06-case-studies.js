@@ -258,8 +258,8 @@ export function render() {
 .p06-step-tip.dark  { background:rgba(184,184,232,0.08); color:var(--text-on-dark-2); }
 
 /* ── S3 Mermaid ── */
-.p06-mermaid-wrap { background:var(--bg-dark-elevated); border-radius:var(--radius-lg); padding:var(--space-lg); border:1px solid var(--border-dark); min-height:180px; max-height:400px; overflow:auto; -webkit-overflow-scrolling:touch; max-width:1100px; margin:0 auto var(--space-2xl); }
-.p06-mermaid-wrap svg { width:auto !important; max-width:none; height:auto; min-height:160px; }
+.p06-mermaid-wrap { background:var(--bg-dark-elevated); border-radius:var(--radius-lg); padding:var(--space-lg); border:1px solid var(--border-dark); min-height:180px; max-height:400px; overflow:auto; -webkit-overflow-scrolling:touch; touch-action:pan-x pan-y; max-width:1100px; margin:0 auto var(--space-2xl); }
+.p06-mermaid-wrap svg { width:auto !important; max-width:none; height:auto; min-height:160px; display:block; }
 .p06-mermaid-hint { display:none; }
 @media (max-width:768px) { .p06-mermaid-hint { display:block; text-align:center; font-size:var(--text-caption); color:var(--text-on-dark-3); margin-top:calc(-1 * var(--space-md)); margin-bottom:var(--space-md); } }
 
@@ -284,6 +284,9 @@ export function render() {
 .p06-takeaway-title { font-size:var(--text-body); font-weight:700; color:var(--text-on-dark); margin-bottom:var(--space-sm); }
 .p06-takeaway-desc { font-size:0.85rem; color:var(--text-on-dark-2); line-height:1.7; }
 
+/* ── 全局溢出防护（任何宽度下）── */
+#p06-s3, #p06-s5 { overflow-x:hidden; }
+
 /* ── responsive ── */
 @media (max-width:900px) {
   .p06-case-selector { grid-template-columns:1fr; }
@@ -294,26 +297,26 @@ export function render() {
 }
 @media (max-width:768px) {
   #p06-s1, #p06-s2, #p06-s3, #p06-s4, #p06-s5 { scroll-margin-top:56px; }
+  /* 案例 02：步骤卡片减少内边距 */
   .p06-steps-grid.cols-4 { grid-template-columns:1fr; }
   .p06-steps-grid.cols-5 { grid-template-columns:1fr; }
-  /* 步骤卡片移动端减少内边距，防止内容溢出 */
-  .p06-step-card { padding:var(--space-md); }
-  /* Mermaid 容器：限制高度，内部横向滚动 */
-  .p06-mermaid-wrap { max-height:260px; padding:var(--space-sm); }
-  .p06-mermaid-wrap svg { min-height:120px; }
-  /* 规律总结表格：全宽展开，第一列允许换行 */
-  .p06-summary-wrap {
-    margin-left: calc(-1 * var(--space-xl));
-    margin-right: calc(-1 * var(--space-xl));
-    width: calc(100% + 2 * var(--space-xl));
-    max-width: 100vw;
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
-  }
+  .p06-step-card { padding:var(--space-md) !important; }
+  .p06-step-icon { font-size:1.4rem; }
+  .p06-step-title { font-size:0.9rem; }
+  .p06-step-desc  { font-size:0.8rem; }
+  .p06-step-tip   { font-size:0.72rem; }
+  /* 案例 02：Mermaid 固定高度+横向滚动，防 SVG 撑破外层 */
+  .p06-mermaid-wrap { max-height:220px; min-height:120px; padding:var(--space-sm); }
+  .p06-mermaid-wrap svg { height:180px !important; width:auto !important; min-height:unset; min-width:360px; }
+  /* 案例 02：最终图片容器全宽 */
+  .p06-ph-wrap { margin:0 0 var(--space-xl); }
+  /* 规律总结：表格在 section 内水平滚动，无需全宽展开 */
+  .p06-summary-wrap { box-sizing:border-box; max-width:100%; }
   .p06-summary-table th,
-  .p06-summary-table td { padding:8px 10px; font-size:0.78rem; }
-  .p06-summary-table td:first-child { white-space:normal; font-size:0.78rem; }
+  .p06-summary-table td { padding:7px 8px; font-size:0.76rem; }
+  .p06-summary-table td:first-child { white-space:normal; font-size:0.76rem; min-width:72px; }
+  /* takeaway 卡片已在 900px 改为 1 列，移动端减少内边距 */
+  .p06-takeaway-card { padding:var(--space-md); }
 }
 </style>
 
