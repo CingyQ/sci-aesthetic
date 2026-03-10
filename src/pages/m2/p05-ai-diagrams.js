@@ -133,18 +133,18 @@ export function render() {
 .p05-cell-no { color:#dc2626; font-weight:600; }
 
 /* 政策弹出框 */
-.p05-policy-popup { position:fixed; background:var(--bg-light-elevated,#fff); border:1px solid var(--border-light); border-radius:var(--radius-md); padding:var(--space-md); max-width:320px; font-size:0.85rem; line-height:1.6; box-shadow:var(--shadow-light); z-index:500; display:none; color:var(--text-on-light-2); }
+.p05-policy-popup { position:fixed; background:var(--bg-light-elevated,#fff); border:1px solid var(--border-light); border-radius:var(--radius-md); padding:var(--space-md); max-width:min(320px, calc(100vw - 32px)); font-size:0.85rem; line-height:1.6; box-shadow:var(--shadow-light); z-index:500; display:none; color:var(--text-on-light-2); }
 .p05-policy-popup h4 { color:var(--text-on-light); font-size:0.9rem; font-weight:700; margin-bottom:8px; }
 .p05-policy-popup-close { float:right; cursor:pointer; color:var(--text-on-light-3,#999); font-size:1.1rem; line-height:1; background:none; border:none; padding:0; }
 
 /* S2 合规光谱 */
-.p05-spectrum-row { border-radius:var(--radius-md); margin-bottom:var(--space-sm); cursor:pointer; border-left:4px solid; transition:opacity 0.2s; }
+.p05-spectrum-row { border-radius:var(--radius-md); margin-bottom:var(--space-sm); cursor:pointer; border-left:4px solid; transition:opacity 0.2s; overflow:hidden; box-sizing:border-box; width:100%; }
 .p05-spectrum-main { display:flex; align-items:center; gap:var(--space-md); padding:var(--space-md); }
 .p05-spectrum-dot { width:12px; height:12px; border-radius:50%; flex-shrink:0; }
 .p05-spectrum-label { font-weight:700; font-size:0.95rem; }
 .p05-spectrum-example { font-size:0.82rem; color:var(--text-on-dark-3); margin-top:2px; }
 .p05-spectrum-toggle { margin-left:auto; font-size:0.8rem; color:var(--text-on-dark-3); transition:transform 0.3s; }
-.p05-spectrum-detail { padding:0 var(--space-md) var(--space-md); font-size:0.88rem; color:var(--text-on-dark-2); line-height:1.7; border-top:1px solid rgba(255,255,255,0.08); }
+.p05-spectrum-detail { padding:0 var(--space-md) var(--space-md); font-size:0.88rem; color:var(--text-on-dark-2); line-height:1.7; border-top:1px solid rgba(255,255,255,0.08); overflow-wrap:break-word; word-break:break-word; box-sizing:border-box; }
 
 /* S3 情景练习 */
 .p05-quiz-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:var(--space-md); max-width:960px; margin:0 auto; }
@@ -180,6 +180,13 @@ export function render() {
 @media (max-width:768px) {
   #p05-s1, #p05-s2, #p05-s3, #p05-s4 { scroll-margin-top:56px; }
   .p05-quiz-grid { grid-template-columns:1fr; }
+  .p05-table-wrap {
+    margin-left: -32px;
+    margin-right: -32px;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
 }
 </style>
 
