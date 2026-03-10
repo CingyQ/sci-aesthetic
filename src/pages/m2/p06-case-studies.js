@@ -56,7 +56,7 @@ async function renderMermaid(code, containerId) {
 // ─── 数据常量 ────────────────────────────────────────────────────────────────
 
 const CASE_CARDS = [
-  { num: '01', title: '水污染 Graphical Abstract', brief: '期刊GA制作全流程，从论文摘要到投稿级GA，使用Nano Banana + Vectorizer.AI', target: '#p06-s2' },
+  { num: '01', title: '水污染 Graphical Abstract', brief: '期刊GA制作全流程，从论文摘要到投稿级GA，使用 Nano Banana 2 + Vectorizer.AI', target: '#p06-s2' },
   { num: '02', title: '微塑料迁移方法图', brief: 'Methods部分流程图制作，Mermaid AI生成可编辑流程图，展示微塑料迁移路径', target: '#p06-s3' },
   { num: '03', title: '碳循环综述概念图', brief: '综述文章框架图制作，多轮CDTF迭代和AI辅助，从框架到精修全流程', target: '#p06-s4' },
 ];
@@ -71,8 +71,8 @@ const CASE1_STEPS = [
   { num: '03', title: '撰写CDTF Prompt', icon: '✍️',
     desc: '[Context]中国流域重金属污染研究，投稿Science of The Total Environment\n[Description]从河流上游采矿区→中游农业区→下游城市区的Cd污染梯度，EDTA植物修复机制\n[Technique]蓝绿配色，卫星视角俯瞰，数字标注污染浓度\n[Format]1.8:1，300DPI，白色背景',
     tip: '期刊要求的GA尺寸不同，先查目标期刊要求再设置Format。' },
-  { num: '04', title: 'Nano Banana 生成', icon: '🤖',
-    desc: '使用 Nano Banana（Gemini on OpenRouter）生成3个备选版本。选择构图最清晰的版本进入下一步。',
+  { num: '04', title: 'Nano Banana 2 生成', icon: '🤖',
+    desc: '使用 Nano Banana 2 生成3个备选版本。选择构图最清晰的版本进入下一步。',
     tip: '生成3-5个版本，从中选择而非修改到满意，成本更低效率更高。' },
   { num: '05', title: '迭代精修（3轮）', icon: '🔄',
     desc: 'Round 1：调整色彩，将默认色改为色盲友好方案\nRound 2：添加污染浓度数字标注，调整字体大小\nRound 3：优化图例位置，移除冗余信息',
@@ -81,7 +81,7 @@ const CASE1_STEPS = [
     desc: '用Vectorizer.AI转为SVG→Illustrator清理路径→统一色板→重写文字标注→调整到86mm宽度',
     tip: '从AI图到出版级图的"最后一公里"——矢量化+精修通常需要45-90分钟。' },
   { num: '07', title: '期刊导出+AI声明', icon: '📤',
-    desc: '导出PNG（300DPI，RGB）+ PDF（矢量）\n在图注末尾添加：This Graphical Abstract was created with AI assistance (Nano Banana, 2025), verified by authors.',
+    desc: '导出PNG（300DPI，RGB）+ PDF（矢量）\n在图注末尾添加：This Graphical Abstract was created with AI assistance (Nano Banana 2, 2025), verified by authors.',
     tip: '保留所有prompt文本，便于后续修改和声明审核。' },
 ];
 
