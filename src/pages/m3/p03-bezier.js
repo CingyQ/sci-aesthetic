@@ -775,6 +775,7 @@ function initMainEditor() {
       const idx = parseInt(btn.dataset.preset, 10);
       if (PRESETS[idx]) {
         bezierState.points = PRESETS[idx].points.map(p => ({ ...p }));
+        bezierState.dragging = null;
         bezierState.mode = 'cubic';
         document.querySelectorAll('.p03-preset-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
