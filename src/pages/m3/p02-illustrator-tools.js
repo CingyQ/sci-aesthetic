@@ -359,7 +359,7 @@ export function render() {
 .p02-browser { display:flex; gap:var(--space-lg); align-items:flex-start; }
 .p02-tool-sidebar { width:260px; flex-shrink:0; }
 .p02-cat-tabs { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:var(--space-md); }
-.p02-cat-tab { padding:6px 14px; border-radius:var(--radius-full); border:1.5px solid var(--border-light); background:transparent; color:var(--text-on-light-2); font-size:0.78rem; cursor:pointer; transition:all 0.2s; min-height:36px; font-family:var(--font-heading); white-space:nowrap; }
+.p02-cat-tab { padding:6px 14px; border-radius:var(--radius-full); border:1.5px solid var(--border-light); background:transparent; color:var(--text-on-light-2); font-size:0.78rem; cursor:pointer; transition:all 0.2s; min-height:44px; font-family:var(--font-heading); white-space:nowrap; }
 .p02-cat-tab:hover { border-color:var(--module-3); color:var(--text-on-light); }
 .p02-cat-tab.active { background:rgba(149,213,178,0.12); border-color:var(--module-3); color:var(--module-3); font-weight:600; }
 .p02-tool-list { display:flex; flex-direction:column; gap:4px; max-height:480px; overflow-y:auto; }
