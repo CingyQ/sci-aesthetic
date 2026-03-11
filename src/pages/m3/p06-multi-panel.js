@@ -1133,7 +1133,6 @@ export function render() {
   <p class="page-footer-desc">掌握多面板 Figure 的排版规范，让你的论文图表达到顶刊标准。</p>
   <div class="page-footer-nav">
     <button class="btn-ghost" id="p06-btn-prev">← SVG 编辑与优化</button>
-    <button class="btn-ghost" id="p06-home-btn">返回模块首页</button>
     <button class="btn-primary" id="p06-btn-next">资源与工具 →</button>
   </div>
 </section>

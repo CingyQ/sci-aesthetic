@@ -595,7 +595,6 @@ export function render() {
   <p class="page-footer-desc">从数据到发表级图表，美化不是装饰，是科学表达的精准度。</p>
   <div class="page-footer-nav">
     <button class="btn-ghost" id="p04-prev-btn">← 贝塞尔曲线</button>
-    <button class="btn-ghost" id="p04-home-btn">返回模块首页</button>
     <button class="btn-primary" id="p04-next-btn">SVG 编辑与优化 →</button>
   </div>
 </section>

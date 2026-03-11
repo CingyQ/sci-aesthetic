@@ -540,7 +540,6 @@ export function render() {
   <p class="page-footer-desc">熟练掌握 Illustrator 核心工具，让创作速度匹配你的思维速度。</p>
   <div class="page-footer-nav">
     <button class="btn-ghost" id="p02-prev-btn">← 矢量 vs 位图</button>
-    <button class="btn-ghost" id="p02-home-btn">返回模块首页</button>
     <button class="btn-primary" id="p02-next-btn">贝塞尔曲线 →</button>
   </div>
 </section>

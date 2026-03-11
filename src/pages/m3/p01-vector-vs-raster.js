@@ -746,8 +746,7 @@ export function render() {
   <h2 class="page-footer-quote">格式选择，是科研表达的第一道门槛。</h2>
   <p class="page-footer-desc">掌握矢量与位图的本质区别，是科研图形制作的第一步。</p>
   <div class="page-footer-nav">
-    <button class="btn-ghost" id="p01m3-nav-prev">← 模块二完结</button>
-    <button class="btn-ghost" id="p01m3-nav-home">返回模块首页</button>
+    <button class="btn-ghost" id="p01m3-nav-prev">← 端到端实战：三个完整案例</button>
     <button class="btn-primary" id="p01m3-nav-next">Illustrator 工具 →</button>
   </div>
 </section>

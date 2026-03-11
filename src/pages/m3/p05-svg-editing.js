@@ -801,7 +801,6 @@ export function render() {
   <p class="page-footer-desc">直接编辑 SVG 代码，让你的科研图形精确到每一个像素。</p>
   <div class="page-footer-nav">
     <button class="btn-ghost" id="p05-prev-btn">← 图表美化实战</button>
-    <button class="btn-ghost" id="p05-home-btn">返回模块首页</button>
     <button class="btn-primary" id="p05-next-btn">多面板 Figure →</button>
   </div>
 </section>

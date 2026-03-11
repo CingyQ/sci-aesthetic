@@ -534,7 +534,6 @@ Z</pre>
   <p class="page-footer-desc">贝塞尔曲线是矢量绘图的数学基础，也是专业科研图形的灵魂所在。</p>
   <div class="page-footer-nav">
     <button class="btn-ghost" id="p03-prev-btn">← Illustrator 工具</button>
-    <button class="btn-ghost" id="p03-home-btn">返回模块首页</button>
     <button class="btn-primary" id="p03-next-btn">图表美化实战 →</button>
   </div>
 </section>
