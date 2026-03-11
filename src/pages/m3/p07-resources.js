@@ -958,16 +958,14 @@ export function render() {
   </section>
 
   <!-- ══════ Footer CTA ══════ -->
-  <section class="section-dark section-footer-cta" id="p07-footer">
-    <div class="section-inner" style="text-align:center;">
-      <h2 class="page-footer-quote">工欲善其事，必先利其器——选对工具，事半功倍</h2>
-      <p style="color:var(--text-on-dark-2);margin-top:var(--space-sm);max-width:540px;margin-left:auto;margin-right:auto;line-height:1.8;">
-        模块三已全部完成。掌握矢量设计工具链，让你的科研图形达到发表级水准。
-      </p>
-      <div class="footer-nav-row" style="margin-top:var(--space-lg);display:flex;gap:var(--space-md);justify-content:center;flex-wrap:wrap;">
-        <button class="btn-outline-light" id="p07-prev-btn">← 多面板 Figure 组合</button>
-        <button class="btn-primary" id="p07-next-btn">进入模块四 →</button>
-      </div>
+  <section class="page-footer-cta">
+    <p class="page-footer-num">07 / 07</p>
+    <h2 class="page-footer-quote">工欲善其事，必先利其器——选对工具，事半功倍。</h2>
+    <p class="page-footer-desc">模块三「矢量绘图与设计」到此完结。模块四将带你进入学术演示设计的世界。</p>
+    <div class="page-footer-nav">
+      <button class="btn-ghost" id="p07-prev-btn">← 多面板 Figure 组合</button>
+      <button class="btn-ghost" id="p07-home-btn">返回模块首页</button>
+      <button class="btn-primary" id="p07-next-btn">进入模块四 →</button>
     </div>
   </section>
 </div>
@@ -1238,6 +1236,7 @@ export function init() {
   // ── Footer ──
   fadeIn('#p07-footer', { trigger: '#p07-footer' });
   addEvt(document.getElementById('p07-prev-btn'), 'click', () => navigateTo('m3-p6'));
+  addEvt(document.getElementById('p07-home-btn'), 'click', () => navigateTo('m3-p1'));
   addEvt(document.getElementById('p07-next-btn'), 'click', () => navigateTo('m4-p1'));
 }
 

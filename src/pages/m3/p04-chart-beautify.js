@@ -589,16 +589,16 @@ export function render() {
 <!-- ══════════════════════════════════════════════════════ -->
 <!--  Footer CTA                                            -->
 <!-- ══════════════════════════════════════════════════════ -->
-<footer class="section-dark page-footer-cta p04-footer" id="p04-footer">
-  <div class="flex-col-center" style="gap:var(--space-lg);max-width:680px;padding:0 var(--space-lg);">
-    <div class="page-footer-num" style="color:var(--module-3);">Module 03 / 04</div>
-    <h2 class="page-footer-quote">美化不是装饰，是让数据被正确理解的科学责任。</h2>
-    <div class="page-footer-nav">
-      <button class="btn-outline-light" id="p04-prev-btn">← 贝塞尔曲线</button>
-      <button class="btn-primary" id="p04-next-btn" style="background:var(--module-3);color:#000;">SVG 编辑优化 →</button>
-    </div>
+<section class="page-footer-cta">
+  <p class="page-footer-num">04 / 07</p>
+  <h2 class="page-footer-quote">同样的数据，好的设计让它开口说话。</h2>
+  <p class="page-footer-desc">从数据到发表级图表，美化不是装饰，是科学表达的精准度。</p>
+  <div class="page-footer-nav">
+    <button class="btn-ghost" id="p04-prev-btn">← 贝塞尔曲线</button>
+    <button class="btn-ghost" id="p04-home-btn">返回模块首页</button>
+    <button class="btn-primary" id="p04-next-btn">SVG 编辑与优化 →</button>
   </div>
-</footer>
+</section>
 </div>
   `;
 }
@@ -1157,15 +1157,17 @@ export function init() {
 
   // ── Footer 导航 ──
   const prevBtn = document.getElementById('p04-prev-btn');
+  const homeBtn = document.getElementById('p04-home-btn');
   const nextBtn = document.getElementById('p04-next-btn');
   if (prevBtn) addEvent(prevBtn, 'click', () => navigateTo('m3-p3'));
+  if (homeBtn) addEvent(homeBtn, 'click', () => navigateTo('m3-p1'));
   if (nextBtn) addEvent(nextBtn, 'click', () => navigateTo('m3-p5'));
 
   // ── ScrollTrigger fadeIn ──
   fadeIn('#p04-s1 .p04-s1-heading', { start: 'top 85%' });
   fadeIn('#p04-s2 .p04-s2-heading', { start: 'top 85%' });
   fadeIn('#p04-s3 .p04-s3-heading', { start: 'top 85%' });
-  fadeIn('#p04-footer .page-footer-quote', { start: 'top 85%', y: 30 });
+  fadeIn('.page-footer-cta .page-footer-quote', { start: 'top 85%', y: 30 });
 }
 
 // ══════════════════════════════════════════════════════

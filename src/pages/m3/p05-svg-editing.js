@@ -795,14 +795,14 @@ export function render() {
 </section>
 
 <!-- ── Footer CTA ── -->
-<section class="section-dark page-footer-cta" id="p05-footer">
-  <div class="flex-col-center" style="gap:var(--space-lg);text-align:center;">
-    <p class="page-footer-num">Module 03 / 05</p>
-    <h2 class="page-footer-quote">SVG 是矢量图的灵魂——读懂代码，就是读懂设计。</h2>
-    <div class="page-footer-nav">
-      <button class="btn-outline-light" id="p05-prev-btn">← 图表美化实战</button>
-      <button class="btn-primary" id="p05-next-btn">多面板 Figure →</button>
-    </div>
+<section class="page-footer-cta">
+  <p class="page-footer-num">05 / 07</p>
+  <h2 class="page-footer-quote">SVG 是矢量图的源代码——读懂它，你就拥有了完全的控制权。</h2>
+  <p class="page-footer-desc">直接编辑 SVG 代码，让你的科研图形精确到每一个像素。</p>
+  <div class="page-footer-nav">
+    <button class="btn-ghost" id="p05-prev-btn">← 图表美化实战</button>
+    <button class="btn-ghost" id="p05-home-btn">返回模块首页</button>
+    <button class="btn-primary" id="p05-next-btn">多面板 Figure →</button>
   </div>
 </section>
 
@@ -953,12 +953,14 @@ export function init() {
 
   // ── Footer 导航 ────────────────────────────────────────────────────────────
   const prevBtn = document.getElementById('p05-prev-btn');
+  const homeBtn = document.getElementById('p05-home-btn');
   const nextBtn = document.getElementById('p05-next-btn');
 
   if (prevBtn) addEvt(prevBtn, 'click', () => navigateTo('m3-p4'));
+  if (homeBtn) addEvt(homeBtn, 'click', () => navigateTo('m3-p1'));
   if (nextBtn) addEvt(nextBtn, 'click', () => navigateTo('m3-p6'));
 
-  fadeIn('#p05-footer .page-footer-num, #p05-footer .page-footer-quote, #p05-footer .page-footer-nav');
+  fadeIn('.page-footer-cta .page-footer-num, .page-footer-cta .page-footer-quote, .page-footer-cta .page-footer-nav');
 }
 
 // ─── destroy ──────────────────────────────────────────────────────────────────

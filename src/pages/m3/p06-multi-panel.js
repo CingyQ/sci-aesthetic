@@ -539,8 +539,10 @@ function initQuicknav() {
 // ══════════════════════════════════════════════════════
 function initFooterNav() {
   const prevBtn = document.getElementById('p06-btn-prev');
+  const homeBtn = document.getElementById('p06-home-btn');
   const nextBtn = document.getElementById('p06-btn-next');
   if (prevBtn) addEvt(prevBtn, 'click', () => navigateTo('m3-p5'));
+  if (homeBtn) addEvt(homeBtn, 'click', () => navigateTo('m3-p1'));
   if (nextBtn) addEvt(nextBtn, 'click', () => navigateTo('m3-p7'));
 }
 
@@ -570,7 +572,7 @@ function initScrollAnimations() {
   fadeIn('.p06-journal-card',          { stagger: 0.2,  y: 45, duration: 0.8 });
 
   fadeIn('.page-footer-quote',         { y: 40, duration: 0.9 });
-  fadeIn('.p06-footer-nav',            { y: 25, duration: 0.6 });
+  fadeIn('.page-footer-cta .page-footer-nav', { y: 25, duration: 0.6 });
 }
 
 // ══════════════════════════════════════════════════════
@@ -1125,13 +1127,16 @@ export function render() {
 </section>
 
 <!-- ── Footer CTA ── -->
-<footer class="section-dark" id="p06-footer">
-  <h2 class="page-footer-quote">一张好的多面板图，是你研究故事的目录页</h2>
-  <div class="p06-footer-nav">
-    <button class="p06-nav-btn" id="p06-btn-prev">← SVG 编辑与优化</button>
-    <button class="p06-nav-btn p06-nav-btn--primary" id="p06-btn-next">资源速查手册 →</button>
+<section class="page-footer-cta">
+  <p class="page-footer-num">06 / 07</p>
+  <h2 class="page-footer-quote">一张好的多面板图，是你研究故事的目录页。</h2>
+  <p class="page-footer-desc">掌握多面板 Figure 的排版规范，让你的论文图表达到顶刊标准。</p>
+  <div class="page-footer-nav">
+    <button class="btn-ghost" id="p06-btn-prev">← SVG 编辑与优化</button>
+    <button class="btn-ghost" id="p06-home-btn">返回模块首页</button>
+    <button class="btn-primary" id="p06-btn-next">资源与工具 →</button>
   </div>
-</footer>
+</section>
 </div>`;
 }
 

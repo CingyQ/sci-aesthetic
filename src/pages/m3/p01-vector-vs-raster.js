@@ -741,19 +741,16 @@ export function render() {
 </section>
 
 <!-- ── FOOTER CTA ── -->
-<footer class="page-footer-cta" id="p01m3-footer">
-  <div class="content-wrapper" style="text-align:center;">
-    <p class="page-footer-num">Module 03 / 01</p>
-    <h2 class="page-footer-quote">格式选择，是科研表达的第一道门槛。</h2>
-    <p style="color:var(--text-on-dark-2);font-size:var(--text-body);font-weight:300;line-height:1.8;max-width:540px;margin:0 auto var(--space-lg);">
-      当你下次导出图表时，先问一句：这是像素，还是数学？
-    </p>
-    <div class="page-footer-nav">
-      <button class="btn-outline-light" id="p01m3-nav-prev">← 模块二完结</button>
-      <button class="btn-primary" id="p01m3-nav-next">→ Illustrator 工具</button>
-    </div>
+<section class="page-footer-cta">
+  <p class="page-footer-num">01 / 07</p>
+  <h2 class="page-footer-quote">格式选择，是科研表达的第一道门槛。</h2>
+  <p class="page-footer-desc">掌握矢量与位图的本质区别，是科研图形制作的第一步。</p>
+  <div class="page-footer-nav">
+    <button class="btn-ghost" id="p01m3-nav-prev">← 模块二完结</button>
+    <button class="btn-ghost" id="p01m3-nav-home">返回模块首页</button>
+    <button class="btn-primary" id="p01m3-nav-next">Illustrator 工具 →</button>
   </div>
-</footer>
+</section>
 
 <!-- D3 tooltip -->
 <div class="p01m3-tooltip" id="p01m3-tooltip"></div>
@@ -1463,8 +1460,10 @@ function initFileChart() {
 
 function initFooterNav() {
   const prevBtn = document.getElementById('p01m3-nav-prev');
+  const homeBtn = document.getElementById('p01m3-nav-home');
   const nextBtn = document.getElementById('p01m3-nav-next');
   if (prevBtn) prevBtn.addEventListener('click', () => navigateTo('m2-p6'));
+  if (homeBtn) homeBtn.addEventListener('click', () => navigateTo('m3-p1'));
   if (nextBtn) nextBtn.addEventListener('click', () => navigateTo('m3-p2'));
 }
 
