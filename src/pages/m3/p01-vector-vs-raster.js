@@ -61,7 +61,7 @@ export function render() {
   align-items:start;
 }
 .p01m3-format-card {
-  background:#fff;
+  background:var(--bg-light-elevated);
   border-radius:var(--radius-lg);
   padding:var(--space-lg);
   border:1px solid var(--border-light);
@@ -112,7 +112,7 @@ export function render() {
   margin:0 auto;
 }
 .p01m3-metric-card {
-  background:#fff;
+  background:var(--bg-light-elevated);
   border-radius:var(--radius-lg);
   padding:var(--space-lg);
   border:1px solid var(--border-light);
@@ -1234,6 +1234,10 @@ function initFileChart() {
   const svgEl = document.getElementById('p01m3-file-chart');
   if (!svgEl || !d3) return;
 
+  // 颜色常量（对应 CSS 变量，避免硬编码）
+  const BG_DARK_ELEVATED = '#2d2d2f';  // var(--bg-dark-elevated)
+  const BORDER_DARK = '#424245';       // var(--border-dark)
+
   const tooltip = document.getElementById('p01m3-tooltip');
   const slider = document.getElementById('p01m3-complexity-slider');
   const valDisplay = document.getElementById('p01m3-complexity-val');
@@ -1257,7 +1261,7 @@ function initFileChart() {
       .attr('width', W)
       .attr('height', H)
       .attr('rx', 16)
-      .attr('fill', '#2a2a2d');
+      .attr('fill', BG_DARK_ELEVATED);
 
     const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
@@ -1270,7 +1274,7 @@ function initFileChart() {
       .attr('class', 'grid')
       .call(d3.axisLeft(yScale).ticks(5).tickSize(-width).tickFormat(''))
       .selectAll('line')
-      .attr('stroke', '#3a3a3d')
+      .attr('stroke', BORDER_DARK)
       .attr('stroke-dasharray', '3,3');
     g.select('.grid .domain').remove();
 
@@ -1281,7 +1285,7 @@ function initFileChart() {
       .selectAll('text')
       .attr('fill', '#6e6e73')
       .attr('font-size', '11px');
-    g.select('.domain').attr('stroke', '#424245');
+    g.select('.domain').attr('stroke', BORDER_DARK);
 
     // Y 轴
     g.append('g')
@@ -1393,7 +1397,7 @@ function initFileChart() {
         tooltip.style.opacity = '1';
         tooltip.style.left = (event.clientX + 14) + 'px';
         tooltip.style.top = (event.clientY - 20) + 'px';
-        tooltip.style.whiteSpace = 'pre';
+        tooltip.style.whiteSpace = 'pre-wrap';
         tooltip.textContent = `复杂度 ${xVal}：\n${lines}`;
       }
     }).on('mouseleave', function() {
@@ -1416,7 +1420,7 @@ function initFileChart() {
         tooltip.style.opacity = '1';
         tooltip.style.left = (touch.clientX + 14) + 'px';
         tooltip.style.top = (touch.clientY - 20) + 'px';
-        tooltip.style.whiteSpace = 'pre';
+        tooltip.style.whiteSpace = 'pre-wrap';
         tooltip.textContent = `复杂度 ${xVal}：\n${lines}`;
       }
     }, { passive: false });
