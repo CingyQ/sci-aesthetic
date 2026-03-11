@@ -352,6 +352,7 @@ export function render() {
 .p04-chart-step-label { font-size: 11px; font-family: var(--font-code); color: var(--text-on-light-2); text-align: center; margin-bottom: 8px; letter-spacing: 0.05em; }
 
 @media (max-width: 768px) {
+  #p04-s1, #p04-s2, #p04-s3 { scroll-margin-top: 56px; }
   .p04-steps-body { flex-direction: column; }
   .p04-steps-left {
     width: 100%; height: auto;
