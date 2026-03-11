@@ -979,7 +979,7 @@ function initZoomDemo() {
   }
 
   slider.addEventListener('input', updateZoom, { passive: true });
-  _scrollHandlers.push({ el: slider, fn: updateZoom, opts: { passive: true } });
+  _scrollHandlers.push({ el: slider, type: 'input', fn: updateZoom, opts: { passive: true } });
 }
 
 // ── 决策树（D3）──────────────────────────────────────────────────────────────
@@ -1179,15 +1179,15 @@ function initDecisionTree() {
       backG.append('rect')
         .attr('x', questionX)
         .attr('y', lineY2 + 70)
-        .attr('width', 80)
-        .attr('height', 28)
-        .attr('rx', 14)
+        .attr('width', 100)
+        .attr('height', 44)
+        .attr('rx', 22)
         .attr('fill', 'transparent')
         .attr('stroke', '#d2d2d7')
         .attr('stroke-width', 1);
       backG.append('text')
-        .attr('x', questionX + 40)
-        .attr('y', lineY2 + 88)
+        .attr('x', questionX + 50)
+        .attr('y', lineY2 + 97)
         .attr('text-anchor', 'middle')
         .attr('font-size', '11px')
         .attr('fill', '#6e6e73')
@@ -1225,7 +1225,7 @@ function initDecisionTree() {
     });
   }
   window.addEventListener('resize', onResize, { passive: true });
-  _scrollHandlers.push({ el: window, fn: onResize, opts: { passive: true } });
+  _scrollHandlers.push({ el: window, type: 'resize', fn: onResize, opts: { passive: true } });
 }
 
 // ── 文件大小折线图（D3）──────────────────────────────────────────────────────
@@ -1243,6 +1243,9 @@ function initFileChart() {
   const valDisplay = document.getElementById('p01m3-complexity-val');
 
   const margin = { top: 24, right: 100, bottom: 48, left: 70 };
+
+  // 保存最新一次 drawChart 产生的 updateVLine，供 slider handler 调用
+  let _currentUpdateVLine = null;
 
   function drawChart() {
     const W = svgEl.parentElement ? svgEl.parentElement.clientWidth : 800;
@@ -1425,19 +1428,22 @@ function initFileChart() {
       }
     }, { passive: false });
 
-    // slider 控制竖线
-    if (slider) {
-      const sliderHandler = () => {
-        const v = parseInt(slider.value);
-        if (valDisplay) valDisplay.textContent = v;
-        updateVLine(v);
-      };
-      slider.addEventListener('input', sliderHandler, { passive: true });
-      _scrollHandlers.push({ el: slider, fn: sliderHandler, opts: { passive: true } });
-    }
+    // 把最新的 updateVLine 暴露给 slider handler
+    _currentUpdateVLine = updateVLine;
   }
 
   drawChart();
+
+  // slider 控制竖线（一次性注册，避免 resize 触发 drawChart 时重复注册）
+  if (slider) {
+    const sliderHandler = () => {
+      const v = parseInt(slider.value);
+      if (valDisplay) valDisplay.textContent = v;
+      if (_currentUpdateVLine) _currentUpdateVLine(v);
+    };
+    slider.addEventListener('input', sliderHandler, { passive: true });
+    _scrollHandlers.push({ el: slider, type: 'input', fn: sliderHandler, opts: { passive: true } });
+  }
 
   // resize 重绘
   let chartResizeTicking = false;
@@ -1450,7 +1456,7 @@ function initFileChart() {
     });
   }
   window.addEventListener('resize', onChartResize, { passive: true });
-  _scrollHandlers.push({ el: window, fn: onChartResize, opts: { passive: true } });
+  _scrollHandlers.push({ el: window, type: 'resize', fn: onChartResize, opts: { passive: true } });
 }
 
 // ── Footer 导航 ───────────────────────────────────────────────────────────────
@@ -1466,10 +1472,8 @@ function initFooterNav() {
 
 export function destroy() {
   killAll();
-  _scrollHandlers.forEach(({ el, fn, opts }) => {
-    el.removeEventListener('scroll', fn, opts);
-    el.removeEventListener('input', fn, opts);
-    el.removeEventListener('resize', fn, opts);
+  _scrollHandlers.forEach(({ el, type, fn, opts }) => {
+    el.removeEventListener(type, fn, opts);
   });
   _scrollHandlers = [];
   _observers.forEach(o => o.disconnect());
