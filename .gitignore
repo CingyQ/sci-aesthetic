@@ -2,3 +2,9 @@ node_modules/
 dist/
 .DS_Store
 *.local
+
+# 本地开发文档，不推送到远端
+CLAUDE.md
+commands.md
+content-outline.md
+design-spec.md
