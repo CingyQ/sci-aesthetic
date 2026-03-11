@@ -1037,7 +1037,7 @@ function initDecisionTree() {
         .attr('y', -5)
         .attr('text-anchor', 'middle')
         .attr('font-size', '11px')
-        .attr('fill', '#9a9690')
+        .attr('fill', '#95D5B2')
         .attr('font-family', 'var(--font-heading)')
         .text('路径：' + breadcrumb);
     }
@@ -1049,9 +1049,9 @@ function initDecisionTree() {
       .attr('width', questionW)
       .attr('height', questionH)
       .attr('rx', 12)
-      .attr('fill', '#fff')
+      .attr('fill', '#1d1d1f')
       .attr('stroke', '#95D5B2')
-      .attr('stroke-width', 1.5);
+      .attr('stroke-width', 2);
 
     g.append('text')
       .attr('x', W / 2)
@@ -1059,7 +1059,7 @@ function initDecisionTree() {
       .attr('text-anchor', 'middle')
       .attr('font-size', isMobile ? '13px' : '15px')
       .attr('font-weight', '600')
-      .attr('fill', '#1d1d1f')
+      .attr('fill', '#f5f5f7')
       .attr('font-family', 'var(--font-heading)')
       .text(currentNode.question);
 
@@ -1085,7 +1085,7 @@ function initDecisionTree() {
       g.append('path')
         .attr('d', path.toString())
         .attr('fill', 'none')
-        .attr('stroke', '#d2d2d7')
+        .attr('stroke', 'rgba(149,213,178,0.5)')
         .attr('stroke-width', 1.5);
 
       // 选项标签
@@ -1107,8 +1107,8 @@ function initDecisionTree() {
 
     optBoxes.forEach(opt => {
       const isResult = opt.node.result;
-      const fillColor = isResult ? (opt.node.color || '#95D5B2') + '22' : '#f5f5f7';
-      const strokeColor = isResult ? (opt.node.color || '#95D5B2') : '#d2d2d7';
+      const fillColor = isResult ? (opt.node.color || '#95D5B2') + '22' : 'rgba(30, 30, 40, 0.88)';
+      const strokeColor = isResult ? (opt.node.color || '#95D5B2') : '#95D5B2';
 
       const grp = g.append('g')
         .attr('cursor', 'pointer')
@@ -1136,7 +1136,7 @@ function initDecisionTree() {
         .attr('text-anchor', 'middle')
         .attr('font-size', isMobile ? '11px' : '12.5px')
         .attr('font-weight', isResult ? '700' : '500')
-        .attr('fill', isResult ? (opt.node.color || '#3a9a6a') : '#1d1d1f')
+        .attr('fill', isResult ? (opt.node.color || '#3a9a6a') : '#f5f5f7')
         .attr('font-family', 'var(--font-heading)')
         .text(shortText);
 
@@ -1146,7 +1146,7 @@ function initDecisionTree() {
           .attr('y', lineY2 + 43)
           .attr('text-anchor', 'middle')
           .attr('font-size', '10px')
-          .attr('fill', '#6e6e73')
+          .attr('fill', 'rgba(149,213,178,0.7)')
           .attr('font-family', 'var(--font-heading)')
           .text('→ 点击继续');
       }
@@ -1183,14 +1183,14 @@ function initDecisionTree() {
         .attr('height', 44)
         .attr('rx', 22)
         .attr('fill', 'transparent')
-        .attr('stroke', '#d2d2d7')
+        .attr('stroke', 'rgba(149,213,178,0.4)')
         .attr('stroke-width', 1);
       backG.append('text')
         .attr('x', questionX + 50)
         .attr('y', lineY2 + 97)
         .attr('text-anchor', 'middle')
         .attr('font-size', '11px')
-        .attr('fill', '#6e6e73')
+        .attr('fill', '#95D5B2')
         .attr('font-family', 'var(--font-heading)')
         .text('← 返回');
       backG.on('click', () => {
