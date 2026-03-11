@@ -18,10 +18,10 @@ const TOOLS = [
   <circle cx="40" cy="90" r="4" fill="#95D5B2" class="select-handle" style="opacity:0"/>
   <circle cx="120" cy="90" r="4" fill="#95D5B2" class="select-handle" style="opacity:0"/>
   <style>
-    .select-box { animation: selectBoxAnim 3s ease-in-out infinite; }
-    .select-handle { animation: selectHandleAnim 3s ease-in-out infinite; }
-    .select-obj { animation: selectObjAnim 3s ease-in-out infinite; }
-    @keyframes selectBoxAnim { 0%,20%{opacity:0;transform:scale(0.5);transform-origin:40px 30px} 40%,80%{opacity:1;transform:scale(1)} 90%,100%{opacity:0} }
+    .select-box { animation: selectBoxAnim 3s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .select-handle { animation: selectHandleAnim 3s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .select-obj { animation: selectObjAnim 3s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    @keyframes selectBoxAnim { 0%,20%{opacity:0;transform:scale(0.5)} 40%,80%{opacity:1;transform:scale(1)} 90%,100%{opacity:0;transform:scale(1)} }
     @keyframes selectHandleAnim { 0%,30%{opacity:0} 50%,80%{opacity:1} 90%,100%{opacity:0} }
     @keyframes selectObjAnim { 0%,60%{transform:translate(0,0)} 75%{transform:translate(15px,-10px)} 90%,100%{transform:translate(0,0)} }
   </style>
@@ -40,7 +40,7 @@ const TOOLS = [
   <line x1="20" y1="80" x2="56" y2="24" stroke="rgba(149,213,178,0.4)" stroke-width="1" stroke-dasharray="3 2"/>
   <line x1="140" y1="80" x2="100" y2="24" stroke="rgba(149,213,178,0.4)" stroke-width="1" stroke-dasharray="3 2"/>
   <style>
-    .da-ctrl { animation: daCtrlMove 3s ease-in-out infinite; }
+    .da-ctrl { animation: daCtrlMove 3s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
     @keyframes daCtrlMove { 0%,30%{transform:translate(0,0)} 60%{transform:translate(0,-20px)} 90%,100%{transform:translate(0,0)} }
   </style>
 </svg>`
@@ -56,10 +56,10 @@ const TOOLS = [
   <path d="M80 30 C90 50 120 50 140 100" fill="none" stroke="#7EC8E3" stroke-width="2" stroke-dasharray="200" stroke-dashoffset="200" class="pen-path-2" style="opacity:0"/>
   <circle cx="80" cy="30" r="4" fill="#F0B27A" class="pen-cursor" style="opacity:0"/>
   <style>
-    .pen-path-1 { animation: penP1 4s ease-in-out infinite; }
-    .pen-path-2 { animation: penP2 4s ease-in-out infinite; }
-    .pen-cursor { animation: penCursor 4s ease-in-out infinite; }
-    .pen-a3 { animation: penA3 4s ease-in-out infinite; }
+    .pen-path-1 { animation: penP1 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .pen-path-2 { animation: penP2 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .pen-cursor { animation: penCursor 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .pen-a3 { animation: penA3 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
     @keyframes penP1 { 0%,10%{stroke-dashoffset:200} 40%,100%{stroke-dashoffset:0} }
     @keyframes penP2 { 0%,45%{opacity:0;stroke-dashoffset:200} 50%{opacity:1;stroke-dashoffset:200} 80%,100%{stroke-dashoffset:0;opacity:1} }
     @keyframes penCursor { 0%,10%{opacity:0;cx:30;cy:80} 15%,40%{opacity:1;cx:80;cy:30} 50%,75%{opacity:0;cx:140;cy:100} 100%{opacity:0} }
@@ -76,8 +76,8 @@ const TOOLS = [
   <text x="30" y="68" font-family="Arial" font-size="13" fill="#1d1d1f" class="type-text">科研图表标题</text>
   <line x1="132" y1="72" x2="132" y2="52" stroke="#95D5B2" stroke-width="1.5" class="type-cursor"/>
   <style>
-    .type-cursor { animation: typeCursorBlink 1s step-end infinite; }
-    .type-text { animation: typeTextAppear 3s ease-in-out infinite; }
+    .type-cursor { animation: typeCursorBlink 1s step-end infinite; transform-box: fill-box; transform-origin: center; }
+    .type-text { animation: typeTextAppear 3s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
     @keyframes typeCursorBlink { 0%,100%{opacity:1} 50%{opacity:0} }
     @keyframes typeTextAppear { 0%,10%{opacity:0} 30%,100%{opacity:1} }
   </style>
@@ -98,9 +98,9 @@ const TOOLS = [
     <text x="47" y="68" text-anchor="middle" font-size="8" fill="#000" font-family="Arial">联集</text>
   </g>
   <style>
-    .pf-before { animation: pfBefore 4s ease-in-out infinite; }
-    .pf-after { animation: pfAfter 4s ease-in-out infinite; }
-    .pf-label { animation: pfLabel 4s ease-in-out infinite; }
+    .pf-before { animation: pfBefore 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .pf-after { animation: pfAfter 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .pf-label { animation: pfLabel 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
     @keyframes pfBefore { 0%,50%{opacity:1} 65%,100%{opacity:0} }
     @keyframes pfAfter { 0%,50%{opacity:0} 65%,100%{opacity:1} }
     @keyframes pfLabel { 0%,50%{opacity:1} 65%,100%{opacity:0} }
@@ -125,8 +125,8 @@ const TOOLS = [
   <circle cx="80" cy="62" r="4" fill="#95D5B2" stroke="white" stroke-width="1" class="grad-mid"/>
   <circle cx="140" cy="62" r="6" fill="#7EC8E3" stroke="white" stroke-width="1.5" class="grad-end"/>
   <style>
-    .grad-mid { animation: gradMid 3s ease-in-out infinite; }
-    .grad-end { animation: gradEnd 3s ease-in-out infinite; }
+    .grad-mid { animation: gradMid 3s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .grad-end { animation: gradEnd 3s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
     @keyframes gradMid { 0%,100%{cx:80} 50%{cx:100} }
     @keyframes gradEnd { 0%,100%{cx:140} 50%{cx:150} }
   </style>
@@ -148,8 +148,8 @@ const TOOLS = [
   </g>
   <rect x="80" y="10" width="70" height="85" rx="3" fill="#3b5e8c" class="eye-apply" style="opacity:0"/>
   <style>
-    .eye-cursor { animation: eyeCursor 4s ease-in-out infinite; }
-    .eye-apply { animation: eyeApply 4s ease-in-out infinite; }
+    .eye-cursor { animation: eyeCursor 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .eye-apply { animation: eyeApply 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
     @keyframes eyeCursor { 0%{transform:translate(35px,30px)} 30%{transform:translate(35px,25px)} 50%{transform:translate(100px,50px)} 100%{transform:translate(35px,30px)} }
     @keyframes eyeApply { 0%,45%{opacity:0} 55%,75%{opacity:0.8} 85%,100%{opacity:0} }
   </style>
@@ -172,9 +172,9 @@ const TOOLS = [
     <rect x="110" y="52" width="30" height="20" rx="3" fill="none" stroke="#95D5B2" stroke-width="1.5"/>
   </g>
   <style>
-    .align-before { animation: alignBefore 3.5s ease-in-out infinite; }
-    .align-guide { animation: alignGuide 3.5s ease-in-out infinite; }
-    .align-after { animation: alignAfter 3.5s ease-in-out infinite; }
+    .align-before { animation: alignBefore 3.5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .align-guide { animation: alignGuide 3.5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .align-after { animation: alignAfter 3.5s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
     @keyframes alignBefore { 0%,40%{opacity:1} 55%,100%{opacity:0} }
     @keyframes alignGuide { 0%,35%{opacity:0} 50%,65%{opacity:1} 80%,100%{opacity:0} }
     @keyframes alignAfter { 0%,50%{opacity:0} 65%,100%{opacity:1} }
@@ -193,8 +193,8 @@ const TOOLS = [
   </g>
   <rect x="25" y="35" width="108" height="42" rx="5" fill="none" stroke="#95D5B2" stroke-width="2" stroke-dasharray="5 3" class="grp-box" style="opacity:0"/>
   <style>
-    .grp-box { animation: grpBox 3s ease-in-out infinite; }
-    .grp-elements { animation: grpElems 3s ease-in-out infinite; }
+    .grp-box { animation: grpBox 3s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .grp-elements { animation: grpElems 3s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
     @keyframes grpBox { 0%,30%{opacity:0} 50%,80%{opacity:1} 90%,100%{opacity:0} }
     @keyframes grpElems { 0%,60%{transform:translate(0,0)} 80%{transform:translate(10px,15px)} 100%{transform:translate(0,0)} }
   </style>
@@ -232,8 +232,8 @@ const TOOLS = [
   <circle cx="70" cy="55" r="35" fill="none" stroke="#95D5B2" stroke-width="2" class="zoom-ring"/>
   <line x1="98" y1="83" x2="130" y2="112" stroke="#95D5B2" stroke-width="3" stroke-linecap="round"/>
   <style>
-    .zoom-ring { animation: zoomRing 3s ease-in-out infinite; }
-    .zoom-inner { animation: zoomInner 3s ease-in-out infinite; }
+    .zoom-ring { animation: zoomRing 3s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .zoom-inner { animation: zoomInner 3s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
     @keyframes zoomRing { 0%,100%{r:35} 50%{r:44} }
     @keyframes zoomInner { 0%,100%{r:6} 50%{r:9} }
   </style>
@@ -255,9 +255,9 @@ const TOOLS = [
   <path d="M20 60 C50 20 80 20" fill="none" stroke="#95D5B2" stroke-width="2.5" class="sci-left" style="opacity:0"/>
   <path d="M80 20 C110 20 140 60 C110 100 50 100 20 60" fill="none" stroke="#F0B27A" stroke-width="2.5" class="sci-right" style="opacity:0"/>
   <style>
-    .sci-path { animation: sciPath 4s ease-in-out infinite; }
-    .sci-left,.sci-right { animation: sciSplit 4s ease-in-out infinite; }
-    .sci-icon { animation: sciIcon 4s ease-in-out infinite; }
+    .sci-path { animation: sciPath 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .sci-left,.sci-right { animation: sciSplit 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .sci-icon { animation: sciIcon 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
     @keyframes sciPath { 0%,50%{opacity:1} 65%,100%{opacity:0} }
     @keyframes sciSplit { 0%,55%{opacity:0} 70%,100%{opacity:1} }
     @keyframes sciIcon { 0%{transform:translate(76px,14px) scale(1)} 30%{transform:translate(76px,14px) scale(1)} 45%{transform:translate(76px,14px) scale(1.3)} 60%,100%{transform:translate(76px,14px) scale(1)} }
