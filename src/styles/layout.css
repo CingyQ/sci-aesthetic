@@ -703,6 +703,7 @@
   max-width: 640px;
   line-height: 1.3;
   color: var(--text-on-dark);
+  text-align: center;
 }
 
 .page-footer-quote::before {

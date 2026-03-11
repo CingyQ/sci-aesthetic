@@ -65,6 +65,36 @@
   transform: scale(0.97);
 }
 
+/* 深色背景上的轮廓按钮（Footer CTA prev 按钮）*/
+.btn-outline-light {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: 14px 32px;
+  background: transparent;
+  color: var(--text-on-dark-2);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius-full);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--t-base);
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.btn-outline-light:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+  color: var(--text-on-dark);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.btn-outline-light:active {
+  transform: scale(0.97);
+}
+
 /* 小尺寸按钮 */
 .btn-small {
   padding: 8px 20px;
