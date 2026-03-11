@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="readme-assets/hero.png" alt="SciAesthetic Banner" width="100%">
+<img src="readme-assets/hero.webp" alt="SciAesthetic Banner" width="100%">
 
 # SciAesthetic · 科研美学
 
@@ -27,23 +27,23 @@ SciAesthetic 是面向科研工作者的**交互式视觉传达知识百科**，
 
 <table>
 <tr>
-<td width="25%" align="center">
-<img src="readme-assets/m1-dataviz.png" width="120" alt="数据可视化"><br>
+<td width="25%" align="center" valign="top">
+<img src="readme-assets/m1-dataviz.webp" width="120" height="120" alt="数据可视化"><br><br>
 <b>科研数据可视化</b><br>
 <sub>色彩理论 · R/Python 图表 · 出版规格导出</sub>
 </td>
-<td width="25%" align="center">
-<img src="readme-assets/m2-ai.png" width="120" alt="AI 辅助"><br>
+<td width="25%" align="center" valign="top">
+<img src="readme-assets/m2-ai.webp" width="120" height="120" alt="AI 辅助"><br><br>
 <b>AI 辅助科研绘图</b><br>
 <sub>Prompt 技巧 · 矢量化 · 伦理边界</sub>
 </td>
-<td width="25%" align="center">
-<img src="readme-assets/m3-vector.png" width="120" alt="矢量设计"><br>
+<td width="25%" align="center" valign="top">
+<img src="readme-assets/m3-vector.webp" width="120" height="120" alt="矢量设计"><br><br>
 <b>矢量绘图与设计</b><br>
 <sub>Illustrator · 贝塞尔 · SVG 编辑</sub>
 </td>
-<td width="25%" align="center">
-<img src="readme-assets/m4-present.png" width="120" alt="演示设计"><br>
+<td width="25%" align="center" valign="top">
+<img src="readme-assets/m4-present.webp" width="120" height="120" alt="演示设计"><br><br>
 <b>学术演示设计</b><br>
 <sub>PPT · 海报 · 图摘 · 信息图</sub>
 </td>
