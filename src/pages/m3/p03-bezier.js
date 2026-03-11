@@ -95,7 +95,7 @@ export function render() {
 
 /* ── S1 原理图解 ── */
 .p03-concept-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-md); max-width:var(--w-full); margin:0 auto; }
-.p03-concept-card { background:var(--bg-light-elevated,#fff); border-radius:var(--radius-lg); padding:var(--space-md) var(--space-md) var(--space-lg); border:1px solid var(--border-light); display:flex; flex-direction:column; gap:var(--space-sm); opacity:0; transition:box-shadow 0.3s; }
+.p03-concept-card { background:var(--bg-light-elevated,#fff); border-radius:var(--radius-lg); padding:var(--space-md) var(--space-md) var(--space-lg); border:1px solid var(--border-light); display:flex; flex-direction:column; gap:var(--space-sm); transition:box-shadow 0.3s; }
 .p03-concept-card:hover { box-shadow:0 12px 40px rgba(0,0,0,0.08); }
 .p03-concept-svg { width:100%; height:120px; }
 .p03-concept-title { font-family:var(--font-heading); font-size:var(--text-heading); font-weight:700; color:var(--text-on-light); margin-top:4px; }
@@ -230,13 +230,21 @@ export function render() {
       <!-- 卡片1：锚点 -->
       <div class="p03-concept-card">
         <svg class="p03-concept-svg" viewBox="0 0 240 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M40 80 C80 80 160 40 200 40" stroke="#95D5B2" stroke-width="2.5" stroke-linecap="round"/>
-          <rect x="33" y="73" width="14" height="14" rx="2" fill="#95D5B2" stroke="#1d1d1f" stroke-width="1.5"/>
-          <rect x="193" y="33" width="14" height="14" rx="2" fill="#95D5B2" stroke="#1d1d1f" stroke-width="1.5"/>
-          <circle cx="120" cy="56" r="6" fill="none" stroke="#7EC8E3" stroke-width="1.5" stroke-dasharray="3 2"/>
+          <path d="M40 80 C80 80 160 40 200 40" stroke="#95D5B2" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="220" stroke-dashoffset="220" class="p03c1-path"/>
+          <rect x="33" y="73" width="14" height="14" rx="2" fill="#95D5B2" stroke="#1d1d1f" stroke-width="1.5" class="p03c1-pt" style="opacity:0;transform-box:fill-box;transform-origin:center"/>
+          <rect x="193" y="33" width="14" height="14" rx="2" fill="#95D5B2" stroke="#1d1d1f" stroke-width="1.5" class="p03c1-pt" style="opacity:0;transform-box:fill-box;transform-origin:center"/>
+          <circle cx="120" cy="56" r="6" fill="none" stroke="#7EC8E3" stroke-width="1.5" stroke-dasharray="3 2" class="p03c1-mid" style="opacity:0"/>
           <text x="40" y="106" font-size="10" fill="#95D5B2" font-family="JetBrains Mono, monospace">P0</text>
           <text x="197" y="58" font-size="10" fill="#95D5B2" font-family="JetBrains Mono, monospace">P1</text>
           <text x="108" y="75" font-size="9" fill="#7EC8E3" font-family="JetBrains Mono, monospace">中点</text>
+          <style>
+            .p03c1-path { animation: p03c1draw 3.5s ease-out infinite; }
+            .p03c1-pt   { animation: p03c1pt 3.5s ease-out infinite; }
+            .p03c1-mid  { animation: p03c1mid 3.5s ease-out infinite; }
+            @keyframes p03c1draw { 0%,5%{stroke-dashoffset:220} 55%,88%{stroke-dashoffset:0} 95%,100%{stroke-dashoffset:220} }
+            @keyframes p03c1pt { 0%,15%{opacity:0;transform:scale(0)} 40%,85%{opacity:1;transform:scale(1)} 93%,100%{opacity:0} }
+            @keyframes p03c1mid { 0%,50%{opacity:0} 68%,85%{opacity:1} 93%,100%{opacity:0} }
+          </style>
         </svg>
         <span class="p03-concept-en">Anchor Points</span>
         <h3 class="p03-concept-title">锚点</h3>
@@ -249,11 +257,16 @@ export function render() {
           <circle cx="120" cy="75" r="7" fill="#95D5B2" stroke="#1d1d1f" stroke-width="1.5"/>
           <line x1="120" y1="75" x2="60" y2="25" stroke="rgba(149,213,178,0.4)" stroke-width="1.5" stroke-dasharray="4 3"/>
           <line x1="120" y1="75" x2="190" y2="35" stroke="rgba(149,213,178,0.4)" stroke-width="1.5" stroke-dasharray="4 3"/>
-          <circle cx="60" cy="25" r="5" fill="none" stroke="#7EC8E3" stroke-width="2"/>
-          <circle cx="190" cy="35" r="5" fill="none" stroke="#7EC8E3" stroke-width="2"/>
+          <circle cx="60" cy="25" r="5" fill="none" stroke="#7EC8E3" stroke-width="2" class="p03c2-h1"/>
+          <circle cx="190" cy="35" r="5" fill="none" stroke="#7EC8E3" stroke-width="2" class="p03c2-h2"/>
           <text x="28" y="20" font-size="9" fill="#7EC8E3" font-family="JetBrains Mono, monospace">短手柄</text>
           <text x="145" y="24" font-size="9" fill="#7EC8E3" font-family="JetBrains Mono, monospace">长手柄=强曲率</text>
           <text x="108" y="100" font-size="10" fill="#95D5B2" font-family="JetBrains Mono, monospace">锚点</text>
+          <style>
+            .p03c2-h1,.p03c2-h2 { animation: p03c2pulse 2.5s ease-in-out infinite alternate; transform-box:fill-box; transform-origin:center; }
+            .p03c2-h2 { animation-delay:0.5s; }
+            @keyframes p03c2pulse { 0%{r:5;stroke:#7EC8E3;stroke-width:2} 100%{r:7;stroke:#95D5B2;stroke-width:2.5} }
+          </style>
         </svg>
         <span class="p03-concept-en">Control Handles</span>
         <h3 class="p03-concept-title">控制手柄</h3>
@@ -265,7 +278,8 @@ export function render() {
         <svg class="p03-concept-svg" viewBox="0 0 240 120" fill="none" xmlns="http://www.w3.org/2000/svg">
           <line x1="30" y1="90" x2="70" y2="20" stroke="rgba(149,213,178,0.3)" stroke-width="1.2" stroke-dasharray="4 3"/>
           <line x1="210" y1="85" x2="170" y2="20" stroke="rgba(149,213,178,0.3)" stroke-width="1.2" stroke-dasharray="4 3"/>
-          <path d="M30 90 C70 20 170 20 210 85" stroke="#95D5B2" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M30 90 C70 20 170 20 210 85" stroke="#95D5B2" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="320" stroke-dashoffset="320" class="p03c3-curve"/>
+          <circle r="4" fill="#F0B27A" class="p03c3-dot"/>
           <circle cx="70" cy="20" r="5" fill="none" stroke="#7EC8E3" stroke-width="2"/>
           <circle cx="170" cy="20" r="5" fill="none" stroke="#7EC8E3" stroke-width="2"/>
           <circle cx="30" cy="90" r="7" fill="#95D5B2" stroke="#1d1d1f" stroke-width="1.5"/>
@@ -274,6 +288,20 @@ export function render() {
           <text x="58" y="14" font-size="9" fill="#7EC8E3" font-family="JetBrains Mono, monospace">P1</text>
           <text x="158" y="14" font-size="9" fill="#7EC8E3" font-family="JetBrains Mono, monospace">P2</text>
           <text x="197" y="108" font-size="9" fill="#95D5B2" font-family="JetBrains Mono, monospace">P3</text>
+          <style>
+            .p03c3-curve { animation: p03c3draw 4s ease-in-out infinite; }
+            .p03c3-dot   { animation: p03c3dot 4s ease-in-out infinite; }
+            @keyframes p03c3draw { 0%,5%{stroke-dashoffset:320} 65%,90%{stroke-dashoffset:0} 97%,100%{stroke-dashoffset:320} }
+            @keyframes p03c3dot {
+              0%{cx:30;cy:90;opacity:0}
+              8%{opacity:1}
+              25%{cx:80;cy:40}
+              50%{cx:120;cy:22}
+              75%{cx:165;cy:40}
+              88%{cx:210;cy:85;opacity:1}
+              93%,100%{cx:210;cy:85;opacity:0}
+            }
+          </style>
         </svg>
         <span class="p03-concept-en">Cubic Bézier</span>
         <h3 class="p03-concept-title">三次贝塞尔曲线</h3>
@@ -1007,9 +1035,7 @@ export function init() {
   heroTl.fromTo('.p03-scroll-hint',           { opacity: 0, y: 15 }, { opacity: 1,   y: 0, duration: 0.6, ease: 'power3.out' }, 0.75);
 
   // S1 概念卡片
-  document.querySelectorAll('.p03-concept-card').forEach((card, i) => {
-    fadeIn(card, { delay: i * 0.15 });
-  });
+  fadeIn('.p03-concept-card', { stagger: 0.18, y: 50, start: 'top 88%' });
 
   // S2 编辑器区域
   fadeIn('#p03-editor-layout');
