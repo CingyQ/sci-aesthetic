@@ -13,6 +13,9 @@ import * as d3 from 'd3';
 let _eventHandlers = [];
 let _sortableInstances = [];
 let _editors = [];
+let _timeouts = [];
+let _rEditor = null;
+let _pyEditor = null;
 
 // 布局编辑器状态
 let _editorState = {
@@ -177,6 +180,34 @@ function refreshCanvas() {
     }
   });
 
+  // 同步移动端画布
+  const mobileGrid = document.getElementById('p06-canvas-grid-m');
+  if (mobileGrid) {
+    mobileGrid.style.gap = _editorState.spacing + 'px';
+    const mobileCells = mobileGrid.querySelectorAll('.p06-cell');
+    mobileCells.forEach((cell, i) => {
+      const panelType = _editorState.cells[i];
+      const chartDiv  = cell.querySelector('.p06-cell-chart');
+      const labelDiv  = cell.querySelector('.p06-cell-label');
+      const emptyDiv  = cell.querySelector('.p06-cell-empty');
+
+      if (panelType) {
+        if (chartDiv) renderMiniChart(chartDiv, panelType, 100, 60);
+        if (labelDiv) {
+          labelDiv.textContent = String.fromCharCode(65 + i);
+          labelDiv.style.display = _editorState.showLabels ? 'flex' : 'none';
+        }
+        if (emptyDiv) emptyDiv.style.display = 'none';
+        cell.classList.add('p06-cell--filled');
+      } else {
+        if (chartDiv) chartDiv.innerHTML = '';
+        if (labelDiv) labelDiv.style.display = 'none';
+        if (emptyDiv) emptyDiv.style.display = 'flex';
+        cell.classList.remove('p06-cell--filled');
+      }
+    });
+  }
+
   updateGeneratedCode();
 }
 
@@ -313,16 +344,14 @@ print("导出完成：multi_panel.pdf / .tiff")`;
 }
 
 function updateGeneratedCode() {
-  const rEditor = window._p06REditor;
-  const pyEditor = window._p06PyEditor;
-  if (rEditor) {
+  if (_rEditor) {
     try {
-      rEditor.dispatch({ changes: { from: 0, to: rEditor.state.doc.length, insert: generateRCode() } });
+      _rEditor.dispatch({ changes: { from: 0, to: _rEditor.state.doc.length, insert: generateRCode() } });
     } catch (_) {}
   }
-  if (pyEditor) {
+  if (_pyEditor) {
     try {
-      pyEditor.dispatch({ changes: { from: 0, to: pyEditor.state.doc.length, insert: generatePyCode() } });
+      _pyEditor.dispatch({ changes: { from: 0, to: _pyEditor.state.doc.length, insert: generatePyCode() } });
     } catch (_) {}
   }
 }
@@ -483,7 +512,7 @@ function initCopyButtons() {
       try {
         await navigator.clipboard.writeText(text);
         btn.textContent = '已复制 ✓';
-        setTimeout(() => { btn.textContent = '复制代码'; }, 2000);
+        _timeouts.push(setTimeout(() => { btn.textContent = '复制代码'; }, 2000));
       } catch (_) {
         btn.textContent = '复制失败';
       }
@@ -1134,6 +1163,8 @@ export function init() {
     // 移动端：渲染移动端画布（镜像 grid）
     const mobileGrid = document.getElementById('p06-canvas-grid-m');
     if (mobileGrid) {
+      // 清空旧内容，防止页面重入时重复创建单元格
+      mobileGrid.innerHTML = '';
       // 用与桌面相同的单元格结构，但绑定独立 click 事件
       mobileGrid.style.gap = _editorState.spacing + 'px';
       mobileGrid.style.gridTemplateColumns = 'repeat(2,1fr)';
@@ -1177,13 +1208,13 @@ export function init() {
   const rEditorEl = document.getElementById('p06-r-editor');
   if (rEditorEl) {
     const ed = createCodeEditor(rEditorEl, generateRCode(), 'r', { readOnly: true });
-    if (ed) { _editors.push(ed); window._p06REditor = ed; }
+    if (ed) { _editors.push(ed); _rEditor = ed; }
   }
 
   const pyEditorEl = document.getElementById('p06-py-editor');
   if (pyEditorEl) {
     const ed = createCodeEditor(pyEditorEl, generatePyCode(), 'python', { readOnly: true });
-    if (ed) { _editors.push(ed); window._p06PyEditor = ed; }
+    if (ed) { _editors.push(ed); _pyEditor = ed; }
   }
 
   // ── ScrollTrigger ──
@@ -1210,8 +1241,11 @@ export function destroy() {
   });
   _eventHandlers = [];
 
-  delete window._p06REditor;
-  delete window._p06PyEditor;
+  _timeouts.forEach(id => clearTimeout(id));
+  _timeouts = [];
+
+  _rEditor = null;
+  _pyEditor = null;
 
   // 重置状态，以便下次 init() 从干净状态开始
   _editorState.cells = Array(6).fill(null);
