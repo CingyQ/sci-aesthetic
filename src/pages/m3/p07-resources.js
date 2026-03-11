@@ -8,6 +8,7 @@ import { navigateTo } from '../../utils/router.js';
 //  模块级状态
 // ══════════════════════════════════════════════════════
 let _eventHandlers = [];
+let _resultTimer = null;
 
 function addEvt(el, type, fn, opts) {
   if (!el) return;
@@ -321,7 +322,6 @@ const LICENSES = [
     id: 'cc-by',
     name: 'CC BY',
     fullName: '署名许可',
-    colorVar: 'var(--module-3)',
     colorHex: '#95D5B2',
     icon: 'BY',
     desc: '使用作品时需要注明原作者，可自由使用、修改和商业化。',
@@ -333,7 +333,6 @@ const LICENSES = [
     id: 'cc-by-nc',
     name: 'CC BY-NC',
     fullName: '署名—非商业性使用',
-    colorVar: 'var(--accent)',
     colorHex: '#7EC8E3',
     icon: 'NC',
     desc: '允许非商业用途的使用和修改，必须署名，禁止商业用途。',
@@ -345,7 +344,6 @@ const LICENSES = [
     id: 'cc-by-sa',
     name: 'CC BY-SA',
     fullName: '署名—相同方式共享',
-    colorVar: 'var(--module-4)',
     colorHex: '#F0B27A',
     icon: 'SA',
     desc: '允许修改和使用，但衍生作品必须采用相同的许可协议，并署名。',
@@ -357,7 +355,6 @@ const LICENSES = [
     id: 'cc0',
     name: 'CC0',
     fullName: '公共领域 / 无版权',
-    colorVar: 'var(--module-2)',
     colorHex: '#B8B8E8',
     icon: 'C0',
     desc: '作者放弃所有版权，任何人可以自由使用、修改、商业化，无需署名。',
@@ -369,7 +366,6 @@ const LICENSES = [
     id: 'commercial',
     name: '商业许可',
     fullName: '专有商业许可',
-    colorVar: '#E8A0A0',
     colorHex: '#E8A0A0',
     icon: '©',
     desc: '需要购买授权才能使用，通常有明确的使用范围限制，不可随意再分发。',
@@ -887,7 +883,7 @@ export function render() {
   </section>
 
   <!-- ══════ S1 资源卡片库 ══════ -->
-  <section class="section-light" id="p07-s1" style="scroll-margin-top:56px;">
+  <section class="section-light" id="p07-s1">
     <div class="section-inner">
       <div class="section-header" style="text-align:center;margin-bottom:var(--space-xl);">
         <p class="section-eyebrow">Resources Library</p>
@@ -913,7 +909,7 @@ export function render() {
   </section>
 
   <!-- ══════ S2 工具推荐向导 ══════ -->
-  <section class="section-dark" id="p07-s2" style="scroll-margin-top:56px;">
+  <section class="section-dark" id="p07-s2">
     <div class="section-inner">
       <div class="section-header" style="text-align:center;margin-bottom:var(--space-xl);">
         <p class="section-eyebrow" style="color:rgba(149,213,178,0.7);">Tool Finder Quiz</p>
@@ -945,7 +941,7 @@ export function render() {
   </section>
 
   <!-- ══════ S3 许可证速查 ══════ -->
-  <section class="section-light" id="p07-s3" style="scroll-margin-top:56px;">
+  <section class="section-light" id="p07-s3">
     <div class="section-inner">
       <div class="section-header" style="text-align:center;margin-bottom:var(--space-xl);">
         <p class="section-eyebrow">License Guide</p>
@@ -1124,7 +1120,7 @@ function handleOptionClick(e) {
   document.getElementById('p07-quiz-progress-label').textContent = `${nextStep} / ${total}`;
 
   if (nextStep >= total) {
-    setTimeout(() => showQuizResults(), 400);
+    _resultTimer = setTimeout(() => showQuizResults(), 400);
   } else {
     const currentEl = document.getElementById(`p07-question-${step}`);
     const nextEl    = document.getElementById(`p07-question-${nextStep}`);
@@ -1250,6 +1246,7 @@ export function init() {
 // ══════════════════════════════════════════════════════
 export function destroy() {
   killAll();
+  clearTimeout(_resultTimer); _resultTimer = null;
   _eventHandlers.forEach(({ el, type, fn, opts }) => el.removeEventListener(type, fn, opts));
   _eventHandlers = [];
   _quizState = { currentStep: 0, answers: {} };
