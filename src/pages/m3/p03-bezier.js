@@ -265,7 +265,7 @@ export function render() {
           <style>
             .p03c2-h1,.p03c2-h2 { animation: p03c2pulse 2.5s ease-in-out infinite alternate; transform-box:fill-box; transform-origin:center; }
             .p03c2-h2 { animation-delay:0.5s; }
-            @keyframes p03c2pulse { 0%{r:5;stroke:#7EC8E3;stroke-width:2} 100%{r:7;stroke:#95D5B2;stroke-width:2.5} }
+            @keyframes p03c2pulse { 0%{transform:scale(1);stroke:#7EC8E3;stroke-width:2} 100%{transform:scale(1.5);stroke:#95D5B2;stroke-width:2.5} }
           </style>
         </svg>
         <span class="p03-concept-en">Control Handles</span>
@@ -528,14 +528,16 @@ Z</pre>
 </section>
 
 <!-- Footer CTA -->
-<footer class="page-footer-cta">
-  <p class="page-footer-num">Module 03 / 03</p>
-  <h2 class="page-footer-quote">每一根弯曲的连接线，都是一次对路径语言的运用。</h2>
+<section class="page-footer-cta">
+  <p class="page-footer-num">03 / 07</p>
+  <h2 class="page-footer-quote">每一条流畅的科研曲线，都始于三个点的理解。</h2>
+  <p class="page-footer-desc">贝塞尔曲线是矢量绘图的数学基础，也是专业科研图形的灵魂所在。</p>
   <div class="page-footer-nav">
-    <button class="btn-outline-light" id="p03-prev-btn">← Illustrator 工具</button>
+    <button class="btn-ghost" id="p03-prev-btn">← Illustrator 工具</button>
+    <button class="btn-ghost" id="p03-home-btn">返回模块首页</button>
     <button class="btn-primary" id="p03-next-btn">图表美化实战 →</button>
   </div>
-</footer>
+</section>
 
 </div>`;
 }
@@ -1055,8 +1057,10 @@ export function init() {
 
   // Footer 导航
   const prevBtn = document.getElementById('p03-prev-btn');
+  const homeBtn = document.getElementById('p03-home-btn');
   const nextBtn = document.getElementById('p03-next-btn');
   if (prevBtn) addEvent(prevBtn, 'click', () => navigateTo('m3-p2'));
+  if (homeBtn) addEvent(homeBtn, 'click', () => navigateTo('m3-p1'));
   if (nextBtn) addEvent(nextBtn, 'click', () => navigateTo('m3-p4'));
 }
 

@@ -93,17 +93,21 @@ const TOOLS = [
     <circle cx="100" cy="62" r="28" fill="rgba(149,213,178,0.3)" stroke="#95D5B2" stroke-width="1.5"/>
   </g>
   <text x="80" y="20" text-anchor="middle" font-size="9" fill="#6e6e73" font-family="Arial" class="pf-label">布尔运算前</text>
+  <text x="80" y="20" text-anchor="middle" font-size="9" font-family="Arial" class="pf-label-after" style="opacity:0">联集（布尔运算后）</text>
   <g class="pf-after" style="opacity:0">
-    <path d="M30 90 L30 35 Q30 35 30 35 L60 35 A28 28 0 0 0 60 90 Z" fill="#95D5B2" opacity="0.8"/>
-    <text x="47" y="68" text-anchor="middle" font-size="8" fill="#000" font-family="Arial">联集</text>
+    <rect x="30" y="35" width="60" height="55" rx="4" fill="#95D5B2" opacity="0.85"/>
+    <circle cx="100" cy="62" r="28" fill="#95D5B2" opacity="0.85"/>
+    <text x="72" y="110" text-anchor="middle" font-size="8" fill="#95D5B2" font-family="Arial" font-weight="600">联集完成</text>
   </g>
   <style>
     .pf-before { animation: pfBefore 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
     .pf-after { animation: pfAfter 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
     .pf-label { animation: pfLabel 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    .pf-label-after { animation: pfLabelAfter 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
     @keyframes pfBefore { 0%,50%{opacity:1} 65%,100%{opacity:0} }
     @keyframes pfAfter { 0%,50%{opacity:0} 65%,100%{opacity:1} }
     @keyframes pfLabel { 0%,50%{opacity:1} 65%,100%{opacity:0} }
+    @keyframes pfLabelAfter { 0%,55%{opacity:0} 65%,95%{opacity:1;fill:#95D5B2} 100%{opacity:0} }
   </style>
 </svg>`
   },
@@ -222,20 +226,38 @@ const TOOLS = [
     desc: '点击放大，Alt+点击缩小。Cmd+= 放大，Cmd+- 缩小，Cmd+0 适合窗口，Cmd+1 100%。',
     use: '精细编辑锚点和路径时切换到 400%+ 视图，导出前在 100% 视图检查字号',
     svgDemo: `<svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
-  <circle cx="70" cy="55" r="35" fill="none" stroke="#424245" stroke-width="1"/>
-  <line x1="98" y1="83" x2="130" y2="112" stroke="#6e6e73" stroke-width="3" stroke-linecap="round"/>
-  <g style="clip-path:circle(33px at 70px 55px)">
+  <defs>
+    <clipPath id="p02-lens-clip">
+      <circle cx="70" cy="55" r="32"/>
+    </clipPath>
+  </defs>
+  <!-- Magnified content area -->
+  <g clip-path="url(#p02-lens-clip)">
     <rect x="37" y="22" width="66" height="66" fill="#2d2d2f"/>
-    <circle cx="70" cy="55" r="6" fill="#95D5B2" class="zoom-inner"/>
-    <rect x="52" y="50" width="36" height="10" rx="2" fill="none" stroke="#7EC8E3" stroke-width="1"/>
+    <!-- Chart content inside lens -->
+    <line x1="40" y1="80" x2="100" y2="80" stroke="rgba(149,213,178,0.3)" stroke-width="1"/>
+    <line x1="40" y1="60" x2="100" y2="60" stroke="rgba(149,213,178,0.3)" stroke-width="1"/>
+    <line x1="40" y1="40" x2="100" y2="40" stroke="rgba(149,213,178,0.3)" stroke-width="1"/>
+    <rect x="45" y="60" width="8" height="20" fill="#7EC8E3" opacity="0.8"/>
+    <rect x="58" y="45" width="8" height="35" fill="#95D5B2" opacity="0.8"/>
+    <rect x="71" y="52" width="8" height="28" fill="#7EC8E3" opacity="0.8"/>
+    <rect x="84" y="38" width="8" height="42" fill="#F0B27A" opacity="0.8" class="zoom-bar"/>
+    <!-- Zoom indicator crosshair -->
+    <line x1="68" y1="53" x2="74" y2="53" stroke="#F0B27A" stroke-width="1"/>
+    <line x1="71" y1="50" x2="71" y2="56" stroke="#F0B27A" stroke-width="1"/>
   </g>
-  <circle cx="70" cy="55" r="35" fill="none" stroke="#95D5B2" stroke-width="2" class="zoom-ring"/>
-  <line x1="98" y1="83" x2="130" y2="112" stroke="#95D5B2" stroke-width="3" stroke-linecap="round"/>
+  <!-- Magnifying glass frame -->
+  <circle cx="70" cy="55" r="32" fill="none" stroke="#95D5B2" stroke-width="2"/>
+  <circle cx="70" cy="55" r="32" fill="none" stroke="rgba(149,213,178,0.15)" stroke-width="6"/>
+  <!-- Handle -->
+  <line x1="95" y1="80" x2="125" y2="108" stroke="#95D5B2" stroke-width="3.5" stroke-linecap="round"/>
+  <!-- Zoom label -->
+  <text x="38" y="18" font-size="8" fill="#95D5B2" font-family="Arial" class="zoom-label">400%</text>
   <style>
-    .zoom-ring { animation: zoomRing 3s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-    .zoom-inner { animation: zoomInner 3s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
-    @keyframes zoomRing { 0%,100%{r:35} 50%{r:44} }
-    @keyframes zoomInner { 0%,100%{r:6} 50%{r:9} }
+    .zoom-bar { animation: zoomBarPulse 2s ease-in-out infinite alternate; transform-box:fill-box; transform-origin:bottom center; }
+    .zoom-label { animation: zoomLabelPulse 2s ease-in-out infinite alternate; }
+    @keyframes zoomBarPulse { 0%{opacity:0.8;transform:scaleY(1)} 100%{opacity:1;transform:scaleY(1.15)} }
+    @keyframes zoomLabelPulse { 0%{opacity:0.6} 100%{opacity:1;fill:#F0B27A} }
   </style>
 </svg>`
   },
@@ -246,7 +268,7 @@ const TOOLS = [
     svgDemo: `<svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
   <path d="M20 60 C50 20 110 20 140 60 C110 100 50 100 20 60 Z" fill="none" stroke="#7EC8E3" stroke-width="2" class="sci-path"/>
   <circle cx="80" cy="20" r="5" fill="#95D5B2"/>
-  <g class="sci-icon">
+  <g transform="translate(80,20)" class="sci-icon">
     <circle cx="-6" cy="-6" r="4" fill="none" stroke="#95D5B2" stroke-width="1.5"/>
     <circle cx="6" cy="-6" r="4" fill="none" stroke="#95D5B2" stroke-width="1.5"/>
     <line x1="-2" y1="-4" x2="4" y2="4" stroke="#95D5B2" stroke-width="1.5"/>
@@ -260,7 +282,7 @@ const TOOLS = [
     .sci-icon { animation: sciIcon 4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
     @keyframes sciPath { 0%,50%{opacity:1} 65%,100%{opacity:0} }
     @keyframes sciSplit { 0%,55%{opacity:0} 70%,100%{opacity:1} }
-    @keyframes sciIcon { 0%{transform:translate(76px,14px) scale(1)} 30%{transform:translate(76px,14px) scale(1)} 45%{transform:translate(76px,14px) scale(1.3)} 60%,100%{transform:translate(76px,14px) scale(1)} }
+    @keyframes sciIcon { 0%,30%{transform:scale(1)} 45%{transform:scale(1.4)} 60%,100%{transform:scale(1)} }
   </style>
 </svg>`
   },
@@ -513,10 +535,12 @@ export function render() {
 
 <!-- Footer CTA -->
 <section class="page-footer-cta">
-  <p class="page-footer-num">Module 03 / 02</p>
-  <h2 class="page-footer-quote">工具是手段，理解原理才是核心。</h2>
+  <p class="page-footer-num">02 / 07</p>
+  <h2 class="page-footer-quote">工具是思维的延伸，快捷键是工具的翅膀。</h2>
+  <p class="page-footer-desc">熟练掌握 Illustrator 核心工具，让创作速度匹配你的思维速度。</p>
   <div class="page-footer-nav">
-    <button class="btn-outline-light" id="p02-prev-btn">← 矢量 vs 位图</button>
+    <button class="btn-ghost" id="p02-prev-btn">← 矢量 vs 位图</button>
+    <button class="btn-ghost" id="p02-home-btn">返回模块首页</button>
     <button class="btn-primary" id="p02-next-btn">贝塞尔曲线 →</button>
   </div>
 </section>
@@ -796,11 +820,17 @@ export function init() {
 
   // ── 5. Footer ──
   const prevBtn = document.getElementById('p02-prev-btn');
+  const homeBtn = document.getElementById('p02-home-btn');
   const nextBtn = document.getElementById('p02-next-btn');
   if (prevBtn) {
     const fn = () => navigateTo('m3-p1');
     prevBtn.addEventListener('click', fn);
     _eventHandlers.push({ el: prevBtn, type: 'click', fn });
+  }
+  if (homeBtn) {
+    const fn = () => navigateTo('m3-p1');
+    homeBtn.addEventListener('click', fn);
+    _eventHandlers.push({ el: homeBtn, type: 'click', fn });
   }
   if (nextBtn) {
     const fn = () => navigateTo('m3-p3');
