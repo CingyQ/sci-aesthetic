@@ -457,11 +457,68 @@ function addEvt(el, type, fn, opts) {
   _eventHandlers.push({ el, type, fn, opts });
 }
 
+// ─── SVG 安全过滤（DOMParser 白名单方案）────────────────────────────────────
+
+const ALLOWED_SVG_TAGS = new Set([
+  'svg','g','path','rect','circle','ellipse','line','polyline','polygon',
+  'text','tspan','textpath','image','use','defs','symbol','clippath',
+  'mask','pattern','lineargradient','radialgradient','stop','filter',
+  'feblend','fecolormatrix','fecomposite','feconvolvematrix',
+  'fediffuselighting','fedisplacementmap','fedropshadow','feflood',
+  'fegaussianblur','feimage','femerge','femergenode','femorphology',
+  'feoffset','fespecularlighting','fetile','feturbulence','marker',
+  'title','desc','animate','animatetransform','animatemotion','mpath',
+  'set','metadata','switch'
+]);
+
+// 危险属性：事件处理器（on*）和可携带 javascript: 的链接属性
+const DANGEROUS_ATTRS = /^(on|xlink:href$|href$)/i;
+
+function sanitizeElement(el) {
+  // 不在白名单的元素直接移除
+  if (!ALLOWED_SVG_TAGS.has(el.tagName.toLowerCase())) {
+    el.remove();
+    return;
+  }
+  // 移除危险属性
+  const attrs = Array.from(el.attributes);
+  for (const attr of attrs) {
+    if (DANGEROUS_ATTRS.test(attr.name)) {
+      el.removeAttribute(attr.name);
+    } else if (attr.value && /javascript:/i.test(attr.value)) {
+      el.removeAttribute(attr.name);
+    }
+  }
+  // 递归处理子元素（先复制列表，避免边删边迭代）
+  Array.from(el.children).forEach(sanitizeElement);
+}
+
+function sanitizeSvg(svgStr) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(svgStr, 'image/svg+xml');
+
+  // DOMParser 遇到格式错误时会生成 parsererror 节点
+  const parseError = doc.querySelector('parsererror');
+  if (parseError) {
+    // 回退：以 HTML 片段方式解析，先强力移除 script
+    const div = document.createElement('div');
+    div.innerHTML = svgStr.replace(/<script[\s\S]*?<\/script>/gi, '');
+    const svgEl = div.querySelector('svg');
+    if (!svgEl) {
+      return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40"><text y="20" x="8" fill="#ef4444" font-size="12">Parse error — 请检查 SVG 语法</text></svg>';
+    }
+    sanitizeElement(svgEl);
+    return svgEl.outerHTML;
+  }
+
+  const svgEl = doc.documentElement;
+  sanitizeElement(svgEl);
+  return svgEl.outerHTML;
+}
+
 function updateSvgPreview(code, previewEl, byteCountEl) {
-  // 移除 script 标签，安全渲染
-  const safe = code.replace(/<script[\s\S]*?<\/script>/gi, '');
   try {
-    previewEl.innerHTML = safe;
+    previewEl.innerHTML = sanitizeSvg(code);
   } catch (e) {
     // 解析失败保持上一个状态
   }
@@ -542,6 +599,7 @@ export function render() {
 <style>
 /* ── p05 hero ── */
 .p05-hero { position:relative; overflow:hidden; align-items:center; }
+/* rgba(149,213,178,…) = --module-3:#95D5B2  rgba(126,200,227,…) = --module-1(accent):#7EC8E3 */
 .p05-hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 55% 45% at 25% 35%, rgba(149,213,178,0.15) 0%, transparent 65%); animation:p05-drift-a 12s ease-in-out infinite; pointer-events:none; }
 .p05-hero::after  { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 50% 40% at 75% 65%, rgba(126,200,227,0.1) 0%, transparent 65%); animation:p05-drift-b 8s ease-in-out infinite reverse; pointer-events:none; }
 @keyframes p05-drift-a { 0%,100%{transform:translate(0,0)} 50%{transform:translate(20px,-12px)} }
@@ -556,7 +614,7 @@ export function render() {
 .p05-elem-tab.active { border-color:var(--module-3,#95D5B2); color:var(--module-3,#95D5B2); background:rgba(149,213,178,0.08); font-weight:600; }
 
 .p05-elem-content { display:grid; grid-template-columns:260px 1fr; gap:var(--space-xl); align-items:start; }
-.p05-svg-preview-wrap { position:relative; background:#fff; border-radius:var(--radius-md); border:1px solid var(--border-light); width:240px; height:180px; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.06); }
+.p05-svg-preview-wrap { position:relative; background:var(--bg-light,#fff); border-radius:var(--radius-md); border:1px solid var(--border-light); width:240px; height:180px; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.06); }
 .p05-svg-canvas { width:160px; height:120px; }
 .p05-svg-size-label { position:absolute; top:8px; left:8px; font-family:var(--font-code); font-size:10px; color:var(--text-on-light-2); background:rgba(210,210,215,0.7); padding:2px 6px; border-radius:4px; }
 
@@ -595,7 +653,7 @@ export function render() {
 .p05-opt-bytes { font-family:var(--font-code); font-size:0.78rem; padding:2px 8px; border-radius:4px; }
 .p05-opt-bytes-bad { background:rgba(239,68,68,0.1); color:#ef4444; }
 .p05-opt-bytes-good { background:rgba(34,197,94,0.1); color:#22c55e; }
-.p05-code-block { font-family:var(--font-code); font-size:0.78rem; line-height:1.6; border-radius:var(--radius-sm); padding:var(--space-sm); margin:0; white-space:pre-wrap; word-wrap:break-word; overflow-x:auto; }
+.p05-code-block { font-family:var(--font-code); font-size:0.78rem; line-height:1.6; border-radius:var(--radius-sm); padding:var(--space-sm); margin:0; white-space:pre-wrap; word-wrap:break-word; }
 .p05-code-bad  { background:#fff5f5; border:1px solid rgba(239,68,68,0.2); color:#7f1d1d; }
 .p05-code-good { background:#f0fdf4; border:1px solid rgba(34,197,94,0.2); color:#14532d; }
 .p05-opt-note { font-size:0.85rem; color:var(--text-on-light-2); background:rgba(149,213,178,0.06); border-left:3px solid var(--module-3,#95D5B2); border-radius:var(--radius-sm); padding:10px 14px; margin:0; line-height:1.7; }
@@ -634,7 +692,7 @@ export function render() {
     <p class="hero-eyebrow" style="opacity:0;">Module 03 / Page 05</p>
     <h1 class="page-hero-title" style="color:var(--text-on-dark);opacity:0;">SVG 编辑与优化</h1>
     <p class="page-hero-sub" style="opacity:0;">SVG Code: Edit, Optimize, and Master Vector Markup</p>
-    <p class="p05-hero-tagline" style="font-family:inherit;font-size:1rem;color:var(--text-on-dark-2);max-width:540px;line-height:1.8;margin-top:var(--space-sm);opacity:0;">SVG 是矢量图的源代码——读懂它，你就拥有了对图表的完全控制权</p>
+    <p class="p05-hero-tagline" style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;margin-top:var(--space-sm);opacity:0;">SVG 是矢量图的源代码——读懂它，你就拥有了对图表的完全控制权</p>
     <nav class="hero-quicknav" id="p05-quicknav" style="opacity:0;">
       <button class="hero-quicknav__item" data-target="#p05-s1">语法图解</button>
       <button class="hero-quicknav__item" data-target="#p05-s2">代码编辑器</button>
@@ -705,7 +763,7 @@ export function render() {
           <span>实时预览</span>
           <span style="font-size:0.75rem;color:var(--text-on-dark-3);">安全沙盒渲染</span>
         </div>
-        <div id="p05-svg-preview-live" style="background:white;border-radius:0 0 var(--radius-md) var(--radius-md);padding:var(--space-lg);min-height:320px;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-wrap:wrap;"></div>
+        <div id="p05-svg-preview-live" style="background:var(--bg-light,#fff);border-radius:0 0 var(--radius-md) var(--radius-md);padding:var(--space-lg);min-height:320px;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-wrap:wrap;"></div>
       </div>
     </div>
   </div>
@@ -790,7 +848,8 @@ export function init() {
       });
     }
 
-    // 更新 SVG 预览
+    // 更新 SVG 预览（sanitizeSvg 仅对完整 SVG 文档有意义，
+    // el.preview 是 SVG 内容片段，直接赋值；内容来自本文件常量，无 XSS 风险）
     if (svgCanvas) svgCanvas.innerHTML = el.preview;
 
     // 更新属性列表
@@ -823,7 +882,7 @@ export function init() {
 
     _editor = createCodeEditor(editorContainer, {
       code: initialCode,
-      language: 'r',   // CodeEditor 目前只支持 r/python，用 r 做语法高亮回退
+      language: 'xml', // xml 模式：CodeEditor 无对应语言包时退回基础编辑器
       onChange: (code) => {
         updateSvgPreview(code, previewLive, byteCount);
       }
