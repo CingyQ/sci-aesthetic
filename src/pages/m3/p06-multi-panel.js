@@ -498,9 +498,91 @@ function initMobilePresets() {
 }
 
 // ══════════════════════════════════════════════════════
+//  Step 2：布局模板渲染
+// ══════════════════════════════════════════════════════
+function buildMiniGridSVG(layout) {
+  const { cols, rows, spans = [] } = layout;
+  const W = 80, H = 56, gap = 3, pad = 2;
+  const cw = (W - pad * 2 - gap * (cols - 1)) / cols;
+  const rh = (H - pad * 2 - gap * (rows - 1)) / rows;
+  const cells = [];
+  // 标记哪些位置被 span 占用
+  const occupied = new Set();
+  let cellIdx = 0;
+  for (let r = 0; r < rows && cellIdx < layout.cols * layout.rows; r++) {
+    for (let c = 0; c < cols && cellIdx < cols * rows; c++) {
+      const pos = r * cols + c;
+      if (occupied.has(pos)) continue;
+      const span = spans.find(s => s.idx === cellIdx);
+      const rSpan = span?.rowSpan || 1;
+      const cSpan = span?.colSpan || 1;
+      // 标记 span 占用的格子
+      for (let dr = 0; dr < rSpan; dr++) {
+        for (let dc = 0; dc < cSpan; dc++) {
+          if (dr > 0 || dc > 0) occupied.add((r + dr) * cols + (c + dc));
+        }
+      }
+      const x = pad + c * (cw + gap);
+      const y = pad + r * (rh + gap);
+      const w = cw * cSpan + gap * (cSpan - 1);
+      const h = rh * rSpan + gap * (rSpan - 1);
+      cells.push({ x, y, w, h });
+      cellIdx++;
+    }
+  }
+  const rects = cells.map(c =>
+    `<rect x="${c.x.toFixed(1)}" y="${c.y.toFixed(1)}" width="${c.w.toFixed(1)}" height="${c.h.toFixed(1)}" rx="2" fill="rgba(149,213,178,0.22)" stroke="rgba(149,213,178,0.45)" stroke-width="1"/>`
+  ).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;">${rects}</svg>`;
+}
+
+function renderLayoutTemplates() {
+  const container = document.getElementById('p06-layout-templates');
+  if (!container) return;
+  const list = LAYOUTS[_editorState.panelCount] || LAYOUTS[4];
+  container.innerHTML = list.map(layout => `
+    <div class="p06-tpl-card${layout.id === _editorState.layoutId ? ' active' : ''}" data-layout-id="${layout.id}">
+      <div class="p06-tpl-preview">${buildMiniGridSVG(layout)}</div>
+      <div class="p06-tpl-name">${layout.label}</div>
+      <div class="p06-tpl-desc">${layout.desc}</div>
+    </div>
+  `).join('');
+  container.querySelectorAll('.p06-tpl-card').forEach(card => {
+    addEvt(card, 'click', () => {
+      setLayout(card.dataset.layoutId);
+      container.querySelectorAll('.p06-tpl-card').forEach(c => c.classList.remove('active'));
+      card.classList.add('active');
+      updateStepsBar(3);
+      if (typeof rebuildCanvas === 'function') rebuildCanvas();
+    });
+  });
+}
+
+function updateStepsBar(activeStep) {
+  document.querySelectorAll('.p06-step-item').forEach(item => {
+    const step = parseInt(item.dataset.step);
+    item.classList.toggle('active', step === activeStep);
+    item.classList.toggle('done', step < activeStep);
+  });
+}
+
+// ══════════════════════════════════════════════════════
 //  控制面板事件
 // ══════════════════════════════════════════════════════
 function initEditorControls() {
+  // 数量选择器（Step 1）
+  document.querySelectorAll('.p06-count-btn').forEach(btn => {
+    addEvt(btn, 'click', () => {
+      const n = parseInt(btn.dataset.count);
+      setPanelCount(n);
+      document.querySelectorAll('.p06-count-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      updateStepsBar(2);
+      renderLayoutTemplates();
+      if (typeof rebuildCanvas === 'function') rebuildCanvas();
+    });
+  });
+
   // 间距按钮（桌面 + 移动端共用，通过 class 匹配所有）
   document.querySelectorAll('.p06-spacing-btn').forEach(btn => {
     addEvt(btn, 'click', () => {
@@ -911,6 +993,34 @@ export function render() {
   .p06-canvas-grid { grid-template-columns:1fr 1fr; }
   .p06-journal-grid { grid-template-columns:1fr; }
 }
+
+/* ── 三步向导 ── */
+.p06-wizard { max-width:1100px; margin:0 auto; }
+.p06-steps-bar { display:flex; align-items:center; gap:0; margin-bottom:var(--space-xxl); }
+.p06-step-item { display:flex; align-items:center; gap:10px; }
+.p06-step-num { width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,0.1); border:2px solid rgba(255,255,255,0.2); color:rgba(255,255,255,0.35); font-size:0.78rem; font-weight:700; display:flex; align-items:center; justify-content:center; transition:all 0.3s; flex-shrink:0; }
+.p06-step-item.active .p06-step-num { background:var(--module-3,#95D5B2); border-color:var(--module-3,#95D5B2); color:#1d1d1f; }
+.p06-step-item.done .p06-step-num { background:rgba(149,213,178,0.25); border-color:var(--module-3,#95D5B2); color:var(--module-3,#95D5B2); }
+.p06-step-label { font-size:0.82rem; color:rgba(255,255,255,0.35); transition:color 0.3s; white-space:nowrap; }
+.p06-step-item.active .p06-step-label,.p06-step-item.done .p06-step-label { color:var(--text-on-dark-2); }
+.p06-step-connector { flex:1; height:1.5px; background:rgba(255,255,255,0.1); margin:0 12px; min-width:20px; }
+.p06-count-grid { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:var(--space-xl); }
+.p06-count-btn { width:56px; height:56px; border-radius:var(--radius-md); border:1.5px solid rgba(255,255,255,0.15); background:rgba(255,255,255,0.04); color:var(--text-on-dark-2); font-size:1.25rem; font-weight:700; cursor:pointer; transition:all 0.2s; position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:var(--font-display); padding-top:4px; }
+.p06-count-btn:hover { border-color:var(--module-3,#95D5B2); color:var(--module-3,#95D5B2); background:rgba(149,213,178,0.08); transform:translateY(-2px); }
+.p06-count-btn.active { background:var(--module-3,#95D5B2); border-color:var(--module-3,#95D5B2); color:#1d1d1f; transform:translateY(-2px); box-shadow:0 4px 16px rgba(149,213,178,0.3); }
+.p06-count-sub { font-size:0.58rem; white-space:nowrap; opacity:0.6; font-weight:400; font-family:var(--font-body); line-height:1; }
+.p06-layout-step { display:none; }
+.p06-layout-step.visible { display:block; animation:p06-step-in 0.3s ease; }
+@keyframes p06-step-in { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+.p06-layout-templates { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:var(--space-xl); }
+.p06-tpl-card { cursor:pointer; padding:14px 16px; border-radius:var(--radius-md); border:1.5px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.03); transition:all 0.2s; min-width:120px; }
+.p06-tpl-card:hover { border-color:rgba(149,213,178,0.5); background:rgba(149,213,178,0.06); transform:translateY(-2px); }
+.p06-tpl-card.active { border-color:var(--module-3,#95D5B2); background:rgba(149,213,178,0.1); box-shadow:0 0 0 2px rgba(149,213,178,0.2); }
+.p06-tpl-preview { width:80px; height:56px; margin-bottom:10px; }
+.p06-tpl-name { font-size:0.82rem; font-weight:600; color:var(--text-on-dark); margin-bottom:3px; }
+.p06-tpl-desc { font-size:0.72rem; color:var(--text-on-dark-3); line-height:1.4; }
+.p06-mobile-editor { display:none; }
+@media (max-width:768px) { .p06-desktop-drag { display:none !important; } .p06-mobile-editor { display:block; } }
 </style>
 
 <!-- ── Hero ── -->
@@ -1025,68 +1135,98 @@ export function render() {
 
 <!-- ── S2 拖拽布局编辑器 ── -->
 <section class="section-dark" id="p06-s2" style="padding:var(--space-xxl) var(--space-lg);">
-  <div style="max-width:1100px;margin:0 auto;">
+  <div class="p06-wizard">
     <p class="p06-section-label p06-label-dark">Interactive Editor</p>
-    <h2 class="p06-section-title p06-title-dark">拖拽布局编辑器</h2>
-    <p class="p06-editor-intro">从左侧面板库拖入图表类型到画布格子，实时预览 2×3 布局效果。点击已放置的面板可将其移除。</p>
+    <h2 class="p06-section-title p06-title-dark">自适应布局编辑器</h2>
+    <p class="p06-editor-intro">三步构建你的多面板图：选择面板数量，挑选最合适的排版模板，最后拖入图表类型。</p>
 
-    <!-- 移动端：预设模板选择 -->
-    <div id="p06-mobile-presets" class="p06-mobile-presets">
-      <p class="p06-pool-title">选择预设布局模板</p>
-      ${mobilePresets}
-    </div>
-
-    <!-- 桌面端：拖拽编辑器 -->
-    <div class="p06-editor-layout p06-desktop-drag">
-      <!-- 左：面板库 -->
-      <div>
-        <p class="p06-pool-title">面板库</p>
-        <div id="p06-panel-pool" class="p06-panel-pool">
-          ${poolItems}
-        </div>
-        <p class="p06-pool-hint">拖拽到右侧画布<br>点击已放置面板可移除</p>
+    <!-- 步骤指示器 -->
+    <div class="p06-steps-bar">
+      <div class="p06-step-item active" data-step="1">
+        <div class="p06-step-num">1</div>
+        <span class="p06-step-label">选择面板数</span>
       </div>
-
-      <!-- 右：控制 + 画布 -->
-      <div class="p06-canvas-area">
-        <!-- 控制面板 -->
-        <div class="p06-canvas-controls">
-          <div class="p06-ctrl-group">
-            <span class="p06-ctrl-label">间距</span>
-            <button class="p06-spacing-btn" data-spacing="4">紧密</button>
-            <button class="p06-spacing-btn active" data-spacing="12">正常</button>
-            <button class="p06-spacing-btn" data-spacing="24">宽松</button>
-          </div>
-          <div class="p06-ctrl-group p06-toggle-wrap">
-            <input type="checkbox" class="p06-toggle" id="p06-label-toggle" checked>
-            <label class="p06-toggle-label" for="p06-label-toggle">ABCDEF 标签</label>
-          </div>
-          <div class="p06-ctrl-group">
-            <span class="p06-ctrl-label">尺寸预设</span>
-            <button class="p06-size-btn" data-size="nature-single">单栏 89mm</button>
-            <button class="p06-size-btn" data-size="nature-1half">1.5栏 140mm</button>
-            <button class="p06-size-btn active" data-size="nature-double">双栏 183mm</button>
-          </div>
-        </div>
-
-        <!-- 画布 -->
-        <div class="p06-canvas-wrap">
-          <div id="p06-canvas-grid" class="p06-canvas-grid">
-            ${canvasCells}
-          </div>
-        </div>
-
-        <div class="p06-canvas-actions">
-          <button class="p06-action-btn" id="p06-clear-btn">清空画布</button>
-          <button class="p06-action-btn p06-action-btn--primary" id="p06-export-code-btn">生成代码 →</button>
-        </div>
-        <p class="p06-canvas-hint">画布模拟 Nature 双栏宽度（183mm），每格对应一个子图</p>
+      <div class="p06-step-connector"></div>
+      <div class="p06-step-item" data-step="2">
+        <div class="p06-step-num">2</div>
+        <span class="p06-step-label">选择布局模板</span>
+      </div>
+      <div class="p06-step-connector"></div>
+      <div class="p06-step-item" data-step="3">
+        <div class="p06-step-num">3</div>
+        <span class="p06-step-label">拖入图表 / 生成代码</span>
       </div>
     </div>
 
-    <!-- 移动端：控制面板 + 画布 -->
-    <div style="margin-top:var(--space-lg);">
-      <div class="p06-canvas-controls" style="margin-bottom:var(--space-md);">
+    <!-- Step 1：面板数量 -->
+    <div id="p06-step1">
+      <p class="p06-pool-title" style="margin-bottom:var(--space-md);">需要几个子图？</p>
+      <div class="p06-count-grid" id="p06-count-grid">
+        <button class="p06-count-btn" data-count="1">1<span class="p06-count-sub">单图</span></button>
+        <button class="p06-count-btn" data-count="2">2<span class="p06-count-sub">两图</span></button>
+        <button class="p06-count-btn" data-count="3">3<span class="p06-count-sub">三图</span></button>
+        <button class="p06-count-btn active" data-count="4">4<span class="p06-count-sub">四图</span></button>
+        <button class="p06-count-btn" data-count="5">5<span class="p06-count-sub">五图</span></button>
+        <button class="p06-count-btn" data-count="6">6<span class="p06-count-sub">六图</span></button>
+        <button class="p06-count-btn" data-count="7">7<span class="p06-count-sub">七图</span></button>
+        <button class="p06-count-btn" data-count="8">8<span class="p06-count-sub">八图</span></button>
+      </div>
+    </div>
+
+    <!-- Step 2：布局模板（JS 动态渲染） -->
+    <div id="p06-step2" class="p06-layout-step visible">
+      <p class="p06-pool-title" style="margin-bottom:var(--space-md);">选择布局模板</p>
+      <div class="p06-layout-templates" id="p06-layout-templates"></div>
+    </div>
+
+    <!-- Step 3：画布区（桌面端） -->
+    <div id="p06-step3" class="p06-layout-step visible p06-desktop-drag">
+      <div style="display:flex;gap:var(--space-xl);align-items:start;">
+        <div style="width:190px;flex-shrink:0;">
+          <p class="p06-pool-title">面板库</p>
+          <div id="p06-panel-pool" class="p06-panel-pool">
+            ${poolItems}
+          </div>
+          <p class="p06-pool-hint">拖入右侧画布格子<br>点击已放置面板可移除</p>
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div class="p06-canvas-controls">
+            <div class="p06-ctrl-group">
+              <span class="p06-ctrl-label">间距</span>
+              <button class="p06-spacing-btn" data-spacing="4">紧密</button>
+              <button class="p06-spacing-btn active" data-spacing="12">正常</button>
+              <button class="p06-spacing-btn" data-spacing="24">宽松</button>
+            </div>
+            <div class="p06-ctrl-group p06-toggle-wrap">
+              <input type="checkbox" class="p06-toggle" id="p06-label-toggle" checked>
+              <label class="p06-toggle-label" for="p06-label-toggle">ABCDEF 标签</label>
+            </div>
+            <div class="p06-ctrl-group">
+              <span class="p06-ctrl-label">尺寸预设</span>
+              <button class="p06-size-btn" data-size="nature-single">单栏 89mm</button>
+              <button class="p06-size-btn" data-size="nature-1half">1.5栏 140mm</button>
+              <button class="p06-size-btn active" data-size="nature-double">双栏 183mm</button>
+            </div>
+          </div>
+          <div class="p06-canvas-wrap">
+            <div id="p06-canvas-grid" class="p06-canvas-grid"></div>
+          </div>
+          <div class="p06-canvas-actions">
+            <button class="p06-action-btn" id="p06-clear-btn">清空画布</button>
+            <button class="p06-action-btn p06-action-btn--primary" id="p06-export-code-btn">生成代码 →</button>
+          </div>
+          <p class="p06-canvas-hint">画布模拟 Nature 双栏宽度（183mm），每格对应一个子图</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 移动端 -->
+    <div class="p06-mobile-editor">
+      <p class="p06-pool-title">选择预设布局</p>
+      <div id="p06-mobile-presets" class="p06-mobile-presets">
+        ${mobilePresets}
+      </div>
+      <div class="p06-canvas-controls">
         <div class="p06-ctrl-group">
           <span class="p06-ctrl-label">间距</span>
           <button class="p06-spacing-btn" data-spacing="4">紧密</button>
@@ -1102,7 +1242,7 @@ export function render() {
         <div id="p06-canvas-grid-m" class="p06-canvas-grid"></div>
       </div>
       <div style="text-align:center;margin-top:var(--space-xl);">
-        <button class="p06-action-btn p06-action-btn--primary" id="p06-export-code-btn-m" style="font-size:1rem;padding:14px 32px;">查看完整代码 →</button>
+        <button class="p06-action-btn p06-action-btn--primary" id="p06-export-code-btn-m">查看完整代码 →</button>
       </div>
     </div>
   </div>
@@ -1268,6 +1408,7 @@ export function init() {
     initSortable();
   }
 
+  renderLayoutTemplates();
   initEditorControls();
 
   // ── S3 代码编辑器 ──
