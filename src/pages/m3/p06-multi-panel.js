@@ -1680,6 +1680,9 @@ export function destroy() {
   _sortableInstances.forEach(s => { try { s.destroy(); } catch (_) {} });
   _sortableInstances = [];
 
+  const pool = document.getElementById('p06-panel-pool');
+  if (pool) pool._hasSortable = false;
+
   _editors.forEach(e => { try { e && e.destroy(); } catch (_) {} });
   _editors = [];
 
