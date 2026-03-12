@@ -993,6 +993,7 @@ function drawBaCharts(pairIdx) {
 //  粘性步骤逻辑
 // ══════════════════════════════════════════════════════
 let currentStep = 0;
+let _stepAnimating = false;   // 模块作用域，与 currentStep 同级别
 let _cachedBodyH = 0, _cachedLeftH = 0, _cachedBodyTop = 0, _maxTranslate = 0, _cachedPanelH = 0;
 let _ticking = false;
 
@@ -1037,6 +1038,37 @@ function updateStepUI(idx) {
   });
 }
 
+function animateStepTransition(idx) {
+  const numEl     = document.getElementById('p04-step-num');
+  const titleEl   = document.getElementById('p04-step-title');
+  const descEl    = document.getElementById('p04-step-desc');
+  const codeEl    = document.getElementById('p04-step-code');
+  const changesEl = document.getElementById('p04-changes');
+  const targets   = [numEl, titleEl, changesEl, descEl, codeEl].filter(Boolean);
+
+  if (_stepAnimating) {
+    // 快速滚动时直接更新，跳过动画
+    updateStepUI(idx);
+    return;
+  }
+  _stepAnimating = true;
+
+  gsap.to(targets, {
+    opacity: 0, y: -10, duration: 0.18, ease: 'power2.in',
+    onComplete() {
+      updateStepUI(idx);
+      gsap.fromTo(targets,
+        { opacity: 0, y: 12 },
+        {
+          opacity: 1, y: 0, duration: 0.32, stagger: 0.05,
+          ease: 'power3.out',
+          onComplete() { _stepAnimating = false; },
+        }
+      );
+    },
+  });
+}
+
 function onStickyScroll() {
   const isMobile = window.innerWidth <= 768;
   if (isMobile) return;
@@ -1055,7 +1087,7 @@ function onStickyScroll() {
 
   if (stepIdx !== currentStep) {
     currentStep = stepIdx;
-    updateStepUI(currentStep);   // Task 2 会替换为 animateStepTransition
+    animateStepTransition(currentStep);
   }
 }
 
@@ -1201,6 +1233,7 @@ export function destroy() {
 
   // 重置状态
   currentStep = 0;
+  _stepAnimating = false;
   _ticking = false;
   _cachedBodyTop = 0;
   _cachedPanelH = 0;
