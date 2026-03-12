@@ -19,7 +19,9 @@ let _pyEditor = null;
 
 // 布局编辑器状态
 let _editorState = {
-  cells: Array(6).fill(null),   // 6格画布，每格存放面板类型或 null
+  panelCount: 4,
+  layoutId: '2x2',
+  cells: [],
   spacing: 12,                   // tight:4 / normal:12 / loose:24
   showLabels: true,
   preset: 'nature-double'        // 尺寸预设
@@ -54,6 +56,73 @@ const PANEL_TYPES = [
   { id: 'box',     label: '箱线图', icon: '⊟', desc: '分布形态' },
   { id: 'heatmap', label: '热图',   icon: '▦', desc: '矩阵数据' },
 ];
+
+// ══════════════════════════════════════════════════════
+//  布局模板定义（驱动动态画布）
+// ══════════════════════════════════════════════════════
+const LAYOUTS = {
+  1: [
+    { id: '1x1', label: '单图', cols: 1, rows: 1, gridCols: '1fr', desc: '单栏独立图，全宽' },
+  ],
+  2: [
+    { id: '1x2', label: '左右并排', cols: 2, rows: 1, gridCols: '1fr 1fr', desc: '双变量对比，等宽' },
+    { id: '2x1', label: '上下堆叠', cols: 1, rows: 2, gridCols: '1fr', desc: '时间序列上下对比' },
+    { id: '1w+1', label: '主图+辅图', cols: 2, rows: 1, gridCols: '1.8fr 1fr', desc: '主图突出，辅图辅助' },
+  ],
+  3: [
+    { id: '1x3', label: '三列叙事', cols: 3, rows: 1, gridCols: '1fr 1fr 1fr', desc: '因果三步递进' },
+    { id: '1s+2', label: '主图+两辅', cols: 2, rows: 2, gridCols: '1.6fr 1fr', spans: [{ idx: 0, rowSpan: 2 }], desc: '左侧主图，右侧上下两辅' },
+    { id: '2+1s', label: '两辅+主图', cols: 2, rows: 2, gridCols: '1fr 1.6fr', spans: [{ idx: 1, colStart: 2, rowSpan: 2 }], desc: '左侧上下两辅，右侧主图' },
+  ],
+  4: [
+    { id: '2x2', label: '四等分', cols: 2, rows: 2, gridCols: '1fr 1fr', desc: '均等对比，2×2' },
+    { id: '1x4', label: '四列横排', cols: 4, rows: 1, gridCols: 'repeat(4,1fr)', desc: '步骤演示，横向展开' },
+    { id: '1s+3', label: '主图+三辅', cols: 2, rows: 3, gridCols: '1.6fr 1fr', spans: [{ idx: 0, rowSpan: 3 }], desc: '左侧大主图，右侧三小图' },
+  ],
+  5: [
+    { id: '2+3', label: '上2下3', cols: 3, rows: 2, gridCols: '1fr 1fr 1fr', spanConfig: '2+3', desc: '上方两图，下方三图' },
+    { id: '3+2', label: '上3下2', cols: 3, rows: 2, gridCols: '1fr 1fr 1fr', spanConfig: '3+2', desc: '上方三图，下方两图居中' },
+    { id: '1s+4', label: '主图+四辅', cols: 2, rows: 3, gridCols: '1.5fr 1fr', spans: [{ idx: 0, rowSpan: 2 }], desc: '左侧主图占两行，右侧四小图' },
+  ],
+  6: [
+    { id: '2x3', label: '两行三列', cols: 3, rows: 2, gridCols: '1fr 1fr 1fr', desc: 'Nature 标准双栏六图' },
+    { id: '3x2', label: '三行两列', cols: 2, rows: 3, gridCols: '1fr 1fr', desc: '纵向叙事六图' },
+    { id: '1sx2+4', label: '主图+五辅', cols: 3, rows: 3, gridCols: '1.5fr 1fr 1fr', spans: [{ idx: 0, rowSpan: 3 }], desc: '左侧大主图，右侧2列五小图' },
+  ],
+  7: [
+    { id: '3+4', label: '上3下4', cols: 4, rows: 2, gridCols: 'repeat(4,1fr)', spanConfig: '3+4', desc: '复杂七图组合' },
+    { id: '2x3+1', label: '六格+底图', cols: 3, rows: 3, gridCols: '1fr 1fr 1fr', spans: [{ idx: 6, colSpan: 3 }], desc: '六格+底部横幅图' },
+  ],
+  8: [
+    { id: '2x4', label: '两行四列', cols: 4, rows: 2, gridCols: 'repeat(4,1fr)', desc: '大版面八图' },
+    { id: '4x2', label: '四行两列', cols: 2, rows: 4, gridCols: '1fr 1fr', desc: '纵向长图' },
+    { id: '1sx3+4', label: '主图+七辅', cols: 4, rows: 2, gridCols: '1.8fr 1fr 1fr 1fr', spans: [{ idx: 0, rowSpan: 2 }], desc: '左侧主图，右侧七小图' },
+  ],
+};
+
+// ══════════════════════════════════════════════════════
+//  布局工具函数
+// ══════════════════════════════════════════════════════
+function getCurrentLayout() {
+  const list = LAYOUTS[_editorState.panelCount] || LAYOUTS[4];
+  return list.find(l => l.id === _editorState.layoutId) || list[0];
+}
+
+function setPanelCount(n) {
+  _editorState.panelCount = n;
+  const list = LAYOUTS[n] || LAYOUTS[4];
+  _editorState.layoutId = list[0].id;
+  _editorState.cells = Array(n).fill(null);
+}
+
+function setLayout(layoutId) {
+  const list = LAYOUTS[_editorState.panelCount] || LAYOUTS[4];
+  const layout = list.find(l => l.id === layoutId);
+  if (!layout) return;
+  _editorState.layoutId = layoutId;
+  const n = _editorState.panelCount;
+  _editorState.cells = Array(n).fill(null).map((_, i) => _editorState.cells[i] || null);
+}
 
 // ══════════════════════════════════════════════════════
 //  Mini D3 图表预览
@@ -212,7 +281,7 @@ function refreshCanvas() {
 }
 
 function clearCanvas() {
-  _editorState.cells = Array(6).fill(null);
+  _editorState.cells = Array(_editorState.panelCount).fill(null);
   refreshCanvas();
 }
 
