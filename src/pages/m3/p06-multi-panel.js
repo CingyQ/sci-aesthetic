@@ -12,6 +12,7 @@ import * as d3 from 'd3';
 // ══════════════════════════════════════════════════════
 let _eventHandlers = [];
 let _sortableInstances = [];
+let _poolSortable = null;   // pool Sortable 独立管理，不随 rebuildCanvas 销毁
 let _editors = [];
 let _timeouts = [];
 let _rEditor = null;
@@ -596,15 +597,13 @@ function updateGeneratedCode() {
 function initSortableOnGrid() {
   // 面板池：只初始化一次
   const pool = document.getElementById('p06-panel-pool');
-  if (pool && !pool._hasSortable) {
-    pool._hasSortable = true;
-    const poolSortable = new Sortable(pool, {
+  if (pool && !_poolSortable) {
+    _poolSortable = new Sortable(pool, {
       group: { name: 'panels', pull: 'clone', put: false },
       animation: 150,
       ghostClass: 'p06-ghost',
       sort: false,
     });
-    _sortableInstances.push(poolSortable);
   }
 
   // 画布格子：每次 rebuildCanvas 时重新绑定
@@ -1679,9 +1678,7 @@ export function destroy() {
 
   _sortableInstances.forEach(s => { try { s.destroy(); } catch (_) {} });
   _sortableInstances = [];
-
-  const pool = document.getElementById('p06-panel-pool');
-  if (pool) pool._hasSortable = false;
+  if (_poolSortable) { try { _poolSortable.destroy(); } catch (_) {} _poolSortable = null; }
 
   _editors.forEach(e => { try { e && e.destroy(); } catch (_) {} });
   _editors = [];
