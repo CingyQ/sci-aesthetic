@@ -993,7 +993,7 @@ function drawBaCharts(pairIdx) {
 //  粘性步骤逻辑
 // ══════════════════════════════════════════════════════
 let currentStep = 0;
-let _cachedBodyH = 0, _cachedLeftH = 0, _cachedBodyTop = 0, _maxTranslate = 0;
+let _cachedBodyH = 0, _cachedLeftH = 0, _cachedBodyTop = 0, _maxTranslate = 0, _cachedPanelH = 0;
 let _ticking = false;
 
 function cacheLayout() {
@@ -1005,6 +1005,7 @@ function cacheLayout() {
   // 缓存绝对位置（只计算一次，不在滚动热路径中调用）
   _cachedBodyTop = bodyEl.getBoundingClientRect().top + window.scrollY;
   _maxTranslate  = Math.max(0, _cachedBodyH - _cachedLeftH);
+  _cachedPanelH  = _cachedBodyH / BEAUTY_STEPS.length;
 }
 
 function updateStepUI(idx) {
@@ -1049,7 +1050,7 @@ function onStickyScroll() {
 
   // 用视口中心判断步骤，防止边界震荡
   const midY    = scrollY + window.innerHeight * 0.5;
-  const rawIdx  = Math.floor((midY - _cachedBodyTop) / window.innerHeight);
+  const rawIdx  = Math.floor((midY - _cachedBodyTop) / (_cachedPanelH || window.innerHeight));
   const stepIdx = Math.min(BEAUTY_STEPS.length - 1, Math.max(0, rawIdx));
 
   if (stepIdx !== currentStep) {
@@ -1106,6 +1107,7 @@ export function init() {
     cacheLayout();
     const leftEl = document.getElementById('p04-steps-left');
     if (leftEl && window.innerWidth > 768) leftEl.style.transform = 'translateY(0)';
+    updateStepUI(0);
   };
   addEvent(window, 'resize', onResize);
 
@@ -1201,4 +1203,5 @@ export function destroy() {
   currentStep = 0;
   _ticking = false;
   _cachedBodyTop = 0;
+  _cachedPanelH = 0;
 }
