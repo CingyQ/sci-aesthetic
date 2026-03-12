@@ -373,8 +373,12 @@ const PANEL_R_MAP = {
 
 function generateRCode() {
   const filled = _editorState.cells.filter(Boolean);
-  if (filled.length === 0) return '# 请先选择面板放置到画布\n';
+  if (filled.length === 0) return '# 请先在画布中放置面板\n';
 
+  const layout = getCurrentLayout();
+  const { cols, rows, spans = [] } = layout;
+
+  // 各子图定义（去重）
   const unique = [...new Set(filled)];
   const defs = unique.map(t => {
     const map = {
@@ -388,10 +392,51 @@ function generateRCode() {
     return map[t] || `p_${t} <- ggplot() + labs(title = "${t}")`;
   }).join('\n\n');
 
-  const varNames = _editorState.cells.map(t => t ? PANEL_R_MAP[t] : 'plot_spacer()');
+  // patchwork 布局：有 span 时用 design 字符串，否则用 ncol
+  let layoutCode;
+  if (spans.length > 0) {
+    const n = _editorState.panelCount;
+    const letters = Array.from({ length: n }, (_, i) => String.fromCharCode(65 + i));
+    // 生成 rows × cols 的 design 矩阵
+    const occupied = new Set();
+    let idx = 0;
+    const grid = Array.from({ length: rows }, () => Array(cols).fill('#'));
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        if (occupied.has(r * cols + c) || idx >= n) continue;
+        const span = spans.find(s => s.idx === idx);
+        const rSpan = span?.rowSpan || 1;
+        const cSpan = span?.colSpan || 1;
+        const letter = letters[idx];
+        for (let dr = 0; dr < rSpan; dr++) {
+          for (let dc = 0; dc < cSpan; dc++) {
+            if (r + dr < rows && c + dc < cols) {
+              grid[r + dr][c + dc] = letter;
+              if (dr > 0 || dc > 0) occupied.add((r + dr) * cols + (c + dc));
+            }
+          }
+        }
+        occupied.add(r * cols + c);
+        idx++;
+      }
+    }
+    const designStr = grid.map(row => row.join('')).join('\\n');
+    layoutCode = `plot_layout(design = "${designStr}", guides = "collect")`;
+  } else {
+    layoutCode = `plot_layout(ncol = ${cols}, guides = "collect")`;
+  }
+
+  const varNames = _editorState.cells.map(t => t ? `p_${t}` : 'plot_spacer()');
   const labelsCode = _editorState.showLabels
     ? '\n  plot_annotation(tag_levels = "A") &\n  theme(plot.tag = element_text(size = 8, face = "bold"))'
     : '';
+
+  const presetSizes = {
+    'nature-single': 'width = 89, height = 70',
+    'nature-1half':  'width = 140, height = 100',
+    'nature-double': 'width = 183, height = 120',
+  };
+  const sizeStr = presetSizes[_editorState.preset] || 'width = 183, height = 120';
 
   return `library(ggplot2)
 library(patchwork)
@@ -402,27 +447,74 @@ okabe_ito <- c("#E69F00", "#56B4E9", "#009E73")
 # ─── 各子图定义 ───────────────────────────────────────
 ${defs}
 
-# ─── 组合布局（2×3 网格）────────────────────────────
-# 间距控制：theme(plot.margin = unit(c(${_editorState.spacing/4},${_editorState.spacing/4},${_editorState.spacing/4},${_editorState.spacing/4}), "mm"))
+# ─── 组合布局（${rows} 行 × ${cols} 列）────────────────────────────
 (${varNames.join(' | ')}) +
-  plot_layout(ncol = 3, guides = "collect")${labelsCode}
+  ${layoutCode}${labelsCode}
 
 # ─── 导出 ─────────────────────────────────────────────
 ggsave("multi_panel.pdf",
-       width = 183, height = 120, units = "mm", dpi = 300)`;
+       ${sizeStr}, units = "mm", dpi = 300)`;
 }
 
 function generatePyCode() {
   const filled = _editorState.cells.filter(Boolean);
-  if (filled.length === 0) return '# 请先选择面板放置到画布\n';
+  if (filled.length === 0) return '# 请先在画布中放置面板\n';
+
+  const layout = getCurrentLayout();
+  const { cols, rows, spans = [] } = layout;
+  const hasSpan = spans.length > 0;
 
   const hspace = _editorState.spacing <= 4 ? 0.3 : _editorState.spacing <= 12 ? 0.45 : 0.6;
   const wspace = _editorState.spacing <= 4 ? 0.25 : _editorState.spacing <= 12 ? 0.35 : 0.5;
+  const figW = (cols * 2.4).toFixed(1);
+  const figH = (rows * 2.1).toFixed(1);
 
+  if (hasSpan) {
+    // 使用 gridspec
+    const spanDefs = spans.map(({ idx, rowSpan = 1, colSpan = 1 }) => {
+      const r = Math.floor(idx / cols);
+      const c = idx % cols;
+      const letter = String.fromCharCode(65 + idx);
+      return `ax${letter} = fig.add_subplot(gs[${r}:${r + rowSpan}, ${c}:${c + colSpan}])  # 面板 ${letter}`;
+    }).join('\n');
+    const normalDefs = _editorState.cells.map((t, i) => {
+      if (spans.some(s => s.idx === i)) return null; // 已用 gridspec 处理
+      const r = Math.floor(i / cols);
+      const c = i % cols;
+      const letter = String.fromCharCode(65 + i);
+      return `ax${letter} = fig.add_subplot(gs[${r}, ${c}])  # 面板 ${letter}`;
+    }).filter(Boolean).join('\n');
+
+    return `import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
+
+plt.rcParams.update({
+    'font.size': 9, 'axes.labelsize': 9,
+    'axes.spines.top': False, 'axes.spines.right': False,
+    'figure.dpi': 300,
+})
+
+# ─── 创建 ${rows}×${cols} GridSpec 画布（含 span 布局）────────────
+fig = plt.figure(figsize=(${figW}, ${figH}))
+gs = gridspec.GridSpec(${rows}, ${cols}, figure=fig,
+                       hspace=${hspace}, wspace=${wspace})
+
+# ─── 添加子图 ─────────────────────────────────────────
+${spanDefs}
+${normalDefs}
+
+# ─── 在各 ax 中绘图 ────────────────────────────────────
+# 示例：axA.scatter(df['var1'], df['var2'], alpha=0.7, s=20)
+
+plt.savefig('multi_panel.pdf', bbox_inches='tight', dpi=300)
+print("导出完成：multi_panel.pdf")`;
+  }
+
+  // 无 span：标准 subplots，用 ax.flat[i] 统一访问
   const plotCalls = _editorState.cells.map((t, i) => {
-    const row = Math.floor(i / 3);
-    const col = i % 3;
-    const axRef = `ax[${row}][${col}]`;
+    const axRef = rows === 1 ? `ax[${i}]` : cols === 1 ? `ax[${i}]` : `ax.flat[${i}]`;
     const label = _editorState.showLabels
       ? `${axRef}.set_title("(${String.fromCharCode(65 + i)})", loc='left', fontweight='bold', fontsize=9)\n`
       : '';
@@ -435,37 +527,28 @@ function generatePyCode() {
       heatmap: `im = ${axRef}.imshow(matrix, aspect='auto', cmap='YlOrRd')\nfig.colorbar(im, ax=${axRef}, shrink=0.8)\n${label}`,
     };
     if (!t) return `${axRef}.axis('off')  # 空格`;
-    return calls[t] || `${axRef}.text(0.5, 0.5, '${t}', ha='center', va='center', transform=${axRef}.transAxes)`;
+    return calls[t] || `${axRef}.text(0.5, 0.5, '${t}', ha='center', transform=${axRef}.transAxes)`;
   }).join('\n\n');
 
   return `import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# ─── 全局样式设置 ──────────────────────────────────────
 plt.rcParams.update({
-    'font.size': 9,
-    'axes.labelsize': 9,
-    'axes.titlesize': 9,
-    'xtick.labelsize': 8,
-    'ytick.labelsize': 8,
+    'font.size': 9, 'axes.labelsize': 9, 'axes.titlesize': 9,
+    'xtick.labelsize': 8, 'ytick.labelsize': 8,
     'figure.dpi': 300,
-    'axes.spines.top': False,
-    'axes.spines.right': False,
+    'axes.spines.top': False, 'axes.spines.right': False,
 })
 
-# ─── 示例数据 ──────────────────────────────────────────
 np.random.seed(42)
 df = pd.DataFrame({
-    'var1': np.random.randn(50),
-    'var2': np.random.randn(50),
-    'x1': np.random.randn(50),
-    'x2': np.random.randn(50),
-    'time': np.arange(50),
-    'value': np.cumsum(np.random.randn(50)),
-    'group': np.repeat(['A', 'B', 'C', 'D', 'E'], 10)
+    'var1': np.random.randn(50), 'var2': np.random.randn(50),
+    'x1': np.random.randn(50),   'x2': np.random.randn(50),
+    'time': np.arange(50),       'value': np.cumsum(np.random.randn(50)),
+    'group': np.repeat(['A','B','C','D','E'], 10)
 })
-groups = ['A', 'B', 'C', 'D', 'E']
+groups = ['A','B','C','D','E']
 means = df.groupby('group')['value'].mean().values
 sems  = df.groupby('group')['value'].sem().values
 matrix = np.random.rand(5, 6)
@@ -473,13 +556,12 @@ colors = ['#7EC8E3' if g == 'A' else '#95D5B2' for g in df['group']]
 x_fit = np.linspace(df['var1'].min(), df['var1'].max(), 50)
 y_fit = np.poly1d(np.polyfit(df['var1'], df['var2'], 1))(x_fit)
 
-# ─── 创建 2×3 画布（183mm × 120mm = Nature 双栏）─────
-fig, ax = plt.subplots(2, 3, figsize=(7.2, 4.7))
+# ─── 创建 ${rows}×${cols} 画布（${figW}" × ${figH}"）────────────────
+fig, ax = plt.subplots(${rows}, ${cols}, figsize=(${figW}, ${figH}))
 fig.subplots_adjust(hspace=${hspace}, wspace=${wspace})
 
 ${plotCalls}
 
-# ─── 导出 ─────────────────────────────────────────────
 plt.tight_layout()
 plt.savefig('multi_panel.pdf', bbox_inches='tight', dpi=300)
 plt.savefig('multi_panel.tiff', bbox_inches='tight', dpi=600)
