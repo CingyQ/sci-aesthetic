@@ -993,16 +993,18 @@ function drawBaCharts(pairIdx) {
 //  粘性步骤逻辑
 // ══════════════════════════════════════════════════════
 let currentStep = 0;
-let _cachedBodyH = 0, _cachedLeftH = 0, _maxTranslate = 0;
+let _cachedBodyH = 0, _cachedLeftH = 0, _cachedBodyTop = 0, _maxTranslate = 0;
 let _ticking = false;
 
 function cacheLayout() {
   const bodyEl = document.getElementById('p04-steps-body');
   const leftEl = document.getElementById('p04-steps-left');
   if (!bodyEl || !leftEl) return;
-  _cachedBodyH = bodyEl.offsetHeight;
-  _cachedLeftH = leftEl.offsetHeight;
-  _maxTranslate = Math.max(0, _cachedBodyH - _cachedLeftH);
+  _cachedBodyH   = bodyEl.offsetHeight;
+  _cachedLeftH   = leftEl.offsetHeight;
+  // 缓存绝对位置（只计算一次，不在滚动热路径中调用）
+  _cachedBodyTop = bodyEl.getBoundingClientRect().top + window.scrollY;
+  _maxTranslate  = Math.max(0, _cachedBodyH - _cachedLeftH);
 }
 
 function updateStepUI(idx) {
@@ -1036,19 +1038,23 @@ function updateStepUI(idx) {
 
 function onStickyScroll() {
   const isMobile = window.innerWidth <= 768;
-  if (isMobile) return; // 移动端用 CSS sticky
+  if (isMobile) return;
 
-  const bodyEl = document.getElementById('p04-steps-body');
   const leftEl = document.getElementById('p04-steps-left');
-  if (!bodyEl || !leftEl) return;
+  if (!leftEl) return;
 
-  const scrolledPast = Math.max(0, -bodyEl.getBoundingClientRect().top);
+  const scrollY      = window.scrollY;
+  const scrolledPast = Math.max(0, scrollY - _cachedBodyTop);
   leftEl.style.transform = `translateY(${Math.min(scrolledPast, _maxTranslate)}px)`;
 
-  const stepIdx = Math.min(BEAUTY_STEPS.length - 1, Math.max(0, Math.floor(scrolledPast / window.innerHeight)));
+  // 用视口中心判断步骤，防止边界震荡
+  const midY    = scrollY + window.innerHeight * 0.5;
+  const rawIdx  = Math.floor((midY - _cachedBodyTop) / window.innerHeight);
+  const stepIdx = Math.min(BEAUTY_STEPS.length - 1, Math.max(0, rawIdx));
+
   if (stepIdx !== currentStep) {
     currentStep = stepIdx;
-    updateStepUI(currentStep);
+    updateStepUI(currentStep);   // Task 2 会替换为 animateStepTransition
   }
 }
 
@@ -1194,4 +1200,5 @@ export function destroy() {
   // 重置状态
   currentStep = 0;
   _ticking = false;
+  _cachedBodyTop = 0;
 }
