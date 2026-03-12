@@ -345,14 +345,10 @@ print("导出完成：multi_panel.pdf / .tiff")`;
 
 function updateGeneratedCode() {
   if (_rEditor) {
-    try {
-      _rEditor.dispatch({ changes: { from: 0, to: _rEditor.state.doc.length, insert: generateRCode() } });
-    } catch (_) {}
+    try { _rEditor.setCode(generateRCode()); } catch (_) {}
   }
   if (_pyEditor) {
-    try {
-      _pyEditor.dispatch({ changes: { from: 0, to: _pyEditor.state.doc.length, insert: generatePyCode() } });
-    } catch (_) {}
+    try { _pyEditor.setCode(generatePyCode()); } catch (_) {}
   }
 }
 
@@ -1211,13 +1207,13 @@ export function init() {
 
   const rEditorEl = document.getElementById('p06-r-editor');
   if (rEditorEl) {
-    const ed = createCodeEditor(rEditorEl, generateRCode(), 'r', { readOnly: true });
+    const ed = createCodeEditor(rEditorEl, { code: generateRCode(), language: 'r', readOnly: true });
     if (ed) { _editors.push(ed); _rEditor = ed; }
   }
 
   const pyEditorEl = document.getElementById('p06-py-editor');
   if (pyEditorEl) {
-    const ed = createCodeEditor(pyEditorEl, generatePyCode(), 'python', { readOnly: true });
+    const ed = createCodeEditor(pyEditorEl, { code: generatePyCode(), language: 'python', readOnly: true });
     if (ed) { _editors.push(ed); _pyEditor = ed; }
   }
 
