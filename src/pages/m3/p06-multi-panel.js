@@ -247,7 +247,7 @@ function buildCellConfigs(layout, n) {
 // ══════════════════════════════════════════════════════
 //  动态画布：重建画布 DOM
 // ══════════════════════════════════════════════════════
-function rebuildCanvas() {
+async function rebuildCanvas() {
   const grid = document.getElementById('p06-canvas-grid');
   if (!grid) return;
 
@@ -264,7 +264,13 @@ function rebuildCanvas() {
   grid.style.gridTemplateRows = `repeat(${rows}, minmax(80px, 1fr))`;
   grid.style.gap = _editorState.spacing + 'px';
 
-  // 清空并重建格子
+  // 清空并重建格子（先执行退出动画）
+  const oldCells = [...grid.querySelectorAll('.p06-cell')];
+  if (oldCells.length > 0) {
+    await new Promise(resolve => {
+      gsap.to(oldCells, { scale: 0.88, opacity: 0, duration: 0.18, stagger: 0.03, ease: 'power2.in', onComplete: resolve });
+    });
+  }
   grid.innerHTML = '';
 
   const cellConfigs = buildCellConfigs(layout, n);
@@ -801,7 +807,7 @@ function initEditorControls() {
               { boxShadow: '0 0 0 2px rgba(149,213,178,0.6)', duration: 0.4, yoyo: true, repeat: 2, ease: 'power2.inOut' }
             );
           }
-        }, 700);
+        }, 600);
         _timeouts.push(t);
       }
     });
