@@ -1317,7 +1317,7 @@ export function destroy() {
   _pyEditor = null;
 
   // 重置状态，以便下次 init() 从干净状态开始
-  _editorState.cells = Array(6).fill(null);
+  _editorState.cells = Array(_editorState.panelCount).fill(null);
   _editorState.spacing = 12;
   _editorState.showLabels = true;
   _editorState.preset = 'nature-double';
