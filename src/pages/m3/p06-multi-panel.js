@@ -217,6 +217,84 @@ function renderMiniChart(container, type, w, h) {
 }
 
 // ══════════════════════════════════════════════════════
+//  动态画布：计算格子配置
+// ══════════════════════════════════════════════════════
+function buildCellConfigs(layout, n) {
+  const { cols, rows, spans = [], spanConfig } = layout;
+  const configs = Array(n).fill(null).map(() => ({ rowSpan: 1, colSpan: 1 }));
+
+  if (spanConfig === '2+3') {
+    // 5图上2下3：上行第一格跨2列
+    if (n >= 1) configs[0] = { rowSpan: 1, colSpan: 2 };
+  } else if (spanConfig === '3+2') {
+    // 5图上3下2：下行第一格跨2列（索引3）
+    if (n >= 4) configs[3] = { rowSpan: 1, colSpan: 2 };
+  } else if (spanConfig === '3+4') {
+    // 7图上3下4：上行第一格跨约1.3列，简化为上行整行内3格
+    // 无特殊处理，正常排列
+  }
+
+  // 处理普通 spans
+  spans.forEach(({ idx, rowSpan = 1, colSpan = 1 }) => {
+    if (idx < configs.length) {
+      configs[idx] = { rowSpan, colSpan };
+    }
+  });
+
+  return configs;
+}
+
+// ══════════════════════════════════════════════════════
+//  动态画布：重建画布 DOM
+// ══════════════════════════════════════════════════════
+function rebuildCanvas() {
+  const grid = document.getElementById('p06-canvas-grid');
+  if (!grid) return;
+
+  const layout = getCurrentLayout();
+  const { gridCols, rows } = layout;
+  const n = _editorState.panelCount;
+
+  // 销毁旧 Sortable 实例（保留 pool 的）
+  _sortableInstances.forEach(s => { try { s.destroy(); } catch (_) {} });
+  _sortableInstances = [];
+
+  // 设置 Grid 容器
+  grid.style.gridTemplateColumns = gridCols;
+  grid.style.gridTemplateRows = `repeat(${rows}, minmax(80px, 1fr))`;
+  grid.style.gap = _editorState.spacing + 'px';
+
+  // 清空并重建格子
+  grid.innerHTML = '';
+
+  const cellConfigs = buildCellConfigs(layout, n);
+  cellConfigs.forEach((cfg, i) => {
+    const cell = document.createElement('div');
+    cell.className = 'p06-cell';
+    cell.dataset.cellIndex = i;
+    if (cfg.rowSpan > 1) cell.style.gridRow = `span ${cfg.rowSpan}`;
+    if (cfg.colSpan > 1) cell.style.gridColumn = `span ${cfg.colSpan}`;
+    cell.innerHTML = `
+      <div class="p06-cell-label" style="display:none;">${String.fromCharCode(65 + i)}</div>
+      <div class="p06-cell-chart"></div>
+      <div class="p06-cell-empty">
+        <span class="p06-cell-empty-icon">+</span>
+        <span class="p06-cell-empty-text">拖入面板</span>
+      </div>
+    `;
+    grid.appendChild(cell);
+  });
+
+  // 重新初始化 SortableJS（桌面端）
+  if (window.innerWidth >= 768) {
+    initSortableOnGrid();
+  }
+
+  // 渲染已有内容
+  refreshCanvas();
+}
+
+// ══════════════════════════════════════════════════════
 //  布局编辑器：刷新画布
 // ══════════════════════════════════════════════════════
 function refreshCanvas() {
@@ -226,15 +304,15 @@ function refreshCanvas() {
 
   const cells = grid.querySelectorAll('.p06-cell');
   cells.forEach((cell, i) => {
-    const panelType = _editorState.cells[i];
+    const panelType = _editorState.cells[i] || null;
     const chartDiv  = cell.querySelector('.p06-cell-chart');
     const labelDiv  = cell.querySelector('.p06-cell-label');
     const emptyDiv  = cell.querySelector('.p06-cell-empty');
 
     if (panelType) {
-      const cw = cell.offsetWidth  || 120;
-      const ch = Math.round(cw * 0.6);
-      if (chartDiv) renderMiniChart(chartDiv, panelType, cw - 16, Math.min(ch, 80));
+      const cw = cell.offsetWidth || 120;
+      const ch = Math.round(cw * 0.65);
+      if (chartDiv) renderMiniChart(chartDiv, panelType, cw - 16, Math.min(ch, 100));
       if (labelDiv) {
         labelDiv.textContent = String.fromCharCode(65 + i);
         labelDiv.style.display = _editorState.showLabels ? 'flex' : 'none';
@@ -249,23 +327,19 @@ function refreshCanvas() {
     }
   });
 
-  // 同步移动端画布
+  // 移动端同步（简化版）
   const mobileGrid = document.getElementById('p06-canvas-grid-m');
   if (mobileGrid) {
     mobileGrid.style.gap = _editorState.spacing + 'px';
     const mobileCells = mobileGrid.querySelectorAll('.p06-cell');
     mobileCells.forEach((cell, i) => {
-      const panelType = _editorState.cells[i];
-      const chartDiv  = cell.querySelector('.p06-cell-chart');
-      const labelDiv  = cell.querySelector('.p06-cell-label');
-      const emptyDiv  = cell.querySelector('.p06-cell-empty');
-
+      const panelType = _editorState.cells[i] || null;
+      const chartDiv = cell.querySelector('.p06-cell-chart');
+      const labelDiv = cell.querySelector('.p06-cell-label');
+      const emptyDiv = cell.querySelector('.p06-cell-empty');
       if (panelType) {
         if (chartDiv) renderMiniChart(chartDiv, panelType, 100, 60);
-        if (labelDiv) {
-          labelDiv.textContent = String.fromCharCode(65 + i);
-          labelDiv.style.display = _editorState.showLabels ? 'flex' : 'none';
-        }
+        if (labelDiv) { labelDiv.textContent = String.fromCharCode(65 + i); labelDiv.style.display = _editorState.showLabels ? 'flex' : 'none'; }
         if (emptyDiv) emptyDiv.style.display = 'none';
         cell.classList.add('p06-cell--filled');
       } else {
@@ -424,22 +498,22 @@ function updateGeneratedCode() {
 // ══════════════════════════════════════════════════════
 //  SortableJS 初始化（桌面端）
 // ══════════════════════════════════════════════════════
-function initSortable() {
+function initSortableOnGrid() {
+  // 面板池：只初始化一次
   const pool = document.getElementById('p06-panel-pool');
-  if (!pool) return;
+  if (pool && !pool._hasSortable) {
+    pool._hasSortable = true;
+    const poolSortable = new Sortable(pool, {
+      group: { name: 'panels', pull: 'clone', put: false },
+      animation: 150,
+      ghostClass: 'p06-ghost',
+      sort: false,
+    });
+    _sortableInstances.push(poolSortable);
+  }
 
-  // 面板池：只能拖出（clone），不能接收
-  const poolSortable = new Sortable(pool, {
-    group: { name: 'panels', pull: 'clone', put: false },
-    animation: 150,
-    ghostClass: 'p06-ghost',
-    sort: false,
-  });
-  _sortableInstances.push(poolSortable);
-
-  // 画布格子：可接收拖放
-  const cells = document.querySelectorAll('#p06-canvas-grid .p06-cell');
-  cells.forEach((cell, i) => {
+  // 画布格子：每次 rebuildCanvas 时重新绑定
+  document.querySelectorAll('#p06-canvas-grid .p06-cell').forEach((cell, i) => {
     const cellSortable = new Sortable(cell, {
       group: { name: 'panels', pull: false, put: true },
       animation: 150,
@@ -447,14 +521,12 @@ function initSortable() {
       onAdd(evt) {
         const type = evt.item.dataset.panelType;
         _editorState.cells[i] = type;
-        // 移除 SortableJS 插入的 DOM 节点（由 refreshCanvas 自己渲染内容）
         try { evt.item.remove(); } catch (_) {}
         refreshCanvas();
       }
     });
     _sortableInstances.push(cellSortable);
 
-    // 点击已填充的格子：清除
     addEvt(cell, 'click', () => {
       if (_editorState.cells[i]) {
         _editorState.cells[i] = null;
@@ -1363,9 +1435,12 @@ export function init() {
   // ── 布局编辑器 ──
   const isMobile = window.innerWidth < 768;
 
-  // 初始化画布（默认填充示例面板）
-  _editorState.cells = ['main', 'scatter', 'line', 'bar', 'box', 'heatmap'];
-  refreshCanvas();
+  // 默认状态：4面板，2×2布局，示例内容
+  setPanelCount(4);
+  _editorState.layoutId = '2x2';
+  _editorState.cells = ['main', 'scatter', 'bar', 'box'];
+  renderLayoutTemplates();
+  rebuildCanvas();
 
   if (isMobile) {
     initMobilePresets();
@@ -1404,11 +1479,8 @@ export function init() {
         }
       });
     }
-  } else {
-    initSortable();
   }
 
-  renderLayoutTemplates();
   initEditorControls();
 
   // ── S3 代码编辑器 ──
