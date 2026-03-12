@@ -994,6 +994,7 @@ function drawBaCharts(pairIdx) {
 // ══════════════════════════════════════════════════════
 let currentStep = 0;
 let _stepAnimating = false;   // 模块作用域，与 currentStep 同级别
+let _stepTween = null;
 let _cachedBodyH = 0, _cachedLeftH = 0, _cachedBodyTop = 0, _maxTranslate = 0, _cachedPanelH = 0;
 let _ticking = false;
 
@@ -1053,9 +1054,11 @@ function animateStepTransition(idx) {
   }
   _stepAnimating = true;
 
-  gsap.to(targets, {
+  _stepTween = gsap.to(targets, {
     opacity: 0, y: -10, duration: 0.18, ease: 'power2.in',
+    onInterrupt() { _stepAnimating = false; _stepTween = null; },
     onComplete() {
+      _stepTween = null;
       updateStepUI(idx);
       gsap.fromTo(targets,
         { opacity: 0, y: 12 },
@@ -1234,6 +1237,7 @@ export function destroy() {
   // 重置状态
   currentStep = 0;
   _stepAnimating = false;
+  if (_stepTween) { _stepTween.kill(); _stepTween = null; }
   _ticking = false;
   _cachedBodyTop = 0;
   _cachedPanelH = 0;
