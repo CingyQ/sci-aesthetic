@@ -290,6 +290,13 @@ function rebuildCanvas() {
     initSortableOnGrid();
   }
 
+  // 格子入场动画
+  const newCells = [...grid.querySelectorAll('.p06-cell')];
+  gsap.fromTo(newCells,
+    { scale: 0.82, opacity: 0 },
+    { scale: 1, opacity: 1, duration: 0.28, stagger: 0.04, ease: 'back.out(1.4)', delay: 0.05 }
+  );
+
   // 渲染已有内容
   refreshCanvas();
 }
@@ -784,7 +791,19 @@ function initEditorControls() {
     addEvt(btn, 'click', () => {
       updateGeneratedCode();
       const s3 = document.getElementById('p06-s3');
-      if (s3) s3.scrollIntoView({ behavior: 'smooth' });
+      if (s3) {
+        s3.scrollIntoView({ behavior: 'smooth' });
+        const t = setTimeout(() => {
+          const editors = document.querySelectorAll('.p06-editor-container');
+          if (editors.length) {
+            gsap.fromTo(editors,
+              { boxShadow: '0 0 0 2px rgba(149,213,178,0)' },
+              { boxShadow: '0 0 0 2px rgba(149,213,178,0.6)', duration: 0.4, yoyo: true, repeat: 2, ease: 'power2.inOut' }
+            );
+          }
+        }, 700);
+        _timeouts.push(t);
+      }
     });
   });
 }
@@ -854,23 +873,24 @@ function initScrollAnimations() {
   fadeIn('#p06-s1 .p06-section-label', { y: 30, duration: 0.7 });
   fadeIn('#p06-s1 .p06-section-title', { y: 40, duration: 0.8 });
   fadeIn('#p06-s1 .p06-intro-text',    { y: 30, duration: 0.7 });
-  fadeIn('.p06-spec-item',             { stagger: 0.1, y: 25, duration: 0.6 });
-  fadeIn('.p06-archetype-card',        { stagger: 0.18, y: 40, duration: 0.7 });
+  fadeIn('.p06-spec-item',             { stagger: 0.08, y: 20, duration: 0.6 });
+  fadeIn('.p06-archetype-card',        { stagger: 0.12, y: 35, duration: 0.7 });
 
   fadeIn('#p06-s2 .p06-section-label', { y: 30, duration: 0.7 });
   fadeIn('#p06-s2 .p06-section-title', { y: 40, duration: 0.8 });
-  fadeIn('#p06-s2 .p06-editor-layout', { y: 40, duration: 0.7 });
-  fadeIn('#p06-s2 .p06-mobile-presets',{ y: 30, duration: 0.6 });
+  fadeIn('.p06-steps-bar',             { y: 25, duration: 0.7 });
+  fadeIn('.p06-count-grid',            { y: 30, duration: 0.6 });
+  fadeIn('.p06-layout-templates',      { y: 30, duration: 0.6 });
 
   fadeIn('#p06-s3 .p06-section-label', { y: 30, duration: 0.7 });
   fadeIn('#p06-s3 .p06-section-title', { y: 40, duration: 0.8 });
   fadeIn('.p06-code-tabs',             { y: 25, duration: 0.6 });
   fadeIn('.p06-code-panels',           { y: 35, duration: 0.7 });
-  fadeIn('.p06-annotation',            { stagger: 0.12, y: 25, duration: 0.6 });
+  fadeIn('.p06-annotation',            { stagger: 0.1, y: 20, duration: 0.6 });
 
   fadeIn('#p06-s4 .p06-section-label', { y: 30, duration: 0.7 });
   fadeIn('#p06-s4 .p06-section-title', { y: 40, duration: 0.8 });
-  fadeIn('.p06-journal-card',          { stagger: 0.2,  y: 45, duration: 0.8 });
+  fadeIn('.p06-journal-card',          { stagger: 0.18, y: 40, duration: 0.8 });
 
   fadeIn('.page-footer-quote',         { y: 40, duration: 0.9 });
   fadeIn('.page-footer-cta .page-footer-nav', { y: 25, duration: 0.6 });
@@ -995,6 +1015,8 @@ export function render() {
 .p06-hero::after  { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 50% 40% at 80% 60%, rgba(126,200,227,0.08) 0%, transparent 60%); animation:p06-drift-b 9s ease-in-out infinite reverse; pointer-events:none; }
 @keyframes p06-drift-a { 0%,100%{transform:translate(0,0)} 50%{transform:translate(18px,-10px)} }
 @keyframes p06-drift-b { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-14px,18px)} }
+.p06-hero-bg-dots { position:absolute; inset:0; pointer-events:none; z-index:0; background-image:radial-gradient(circle, rgba(149,213,178,0.08) 1px, transparent 1px); background-size:32px 32px; animation:p06-dots-drift 20s linear infinite; }
+@keyframes p06-dots-drift { from{background-position:0 0} to{background-position:32px 32px} }
 .p06-scroll-hint { font-size:var(--text-caption); color:var(--text-on-dark-3); animation:p06-float 2s ease-in-out infinite; white-space:nowrap; margin-top:var(--space-sm); }
 @keyframes p06-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
 
@@ -1179,6 +1201,7 @@ export function render() {
 
 <!-- ── Hero ── -->
 <section class="section-dark section-hero-full p06-hero" id="p06-hero">
+  <div class="p06-hero-bg-dots"></div>
   <div class="flex-col-center" style="gap:var(--space-md);text-align:center;position:relative;z-index:1;">
     <p class="hero-eyebrow" style="opacity:0;">Module 03 / Page 06</p>
     <h1 class="page-hero-title" style="color:var(--text-on-dark);opacity:0;">多面板图形</h1>
@@ -1282,6 +1305,60 @@ export function render() {
           <div class="p06-layout-cell">C<br><small style="opacity:0.55;font-size:0.58rem;">结论</small></div>
         </div>
         <p class="p06-archetype-note">适合：分子机制通路、三步验证实验、病程发展阶段</p>
+      </div>
+
+      <!-- 2×2 四等分（原型4）-->
+      <div class="p06-archetype-card">
+        <div class="p06-archetype-header">
+          <div class="p06-archetype-num">4</div>
+          <div>
+            <p class="p06-archetype-name">2×2 均等四图</p>
+            <p class="p06-archetype-use">四组平行对比，无主次之分</p>
+          </div>
+        </div>
+        <div class="p06-layout-diagram layout-2x2">
+          <div class="p06-layout-cell">A</div>
+          <div class="p06-layout-cell">B</div>
+          <div class="p06-layout-cell">C</div>
+          <div class="p06-layout-cell">D</div>
+        </div>
+        <p class="p06-archetype-note">适合：四种基因型对比、Before/After × 两组实验、ROC 曲线四分类</p>
+      </div>
+
+      <!-- 渐进揭示型（原型5）-->
+      <div class="p06-archetype-card">
+        <div class="p06-archetype-header">
+          <div class="p06-archetype-num">5</div>
+          <div>
+            <p class="p06-archetype-name">渐进揭示型（1+N）</p>
+            <p class="p06-archetype-use">主图全高，辅图递进补充细节</p>
+          </div>
+        </div>
+        <div class="p06-layout-diagram" style="grid-template-columns:1.6fr 1fr;grid-template-rows:1fr 1fr 1fr;">
+          <div class="p06-layout-cell" style="grid-row:span 3;">A<br><small style="opacity:0.6;font-size:0.58rem;">主图</small></div>
+          <div class="p06-layout-cell">B</div>
+          <div class="p06-layout-cell">C</div>
+          <div class="p06-layout-cell">D</div>
+        </div>
+        <p class="p06-archetype-note">适合：全图+三个局部放大、总体趋势+三种条件、模式图+三组验证</p>
+      </div>
+
+      <!-- 横幅底图型（原型6）-->
+      <div class="p06-archetype-card">
+        <div class="p06-archetype-header">
+          <div class="p06-archetype-num">6</div>
+          <div>
+            <p class="p06-archetype-name">横幅底图型</p>
+            <p class="p06-archetype-use">上方多小图，底部横跨大图总结</p>
+          </div>
+        </div>
+        <div class="p06-layout-diagram" style="grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;">
+          <div class="p06-layout-cell">A</div>
+          <div class="p06-layout-cell">B</div>
+          <div class="p06-layout-cell">C</div>
+          <div class="p06-layout-cell" style="grid-column:span 3;">D（横跨全宽）</div>
+        </div>
+        <p class="p06-archetype-note">适合：三个亚组结果 + 底部汇总统计、三时间点 + 综合热图</p>
       </div>
     </div>
   </div>
