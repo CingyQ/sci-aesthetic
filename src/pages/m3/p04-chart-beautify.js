@@ -328,8 +328,16 @@ export function render() {
 .p04-steps-body { display: flex; align-items: flex-start; position: relative; }
 .p04-steps-left {
   width: 45%; flex-shrink: 0; height: 100vh; will-change: transform;
+  position: relative;
   padding: var(--space-2xl) var(--space-lg);
   box-sizing: border-box; display: flex; flex-direction: column; justify-content: center;
+}
+.p04-steps-left::before {
+  content: '';
+  position: absolute; left: 0; top: var(--space-2xl); bottom: var(--space-2xl);
+  width: 3px; border-radius: 0 2px 2px 0;
+  background: var(--step-accent, #6e6e73);
+  transition: background 0.5s ease;
 }
 .p04-steps-right { flex: 1; min-width: 0; }
 .p04-step-panel { height: 100vh; display: flex; align-items: center; justify-content: center; padding: var(--space-lg); }
@@ -339,6 +347,11 @@ export function render() {
 .p04-step-desc { font-size: var(--text-body); color: var(--text-on-light-2); line-height: 1.8; max-width: 380px; margin-bottom: var(--space-md); }
 .p04-step-code-wrap { background: var(--bg-dark); border-radius: var(--radius-md); padding: var(--space-md); overflow: hidden; }
 .p04-step-code-wrap pre { margin: 0; font-family: var(--font-code); font-size: 12px; line-height: 1.7; color: #a8dadc; white-space: pre-wrap; word-wrap: break-word; }
+.p04-step-code-label {
+  font-size: 10px; font-family: var(--font-code); letter-spacing: 0.08em;
+  text-transform: uppercase; margin-bottom: 6px;
+  opacity: 0.6; transition: color 0.4s ease;
+}
 
 .p04-changes { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: var(--space-md); min-height: 24px; }
 .p04-change-tag { font-size: 11px; padding: 3px 10px; border-radius: var(--radius-full); border: 1px solid; font-family: var(--font-code); }
@@ -487,6 +500,7 @@ export function render() {
           ggplot2 灰色主题，默认配色，轴标签偏小，图例占据空间。这是一切美化的起点——先确保数据展示逻辑正确，再谈美化。
         </div>
         <div class="p04-step-code-wrap">
+          <div class="p04-step-code-label" id="p04-step-code-label">R 代码 — Step 01</div>
           <pre id="p04-step-code"></pre>
         </div>
         <div class="p04-step-indicator" id="p04-step-indicator">
@@ -1019,6 +1033,14 @@ function updateStepUI(idx) {
   const changesEl = document.getElementById('p04-changes');
 
   if (numEl)    { numEl.textContent = step.num; numEl.style.color = step.color; }
+  // accent border + code label
+  const leftEl2 = document.getElementById('p04-steps-left');
+  if (leftEl2) leftEl2.style.setProperty('--step-accent', step.color);
+  const codeLabelEl = document.getElementById('p04-step-code-label');
+  if (codeLabelEl) {
+    codeLabelEl.textContent = `R 代码 — Step ${step.num}`;
+    codeLabelEl.style.color = step.color;
+  }
   if (titleEl)  titleEl.textContent = step.title;
   if (descEl)   descEl.textContent  = step.desc;
   if (codeEl)   codeEl.textContent  = step.rCode;
