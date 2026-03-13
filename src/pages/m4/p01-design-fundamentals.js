@@ -75,7 +75,7 @@ const styles = `
   background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(0,0,0,0.02) 10px,rgba(0,0,0,0.02) 20px); }
 
 /* ── S4 配色 ── */
-.df-color-bad { background:linear-gradient(135deg,#eef,#ffe) !important; }
+.df-color-bad { background: linear-gradient(135deg, #dde4ff 0%, #fff5e0 60%, #ffe0e8 100%) !important; border: 2px dashed rgba(200,0,0,0.18) !important; }
 .df-color-bad ul { list-style:none; padding:0; margin:var(--space-sm) 0; }
 .df-color-bad ul li { margin-bottom:6px; font-size:14px; }
 .df-color-good ul { list-style:disc inside; padding:0; margin:var(--space-sm) 0; }
