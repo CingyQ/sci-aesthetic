@@ -458,12 +458,12 @@ export function render() {
 
   <!-- ═══ Footer CTA ═══ -->
   <section class="section-dark page-footer-cta" style="padding:var(--space-3xl) var(--space-lg);">
-    <p class="page-footer-num">01 / 05</p>
+    <p class="page-footer-num">01 / 04</p>
     <h2 class="page-footer-quote">好的设计不是装饰，是让信息自己说话。</h2>
     <p class="page-footer-desc">掌握了这 7 条规则，接下来看看如何应用到真实的 PPT 中。</p>
     <div class="page-footer-nav">
       <button class="btn-ghost" id="df-prev-btn">← 素材资源站</button>
-      <button class="btn-primary" id="df-next-btn">PPT 实战指南 →</button>
+      <button class="btn-primary" id="df-next-btn">学术演示全场景 →</button>
     </div>
   </section>
 
