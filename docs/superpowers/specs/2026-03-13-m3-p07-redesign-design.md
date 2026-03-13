@@ -258,11 +258,25 @@ Hero（深色，100vh）
 - title: `style="color:var(--text-on-dark)"`
 - subtitle: `style="color:var(--text-on-dark-2)"`
 
+### 各 Section 的 Header 文案
+
+| Section | Eyebrow | Title | Subtitle |
+|---------|---------|-------|----------|
+| S1 | Icons | 图标库 | 科研海报、PPT、论文配图中常需要简洁的图标来表达概念——以下是最实用的图标资源站 |
+| S2 | Color Tools | 配色工具 | 配色决定第一印象——用对工具，让每张图表和幻灯片的色彩都经得起推敲 |
+| S3 | Templates | PPT / 演示模板 | 不必从零开始——专业模板让你把时间花在内容上，而不是排版上 |
+| S4 | Scientific Illustrations | 科研插图素材 | 细胞、分子、实验装置……专业科研插图让你的论文配图不再"手绘风" |
+| S5 | Vector Assets | 矢量 / 通用素材 | 矢量插画、背景纹理、装饰元素——为海报和演示增添视觉层次 |
+| S6 | Fonts | 字体资源 | 字体是设计的骨架——选对字体，学术感和可读性兼得 |
+| S7 | Tutorials & Inspiration | 教程 / 灵感 | 不知道该画什么图？这些网站提供完整代码和选型指南，照着做就行 |
+
 ---
 
-## 6. Hero
+## 6. Hero（对齐 M3 p01-p06 风格）
 
-遵循 CLAUDE.md 标准 Hero 模板：
+遵循 CLAUDE.md 标准 Hero 模板，风格与 M3 已有页面对齐。
+
+### 文案
 
 - **eyebrow**: Module 03 / Page 07
 - **title**: 素材资源站
@@ -277,28 +291,215 @@ Hero（深色，100vh）
   - 字体资源 → `#p07-fonts`
   - 教程灵感 → `#p07-tutorials`
 - **scroll-hint**: ↓ 向下探索
-- **背景光晕**: 薄荷绿 + 天蓝双色漂移（与 M3 模块色调一致）
+
+> **tagline 语气参考**（M3 已有页面统一为"一句话点题 + 动词短语"风格）：
+> - p01: "一个像素，一把锁——理解两种格式的本质，选对格式就是选对工具"
+> - p04: "5 步从平凡到出版级——直观可视化美化的完整工作流"
+> - p06: "像 Nature 一样排版——掌握科研多图组合的视觉语言"
+
+### 背景光晕（双层漂移，与 M3 统一模式）
+
+```css
+.p07-hero { position: relative; overflow: hidden; }
+.p07-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 55% 45% at 25% 40%, rgba(149,213,178,0.15) 0%, transparent 70%);
+  animation: p07-drift-a 13s ease-in-out infinite;
+  pointer-events: none;
+}
+.p07-hero::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 50% 40% at 75% 60%, rgba(126,200,227,0.10) 0%, transparent 65%);
+  animation: p07-drift-b 9s ease-in-out infinite reverse;
+  pointer-events: none;
+}
+@keyframes p07-drift-a { 0%,100%{transform:translate(0,0)} 50%{transform:translate(24px,-14px)} }
+@keyframes p07-drift-b { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-18px,20px)} }
+```
+
+> M3 一致性：drift-a 12-14s，drift-b 8-10s reverse，薄荷绿 + 天蓝双色，opacity 0.10-0.18。
+
+### Hero GSAP Timeline（统一时序，禁止独立 fromTo）
+
+```js
+const heroTl = gsap.timeline({ delay: 0.2 });
+heroTl.fromTo('.p07-hero .hero-eyebrow',  { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0);
+heroTl.fromTo('.p07-hero .page-hero-title',{ y: 30, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.15);
+heroTl.fromTo('.p07-hero .page-hero-sub', { y: 20, opacity: 0 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
+heroTl.fromTo('.p07-hero-tagline',        { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
+heroTl.fromTo('#p07-quicknav',            { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
+heroTl.fromTo('.p07-scroll-hint',         { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.75);
+```
+
+### Scroll Hint CSS
+
+```css
+.p07-scroll-hint {
+  font-size: var(--text-caption);
+  color: var(--text-on-dark-3);
+  animation: p07-float 2s ease-in-out infinite;
+  white-space: nowrap;
+  margin-top: var(--space-sm);
+}
+@keyframes p07-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+```
 
 ---
 
-## 7. 动画
+## 7. 动画规格（高级感动效）
 
-### Hero
-标准 timeline 模式（见 CLAUDE.md Hero 规范）。
+### 7.1 Section Header 入场
 
-### Section Headers
-每个 section header 使用 `fadeIn()` 滚动渐入。
+每个 section header 使用 `fadeIn()` 滚动渐入，与 M3 所有页面一致：
+```js
+fadeIn('#p07-icons .section-header', { trigger: '#p07-icons' });
+fadeIn('#p07-colors .section-header', { trigger: '#p07-colors' });
+// ... 7 个 section 各一个
+```
 
-### 资源卡片
-- 每张卡片独立 ScrollTrigger
-- `gsap.fromTo(card, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', scrollTrigger: { trigger: card, start: 'top 88%', toggleActions: 'play none none none' } })`
-- 插图区域额外添加 `scale: 0.95 → 1` 的缩放效果
-- 交错布局的卡片还可以添加轻微的 `x` 偏移入场（左图从左滑入，右图从右滑入）
+### 7.2 资源卡片入场（核心动效，分桌面端/移动端）
 
-### 移动端
-- 减少 `y` 偏移（40 → 25）
-- 去掉 `x` 偏移和 `scale` 效果
-- 通过 `ScrollTrigger.matchMedia` 区分
+**桌面端（≥769px）— 交错方向 + 缩放 + 位移三重组合**
+
+每张卡片的入场动画根据交错方向不同，有不同的 x 偏移方向：
+
+```js
+ScrollTrigger.matchMedia({
+  '(min-width: 769px)': function() {
+    document.querySelectorAll('.p07-resource-item').forEach(item => {
+      const isReverse = item.classList.contains('p07-item-reverse');
+      const illust = item.querySelector('.p07-resource-illustration');
+      const info   = item.querySelector('.p07-resource-info');
+
+      // 整体卡片：opacity + y 入场
+      gsap.fromTo(item,
+        { opacity: 0, y: 50 },
+        { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out',
+          scrollTrigger: { trigger: item, start: 'top 85%', toggleActions: 'play none none none' } }
+      );
+
+      // 插图：从对应方向滑入 + 缩放
+      gsap.fromTo(illust,
+        { opacity: 0, x: isReverse ? 40 : -40, scale: 0.9 },
+        { opacity: 1, x: 0, scale: 1, duration: 0.8, ease: 'power3.out', delay: 0.15,
+          scrollTrigger: { trigger: item, start: 'top 85%', toggleActions: 'play none none none' } }
+      );
+
+      // 信息区：从反方向微移入场 + stagger 子元素
+      const infoChildren = info.querySelectorAll('.p07-resource-name, .p07-resource-desc, .p07-resource-tags, .p07-resource-link');
+      gsap.fromTo(infoChildren,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.5, stagger: 0.08, ease: 'power3.out', delay: 0.25,
+          scrollTrigger: { trigger: item, start: 'top 85%', toggleActions: 'play none none none' } }
+      );
+    });
+  },
+
+  '(max-width: 768px)': function() {
+    // 移动端：简化为纯 y 入场，无 x 偏移和 scale
+    document.querySelectorAll('.p07-resource-item').forEach(item => {
+      gsap.fromTo(item,
+        { opacity: 0, y: 25 },
+        { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out',
+          scrollTrigger: { trigger: item, start: 'top 90%', toggleActions: 'play none none none' } }
+      );
+    });
+  }
+});
+```
+
+**动效拆解（为什么这样设计）**：
+- **整体卡片 y:50**：大位移营造"从下方升起"的重量感（M3 p06 用 y:35-40 做卡片入场）
+- **插图 x 偏移 + scale 0.9→1**：方向性入场增强交错布局的节奏感；缩放从 0.9 起步（不是 0.5），微妙但有高级感
+- **信息区子元素 stagger 0.08s**：名称→介绍→标签→链接依次出现，创造"内容逐行揭示"的阅读引导（M3 p06 的 spec-items 也用 0.08s stagger）
+- **delay 分层**：整体 0s → 插图 0.15s → 文字 0.25s，三层时间差制造深度
+
+### 7.3 SVG 插图微动画（hover / idle）
+
+每个 SVG 装饰插图应有轻微的 idle 动画增加页面活力：
+
+```css
+/* SVG 内部路径的 idle 呼吸动画 */
+.p07-resource-illustration svg {
+  transition: transform 0.4s var(--ease-apple);
+}
+.p07-resource-item:hover .p07-resource-illustration svg {
+  transform: scale(1.05);
+}
+
+/* SVG 内特定路径可添加描边动画 */
+.p07-resource-illustration .p07-svg-accent {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  transition: stroke-dashoffset 0.8s ease;
+}
+.p07-resource-item:hover .p07-svg-accent {
+  stroke-dashoffset: 0;
+}
+```
+
+> **桌面端 only**：hover 效果通过 `@media (hover: hover)` 限定，触摸设备不触发。
+
+```css
+@media (hover: hover) {
+  .p07-resource-item:hover .p07-resource-illustration svg { transform: scale(1.05); }
+  .p07-resource-item:hover .p07-svg-accent { stroke-dashoffset: 0; }
+}
+```
+
+### 7.4 访问链接交互反馈
+
+```css
+.p07-resource-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-caption);
+  font-weight: 500;
+  color: var(--module-3);
+  text-decoration: none;
+  transition: gap 0.25s var(--ease-apple), color 0.25s var(--ease-apple);
+  margin-top: 8px;
+}
+@media (hover: hover) {
+  .p07-resource-link:hover {
+    gap: 12px;
+    color: var(--accent-hover);
+  }
+}
+.p07-resource-link:active {
+  transform: scale(0.97);
+}
+```
+
+### 7.5 Section 过渡装饰（可选，增加高级感）
+
+相邻明暗 section 之间可添加一个渐变过渡带，避免硬切割：
+
+```css
+/* 浅→深过渡 */
+.p07-section-transition-to-dark {
+  height: 120px;
+  background: linear-gradient(to bottom, var(--bg-light) 0%, var(--bg-dark) 100%);
+  pointer-events: none;
+}
+/* 深→浅过渡 */
+.p07-section-transition-to-light {
+  height: 120px;
+  background: linear-gradient(to bottom, var(--bg-dark) 0%, var(--bg-light) 100%);
+  pointer-events: none;
+}
+```
+
+> 实现时可选：如果 7 个 section 之间加 6 个过渡带导致页面过长，可省略此项。
+
+### 7.6 Footer CTA 入场
+
+```js
+fadeIn('.page-footer-cta', { trigger: '.page-footer-cta', y: 40 });
+```
 
 ---
 
@@ -320,7 +521,173 @@ Hero（深色，100vh）
 
 ---
 
-## 9. 删除内容
+## 9. 移动端适配规格（≤768px）
+
+本页面为纯展示型（无 Canvas、CodeMirror、拖拽等复杂交互），移动端适配聚焦于**布局重排、触控优化、动画简化**。
+
+### 9.1 Hero 移动端
+
+```css
+@media (max-width: 768px) {
+  .p07-hero .page-hero-title {
+    font-size: clamp(1.8rem, 6vw, 2.5rem);
+  }
+  .p07-hero-tagline {
+    max-width: 90vw;
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 0 var(--space-sm);
+  }
+}
+```
+
+### 9.2 Quicknav（7 按钮换行处理）
+
+桌面端 7 个 quicknav 按钮一行排列。移动端按钮多，需要换行：
+
+```css
+@media (max-width: 768px) {
+  #p07-quicknav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    max-width: 90vw;
+  }
+  .hero-quicknav__item {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}
+@media (max-width: 400px) {
+  /* 极窄屏：纵向两列 */
+  #p07-quicknav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    width: 100%;
+    padding: 0 20px;
+  }
+  .hero-quicknav__item {
+    text-align: center;
+  }
+}
+```
+
+### 9.3 资源卡片移动端布局
+
+```css
+@media (max-width: 768px) {
+  /* 所有卡片统一纵向堆叠，取消交错 */
+  .p07-resource-item,
+  .p07-item-reverse {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-md);
+  }
+
+  /* 插图区域：全宽，固定高度 */
+  .p07-resource-illustration {
+    width: 100%;
+    height: 120px;
+  }
+
+  /* 信息区：全宽居中 */
+  .p07-resource-info {
+    width: 100%;
+    align-items: center;
+  }
+  .p07-resource-desc {
+    max-width: 100%;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* 资源名称 */
+  .p07-resource-name {
+    font-size: 1.2rem;
+  }
+
+  /* 标签 */
+  .p07-resource-tags {
+    justify-content: center;
+  }
+  .p07-tag {
+    font-size: 11px;
+    padding: 3px 10px;
+  }
+
+  /* 访问链接：加大触控区域 */
+  .p07-resource-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+  }
+
+  /* 卡片间距 */
+  .p07-resource-item + .p07-resource-item {
+    margin-top: var(--space-lg);
+  }
+}
+```
+
+### 9.4 Section 间距
+
+```css
+@media (max-width: 768px) {
+  /* Section padding 缩减 */
+  [id^="p07-"] {
+    padding: 60px 16px;
+    scroll-margin-top: 56px;
+  }
+
+  /* Section header 间距 */
+  .section-header {
+    margin-bottom: var(--space-lg);
+  }
+  .section-subtitle {
+    max-width: 100%;
+    font-size: 14px;
+    padding: 0 8px;
+  }
+}
+```
+
+### 9.5 触控交互
+
+| 元素 | 桌面端 | 移动端 |
+|------|--------|--------|
+| SVG hover scale(1.05) | `@media (hover: hover)` 内 | 不触发，保持静态 |
+| 链接 gap 6→12px | hover 触发 | 不触发；`:active` 时 `scale(0.97)` 提供点击反馈 |
+| 描边动画 dashoffset | hover 触发 | 不触发 |
+| 整张卡片 | 无额外效果 | 可选：`:active` 时轻微 `scale(0.98)` 提供触觉反馈 |
+
+```css
+/* 移动端触控反馈 */
+@media (hover: none) {
+  .p07-resource-link:active {
+    transform: scale(0.95);
+    transition: transform 0.1s;
+  }
+}
+```
+
+### 9.6 动画简化（已在 7.2 中通过 matchMedia 实现）
+
+移动端动画变化要点：
+- 卡片入场：`y: 25`（桌面 50），无 x 偏移，无 scale
+- `start: 'top 90%'`（桌面 85%），更早触发避免用户等待
+- `duration: 0.5s`（桌面 0.7s），更短更干脆
+- 无 stagger 子元素（整张卡片一起出现）
+- Section header 的 `fadeIn()` 保留但减少 y 值
+
+### 9.7 Footer CTA 移动端
+
+Footer CTA 使用全局样式，无需额外适配。按钮在窄屏自动换行（`flex-wrap: wrap`）。
+
+---
+
+## 10. 删除内容
 
 - Quiz 工具推荐向导（整个 S2）
 - 许可证速查（整个 S3）
@@ -330,7 +697,7 @@ Hero（深色，100vh）
 
 ---
 
-## 10. 技术约束
+## 11. 技术约束
 
 - `gsap` / `ScrollTrigger` 必须从 `ScrollAnimations.js` 导入
 - `navigateTo` 从 `router.js` 导入（Footer 按钮导航）
