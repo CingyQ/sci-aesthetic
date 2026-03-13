@@ -180,17 +180,23 @@ Hero（深色，100vh）
 }
 
 /* 信息区 */
+.p07-resource-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
 .p07-resource-name {
   font-family: var(--font-heading);
   font-size: clamp(1.25rem, 2vw, 1.5rem);
   font-weight: 700;
-  margin-bottom: 8px;
+  margin-bottom: var(--space-xs);
 }
 .p07-resource-desc {
   font-size: var(--text-body);
   line-height: 1.7;
   max-width: 480px;
-  margin-bottom: 12px;
+  margin-bottom: var(--space-sm);
 }
 
 /* 标签 */
@@ -207,7 +213,7 @@ Hero（深色，100vh）
   color: var(--module-3);
 }
 
-/* 访问链接 */
+/* 访问链接 — 完整样式见 section 7.4 */
 .p07-resource-link {
   display: inline-flex;
   align-items: center;
@@ -216,10 +222,9 @@ Hero（深色，100vh）
   font-weight: 500;
   color: var(--module-3);
   text-decoration: none;
-  transition: gap 0.2s ease;
-  margin-top: 8px;
+  transition: gap 0.25s var(--ease-apple), color 0.25s var(--ease-apple);
+  margin-top: var(--space-xs);
 }
-.p07-resource-link:hover { gap: 10px; }
 
 /* 移动端 */
 @media (max-width: 768px) {
@@ -253,10 +258,20 @@ Hero（深色，100vh）
 </div>
 ```
 
-**注意**：`section-eyebrow`、`section-title`、`section-subtitle` 是项目内已有的全局 class（各页面普遍使用）。深色 section 需要在 header 元素上添加内联颜色覆盖：
-- eyebrow: `style="color:rgba(149,213,178,0.7)"`
-- title: `style="color:var(--text-on-dark)"`
-- subtitle: `style="color:var(--text-on-dark-2)"`
+**注意**：`section-eyebrow`、`section-title`、`section-subtitle` 是项目内已有的全局 class（各页面普遍使用）。
+
+**浅色 section 模板**（S1, S3, S5, S7）— 使用默认颜色，无需内联覆盖。
+
+**深色 section 模板**（S2, S4, S6）— 需要内联颜色覆盖：
+```html
+<div class="section-header" style="text-align:center;margin-bottom:var(--space-xl);">
+  <p class="section-eyebrow" style="color:rgba(149,213,178,0.7);">Color Tools</p>
+  <h2 class="section-title" style="color:var(--text-on-dark);">配色工具</h2>
+  <p class="section-subtitle" style="color:var(--text-on-dark-2);max-width:540px;margin:0 auto;">
+    配色决定第一印象——用对工具，让每张图表和幻灯片的色彩都经得起推敲
+  </p>
+</div>
+```
 
 ### 各 Section 的 Header 文案
 
@@ -350,13 +365,27 @@ heroTl.fromTo('.p07-scroll-hint',         { opacity: 0, y: 15 }, { opacity: 1, y
 
 ## 7. 动画规格（高级感动效）
 
+### 7.0 Import 声明
+
+```js
+import { gsap, ScrollTrigger, fadeIn, killAll } from '../../components/ScrollAnimations.js';
+import { navigateTo } from '../../utils/router.js';
+```
+
 ### 7.1 Section Header 入场
 
-每个 section header 使用 `fadeIn()` 滚动渐入，与 M3 所有页面一致：
+每个 section header 使用 `fadeIn()` 滚动渐入，与 M3 所有页面一致。
+
+> **注意**：`fadeIn()` 的 trigger 默认就是传入元素本身，不支持自定义 trigger 参数。
+
 ```js
-fadeIn('#p07-icons .section-header', { trigger: '#p07-icons' });
-fadeIn('#p07-colors .section-header', { trigger: '#p07-colors' });
-// ... 7 个 section 各一个
+fadeIn('#p07-icons .section-header');
+fadeIn('#p07-colors .section-header');
+fadeIn('#p07-templates .section-header');
+fadeIn('#p07-science .section-header');
+fadeIn('#p07-vectors .section-header');
+fadeIn('#p07-fonts .section-header');
+fadeIn('#p07-tutorials .section-header');
 ```
 
 ### 7.2 资源卡片入场（核心动效，分桌面端/移动端）
@@ -495,10 +524,11 @@ ScrollTrigger.matchMedia({
 
 > 实现时可选：如果 7 个 section 之间加 6 个过渡带导致页面过长，可省略此项。
 
-### 7.6 Footer CTA 入场
+### 7.6 Footer CTA 入场（与 M3 p06 对齐）
 
 ```js
-fadeIn('.page-footer-cta', { trigger: '.page-footer-cta', y: 40 });
+fadeIn('.page-footer-quote', { y: 40, duration: 0.9 });
+fadeIn('.page-footer-cta .page-footer-nav', { y: 25, duration: 0.6 });
 ```
 
 ---
@@ -559,7 +589,8 @@ fadeIn('.page-footer-cta', { trigger: '.page-footer-cta', y: 40 });
   }
 }
 @media (max-width: 400px) {
-  /* 极窄屏：纵向两列 */
+  /* 极窄屏：纵向两列（而非 CLAUDE.md 默认的单列纵向排列）
+     原因：7 个按钮单列排列会过长（~350px），2 列更紧凑 */
   #p07-quicknav {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -707,5 +738,32 @@ Footer CTA 使用全局样式，无需额外适配。按钮在窄屏自动换行
 - `destroy()` 必须调用 `killAll()` 并清理所有事件监听
 - scroll 监听器使用 `{ passive: true }`
 - 移动端所有 section 设置 `scroll-margin-top: 56px`（全局已有规则，但页面 `<style>` 中应显式包含 `@media (max-width: 768px) { #p07-icons, #p07-colors, ... { scroll-margin-top: 56px; } }`）
+- `destroy()` 清理：除 `killAll()` 外，还需移除 quicknav 按钮的 click 事件监听（建议用事件委托挂在 `#p07-quicknav` 上，destroy 时移除容器监听即可）
 - SVG 插图：21 个独特 SVG，线条风格，可在实现时逐步完善。首轮实现可使用简化版 SVG（几何形状 + 线条组合），后续迭代提升精度
 - 实现前应验证所有 21 个 URL 可访问（尤其是 officeplus.cn、scidraw.io、mycolor.space）
+
+### SVG 插图主题参考
+
+| 资源 | 建议 SVG 主题 |
+|------|--------------|
+| Iconfont | 散落的图标形状（圆、方、星、心） |
+| Flaticon | 网格排列的 4 个迷你图标 |
+| Noun Project | 放大镜 + 概念符号 |
+| Coolors | 5 个横条色块 + 空格键 |
+| ColorBrewer | 渐变色卡阶梯（sequential） |
+| mycolor.space | 圆形渐变光谱 |
+| OfficePlus | PPT 幻灯片缩略轮廓 |
+| Slidesgo | 幻灯片叠放 + 学术帽 |
+| iSlide | 图表 + 魔术棒 |
+| BioRender | 细胞 + DNA 双螺旋轮廓 |
+| Servier Medical Art | 心脏 / 器官简笔轮廓 |
+| SciDraw | 烧杯 + 画笔 |
+| Freepik | 调色板 + 矢量路径 |
+| unDraw | 人物剪影 + 色块 |
+| Vecteezy | 贝塞尔曲线 + 锚点 |
+| Google Fonts | Aa 字母排版 |
+| 猫啃网 | 中文"字"字 + 猫爪印 |
+| Font Squirrel | 松鼠轮廓 + 字母 |
+| R Graph Gallery | 折线图 + R logo |
+| Python Graph Gallery | 散点图 + 蛇形线 |
+| From Data to Viz | 决策树分支图 |
