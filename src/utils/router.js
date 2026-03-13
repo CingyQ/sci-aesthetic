@@ -1,5 +1,5 @@
 // hash 路由
-// 路由格式：#home / #m1-p1 ~ #m1-p10 / #m2-p1 ~ #m2-p6 / #m3-p1 ~ #m3-p7 / #m4-p1 ~ #m4-p5 / #ref
+// 路由格式：#home / #m1-p1 ~ #m1-p10 / #m2-p1 ~ #m2-p6 / #m3-p1 ~ #m3-p7 / #m4-p1 ~ #m4-p4 / #ref
 import { markVisited } from './progress.js';
 
 const routes = new Map();

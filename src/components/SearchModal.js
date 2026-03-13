@@ -27,14 +27,10 @@ const SEARCH_DATA = [
   { id: 'm3-p5', title: 'SVG 编辑与优化', keywords: ['SVG', '编辑', '优化', 'viewBox', '路径'] },
   { id: 'm3-p6', title: '多面板 Figure 组合', keywords: ['面板', 'patchwork', 'subplot', '布局', 'Figure'] },
   { id: 'm3-p7', title: '素材资源站', keywords: ['素材', 'Freepik', 'BioRender', 'Flaticon', '图标'] },
-  { id: 'm4-p1', title: 'PPT 设计原则', keywords: ['PPT', '格式塔', '视觉层次', '信噪比', '设计'] },
-  { id: 'm4-p2', title: '排版与字体', keywords: ['排版', '字体', 'typography', '行距', '对齐'] },
-  { id: 'm4-p3', title: '注意力与视觉流', keywords: ['注意力', '热力图', 'F型', 'Z型', '视觉流'] },
-  { id: 'm4-p4', title: 'PPT 改造案例', keywords: ['改造', 'makeover', 'Before/After'] },
-  { id: 'm4-p5', title: '学术海报设计', keywords: ['海报', 'poster', '会议', 'CMYK', '打印'] },
-  { id: 'm4-p6', title: 'Graphical Abstract', keywords: ['图摘', 'graphical abstract', '图形摘要'] },
-  { id: 'm4-p7', title: '科研信息图', keywords: ['信息图', 'infographic', '社交媒体'] },
-  { id: 'm4-p8', title: '科研动画基础', keywords: ['动画', 'animation', 'gganimate', '关键帧'] },
+  { id: 'm4-p1', title: '设计速成指南', keywords: ['PPT', '格式塔', '视觉层次', '信噪比', '设计'] },
+  { id: 'm4-p2', title: '学术演示全场景', keywords: ['排版', '字体', 'typography', '行距', '对齐'] },
+  { id: 'm4-p3', title: 'PPT 改造工坊', keywords: ['改造', 'makeover', 'Before/After'] },
+  { id: 'm4-p4', title: '学术海报与 GA', keywords: ['海报', 'poster', '会议', 'CMYK', '打印', '图摘', 'graphical abstract'] },
   { id: 'ref', title: '速查手册', keywords: ['速查', '手册', 'reference', '快捷键'] },
 ];
 
