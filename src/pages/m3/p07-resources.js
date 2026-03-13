@@ -830,7 +830,7 @@ export function render() {
     <p class="page-footer-desc">模块三「矢量绘图与设计」到此完结。模块四将带你进入学术演示设计的世界。</p>
     <div class="page-footer-nav">
       <button class="btn-ghost" id="p07-prev-btn">← 多面板 Figure 组合</button>
-      <button class="btn-ghost" id="p07-home-btn">↩ 模块三首页</button>
+      <button class="btn-ghost" id="p07-home-btn">返回模块首页</button>
       <button class="btn-primary" id="p07-next-btn">进入模块四 →</button>
     </div>
   </section>
