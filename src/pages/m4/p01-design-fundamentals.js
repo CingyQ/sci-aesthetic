@@ -282,7 +282,7 @@ export function render() {
           <p class="df-ws-p2">主效应显著 F(2,45)=8.32, p&lt;0.01</p>
           <p class="df-ws-p3">交互效应不显著 F(2,45)=1.04, p=0.36</p>
         </div>
-        <div class="df-ws-chart">[图表区域]</div>
+        <div class="df-ws-chart"><div style="display:flex;align-items:flex-end;gap:4px;height:44px;padding:0 4px;"><div style="flex:1;height:55%;background:rgba(0,0,0,0.08);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:82%;background:rgba(240,178,122,0.4);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:40%;background:rgba(0,0,0,0.08);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:65%;background:rgba(0,0,0,0.08);border-radius:3px 3px 0 0;"></div></div></div>
         <p class="df-ws-source">数据来源：2024 年实验记录</p>
       </div>
       <div class="df-stepper" id="df-ws-stepper">
@@ -444,7 +444,7 @@ export function render() {
         <h3 class="df-h-l1" style="font-size:16px;color:#888;margin-bottom:8px;">实验设计与分析方法</h3>
         <p class="df-h-l2" style="font-size:16px;color:#888;margin-bottom:8px;">双因素混合设计</p>
         <p class="df-h-l3" style="font-size:16px;color:#888;margin-bottom:8px;line-height:1.6;">本研究采用 2×3 混合设计，自变量为干预类型和时间点。因变量为标准化测验得分。采用重复测量方差分析检验主效应和交互效应。</p>
-        <div class="df-h-l4" style="height:60px;border-radius:8px;background:rgba(0,0,0,0.04);display:flex;align-items:center;justify-content:center;font-size:13px;color:#999;margin-bottom:8px;">[图表区域]</div>
+        <div class="df-h-l4" style="height:60px;border-radius:8px;background:rgba(0,0,0,0.04);display:flex;align-items:flex-end;justify-content:center;margin-bottom:8px;padding:0 8px;"><div style="display:flex;align-items:flex-end;gap:4px;height:44px;padding:0 4px;"><div style="flex:1;height:55%;background:rgba(0,0,0,0.08);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:82%;background:rgba(240,178,122,0.4);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:40%;background:rgba(0,0,0,0.08);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:65%;background:rgba(0,0,0,0.08);border-radius:3px 3px 0 0;"></div></div></div>
         <p class="df-h-l5" style="font-size:16px;color:#888;">数据来源：XX 大学心理学实验室 · 2024</p>
       </div>
       <div class="df-hier-controls">
