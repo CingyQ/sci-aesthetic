@@ -443,6 +443,65 @@ const styles = `
 }
 @keyframes p07-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
 
+/* ─── 总览跳转 ─── */
+.p07-overview {
+  padding: var(--space-xl) var(--space-lg) var(--space-3xl);
+}
+.p07-overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-md);
+  max-width: var(--w-full);
+  margin: 0 auto;
+}
+.p07-overview-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-lg) var(--space-md);
+  border-radius: 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  cursor: pointer;
+  transition: background 0.3s var(--ease-apple), border-color 0.3s var(--ease-apple), transform 0.3s var(--ease-apple);
+  text-align: center;
+}
+.p07-overview-card:hover {
+  background: rgba(149,213,178,0.06);
+  border-color: rgba(149,213,178,0.2);
+  transform: translateY(-4px);
+}
+.p07-overview-card:active {
+  transform: scale(0.97);
+}
+.p07-overview-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(149,213,178,0.08);
+}
+.p07-overview-card h3 {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-on-dark);
+}
+.p07-overview-card p {
+  font-size: var(--text-caption);
+  color: var(--text-on-dark-2);
+  line-height: 1.5;
+}
+.p07-overview-count {
+  font-size: 11px;
+  color: rgba(149,213,178,0.7);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
 /* ─── 资源卡片布局 ─── */
 .p07-resource-item {
   display: flex;
@@ -504,8 +563,11 @@ const styles = `
   color: rgba(149,213,178,0.8);
 }
 .section-light .p07-tag {
-  background: rgba(149,213,178,0.12);
-  color: var(--module-3);
+  background: rgba(45,120,80,0.08);
+  color: #2d7850;
+}
+.section-light .p07-resource-link {
+  color: #2d7850;
 }
 
 /* ─── 访问链接 ─── */
@@ -562,6 +624,27 @@ const styles = `
     font-size: 12px;
     padding: 6px 12px;
   }
+  .p07-overview {
+    padding: var(--space-lg) 16px var(--space-xl);
+  }
+  .p07-overview-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .p07-overview-card {
+    padding: var(--space-md) var(--space-sm);
+    gap: 8px;
+  }
+  .p07-overview-icon {
+    width: 40px;
+    height: 40px;
+  }
+  .p07-overview-card h3 {
+    font-size: 0.95rem;
+  }
+  .p07-overview-card p {
+    display: none;
+  }
   .p07-resource-item,
   .p07-item-reverse {
     flex-direction: column;
@@ -600,6 +683,7 @@ const styles = `
   .p07-resource-item + .p07-resource-item {
     margin-top: var(--space-lg);
   }
+  #p07-overview,
   #p07-icons, #p07-colors, #p07-templates,
   #p07-science, #p07-vectors, #p07-fonts, #p07-tutorials {
     padding: 60px 16px;
@@ -708,6 +792,34 @@ export function render() {
     </div>
   </section>
 
+  <!-- ══════ 总览跳转 ══════ -->
+  <section class="section-dark p07-overview" id="p07-overview">
+    <div style="text-align:center;margin-bottom:var(--space-lg);">
+      <h2 class="section-title" style="color:var(--text-on-dark);">7 大类资源，按需取用</h2>
+      <p class="section-subtitle" style="color:var(--text-on-dark-2);max-width:480px;margin:var(--space-xs) auto 0;">点击任意类别，直达对应资源</p>
+    </div>
+    <div class="p07-overview-grid">
+      ${SECTIONS.map(s => `
+        <div class="p07-overview-card" data-target="#${s.id}">
+          <div class="p07-overview-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(149,213,178,0.8)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              ${s.id === 'p07-icons' ? '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><circle cx="17.5" cy="17.5" r="3.5"/>' :
+                s.id === 'p07-colors' ? '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5" fill="rgba(149,213,178,0.2)"/><circle cx="12" cy="12" r="1.5" fill="rgba(149,213,178,0.5)"/>' :
+                s.id === 'p07-templates' ? '<rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="9" x2="9" y2="21"/>' :
+                s.id === 'p07-science' ? '<circle cx="12" cy="10" r="4"/><path d="M8 18c0-2.2 1.8-4 4-4s4 1.8 4 4"/><circle cx="5" cy="6" r="2"/><circle cx="19" cy="6" r="2"/>' :
+                s.id === 'p07-vectors' ? '<polygon points="12,2 15,9 22,9 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9 9,9"/>' :
+                s.id === 'p07-fonts' ? '<path d="M4 7V4h16v3"/><line x1="12" y1="4" x2="12" y2="20"/><line x1="8" y1="20" x2="16" y2="20"/>' :
+                '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>'}
+            </svg>
+          </div>
+          <h3>${s.title}</h3>
+          <p>${s.subtitle.length > 30 ? s.subtitle.substring(0, 28) + '…' : s.subtitle}</p>
+          <span class="p07-overview-count">${s.resources.length} 个资源</span>
+        </div>
+      `).join('')}
+    </div>
+  </section>
+
   <!-- ══════ 7 个资源 Section ══════ -->
   ${SECTIONS.map(renderSection).join('')}
 
@@ -718,6 +830,7 @@ export function render() {
     <p class="page-footer-desc">模块三「矢量绘图与设计」到此完结。模块四将带你进入学术演示设计的世界。</p>
     <div class="page-footer-nav">
       <button class="btn-ghost" id="p07-prev-btn">← 多面板 Figure 组合</button>
+      <button class="btn-ghost" id="p07-home-btn">↩ 模块三首页</button>
       <button class="btn-primary" id="p07-next-btn">进入模块四 →</button>
     </div>
   </section>
@@ -751,7 +864,28 @@ function initQuicknav() {
   addEvt(nav, 'click', handler);
 }
 
+function initOverview() {
+  const grid = document.querySelector('.p07-overview-grid');
+  if (!grid) return;
+  const handler = (e) => {
+    const card = e.target.closest('.p07-overview-card');
+    if (!card) return;
+    const target = card.dataset.target;
+    const el = document.querySelector(target);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+  addEvt(grid, 'click', handler);
+}
+
 function initScrollAnimations() {
+  // 总览卡片入场
+  fadeIn('.p07-overview .section-title');
+  gsap.fromTo('.p07-overview-card',
+    { opacity: 0, y: 30 },
+    { opacity: 1, y: 0, duration: 0.5, stagger: 0.06, ease: 'power3.out',
+      scrollTrigger: { trigger: '.p07-overview-grid', start: 'top 85%', toggleActions: 'play none none none' } }
+  );
+
   // Section header 入场
   fadeIn('#p07-icons .section-header');
   fadeIn('#p07-colors .section-header');
@@ -808,14 +942,17 @@ function initScrollAnimations() {
 
 function initFooterNav() {
   const prev = document.getElementById('p07-prev-btn');
+  const home = document.getElementById('p07-home-btn');
   const next = document.getElementById('p07-next-btn');
   if (prev) addEvt(prev, 'click', () => navigateTo('m3-p6'));
+  if (home) addEvt(home, 'click', () => navigateTo('m3-p1'));
   if (next) addEvt(next, 'click', () => navigateTo('m4-p1'));
 }
 
 export function init() {
   initHero();
   initQuicknav();
+  initOverview();
   initScrollAnimations();
   initFooterNav();
 }
