@@ -939,6 +939,11 @@ function initSNRDesktop() {
   const slideCol = document.getElementById('df-snr-slide-col');
   if (!wrap || !slideCol) return;
 
+  const slideH = slideCol.offsetHeight;
+  const wrapH  = wrap.offsetHeight;
+  const maxTranslate = Math.max(0, wrapH - slideH);
+  const viewH = window.innerHeight;
+
   let ticking = false;
   const onScroll = () => {
     if (ticking) return;
@@ -946,29 +951,24 @@ function initSNRDesktop() {
     requestAnimationFrame(() => {
       ticking = false;
       const wrapRect = wrap.getBoundingClientRect();
-      const slideH = slideCol.offsetHeight;
-      const wrapH = wrap.offsetHeight;
-      const maxTranslate = Math.max(0, wrapH - slideH);
 
-      // JS sticky
       if (wrapRect.top >= 0) {
         slideCol.style.transform = 'translateY(0)';
-      } else if (wrapRect.bottom <= slideH) {
+      } else if (-wrapRect.top + viewH >= wrapH) {
         slideCol.style.transform = `translateY(${maxTranslate}px)`;
       } else {
         const translate = Math.min(-wrapRect.top, maxTranslate);
         slideCol.style.transform = `translateY(${translate}px)`;
       }
 
-      // 计算当前步骤
-      const progress = Math.max(0, -wrapRect.top) / Math.max(1, wrapH - window.innerHeight);
+      const progress = Math.max(0, Math.min(1, -wrapRect.top / Math.max(1, wrapH - viewH)));
       const stepIdx = Math.min(4, Math.floor(progress * 5));
       updateSNR(stepIdx);
     });
   };
 
   addEvt(window, 'scroll', onScroll, { passive: true });
-  updateSNR(0);
+  onScroll();
 }
 
 function initSNRMobile() {
