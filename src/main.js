@@ -36,15 +36,12 @@ registerRoute('m3-p5', () => import('./pages/m3/p05-svg-editing.js'));
 registerRoute('m3-p6', () => import('./pages/m3/p06-multi-panel.js'));
 registerRoute('m3-p7', () => import('./pages/m3/p07-resources.js'));
 
-// 模块四：学术演示设计（8 页）
-registerRoute('m4-p1', () => import('./pages/m4/p01-ppt-principles.js'));
-registerRoute('m4-p2', () => import('./pages/m4/p02-typography.js'));
-registerRoute('m4-p3', () => import('./pages/m4/p03-attention-flow.js'));
-registerRoute('m4-p4', () => import('./pages/m4/p04-ppt-makeover.js'));
-registerRoute('m4-p5', () => import('./pages/m4/p05-poster.js'));
-registerRoute('m4-p6', () => import('./pages/m4/p06-graphical-abstract.js'));
-registerRoute('m4-p7', () => import('./pages/m4/p07-infographics.js'));
-registerRoute('m4-p8', () => import('./pages/m4/p08-animation.js'));
+// 模块四：学术演示设计（5 页）
+registerRoute('m4-p1', () => import('./pages/m4/p01-design-fundamentals.js'));
+registerRoute('m4-p2', () => import('./pages/m4/p02-ppt-guide.js'));
+registerRoute('m4-p3', () => import('./pages/m4/p03-ppt-makeover.js'));
+registerRoute('m4-p4', () => import('./pages/m4/p04-poster.js'));
+registerRoute('m4-p5', () => import('./pages/m4/p05-graphical-abstract.js'));
 
 // 速查手册
 registerRoute('ref', () => import('./pages/ref.js'));
