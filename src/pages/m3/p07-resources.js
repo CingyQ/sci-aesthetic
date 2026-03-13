@@ -1,14 +1,13 @@
-// p07-resources.js — 资源与工具
-// Hero → S1 资源卡片库 → S2 工具推荐向导 → S3 许可证速查 → Footer CTA
+// p07-resources.js — 素材资源站
+// Hero → S1 图标库 → S2 配色工具 → S3 演示模板 → S4 科研插图 → S5 矢量素材 → S6 字体资源 → S7 教程灵感 → Footer
 
-import { fadeIn, killAll, gsap } from '../../components/ScrollAnimations.js';
+import { fadeIn, killAll, gsap, ScrollTrigger } from '../../components/ScrollAnimations.js';
 import { navigateTo } from '../../utils/router.js';
 
 // ══════════════════════════════════════════════════════
 //  模块级状态
 // ══════════════════════════════════════════════════════
 let _eventHandlers = [];
-let _resultTimer = null;
 
 function addEvt(el, type, fn, opts) {
   if (!el) return;
@@ -17,442 +16,666 @@ function addEvt(el, type, fn, opts) {
 }
 
 // ══════════════════════════════════════════════════════
-//  资源数据
+//  SVG 插图辅助
 // ══════════════════════════════════════════════════════
-const RESOURCES = [
-  // 软件工具
-  {
-    id: 'illustrator',
-    name: 'Adobe Illustrator',
-    category: 'software',
-    categoryLabel: '软件工具',
-    desc: '业界标准的专业矢量图形软件，科研插图制作的首选工具。',
-    pricing: 'paid',
-    pricingLabel: '付费',
-    features: ['强大的钢笔工具与贝塞尔曲线控制', '完美兼容各大期刊投稿格式', '丰富的脚本自动化能力'],
-    tags: ['journal', 'diagram', 'presentation', 'all'],
-    os: 'cross-platform',
-    difficulty: 'advanced',
-    free: false,
-    paid: true,
-    url: '#'
-  },
-  {
-    id: 'inkscape',
-    name: 'Inkscape',
-    category: 'software',
-    categoryLabel: '软件工具',
-    desc: '功能完备的免费开源矢量图形编辑器，支持全面的 SVG 标准。',
-    pricing: 'free',
-    pricingLabel: '免费',
-    features: ['完全免费且开源，无需订阅', '出色的 SVG 原生支持', '支持 Python 脚本扩展'],
-    tags: ['journal', 'diagram', 'all'],
-    os: 'cross-platform',
-    difficulty: 'medium',
-    free: true,
-    paid: false,
-    url: '#'
-  },
-  {
-    id: 'affinity',
-    name: 'Affinity Designer',
-    category: 'software',
-    categoryLabel: '软件工具',
-    desc: '高性价比的专业矢量与栅格图形设计工具，一次性购买终身使用。',
-    pricing: 'paid',
-    pricingLabel: '付费',
-    features: ['一次性购买，无订阅费用', '矢量与栅格无缝切换', '流畅的 120fps 实时预览'],
-    tags: ['journal', 'presentation', 'all'],
-    os: 'cross-platform',
-    difficulty: 'medium',
-    free: false,
-    paid: true,
-    url: '#'
-  },
-  {
-    id: 'coreldraw',
-    name: 'CorelDRAW',
-    category: 'software',
-    categoryLabel: '软件工具',
-    desc: '历史悠久的专业矢量设计套件，在工程和科学插图领域广泛应用。',
-    pricing: 'paid',
-    pricingLabel: '付费',
-    features: ['完善的工程制图支持', '丰富的科学符号库', '强大的排版与布局工具'],
-    tags: ['journal', 'diagram', 'all'],
-    os: 'cross-platform',
-    difficulty: 'advanced',
-    free: false,
-    paid: true,
-    url: '#'
-  },
-  // 在线工具
-  {
-    id: 'figma',
-    name: 'Figma',
-    category: 'online',
-    categoryLabel: '在线工具',
-    desc: '基于浏览器的协作设计平台，适合团队共同创作科研图表和演示材料。',
-    pricing: 'freemium',
-    pricingLabel: '免费增值',
-    features: ['实时多人协作编辑', '丰富的矢量编辑能力', '海量社区模板和插件'],
-    tags: ['presentation', 'diagram', 'all'],
-    os: 'cross-platform',
-    difficulty: 'easy',
-    free: true,
-    paid: true,
-    url: '#'
-  },
-  {
-    id: 'canva',
-    name: 'Canva for Science',
-    category: 'online',
-    categoryLabel: '在线工具',
-    desc: '面向科研人员优化的在线设计平台，提供大量学术海报和图表模板。',
-    pricing: 'freemium',
-    pricingLabel: '免费增值',
-    features: ['专属学术设计模板库', '一键生成图形摘要', '支持高分辨率 PDF 导出'],
-    tags: ['presentation', 'journal', 'all'],
-    os: 'cross-platform',
-    difficulty: 'easy',
-    free: true,
-    paid: true,
-    url: '#'
-  },
-  {
-    id: 'biorender',
-    name: 'BioRender',
-    category: 'online',
-    categoryLabel: '在线工具',
-    desc: '生命科学领域的专业科学图形创作平台，内置数千个生物医学图标。',
-    pricing: 'freemium',
-    pricingLabel: '免费增值',
-    features: ['超过 50,000 个生物科学图标', '专为期刊发表图形优化', '支持团队协作与模板共享'],
-    tags: ['journal', 'diagram', 'all'],
-    os: 'cross-platform',
-    difficulty: 'easy',
-    free: true,
-    paid: true,
-    url: '#'
-  },
-  // 字体资源
-  {
-    id: 'google-fonts',
-    name: 'Google Fonts',
-    category: 'fonts',
-    categoryLabel: '字体资源',
-    desc: '免费开源字体库，提供超过 1500 款高质量字体，含多款学术友好字体。',
-    pricing: 'free',
-    pricingLabel: '免费',
-    features: ['完全免费，支持商业使用', '优秀的中英文学术字体选择', 'API 直接嵌入网页和文档'],
-    tags: ['presentation', 'all'],
-    os: 'cross-platform',
-    difficulty: 'easy',
-    free: true,
-    paid: false,
-    url: '#'
-  },
-  {
-    id: 'adobe-fonts',
-    name: 'Adobe Fonts',
-    category: 'fonts',
-    categoryLabel: '字体资源',
-    desc: '随 Adobe Creative Cloud 订阅提供的高端字体库，含众多专业排版字体。',
-    pricing: 'paid',
-    pricingLabel: '付费',
-    features: ['20,000+ 专业级字体', '与 Illustrator 无缝集成', '支持多语言科研文档排版'],
-    tags: ['journal', 'presentation', 'all'],
-    os: 'cross-platform',
-    difficulty: 'easy',
-    free: false,
-    paid: true,
-    url: '#'
-  },
-  {
-    id: 'font-squirrel',
-    name: 'Font Squirrel',
-    category: 'fonts',
-    categoryLabel: '字体资源',
-    desc: '精选的免费商业字体平台，所有字体均经过授权验证，可安全用于发表。',
-    pricing: 'free',
-    pricingLabel: '免费',
-    features: ['严格筛选的商业授权字体', '提供 Web Font 格式转换', '按风格和用途分类浏览'],
-    tags: ['presentation', 'journal', 'all'],
-    os: 'cross-platform',
-    difficulty: 'easy',
-    free: true,
-    paid: false,
-    url: '#'
-  },
-  // 图标库
-  {
-    id: 'noun-project',
-    name: 'The Noun Project',
-    category: 'icons',
-    categoryLabel: '图标库',
-    desc: '全球最大的科学与通用图标库，覆盖几乎所有学科领域的专业图标。',
-    pricing: 'freemium',
-    pricingLabel: '免费增值',
-    features: ['500 万+ 专业图标矢量素材', '覆盖生物、化学、物理等各学科', '支持 SVG/PNG 格式下载'],
-    tags: ['journal', 'diagram', 'presentation', 'all'],
-    os: 'cross-platform',
-    difficulty: 'easy',
-    free: true,
-    paid: true,
-    url: '#'
-  },
-  {
-    id: 'flaticon',
-    name: 'Flaticon',
-    category: 'icons',
-    categoryLabel: '图标库',
-    desc: '拥有大量扁平化风格矢量图标的资源网站，适合制作现代感的科研演示。',
-    pricing: 'freemium',
-    pricingLabel: '免费增值',
-    features: ['900 万+ 矢量图标和贴纸', '提供统一风格的图标包', '支持颜色自定义后下载'],
-    tags: ['presentation', 'diagram', 'all'],
-    os: 'cross-platform',
-    difficulty: 'easy',
-    free: true,
-    paid: true,
-    url: '#'
-  },
-  {
-    id: 'font-awesome',
-    name: 'Font Awesome',
-    category: 'icons',
-    categoryLabel: '图标库',
-    desc: '经典的图标字体库，提供大量 UI 和通用图标，常用于科研网站和报告。',
-    pricing: 'freemium',
-    pricingLabel: '免费增值',
-    features: ['2000+ 免费图标，即用即得', '支持图标字体和 SVG 两种形式', '易于在 Web 和文档中集成'],
-    tags: ['presentation', 'all'],
-    os: 'cross-platform',
-    difficulty: 'easy',
-    free: true,
-    paid: true,
-    url: '#'
-  },
-  // 学习资源
-  {
-    id: 'vecteezy',
-    name: 'Vecteezy Tutorials',
-    category: 'learning',
-    categoryLabel: '学习资源',
-    desc: '提供系统的矢量图形设计教程，从入门到进阶全面覆盖。',
-    pricing: 'free',
-    pricingLabel: '免费',
-    features: ['系统化的矢量设计教程', '实战项目练习文件下载', '社区问答和点评反馈'],
-    tags: ['all'],
-    os: 'cross-platform',
-    difficulty: 'easy',
-    free: true,
-    paid: false,
-    url: '#'
-  },
-  {
-    id: 'adobe-learn',
-    name: 'Adobe Learn',
-    category: 'learning',
-    categoryLabel: '学习资源',
-    desc: 'Adobe 官方学习中心，提供 Illustrator 系列视频教程和实战项目指导。',
-    pricing: 'free',
-    pricingLabel: '免费',
-    features: ['Adobe 官方权威教程', '从基础到高级的完整学习路径', '随时可下载的练习文件'],
-    tags: ['all'],
-    os: 'cross-platform',
-    difficulty: 'easy',
-    free: true,
-    paid: false,
-    url: '#'
-  }
-];
-
-// ══════════════════════════════════════════════════════
-//  Quiz 数据
-// ══════════════════════════════════════════════════════
-const QUIZ_QUESTIONS = [
-  {
-    id: 'budget',
-    question: '你的预算是？',
-    icon: '💰',
-    options: [
-      { value: 'free', label: '完全免费', desc: '只使用免费工具' },
-      { value: 'low', label: '低预算', desc: '可接受一次性小额付费' },
-      { value: 'professional', label: '专业预算', desc: '订阅或高端软件均可' }
-    ]
-  },
-  {
-    id: 'purpose',
-    question: '主要用途是什么？',
-    icon: '🎯',
-    options: [
-      { value: 'journal', label: '期刊图表', desc: '投稿用的精密科学图形' },
-      { value: 'diagram', label: '流程图 / 示意图', desc: '实验流程、机制示意图' },
-      { value: 'presentation', label: '演示设计', desc: '学术海报、PPT、汇报' },
-      { value: 'all', label: '全能需求', desc: '以上都需要' }
-    ]
-  },
-  {
-    id: 'os',
-    question: '你使用什么操作系统？',
-    icon: '💻',
-    options: [
-      { value: 'windows', label: 'Windows', desc: 'PC 或工作站' },
-      { value: 'macos', label: 'macOS', desc: 'Mac / MacBook' },
-      { value: 'cross-platform', label: '跨平台 / 浏览器', desc: '在线工具优先' }
-    ]
-  },
-  {
-    id: 'level',
-    question: '你的设计技术水平？',
-    icon: '📊',
-    options: [
-      { value: 'beginner', label: '初学者', desc: '刚开始接触设计工具' },
-      { value: 'medium', label: '有基础', desc: '用过一些设计软件' },
-      { value: 'advanced', label: '专业用户', desc: '熟悉矢量设计原理' }
-    ]
-  }
-];
-
-// ══════════════════════════════════════════════════════
-//  许可证数据
-// ══════════════════════════════════════════════════════
-const LICENSES = [
-  {
-    id: 'cc-by',
-    name: 'CC BY',
-    fullName: '署名许可',
-    colorHex: '#95D5B2',
-    icon: 'BY',
-    desc: '使用作品时需要注明原作者，可自由使用、修改和商业化。',
-    academicNote: '适合学术发表，在图注中注明来源即可。',
-    canDo: ['学术论文中引用', '修改后用于教学', '商业产品中使用（需署名）', '创作衍生作品'],
-    cannotDo: ['移除版权声明', '声称为自己的原创作品']
-  },
-  {
-    id: 'cc-by-nc',
-    name: 'CC BY-NC',
-    fullName: '署名—非商业性使用',
-    colorHex: '#7EC8E3',
-    icon: 'NC',
-    desc: '允许非商业用途的使用和修改，必须署名，禁止商业用途。',
-    academicNote: '适合学术非营利发表，商业出版社期刊须确认条款。',
-    canDo: ['个人和学术研究使用', '非营利教育材料', '开放获取期刊投稿（部分）'],
-    cannotDo: ['商业出版物中使用', '销售含此内容的产品', '企业报告或宣传材料']
-  },
-  {
-    id: 'cc-by-sa',
-    name: 'CC BY-SA',
-    fullName: '署名—相同方式共享',
-    colorHex: '#F0B27A',
-    icon: 'SA',
-    desc: '允许修改和使用，但衍生作品必须采用相同的许可协议，并署名。',
-    academicNote: '需注意期刊是否接受 SA 类许可，开放获取期刊通常可接受。',
-    canDo: ['学术论文中引用', '修改后在相同许可下发布', '维基百科类协作项目'],
-    cannotDo: ['修改后用专有许可发布', '用于不兼容许可的项目']
-  },
-  {
-    id: 'cc0',
-    name: 'CC0',
-    fullName: '公共领域 / 无版权',
-    colorHex: '#B8B8E8',
-    icon: 'C0',
-    desc: '作者放弃所有版权，任何人可以自由使用、修改、商业化，无需署名。',
-    academicNote: '最友好的学术使用许可，无任何限制，但学术规范建议仍注明来源。',
-    canDo: ['完全自由使用和修改', '无需注明来源（学术规范建议注明）', '商业和非商业均可', '创作任何衍生作品'],
-    cannotDo: ['（几乎没有限制）']
-  },
-  {
-    id: 'commercial',
-    name: '商业许可',
-    fullName: '专有商业许可',
-    colorHex: '#E8A0A0',
-    icon: '©',
-    desc: '需要购买授权才能使用，通常有明确的使用范围限制，不可随意再分发。',
-    academicNote: '部分期刊或机构订阅后可用于发表；个人购买前务必确认学术发表权限。',
-    canDo: ['购买后在授权范围内使用', '部分许可允许学术发表', '咨询版权方获得特殊授权'],
-    cannotDo: ['未购买情况下使用', '超出授权范围使用', '再分发或转售', '修改后发布（通常）']
-  }
-];
-
-// ══════════════════════════════════════════════════════
-//  Quiz 运行时状态
-// ══════════════════════════════════════════════════════
-let _quizState = {
-  currentStep: 0,
-  answers: {}
-};
-
-// ══════════════════════════════════════════════════════
-//  渲染辅助函数
-// ══════════════════════════════════════════════════════
-function renderResourceCard(r) {
-  const pricingClass = {
-    free: 'p07-badge-free',
-    paid: 'p07-badge-paid',
-    freemium: 'p07-badge-freemium'
-  }[r.pricing] || 'p07-badge-free';
-
-  return `
-<div class="p07-resource-card" data-category="${r.category}">
-  <div class="p07-card-header">
-    <div class="p07-card-name">${r.name}</div>
-    <div class="p07-card-badges">
-      <span class="p07-badge p07-badge-category">${r.categoryLabel}</span>
-      <span class="p07-badge ${pricingClass}">${r.pricingLabel}</span>
-    </div>
-  </div>
-  <p class="p07-card-desc">${r.desc}</p>
-  <ul class="p07-card-features">
-    ${r.features.map(f => `<li>${f}</li>`).join('')}
-  </ul>
-  <div class="p07-card-footer">
-    <a href="${r.url}" class="p07-card-link">访问资源 <span aria-hidden="true">→</span></a>
-  </div>
-</div>`.trim();
+function svgColors(dark) {
+  return dark
+    ? { stroke: 'rgba(149,213,178,0.6)', fill: 'rgba(149,213,178,0.08)', accent: 'rgba(149,213,178,0.8)' }
+    : { stroke: 'rgba(29,29,31,0.3)', fill: 'rgba(149,213,178,0.06)', accent: 'rgba(29,29,31,0.5)' };
 }
 
-function renderQuizQuestion(q, index) {
-  const display = index === 0 ? 'block' : 'none';
-  return `
-<div class="p07-quiz-question" id="p07-question-${index}" style="display:${display};">
-  <span class="p07-question-icon" aria-hidden="true">${q.icon}</span>
-  <p class="p07-question-text">${q.question}</p>
-  <div class="p07-quiz-options">
-    ${q.options.map(opt => `
-    <button class="p07-quiz-option" data-question="${q.id}" data-value="${opt.value}">
-      <span class="p07-option-label">${opt.label}</span>
-      <span class="p07-option-desc">${opt.desc}</span>
-    </button>`).join('')}
-  </div>
-</div>`.trim();
+// ── S1 图标库 SVG ──
+function svgIconfont(dark) {
+  const c = svgColors(dark);
+  return `<svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="42" r="18" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <rect x="95" y="26" width="32" height="32" rx="6" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <polygon points="165,28 170,46 188,46 173,56 178,74 165,64 152,74 157,56 142,46 160,46" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <path class="p07-svg-accent" d="M50,82 C50,72 65,62 65,77 C65,87 50,97 50,97 C50,97 35,87 35,77 C35,62 50,72 50,82Z" stroke="${c.accent}" stroke-width="1.5" fill="${c.fill}" stroke-dasharray="120" stroke-dashoffset="120"/>
+    <circle cx="128" cy="92" r="14" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}" stroke-dasharray="4 4"/>
+    <rect x="155" y="85" width="24" height="24" rx="4" stroke="${c.stroke}" stroke-width="1" fill="${c.fill}" opacity="0.5"/>
+  </svg>`;
+}
+function svgFlaticon(dark) {
+  const c = svgColors(dark);
+  return `<svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="30" y="20" width="28" height="28" rx="6" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <rect x="70" y="20" width="28" height="28" rx="6" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <rect x="110" y="20" width="28" height="28" rx="6" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <rect x="150" y="20" width="28" height="28" rx="6" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <rect x="30" y="60" width="28" height="28" rx="6" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <circle cx="84" cy="74" r="14" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <polygon points="124,60 138,88 110,88" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <path class="p07-svg-accent" d="M150,60 L178,60 L178,88 L150,88 Z M156,68 L172,68 M156,76 L168,76" stroke="${c.accent}" stroke-width="1.5" fill="none" stroke-dasharray="140" stroke-dashoffset="140"/>
+    <line x1="30" y1="106" x2="178" y2="106" stroke="${c.stroke}" stroke-width="1" opacity="0.3" stroke-dasharray="4 4"/>
+    <circle cx="60" cy="118" r="6" stroke="${c.stroke}" stroke-width="1" fill="${c.fill}" opacity="0.4"/>
+    <circle cx="100" cy="118" r="6" stroke="${c.stroke}" stroke-width="1" fill="${c.fill}" opacity="0.4"/>
+    <circle cx="140" cy="118" r="6" stroke="${c.stroke}" stroke-width="1" fill="${c.fill}" opacity="0.4"/>
+  </svg>`;
+}
+function svgNounProject(dark) {
+  const c = svgColors(dark);
+  return `<svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="60" r="35" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <circle cx="100" cy="60" r="22" stroke="${c.stroke}" stroke-width="1" fill="none" opacity="0.4"/>
+    <line x1="100" y1="38" x2="100" y2="82" stroke="${c.stroke}" stroke-width="1" opacity="0.3"/>
+    <line x1="78" y1="60" x2="122" y2="60" stroke="${c.stroke}" stroke-width="1" opacity="0.3"/>
+    <path class="p07-svg-accent" d="M125,85 L145,105 M145,105 L140,100 M145,105 L139,106" stroke="${c.accent}" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="60" stroke-dashoffset="60"/>
+    <circle cx="45" cy="110" r="8" stroke="${c.stroke}" stroke-width="1" fill="${c.fill}" opacity="0.3"/>
+    <rect x="148" y="108" width="16" height="16" rx="3" stroke="${c.stroke}" stroke-width="1" fill="${c.fill}" opacity="0.3"/>
+  </svg>`;
 }
 
-function renderLicenseCard(l) {
+// ── S2 配色工具 SVG ──
+function svgCoolors(dark) {
+  const c = svgColors(dark);
+  return `<svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="25" y="25" width="30" height="70" rx="4" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <rect x="60" y="25" width="30" height="70" rx="4" stroke="${c.stroke}" stroke-width="1.5" fill="rgba(149,213,178,0.15)"/>
+    <rect x="95" y="25" width="30" height="70" rx="4" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <rect x="130" y="25" width="30" height="70" rx="4" stroke="${c.stroke}" stroke-width="1.5" fill="rgba(126,200,227,0.12)"/>
+    <rect x="165" y="25" width="30" height="70" rx="4" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <path class="p07-svg-accent" d="M75,110 L80,115 L88,106 L96,115 L104,106 L112,115 L120,106 L125,110" stroke="${c.accent}" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-dasharray="80" stroke-dashoffset="80"/>
+    <text x="100" y="128" text-anchor="middle" font-size="10" fill="${c.stroke}" opacity="0.5" font-family="var(--font-body)">spacebar</text>
+  </svg>`;
+}
+function svgColorBrewer(dark) {
+  const c = svgColors(dark);
+  return `<svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="30" y="30" width="140" height="16" rx="3" stroke="${c.stroke}" stroke-width="1" fill="${c.fill}" opacity="0.3"/>
+    <rect x="30" y="30" width="28" height="16" rx="3" fill="rgba(149,213,178,0.1)" stroke="none"/>
+    <rect x="58" y="30" width="28" height="16" rx="0" fill="rgba(149,213,178,0.2)" stroke="none"/>
+    <rect x="86" y="30" width="28" height="16" rx="0" fill="rgba(149,213,178,0.3)" stroke="none"/>
+    <rect x="114" y="30" width="28" height="16" rx="0" fill="rgba(149,213,178,0.45)" stroke="none"/>
+    <rect x="142" y="30" width="28" height="16" rx="3" fill="rgba(149,213,178,0.6)" stroke="none"/>
+    <rect x="30" y="56" width="140" height="16" rx="3" stroke="${c.stroke}" stroke-width="1" fill="${c.fill}" opacity="0.3"/>
+    <rect x="30" y="56" width="46" height="16" rx="3" fill="rgba(126,200,227,0.15)" stroke="none"/>
+    <rect x="76" y="56" width="48" height="16" rx="0" fill="rgba(126,200,227,0.3)" stroke="none"/>
+    <rect x="124" y="56" width="46" height="16" rx="3" fill="rgba(126,200,227,0.5)" stroke="none"/>
+    <rect x="30" y="82" width="140" height="16" rx="3" stroke="${c.stroke}" stroke-width="1" fill="${c.fill}" opacity="0.3"/>
+    <path class="p07-svg-accent" d="M40,108 Q70,95 100,108 Q130,121 160,108" stroke="${c.accent}" stroke-width="1.5" fill="none" stroke-dasharray="140" stroke-dashoffset="140"/>
+  </svg>`;
+}
+function svgMyColorSpace(dark) {
+  const c = svgColors(dark);
+  return `<svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="65" r="38" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <circle cx="100" cy="65" r="28" stroke="${c.stroke}" stroke-width="1" fill="none" opacity="0.4"/>
+    <circle cx="100" cy="65" r="18" stroke="${c.stroke}" stroke-width="1" fill="rgba(149,213,178,0.12)" opacity="0.6"/>
+    <circle cx="100" cy="65" r="8" fill="rgba(149,213,178,0.25)" stroke="none"/>
+    <path class="p07-svg-accent" d="M60,65 A40,40 0 0,1 140,65" stroke="${c.accent}" stroke-width="2" fill="none" stroke-dasharray="130" stroke-dashoffset="130"/>
+    <line x1="40" y1="115" x2="160" y2="115" stroke="${c.stroke}" stroke-width="1" opacity="0.2"/>
+    <circle cx="60" cy="115" r="5" fill="rgba(149,213,178,0.3)" stroke="none"/>
+    <circle cx="100" cy="115" r="5" fill="rgba(126,200,227,0.3)" stroke="none"/>
+    <circle cx="140" cy="115" r="5" fill="rgba(184,184,232,0.3)" stroke="none"/>
+  </svg>`;
+}
+
+// ── S3 演示模板 SVG ──
+function svgOfficePlus(dark) {
+  const c = svgColors(dark);
+  return `<svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="35" y="20" width="130" height="80" rx="6" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <rect x="45" y="30" width="50" height="8" rx="2" fill="${c.stroke}" opacity="0.3"/>
+    <rect x="45" y="44" width="80" height="5" rx="1.5" fill="${c.stroke}" opacity="0.15"/>
+    <rect x="45" y="54" width="65" height="5" rx="1.5" fill="${c.stroke}" opacity="0.15"/>
+    <rect x="45" y="68" width="35" height="22" rx="4" stroke="${c.stroke}" stroke-width="1" fill="rgba(149,213,178,0.1)"/>
+    <rect x="86" y="68" width="35" height="22" rx="4" stroke="${c.stroke}" stroke-width="1" fill="rgba(126,200,227,0.1)"/>
+    <path class="p07-svg-accent" d="M100,108 L100,125 M90,117 L110,117" stroke="${c.accent}" stroke-width="2" stroke-linecap="round" stroke-dasharray="40" stroke-dashoffset="40"/>
+  </svg>`;
+}
+function svgSlidesgo(dark) {
+  const c = svgColors(dark);
+  return `<svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="55" y="35" width="100" height="65" rx="5" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <rect x="45" y="28" width="100" height="65" rx="5" stroke="${c.stroke}" stroke-width="1" fill="${c.fill}" opacity="0.5"/>
+    <rect x="35" y="21" width="100" height="65" rx="5" stroke="${c.stroke}" stroke-width="1" fill="${c.fill}" opacity="0.25"/>
+    <rect x="65" y="48" width="40" height="6" rx="2" fill="${c.stroke}" opacity="0.3"/>
+    <rect x="65" y="60" width="60" height="4" rx="1" fill="${c.stroke}" opacity="0.15"/>
+    <rect x="65" y="70" width="50" height="4" rx="1" fill="${c.stroke}" opacity="0.15"/>
+    <path class="p07-svg-accent" d="M100,108 L90,120 L95,120 L95,128 L105,128 L105,120 L110,120 Z" stroke="${c.accent}" stroke-width="1.5" fill="${c.fill}" stroke-dasharray="80" stroke-dashoffset="80"/>
+  </svg>`;
+}
+function svgISlide(dark) {
+  const c = svgColors(dark);
+  return `<svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="40" y="25" width="80" height="55" rx="5" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <rect x="50" y="35" width="25" height="18" rx="3" stroke="${c.stroke}" stroke-width="1" fill="rgba(149,213,178,0.1)"/>
+    <rect x="80" y="35" width="30" height="5" rx="1.5" fill="${c.stroke}" opacity="0.2"/>
+    <rect x="80" y="45" width="22" height="4" rx="1" fill="${c.stroke}" opacity="0.12"/>
+    <rect x="50" y="60" width="60" height="12" rx="3" fill="rgba(149,213,178,0.1)" stroke="${c.stroke}" stroke-width="1"/>
+    <path class="p07-svg-accent" d="M140,35 L140,80 M140,35 L155,50 Q158,53 155,56 L142,68" stroke="${c.accent}" stroke-width="2" stroke-linecap="round" fill="none" stroke-dasharray="100" stroke-dashoffset="100"/>
+    <polygon points="140,80 136,72 144,72" fill="${c.accent}" opacity="0.5"/>
+    <text x="100" y="120" text-anchor="middle" font-size="9" fill="${c.stroke}" opacity="0.4" font-family="var(--font-body)">✦ one-click</text>
+  </svg>`;
+}
+
+// ── S4 科研插图 SVG ──
+function svgBioRender(dark) {
+  const c = svgColors(dark);
+  return `<svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="70" cy="55" r="22" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <circle cx="70" cy="55" r="10" stroke="${c.stroke}" stroke-width="1" fill="rgba(149,213,178,0.12)"/>
+    <circle cx="70" cy="55" r="4" fill="${c.accent}" opacity="0.3"/>
+    <path d="M110,25 Q120,50 110,75 Q100,50 110,25Z" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <path d="M110,25 Q130,50 110,75" stroke="${c.stroke}" stroke-width="1.5" fill="none"/>
+    <line x1="104" y1="40" x2="116" y2="40" stroke="${c.stroke}" stroke-width="1" opacity="0.4"/>
+    <line x1="103" y1="50" x2="117" y2="50" stroke="${c.stroke}" stroke-width="1" opacity="0.4"/>
+    <line x1="104" y1="60" x2="116" y2="60" stroke="${c.stroke}" stroke-width="1" opacity="0.4"/>
+    <path class="p07-svg-accent" d="M140,40 C148,35 156,45 148,50 C156,55 148,65 140,60 C132,65 124,55 132,50 C124,45 132,35 140,40Z" stroke="${c.accent}" stroke-width="1.5" fill="${c.fill}" stroke-dasharray="120" stroke-dashoffset="120"/>
+    <rect x="40" y="92" width="120" height="28" rx="6" stroke="${c.stroke}" stroke-width="1" fill="${c.fill}" opacity="0.3"/>
+    <text x="100" y="110" text-anchor="middle" font-size="9" fill="${c.stroke}" opacity="0.4" font-family="var(--font-body)">drag &amp; drop</text>
+  </svg>`;
+}
+function svgServierMedical(dark) {
+  const c = svgColors(dark);
+  return `<svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M100,30 C115,30 125,45 125,60 C125,80 110,95 100,105 C90,95 75,80 75,60 C75,45 85,30 100,30Z" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <path d="M90,55 L100,55 L100,45 L100,55 L110,55 L100,55 L100,65" stroke="${c.stroke}" stroke-width="2" stroke-linecap="round"/>
+    <circle cx="50" cy="90" r="15" stroke="${c.stroke}" stroke-width="1" fill="${c.fill}" opacity="0.4"/>
+    <path d="M45,90 L50,85 L55,90" stroke="${c.stroke}" stroke-width="1.5" fill="none" opacity="0.4"/>
+    <circle cx="150" cy="90" r="15" stroke="${c.stroke}" stroke-width="1" fill="${c.fill}" opacity="0.4"/>
+    <path class="p07-svg-accent" d="M143,85 Q150,95 157,85 Q150,100 143,85" stroke="${c.accent}" stroke-width="1.5" fill="${c.fill}" stroke-dasharray="50" stroke-dashoffset="50"/>
+    <text x="100" y="128" text-anchor="middle" font-size="9" fill="${c.stroke}" opacity="0.35" font-family="var(--font-body)">CC BY</text>
+  </svg>`;
+}
+function svgSciDraw(dark) {
+  const c = svgColors(dark);
+  return `<svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M60,90 L60,40 Q60,30 70,30 L80,30" stroke="${c.stroke}" stroke-width="1.5" fill="none"/>
+    <circle cx="60" cy="95" r="5" fill="${c.fill}" stroke="${c.stroke}" stroke-width="1.5"/>
+    <rect x="75" y="25" width="30" height="35" rx="3" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <line x1="80" y1="35" x2="100" y2="35" stroke="${c.stroke}" stroke-width="1" opacity="0.3"/>
+    <line x1="80" y1="42" x2="96" y2="42" stroke="${c.stroke}" stroke-width="1" opacity="0.3"/>
+    <line x1="80" y1="49" x2="98" y2="49" stroke="${c.stroke}" stroke-width="1" opacity="0.3"/>
+    <path class="p07-svg-accent" d="M130,30 L145,80 M130,30 L133,38 M132,60 L140,58 M136,72 L144,74" stroke="${c.accent}" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-dasharray="100" stroke-dashoffset="100"/>
+    <circle cx="145" cy="82" r="3" fill="${c.accent}" opacity="0.4"/>
+    <rect x="40" y="110" width="120" height="8" rx="4" stroke="${c.stroke}" stroke-width="1" fill="${c.fill}" opacity="0.2"/>
+  </svg>`;
+}
+
+// ── S5 矢量素材 SVG ──
+function svgFreepik(dark) {
+  const c = svgColors(dark);
+  return `<svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="65" cy="55" r="25" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <circle cx="65" cy="55" r="15" fill="rgba(149,213,178,0.1)" stroke="none"/>
+    <path d="M55,50 L65,40 L75,50" stroke="${c.stroke}" stroke-width="1.5" fill="none"/>
+    <path d="M55,60 L65,50 L75,60" stroke="${c.stroke}" stroke-width="1" fill="none" opacity="0.4"/>
+    <rect x="110" y="30" width="60" height="50" rx="4" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <path d="M115,75 L130,55 L140,65 L155,45 L165,55" stroke="${c.stroke}" stroke-width="1.5" fill="none"/>
+    <circle cx="125" cy="42" r="5" fill="rgba(149,213,178,0.2)" stroke="${c.stroke}" stroke-width="1"/>
+    <path class="p07-svg-accent" d="M40,100 C60,85 80,105 100,90 C120,75 140,100 160,88" stroke="${c.accent}" stroke-width="1.5" fill="none" stroke-dasharray="150" stroke-dashoffset="150"/>
+  </svg>`;
+}
+function svgUndraw(dark) {
+  const c = svgColors(dark);
+  return `<svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="80" cy="40" r="12" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <path d="M80,52 L80,85 M80,60 L65,75 M80,60 L95,75 M80,85 L68,105 M80,85 L92,105" stroke="${c.stroke}" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <rect x="120" y="25" width="50" height="35" rx="5" fill="rgba(149,213,178,0.1)" stroke="${c.stroke}" stroke-width="1"/>
+    <rect x="120" y="68" width="50" height="35" rx="5" fill="rgba(126,200,227,0.1)" stroke="${c.stroke}" stroke-width="1"/>
+    <path class="p07-svg-accent" d="M130,45 L160,45 M130,52" stroke="${c.accent}" stroke-width="2" stroke-linecap="round" stroke-dasharray="40" stroke-dashoffset="40"/>
+    <rect x="130" y="78" width="30" height="4" rx="2" fill="${c.stroke}" opacity="0.2"/>
+    <rect x="130" y="86" width="22" height="4" rx="2" fill="${c.stroke}" opacity="0.15"/>
+  </svg>`;
+}
+function svgVecteezy(dark) {
+  const c = svgColors(dark);
+  return `<svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M40,70 C40,40 70,25 100,25 C130,25 160,40 160,70 C160,100 130,115 100,115 C70,115 40,100 40,70Z" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <circle cx="60" cy="60" r="5" fill="${c.accent}" opacity="0.6"/>
+    <circle cx="100" cy="35" r="5" fill="${c.accent}" opacity="0.6"/>
+    <circle cx="140" cy="60" r="5" fill="${c.accent}" opacity="0.6"/>
+    <circle cx="100" cy="105" r="5" fill="${c.accent}" opacity="0.6"/>
+    <line x1="60" y1="60" x2="100" y2="35" stroke="${c.stroke}" stroke-width="1" opacity="0.4"/>
+    <line x1="100" y1="35" x2="140" y2="60" stroke="${c.stroke}" stroke-width="1" opacity="0.4"/>
+    <line x1="140" y1="60" x2="100" y2="105" stroke="${c.stroke}" stroke-width="1" opacity="0.4"/>
+    <line x1="100" y1="105" x2="60" y2="60" stroke="${c.stroke}" stroke-width="1" opacity="0.4"/>
+    <path class="p07-svg-accent" d="M60,60 Q80,50 100,35 Q120,50 140,60 Q120,80 100,105 Q80,80 60,60" stroke="${c.accent}" stroke-width="1.5" fill="none" stroke-dasharray="200" stroke-dashoffset="200"/>
+  </svg>`;
+}
+
+// ── S6 字体资源 SVG ──
+function svgGoogleFonts(dark) {
+  const c = svgColors(dark);
+  return `<svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <text x="50" y="58" font-size="42" font-weight="700" fill="${c.stroke}" opacity="0.6" font-family="serif">A</text>
+    <text x="95" y="62" font-size="36" font-weight="300" fill="${c.stroke}" opacity="0.4" font-family="sans-serif">a</text>
+    <text x="135" y="55" font-size="30" font-weight="400" fill="${c.stroke}" opacity="0.35" font-family="serif" font-style="italic">f</text>
+    <line x1="40" y1="75" x2="170" y2="75" stroke="${c.stroke}" stroke-width="1" opacity="0.2"/>
+    <rect x="40" y="85" width="55" height="6" rx="3" fill="${c.stroke}" opacity="0.15"/>
+    <rect x="40" y="97" width="40" height="5" rx="2.5" fill="${c.stroke}" opacity="0.1"/>
+    <rect x="110" y="85" width="50" height="6" rx="3" fill="rgba(149,213,178,0.15)"/>
+    <rect x="110" y="97" width="35" height="5" rx="2.5" fill="rgba(149,213,178,0.1)"/>
+    <path class="p07-svg-accent" d="M40,115 L170,115" stroke="${c.accent}" stroke-width="1.5" stroke-dasharray="130" stroke-dashoffset="130"/>
+  </svg>`;
+}
+function svgMaoken(dark) {
+  const c = svgColors(dark);
+  return `<svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <text x="100" y="65" text-anchor="middle" font-size="48" font-weight="700" fill="${c.stroke}" opacity="0.5" font-family="serif">字</text>
+    <circle cx="155" cy="35" r="12" stroke="${c.stroke}" stroke-width="1" fill="${c.fill}" opacity="0.4"/>
+    <path d="M150,32 C152,28 158,28 160,32 C162,36 156,40 155,42 C154,40 148,36 150,32Z" fill="${c.accent}" opacity="0.3"/>
+    <path d="M152,38 L148,42" stroke="${c.stroke}" stroke-width="1" opacity="0.3"/>
+    <path class="p07-svg-accent" d="M45,95 L155,95 M65,105 L135,105 M80,115 L120,115" stroke="${c.accent}" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-dasharray="200" stroke-dashoffset="200"/>
+  </svg>`;
+}
+function svgFontSquirrel(dark) {
+  const c = svgColors(dark);
+  return `<svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="80" cy="55" r="20" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <circle cx="74" cy="50" r="3" fill="${c.stroke}" opacity="0.4"/>
+    <circle cx="86" cy="50" r="3" fill="${c.stroke}" opacity="0.4"/>
+    <path d="M75,60 Q80,65 85,60" stroke="${c.stroke}" stroke-width="1" fill="none"/>
+    <circle cx="70" cy="38" r="6" stroke="${c.stroke}" stroke-width="1" fill="${c.fill}"/>
+    <circle cx="90" cy="38" r="6" stroke="${c.stroke}" stroke-width="1" fill="${c.fill}"/>
+    <path d="M80,75 C80,85 75,95 65,100 M80,75 C80,85 85,95 95,100" stroke="${c.stroke}" stroke-width="1.5" fill="none"/>
+    <text x="145" y="50" font-size="28" font-weight="700" fill="${c.stroke}" opacity="0.4" font-family="serif">T</text>
+    <text x="155" y="75" font-size="20" font-weight="400" fill="${c.stroke}" opacity="0.3" font-family="sans-serif">f</text>
+    <path class="p07-svg-accent" d="M125,90 L170,90 M130,100 L165,100 M135,110 L160,110" stroke="${c.accent}" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-dasharray="120" stroke-dashoffset="120"/>
+  </svg>`;
+}
+
+// ── S7 教程灵感 SVG ──
+function svgRGraphGallery(dark) {
+  const c = svgColors(dark);
+  return `<svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="30" y="25" width="140" height="85" rx="5" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <line x1="50" y1="95" x2="150" y2="95" stroke="${c.stroke}" stroke-width="1" opacity="0.3"/>
+    <line x1="50" y1="40" x2="50" y2="95" stroke="${c.stroke}" stroke-width="1" opacity="0.3"/>
+    <path d="M55,88 L70,75 L85,80 L100,55 L115,62 L130,42 L145,48" stroke="${c.stroke}" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="55" cy="88" r="2.5" fill="${c.accent}" opacity="0.6"/>
+    <circle cx="85" cy="80" r="2.5" fill="${c.accent}" opacity="0.6"/>
+    <circle cx="115" cy="62" r="2.5" fill="${c.accent}" opacity="0.6"/>
+    <circle cx="145" cy="48" r="2.5" fill="${c.accent}" opacity="0.6"/>
+    <path class="p07-svg-accent" d="M155,118 L170,118 M155,118 Q155,130 168,130" stroke="${c.accent}" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-dasharray="40" stroke-dashoffset="40"/>
+    <text x="37" y="122" font-size="10" fill="${c.stroke}" opacity="0.35" font-family="monospace">R</text>
+  </svg>`;
+}
+function svgPythonGraphGallery(dark) {
+  const c = svgColors(dark);
+  return `<svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="30" y="25" width="140" height="85" rx="5" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <line x1="50" y1="95" x2="150" y2="95" stroke="${c.stroke}" stroke-width="1" opacity="0.3"/>
+    <line x1="50" y1="40" x2="50" y2="95" stroke="${c.stroke}" stroke-width="1" opacity="0.3"/>
+    <circle cx="70" cy="80" r="4" fill="${c.accent}" opacity="0.35"/>
+    <circle cx="85" cy="65" r="4" fill="${c.accent}" opacity="0.35"/>
+    <circle cx="95" cy="72" r="4" fill="${c.accent}" opacity="0.35"/>
+    <circle cx="110" cy="50" r="4" fill="${c.accent}" opacity="0.35"/>
+    <circle cx="120" cy="58" r="4" fill="${c.accent}" opacity="0.35"/>
+    <circle cx="135" cy="42" r="4" fill="${c.accent}" opacity="0.35"/>
+    <circle cx="145" cy="55" r="4" fill="${c.accent}" opacity="0.35"/>
+    <circle cx="75" cy="55" r="4" fill="${c.accent}" opacity="0.35"/>
+    <path class="p07-svg-accent" d="M40,118 C50,112 60,122 70,115 C80,108 90,118 100,112" stroke="${c.accent}" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="80" stroke-dashoffset="80"/>
+  </svg>`;
+}
+function svgDataToViz(dark) {
+  const c = svgColors(dark);
+  return `<svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="100" cy="25" r="12" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <text x="100" y="29" text-anchor="middle" font-size="10" fill="${c.stroke}" opacity="0.5" font-family="var(--font-body)">?</text>
+    <line x1="88" y1="33" x2="65" y2="55" stroke="${c.stroke}" stroke-width="1.5"/>
+    <line x1="112" y1="33" x2="135" y2="55" stroke="${c.stroke}" stroke-width="1.5"/>
+    <circle cx="65" cy="62" r="10" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <circle cx="135" cy="62" r="10" stroke="${c.stroke}" stroke-width="1.5" fill="${c.fill}"/>
+    <line x1="56" y1="69" x2="40" y2="88" stroke="${c.stroke}" stroke-width="1"/>
+    <line x1="65" y1="72" x2="65" y2="88" stroke="${c.stroke}" stroke-width="1"/>
+    <line x1="74" y1="69" x2="90" y2="88" stroke="${c.stroke}" stroke-width="1"/>
+    <line x1="126" y1="69" x2="110" y2="88" stroke="${c.stroke}" stroke-width="1"/>
+    <line x1="144" y1="69" x2="160" y2="88" stroke="${c.stroke}" stroke-width="1"/>
+    <rect x="32" y="90" width="16" height="12" rx="3" stroke="${c.stroke}" stroke-width="1" fill="${c.fill}" opacity="0.5"/>
+    <rect x="57" y="90" width="16" height="12" rx="3" stroke="${c.stroke}" stroke-width="1" fill="${c.fill}" opacity="0.5"/>
+    <rect x="82" y="90" width="16" height="12" rx="3" stroke="${c.stroke}" stroke-width="1" fill="${c.fill}" opacity="0.5"/>
+    <rect x="102" y="90" width="16" height="12" rx="3" stroke="${c.stroke}" stroke-width="1" fill="${c.fill}" opacity="0.5"/>
+    <rect x="152" y="90" width="16" height="12" rx="3" stroke="${c.stroke}" stroke-width="1" fill="${c.fill}" opacity="0.5"/>
+    <path class="p07-svg-accent" d="M40,118 L160,118" stroke="${c.accent}" stroke-width="1.5" stroke-dasharray="120" stroke-dashoffset="120"/>
+    <text x="100" y="130" text-anchor="middle" font-size="9" fill="${c.stroke}" opacity="0.35" font-family="var(--font-body)">data → chart</text>
+  </svg>`;
+}
+
+// ══════════════════════════════════════════════════════
+//  资源数据（7 类 × 3 个 = 21 个）
+// ══════════════════════════════════════════════════════
+const SECTIONS = [
+  {
+    id: 'p07-icons', eyebrow: 'Icons', title: '图标库',
+    subtitle: '科研海报、PPT、论文配图中常需要简洁的图标来表达概念——以下是最实用的图标资源站',
+    dark: false,
+    resources: [
+      { name: 'Iconfont', url: 'https://www.iconfont.cn/', desc: '阿里巴巴矢量图标库，2300 万+ 图标，支持在线改色和多格式导出', tags: ['中文界面', 'SVG/PNG 导出'], svgFn: svgIconfont },
+      { name: 'Flaticon', url: 'https://www.flaticon.com/', desc: '全球最大扁平化图标库，900 万+ 图标，可按风格统一下载整套图标包', tags: ['风格统一', '整套下载'], svgFn: svgFlaticon },
+      { name: 'The Noun Project', url: 'https://thenounproject.com/', desc: '高质量概念图标，覆盖各学科领域，风格简洁统一', tags: ['学科覆盖广', 'SVG 格式'], svgFn: svgNounProject },
+    ],
+  },
+  {
+    id: 'p07-colors', eyebrow: 'Color Tools', title: '配色工具',
+    subtitle: '配色决定第一印象——用对工具，让每张图表和幻灯片的色彩都经得起推敲',
+    dark: true,
+    resources: [
+      { name: 'Coolors', url: 'https://coolors.co/', desc: '按空格键即可生成配色方案，支持从图片提色和无障碍检查', tags: ['一键生成', '无障碍检查'], svgFn: svgCoolors },
+      { name: 'ColorBrewer', url: 'https://colorbrewer2.org/', desc: '数据可视化配色标杆，ggplot2 内置调色板的来源，色盲友好', tags: ['数据可视化', '色盲友好'], svgFn: svgColorBrewer },
+      { name: 'mycolor.space', url: 'https://mycolor.space/', desc: '输入一个颜色，自动生成多种风格的渐变和搭配方案', tags: ['渐变生成', '即时预览'], svgFn: svgMyColorSpace },
+    ],
+  },
+  {
+    id: 'p07-templates', eyebrow: 'Templates', title: 'PPT / 演示模板',
+    subtitle: '不必从零开始——专业模板让你把时间花在内容上，而不是排版上',
+    dark: false,
+    resources: [
+      { name: 'OfficePlus', url: 'https://www.officeplus.cn/', desc: '微软官方模板平台，百万+ 模板，可通过 PPT 插件直接使用', tags: ['微软官方', '插件集成'], svgFn: svgOfficePlus },
+      { name: 'Slidesgo', url: 'https://slidesgo.com/', desc: '海量免费学术主题模板，支持 PowerPoint 和 Google Slides', tags: ['学术主题', '免费下载'], svgFn: svgSlidesgo },
+      { name: 'iSlide', url: 'https://www.islide.cc/', desc: 'PPT 设计插件 + 模板平台，内置海量图标、图表、布局，一键美化', tags: ['PPT 插件', '一键美化'], svgFn: svgISlide },
+    ],
+  },
+  {
+    id: 'p07-science', eyebrow: 'Scientific Illustrations', title: '科研插图素材',
+    subtitle: '细胞、分子、实验装置……专业科研插图让你的论文配图不再"手绘风"',
+    dark: true,
+    resources: [
+      { name: 'BioRender', url: 'https://www.biorender.com/', desc: '生命科学专用绘图平台，5 万+ 专业图标，拖拽式创作', tags: ['生命科学', '拖拽操作'], svgFn: svgBioRender },
+      { name: 'Servier Medical Art', url: 'https://smart.servier.com/', desc: '制药公司 Servier 出品的免费医学插图库，CC BY 许可', tags: ['免费商用', '医学专用'], svgFn: svgServierMedical },
+      { name: 'SciDraw', url: 'https://scidraw.io/', desc: '开源科学插画仓库，覆盖多学科，SVG 格式可自由编辑', tags: ['开源', '多学科'], svgFn: svgSciDraw },
+    ],
+  },
+  {
+    id: 'p07-vectors', eyebrow: 'Vector Assets', title: '矢量 / 通用素材',
+    subtitle: '矢量插画、背景纹理、装饰元素——为海报和演示增添视觉层次',
+    dark: false,
+    resources: [
+      { name: 'Freepik', url: 'https://www.freepik.com/', desc: '综合矢量素材平台，涵盖插画、图标、照片，格式齐全', tags: ['素材全面', '格式丰富'], svgFn: svgFreepik },
+      { name: 'unDraw', url: 'https://undraw.co/', desc: '扁平风矢量插画库，支持在线自定义配色，免费商用', tags: ['自定义配色', '免费商用'], svgFn: svgUndraw },
+      { name: 'Vecteezy', url: 'https://www.vecteezy.com/', desc: '百万+ 矢量素材，提供在线编辑器，支持 AI/EPS/SVG 格式', tags: ['在线编辑', '格式多样'], svgFn: svgVecteezy },
+    ],
+  },
+  {
+    id: 'p07-fonts', eyebrow: 'Fonts', title: '字体资源',
+    subtitle: '字体是设计的骨架——选对字体，学术感和可读性兼得',
+    dark: true,
+    resources: [
+      { name: 'Google Fonts', url: 'https://fonts.google.com/', desc: '1500+ 免费开源字体，含优秀中英文学术字体，API 直接嵌入', tags: ['免费开源', '中英文'], svgFn: svgGoogleFonts },
+      { name: '猫啃网', url: 'https://www.maoken.com/', desc: '国内最全免费商用中文字体收录站，授权信息清晰可查', tags: ['中文字体', '授权清晰'], svgFn: svgMaoken },
+      { name: 'Font Squirrel', url: 'https://www.fontsquirrel.com/', desc: '精选商业授权免费字体，所有字体均经过许可验证，可安心用于发表', tags: ['许可验证', '学术安全'], svgFn: svgFontSquirrel },
+    ],
+  },
+  {
+    id: 'p07-tutorials', eyebrow: 'Tutorials & Inspiration', title: '教程 / 灵感',
+    subtitle: '不知道该画什么图？这些网站提供完整代码和选型指南，照着做就行',
+    dark: false,
+    resources: [
+      { name: 'R Graph Gallery', url: 'https://r-graph-gallery.com/', desc: '数百种 R 语言图表示例，每个都附完整可复现代码', tags: ['R 语言', '可复现代码'], svgFn: svgRGraphGallery },
+      { name: 'Python Graph Gallery', url: 'https://python-graph-gallery.com/', desc: 'Python 可视化教程库，覆盖 matplotlib / seaborn / plotly', tags: ['Python', '多库覆盖'], svgFn: svgPythonGraphGallery },
+      { name: 'From Data to Viz', url: 'https://www.data-to-viz.com/', desc: '图表选择决策树——输入数据类型，推荐最合适的图表形式', tags: ['决策辅助', '图表选型'], svgFn: svgDataToViz },
+    ],
+  },
+];
+
+// ══════════════════════════════════════════════════════
+//  CSS 样式
+// ══════════════════════════════════════════════════════
+const styles = `
+/* ─── Hero 光晕 ─── */
+.p07-hero { position: relative; overflow: hidden; }
+.p07-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 55% 45% at 25% 40%, rgba(149,213,178,0.15) 0%, transparent 70%);
+  animation: p07-drift-a 13s ease-in-out infinite;
+  pointer-events: none;
+}
+.p07-hero::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 50% 40% at 75% 60%, rgba(126,200,227,0.10) 0%, transparent 65%);
+  animation: p07-drift-b 9s ease-in-out infinite reverse;
+  pointer-events: none;
+}
+@keyframes p07-drift-a { 0%,100%{transform:translate(0,0)} 50%{transform:translate(24px,-14px)} }
+@keyframes p07-drift-b { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-18px,20px)} }
+
+/* ─── Scroll hint ─── */
+.p07-scroll-hint {
+  font-size: var(--text-caption);
+  color: var(--text-on-dark-3);
+  animation: p07-float 2s ease-in-out infinite;
+  white-space: nowrap;
+  margin-top: var(--space-sm);
+}
+@keyframes p07-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+
+/* ─── 资源卡片布局 ─── */
+.p07-resource-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xl);
+  max-width: var(--w-full);
+  margin: 0 auto var(--space-xl);
+}
+.p07-item-reverse {
+  flex-direction: row-reverse;
+}
+
+/* ─── 插图容器 ─── */
+.p07-resource-illustration {
+  flex-shrink: 0;
+  width: 200px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.p07-resource-illustration svg {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.4s var(--ease-apple);
+}
+
+/* ─── 信息区 ─── */
+.p07-resource-info {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+.p07-resource-name {
+  font-family: var(--font-heading);
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 700;
+  margin-bottom: var(--space-xs);
+}
+.p07-resource-desc {
+  font-size: var(--text-body);
+  line-height: 1.7;
+  max-width: 480px;
+  margin-bottom: var(--space-sm);
+}
+
+/* ─── 标签 ─── */
+.p07-resource-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.p07-tag {
+  font-size: 11px;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  background: rgba(149,213,178,0.1);
+  color: rgba(149,213,178,0.8);
+}
+.section-light .p07-tag {
+  background: rgba(149,213,178,0.12);
+  color: var(--module-3);
+}
+
+/* ─── 访问链接 ─── */
+.p07-resource-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-caption);
+  font-weight: 500;
+  color: var(--module-3);
+  text-decoration: none;
+  transition: gap 0.25s var(--ease-apple), color 0.25s var(--ease-apple);
+  margin-top: var(--space-xs);
+}
+.p07-resource-link:active {
+  transform: scale(0.97);
+}
+
+/* ─── SVG hover 动画（桌面端） ─── */
+@media (hover: hover) {
+  .p07-resource-item:hover .p07-resource-illustration svg {
+    transform: scale(1.05);
+  }
+  .p07-resource-item:hover .p07-svg-accent {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.8s ease;
+  }
+  .p07-resource-link:hover {
+    gap: 12px;
+  }
+}
+.p07-svg-accent {
+  transition: stroke-dashoffset 0.8s ease;
+}
+
+/* ─── 移动端 ≤768px ─── */
+@media (max-width: 768px) {
+  .p07-hero .page-hero-title {
+    font-size: clamp(1.8rem, 6vw, 2.5rem);
+  }
+  .p07-hero-tagline {
+    max-width: 90vw;
+    font-size: 15px;
+    line-height: 1.7;
+    padding: 0 var(--space-sm);
+  }
+  #p07-quicknav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    max-width: 90vw;
+  }
+  .hero-quicknav__item {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+  .p07-resource-item,
+  .p07-item-reverse {
+    flex-direction: column;
+    text-align: center;
+    gap: var(--space-md);
+  }
+  .p07-resource-illustration {
+    width: 100%;
+    height: 120px;
+  }
+  .p07-resource-info {
+    width: 100%;
+    align-items: center;
+  }
+  .p07-resource-desc {
+    max-width: 100%;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .p07-resource-name {
+    font-size: 1.2rem;
+  }
+  .p07-resource-tags {
+    justify-content: center;
+  }
+  .p07-tag {
+    font-size: 11px;
+    padding: 3px 10px;
+  }
+  .p07-resource-link {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 14px;
+  }
+  .p07-resource-item + .p07-resource-item {
+    margin-top: var(--space-lg);
+  }
+  #p07-icons, #p07-colors, #p07-templates,
+  #p07-science, #p07-vectors, #p07-fonts, #p07-tutorials {
+    padding: 60px 16px;
+    scroll-margin-top: 56px;
+  }
+  .section-header {
+    margin-bottom: var(--space-lg);
+  }
+  .section-subtitle {
+    max-width: 100%;
+    font-size: 14px;
+    padding: 0 8px;
+  }
+}
+/* ─── 极窄屏 ≤400px ─── */
+@media (max-width: 400px) {
+  #p07-quicknav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    width: 100%;
+    padding: 0 20px;
+  }
+  .hero-quicknav__item {
+    text-align: center;
+  }
+}
+/* ─── 移动端触控反馈 ─── */
+@media (hover: none) {
+  .p07-resource-link:active {
+    transform: scale(0.95);
+    transition: transform 0.1s;
+  }
+}
+`;
+
+// ══════════════════════════════════════════════════════
+//  渲染辅助
+// ══════════════════════════════════════════════════════
+function renderSection(section) {
+  const sectionClass = section.dark ? 'section-dark' : 'section-light';
+  const eyebrowStyle = section.dark ? ' style="color:rgba(149,213,178,0.7);"' : '';
+  const titleStyle = section.dark ? ' style="color:var(--text-on-dark);"' : '';
+  const subtitleStyle = section.dark
+    ? ' style="color:var(--text-on-dark-2);max-width:540px;margin:0 auto;"'
+    : ' style="max-width:540px;margin:0 auto;"';
+
+  const resourcesHtml = section.resources.map((r, i) => {
+    const isReverse = i === 1;
+    return `
+      <div class="p07-resource-item${isReverse ? ' p07-item-reverse' : ''}">
+        <div class="p07-resource-illustration">
+          ${r.svgFn(section.dark)}
+        </div>
+        <div class="p07-resource-info">
+          <h3 class="p07-resource-name">${r.name}</h3>
+          <p class="p07-resource-desc">${r.desc}</p>
+          <div class="p07-resource-tags">
+            ${r.tags.map(t => `<span class="p07-tag">${t}</span>`).join('')}
+          </div>
+          <a href="${r.url}" target="_blank" rel="noopener" class="p07-resource-link">
+            访问网站 <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>`;
+  }).join('');
+
   return `
-<div class="p07-license-card">
-  <div class="p07-license-header">
-    <div class="p07-license-icon" style="background:${l.colorHex}22;color:${l.colorHex};">${l.icon}</div>
-    <div class="p07-license-names">
-      <div class="p07-license-name">${l.name}</div>
-      <div class="p07-license-fullname">${l.fullName}</div>
-    </div>
-  </div>
-  <div class="p07-license-body">
-    <p class="p07-license-desc">${l.desc}</p>
-    <div class="p07-academic-note">学术发表：${l.academicNote}</div>
-    <div class="p07-license-rules">
-      <div class="p07-license-rules-col p07-rules-can">
-        <p class="p07-rules-title">可以</p>
-        ${l.canDo.map(item => `<div class="p07-rule-item"><span class="rule-check" aria-hidden="true">✓</span><span>${item}</span></div>`).join('')}
+    <section class="${sectionClass}" id="${section.id}" style="padding:var(--space-3xl) var(--space-lg);">
+      <div class="section-header" style="text-align:center;margin-bottom:var(--space-xl);">
+        <p class="section-eyebrow"${eyebrowStyle}>${section.eyebrow}</p>
+        <h2 class="section-title"${titleStyle}>${section.title}</h2>
+        <p class="section-subtitle"${subtitleStyle}>${section.subtitle}</p>
       </div>
-      <div class="p07-license-rules-col p07-rules-cannot">
-        <p class="p07-rules-title">不可以</p>
-        ${l.cannotDo.map(item => `<div class="p07-rule-item"><span class="rule-cross" aria-hidden="true">✗</span><span>${item}</span></div>`).join('')}
-      </div>
-    </div>
-  </div>
-</div>`.trim();
+      ${resourcesHtml}
+    </section>`;
 }
 
 // ══════════════════════════════════════════════════════
@@ -460,502 +683,33 @@ function renderLicenseCard(l) {
 // ══════════════════════════════════════════════════════
 export function render() {
   return `
-<div class="page-scroll p07-page">
-  <style>
-    /* ─── Hero scroll hint ─── */
-    .p07-scroll-hint {
-      font-size: var(--text-caption);
-      color: var(--text-on-dark-3);
-      animation: p07-float 2s ease-in-out infinite;
-      white-space: nowrap;
-      margin-top: var(--space-sm);
-    }
-    @keyframes p07-float {
-      0%, 100% { transform: translateY(0); }
-      50%       { transform: translateY(6px); }
-    }
-
-    /* ─── S1 Filter tabs ─── */
-    .p07-filter-tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: var(--space-xs);
-      margin-bottom: var(--space-lg);
-    }
-    .p07-filter-tab {
-      padding: 8px 18px;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      background: transparent;
-      color: var(--text-secondary);
-      font-size: var(--text-caption);
-      cursor: pointer;
-      transition: all 0.2s ease;
-      min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-      font-family: var(--font-body);
-    }
-    .p07-filter-tab:hover {
-      border-color: var(--module-3);
-      color: var(--module-3);
-    }
-    .p07-filter-tab.active {
-      background: var(--module-3);
-      border-color: var(--module-3);
-      color: #1d1d1f;
-      font-weight: 600;
-    }
-
-    /* ─── S1 Resource grid ─── */
-    .p07-resources-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-md);
-    }
-    @media (max-width: 1024px) {
-      .p07-resources-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 600px) {
-      .p07-resources-grid { grid-template-columns: 1fr; }
-    }
-    .p07-resource-card {
-      background: var(--bg-primary);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: var(--space-md);
-      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .p07-resource-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.1);
-      border-color: var(--module-3);
-    }
-    .p07-resource-card.hidden { display: none; }
-    .p07-card-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 8px;
-    }
-    .p07-card-name {
-      font-size: var(--text-body);
-      font-weight: 600;
-      color: var(--text-primary);
-      line-height: 1.3;
-    }
-    .p07-card-badges {
-      display: flex;
-      gap: 6px;
-      flex-shrink: 0;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-    .p07-badge {
-      font-size: 11px;
-      padding: 3px 9px;
-      border-radius: 10px;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-    .p07-badge-category { background: rgba(149,213,178,0.15); color: var(--module-3); }
-    .p07-badge-free     { background: rgba(149,213,178,0.2);  color: #2e7d52; }
-    .p07-badge-paid     { background: rgba(240,178,122,0.2);  color: #9c5e1a; }
-    .p07-badge-freemium { background: rgba(126,200,227,0.2);  color: #1a7296; }
-    .p07-card-desc {
-      font-size: var(--text-caption);
-      color: var(--text-secondary);
-      line-height: 1.6;
-    }
-    .p07-card-features {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
-    }
-    .p07-card-features li {
-      font-size: 13px;
-      color: var(--text-secondary);
-      line-height: 1.5;
-      padding-left: 16px;
-      position: relative;
-    }
-    .p07-card-features li::before {
-      content: '▸';
-      position: absolute;
-      left: 0;
-      color: var(--module-3);
-      font-size: 11px;
-      top: 2px;
-    }
-    .p07-card-footer {
-      margin-top: auto;
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
-    }
-    .p07-card-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: var(--text-caption);
-      color: var(--module-3);
-      text-decoration: none;
-      font-weight: 500;
-      transition: gap 0.2s ease;
-    }
-    .p07-card-link:hover { gap: 10px; }
-
-    /* ─── S2 Quiz ─── */
-    .p07-quiz-wrapper {
-      max-width: 680px;
-      margin: 0 auto;
-    }
-    .p07-quiz-progress {
-      display: flex;
-      align-items: center;
-      gap: var(--space-sm);
-      margin-bottom: var(--space-lg);
-    }
-    .p07-quiz-progress-bar {
-      flex: 1;
-      height: 4px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-    .p07-quiz-progress-fill {
-      height: 100%;
-      background: var(--module-3);
-      border-radius: 2px;
-      transition: width 0.4s ease;
-    }
-    .p07-quiz-progress-label {
-      font-size: var(--text-caption);
-      color: var(--text-on-dark-3);
-      min-width: 36px;
-      text-align: right;
-    }
-    .p07-question-icon {
-      font-size: 2.5rem;
-      margin-bottom: var(--space-sm);
-      display: block;
-    }
-    .p07-question-text {
-      font-size: clamp(1.3rem, 3vw, 1.8rem);
-      font-weight: 600;
-      color: var(--text-on-dark);
-      margin-bottom: var(--space-md);
-      line-height: 1.4;
-    }
-    .p07-quiz-options {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .p07-quiz-option {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 12px;
-      padding: 16px 20px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: left;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      min-height: 44px;
-      width: 100%;
-      font-family: var(--font-body);
-    }
-    .p07-quiz-option:hover {
-      background: rgba(149,213,178,0.1);
-      border-color: var(--module-3);
-    }
-    .p07-quiz-option.selected {
-      background: rgba(149,213,178,0.15);
-      border-color: var(--module-3);
-    }
-    .p07-option-label {
-      font-size: var(--text-body);
-      font-weight: 600;
-      color: var(--text-on-dark);
-    }
-    .p07-option-desc {
-      font-size: var(--text-caption);
-      color: var(--text-on-dark-3);
-    }
-    .p07-quiz-results { display: none; }
-    .p07-results-title {
-      font-size: clamp(1.2rem, 2.5vw, 1.6rem);
-      font-weight: 600;
-      color: var(--text-on-dark);
-      margin-bottom: var(--space-md);
-    }
-    .p07-result-card {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 14px;
-      padding: var(--space-md);
-      margin-bottom: 12px;
-      display: flex;
-      align-items: flex-start;
-      gap: var(--space-sm);
-    }
-    .p07-result-card:first-child {
-      border-color: var(--module-3);
-      background: rgba(149,213,178,0.08);
-    }
-    .p07-result-rank {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 14px;
-      flex-shrink: 0;
-    }
-    .p07-result-rank-1 { background: var(--module-3); color: #1d1d1f; }
-    .p07-result-rank-2 { background: rgba(255,255,255,0.15); color: var(--text-on-dark); }
-    .p07-result-rank-3 { background: rgba(255,255,255,0.08); color: var(--text-on-dark-3); }
-    .p07-result-info { flex: 1; }
-    .p07-result-name {
-      font-size: var(--text-body);
-      font-weight: 600;
-      color: var(--text-on-dark);
-      margin-bottom: 4px;
-    }
-    .p07-result-why {
-      font-size: var(--text-caption);
-      color: var(--text-on-dark-3);
-      line-height: 1.6;
-    }
-    .p07-result-score-bar {
-      width: 100%;
-      height: 3px;
-      background: rgba(255,255,255,0.08);
-      border-radius: 2px;
-      margin-top: 8px;
-      overflow: hidden;
-    }
-    .p07-result-score-fill {
-      height: 100%;
-      background: var(--module-3);
-      border-radius: 2px;
-      transition: width 0.6s ease 0.2s;
-    }
-    .p07-quiz-restart {
-      margin-top: var(--space-md);
-      padding: 12px 28px;
-      background: transparent;
-      border: 1px solid rgba(149,213,178,0.4);
-      border-radius: 24px;
-      color: var(--module-3);
-      font-size: var(--text-caption);
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      min-height: 44px;
-      font-family: var(--font-body);
-    }
-    .p07-quiz-restart:hover {
-      background: rgba(149,213,178,0.1);
-      border-color: var(--module-3);
-    }
-
-    /* ─── S3 Licenses ─── */
-    .p07-license-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: var(--space-md);
-    }
-    .p07-license-card {
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-      background: var(--bg-primary);
-    }
-    .p07-license-header {
-      padding: var(--space-sm) var(--space-md);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .p07-license-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      flex-shrink: 0;
-    }
-    .p07-license-names { flex: 1; }
-    .p07-license-name {
-      font-size: var(--text-body);
-      font-weight: 700;
-      color: var(--text-primary);
-    }
-    .p07-license-fullname {
-      font-size: var(--text-caption);
-      color: var(--text-secondary);
-    }
-    .p07-license-body {
-      padding: 0 var(--space-md) var(--space-md);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .p07-license-desc {
-      font-size: var(--text-caption);
-      color: var(--text-secondary);
-      line-height: 1.7;
-    }
-    .p07-academic-note {
-      background: rgba(149,213,178,0.1);
-      border-left: 3px solid var(--module-3);
-      padding: 8px 12px;
-      border-radius: 0 8px 8px 0;
-      font-size: 13px;
-      color: var(--text-primary);
-      line-height: 1.6;
-    }
-    .p07-license-rules {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-    @media (max-width: 400px) {
-      .p07-license-rules { grid-template-columns: 1fr; }
-    }
-    .p07-license-rules-col { display: flex; flex-direction: column; gap: 4px; }
-    .p07-rules-title {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-bottom: 4px;
-    }
-    .p07-rules-can .p07-rules-title   { color: #2e7d52; }
-    .p07-rules-cannot .p07-rules-title { color: #c0392b; }
-    .p07-rule-item {
-      font-size: 12px;
-      color: var(--text-secondary);
-      line-height: 1.5;
-      display: flex;
-      gap: 5px;
-      align-items: flex-start;
-    }
-    .rule-check { color: #2e7d52; flex-shrink: 0; margin-top: 1px; }
-    .rule-cross  { color: #c0392b; flex-shrink: 0; margin-top: 1px; }
-
-    /* ─── Mobile overrides ─── */
-    @media (max-width: 768px) {
-      #p07-s1, #p07-s2, #p07-s3 { scroll-margin-top: 56px; }
-    }
-  </style>
+<div class="page-scroll">
+  <style>${styles}</style>
 
   <!-- ══════ HERO ══════ -->
   <section class="section-dark section-hero-full p07-hero" id="p07-hero">
     <div class="flex-col-center" style="gap:var(--space-md);text-align:center;position:relative;z-index:1;">
       <p class="hero-eyebrow" style="opacity:0;">Module 03 / Page 07</p>
-      <h1 class="page-hero-title" style="color:var(--text-on-dark);opacity:0;">资源与工具</h1>
-      <p class="page-hero-sub" style="opacity:0;">Vector Design Resources &amp; Tools</p>
+      <h1 class="page-hero-title" style="color:var(--text-on-dark);opacity:0;">素材资源站</h1>
+      <p class="page-hero-sub" style="opacity:0;">Design Resources & Tools</p>
       <p class="p07-hero-tagline" style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;margin-top:var(--space-sm);opacity:0;">
-        精选科研矢量设计工具链——从免费入门到专业进阶，一览无余
+        精选 21 个实用资源——图标、配色、模板、插图、字体、教程，按需取用
       </p>
       <nav class="hero-quicknav" id="p07-quicknav" style="opacity:0;">
-        <button class="hero-quicknav__item" data-target="#p07-s1">资源库</button>
-        <button class="hero-quicknav__item" data-target="#p07-s2">工具推荐</button>
-        <button class="hero-quicknav__item" data-target="#p07-s3">许可证指南</button>
+        <button class="hero-quicknav__item" data-target="#p07-icons">图标库</button>
+        <button class="hero-quicknav__item" data-target="#p07-colors">配色工具</button>
+        <button class="hero-quicknav__item" data-target="#p07-templates">演示模板</button>
+        <button class="hero-quicknav__item" data-target="#p07-science">科研插图</button>
+        <button class="hero-quicknav__item" data-target="#p07-vectors">矢量素材</button>
+        <button class="hero-quicknav__item" data-target="#p07-fonts">字体资源</button>
+        <button class="hero-quicknav__item" data-target="#p07-tutorials">教程灵感</button>
       </nav>
       <div class="p07-scroll-hint" style="opacity:0;">↓ 向下探索</div>
     </div>
   </section>
 
-  <!-- ══════ S1 资源卡片库 ══════ -->
-  <section class="section-light" id="p07-s1">
-    <div class="section-inner">
-      <div class="section-header" style="text-align:center;margin-bottom:var(--space-xl);">
-        <p class="section-eyebrow">Resources Library</p>
-        <h2 class="section-title">精选资源库</h2>
-        <p class="section-subtitle" style="max-width:600px;margin:0 auto;">
-          15 个经过筛选的矢量设计资源，覆盖软件、在线工具、字体、图标和学习材料
-        </p>
-      </div>
-
-      <div class="p07-filter-tabs" id="p07-filter-tabs">
-        <button class="p07-filter-tab active" data-filter="all">全部</button>
-        <button class="p07-filter-tab" data-filter="software">软件工具</button>
-        <button class="p07-filter-tab" data-filter="online">在线工具</button>
-        <button class="p07-filter-tab" data-filter="fonts">字体资源</button>
-        <button class="p07-filter-tab" data-filter="icons">图标库</button>
-        <button class="p07-filter-tab" data-filter="learning">学习资源</button>
-      </div>
-
-      <div class="p07-resources-grid" id="p07-resources-grid">
-        ${RESOURCES.map(r => renderResourceCard(r)).join('\n')}
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════ S2 工具推荐向导 ══════ -->
-  <section class="section-dark" id="p07-s2">
-    <div class="section-inner">
-      <div class="section-header" style="text-align:center;margin-bottom:var(--space-xl);">
-        <p class="section-eyebrow" style="color:rgba(149,213,178,0.7);">Tool Finder Quiz</p>
-        <h2 class="section-title" style="color:var(--text-on-dark);">找到最适合你的工具</h2>
-        <p class="section-subtitle" style="color:var(--text-on-dark-2);max-width:520px;margin:0 auto;">
-          回答 4 个问题，获得个性化工具推荐
-        </p>
-      </div>
-
-      <div class="p07-quiz-wrapper">
-        <div class="p07-quiz-progress">
-          <div class="p07-quiz-progress-bar">
-            <div class="p07-quiz-progress-fill" id="p07-quiz-progress-fill" style="width:0%"></div>
-          </div>
-          <span class="p07-quiz-progress-label" id="p07-quiz-progress-label">0 / 4</span>
-        </div>
-
-        <div id="p07-quiz-questions">
-          ${QUIZ_QUESTIONS.map((q, i) => renderQuizQuestion(q, i)).join('\n')}
-        </div>
-
-        <div class="p07-quiz-results" id="p07-quiz-results">
-          <p class="p07-results-title">为你推荐的工具</p>
-          <div id="p07-quiz-results-list"></div>
-          <button class="p07-quiz-restart" id="p07-quiz-restart">↩ 重新测试</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══════ S3 许可证速查 ══════ -->
-  <section class="section-light" id="p07-s3">
-    <div class="section-inner">
-      <div class="section-header" style="text-align:center;margin-bottom:var(--space-xl);">
-        <p class="section-eyebrow">License Guide</p>
-        <h2 class="section-title">许可证速查手册</h2>
-        <p class="section-subtitle" style="max-width:600px;margin:0 auto;">
-          了解不同许可证类型，确保你的科研图形合规使用
-        </p>
-      </div>
-
-      <div class="p07-license-grid" id="p07-license-grid">
-        ${LICENSES.map(l => renderLicenseCard(l)).join('\n')}
-      </div>
-    </div>
-  </section>
+  <!-- ══════ 7 个资源 Section ══════ -->
+  ${SECTIONS.map(renderSection).join('')}
 
   <!-- ══════ Footer CTA ══════ -->
   <section class="page-footer-cta">
@@ -964,7 +718,6 @@ export function render() {
     <p class="page-footer-desc">模块三「矢量绘图与设计」到此完结。模块四将带你进入学术演示设计的世界。</p>
     <div class="page-footer-nav">
       <button class="btn-ghost" id="p07-prev-btn">← 多面板 Figure 组合</button>
-      <button class="btn-ghost" id="p07-home-btn">返回模块首页</button>
       <button class="btn-primary" id="p07-next-btn">进入模块四 →</button>
     </div>
   </section>
@@ -973,271 +726,98 @@ export function render() {
 }
 
 // ══════════════════════════════════════════════════════
-//  Quiz 逻辑
-// ══════════════════════════════════════════════════════
-function scoreResource(resource, answers) {
-  let score = 0;
-
-  // 预算匹配
-  if (answers.budget === 'free' && resource.free) score += 3;
-  if (answers.budget === 'free' && !resource.free) score -= 3;
-  if (answers.budget === 'low' && (resource.free || resource.pricing === 'freemium')) score += 2;
-  if (answers.budget === 'professional' && resource.paid) score += 2;
-
-  // 用途匹配
-  if (answers.purpose && resource.tags.includes(answers.purpose)) score += 3;
-  if (resource.tags.includes('all')) score += 1;
-
-  // 操作系统匹配
-  if (resource.os === 'cross-platform') score += 2;
-
-  // 技术水平匹配
-  if (answers.level === 'beginner' && resource.difficulty === 'easy') score += 2;
-  if (answers.level === 'medium'   && resource.difficulty === 'medium') score += 2;
-  if (answers.level === 'advanced' && resource.difficulty === 'advanced') score += 2;
-  if (answers.level === 'beginner' && resource.difficulty === 'advanced') score -= 1;
-
-  // 学习资源 / 字体 / 图标库不是主要推荐（除非全能需求）
-  if (resource.category === 'learning' && answers.purpose !== 'all') score -= 2;
-  if ((resource.category === 'fonts' || resource.category === 'icons') &&
-      answers.purpose !== 'all' && answers.purpose !== 'presentation') score -= 1;
-
-  return score;
-}
-
-function getRecommendations(answers) {
-  const scorable = RESOURCES.filter(r =>
-    r.category === 'software' || r.category === 'online'
-  );
-  const scored = scorable.map(r => ({ ...r, score: scoreResource(r, answers) }));
-  scored.sort((a, b) => b.score - a.score);
-  return scored.slice(0, 3);
-}
-
-function buildWhyText(resource, answers) {
-  const parts = [];
-  if (answers.budget === 'free' && resource.free) parts.push('完全免费');
-  if (answers.budget === 'low' && resource.pricing === 'freemium') parts.push('提供免费版本');
-  if (resource.tags.includes(answers.purpose)) {
-    const nameMap = { journal: '期刊图表', diagram: '流程示意图', presentation: '演示设计', all: '全能需求' };
-    parts.push(`非常适合${nameMap[answers.purpose] || answers.purpose}`);
-  }
-  if (resource.difficulty === 'easy' && answers.level === 'beginner') parts.push('上手容易');
-  if (resource.os === 'cross-platform') parts.push('支持跨平台使用');
-  if (parts.length === 0) parts.push('综合匹配度较高');
-  return parts.join('，');
-}
-
-function showQuizResults() {
-  const questionsEl = document.getElementById('p07-quiz-questions');
-  const resultsEl   = document.getElementById('p07-quiz-results');
-  const listEl      = document.getElementById('p07-quiz-results-list');
-
-  const recs    = getRecommendations(_quizState.answers);
-  const maxScore = Math.max(recs[0]?.score || 1, 1);
-
-  listEl.innerHTML = recs.map((r, i) => {
-    const pct         = Math.max(20, Math.round((r.score / maxScore) * 100));
-    const rankClass   = `p07-result-rank-${i + 1}`;
-    const pricingText = r.pricing === 'free' ? '免费' : r.pricing === 'paid' ? '付费' : '免费增值';
-    const why         = buildWhyText(r, _quizState.answers);
-    return `
-<div class="p07-result-card">
-  <div class="p07-result-rank ${rankClass}">${i + 1}</div>
-  <div class="p07-result-info">
-    <div class="p07-result-name">${r.name}
-      <span style="font-size:12px;font-weight:400;color:var(--text-on-dark-3);">(${pricingText})</span>
-    </div>
-    <div class="p07-result-why">${why}</div>
-    <div class="p07-result-score-bar">
-      <div class="p07-result-score-fill" style="width:${pct}%"></div>
-    </div>
-  </div>
-</div>`.trim();
-  }).join('\n');
-
-  gsap.to(questionsEl, {
-    opacity: 0, y: -20, duration: 0.3, ease: 'power2.in',
-    onComplete: () => {
-      questionsEl.style.display = 'none';
-      resultsEl.style.display = 'block';
-      gsap.fromTo(resultsEl,
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }
-      );
-    }
-  });
-
-  document.getElementById('p07-quiz-progress-fill').style.width  = '100%';
-  document.getElementById('p07-quiz-progress-label').textContent = '完成';
-}
-
-function resetQuiz() {
-  _quizState = { currentStep: 0, answers: {} };
-
-  const questionsEl = document.getElementById('p07-quiz-questions');
-  const resultsEl   = document.getElementById('p07-quiz-results');
-
-  // 重置所有选中状态
-  document.querySelectorAll('.p07-quiz-option').forEach(el => el.classList.remove('selected'));
-
-  // 显示第一题，隐藏其余
-  document.querySelectorAll('.p07-quiz-question').forEach((el, i) => {
-    el.style.display  = i === 0 ? 'block' : 'none';
-    el.style.opacity  = '1';
-    el.style.transform = '';
-  });
-
-  resultsEl.style.display   = 'none';
-  questionsEl.style.display = 'block';
-  questionsEl.style.opacity = '1';
-
-  document.getElementById('p07-quiz-progress-fill').style.width  = '0%';
-  document.getElementById('p07-quiz-progress-label').textContent = '0 / 4';
-}
-
-function handleOptionClick(e) {
-  const btn      = e.currentTarget;
-  const question = btn.dataset.question;
-  const value    = btn.dataset.value;
-  const step     = _quizState.currentStep;
-
-  // 标记选中
-  document.getElementById(`p07-question-${step}`)
-    .querySelectorAll('.p07-quiz-option')
-    .forEach(el => el.classList.remove('selected'));
-  btn.classList.add('selected');
-
-  // 记录答案
-  _quizState.answers[question] = value;
-
-  const nextStep  = step + 1;
-  const total     = QUIZ_QUESTIONS.length;
-
-  document.getElementById('p07-quiz-progress-fill').style.width  = `${(nextStep / total) * 100}%`;
-  document.getElementById('p07-quiz-progress-label').textContent = `${nextStep} / ${total}`;
-
-  if (nextStep >= total) {
-    _resultTimer = setTimeout(() => showQuizResults(), 400);
-  } else {
-    const currentEl = document.getElementById(`p07-question-${step}`);
-    const nextEl    = document.getElementById(`p07-question-${nextStep}`);
-
-    nextEl.style.display  = 'block';
-    nextEl.style.opacity  = '0';
-
-    gsap.to(currentEl, {
-      opacity: 0, x: -30, duration: 0.3, ease: 'power2.in',
-      onComplete: () => {
-        currentEl.style.display   = 'none';
-        currentEl.style.opacity   = '1';
-        currentEl.style.transform = '';
-        gsap.fromTo(nextEl,
-          { opacity: 0, x: 30 },
-          { opacity: 1, x: 0, duration: 0.4, ease: 'power2.out' }
-        );
-      }
-    });
-
-    _quizState.currentStep = nextStep;
-  }
-}
-
-// ══════════════════════════════════════════════════════
 //  init()
 // ══════════════════════════════════════════════════════
-export function init() {
-  // ── Hero 动画 ──
+function initHero() {
   const heroTl = gsap.timeline({ delay: 0.2 });
-  heroTl.fromTo('.p07-hero .hero-eyebrow',
-    { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0);
-  heroTl.fromTo('.p07-hero .page-hero-title',
-    { y: 30, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.15);
-  heroTl.fromTo('.p07-hero .page-hero-sub',
-    { y: 20, opacity: 0 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
-  heroTl.fromTo('.p07-hero-tagline',
-    { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
-  heroTl.fromTo('#p07-quicknav',
-    { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
-  heroTl.fromTo('.p07-scroll-hint',
-    { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.75);
+  heroTl.fromTo('.p07-hero .hero-eyebrow',   { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0);
+  heroTl.fromTo('.p07-hero .page-hero-title', { y: 30, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.15);
+  heroTl.fromTo('.p07-hero .page-hero-sub',   { y: 20, opacity: 0 }, { opacity: 0.5, y: 0, duration: 0.8, ease: 'power3.out' }, 0.3);
+  heroTl.fromTo('.p07-hero-tagline',          { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.45);
+  heroTl.fromTo('#p07-quicknav',              { y: 20, opacity: 0 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 0.6);
+  heroTl.fromTo('.p07-scroll-hint',           { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0.75);
+}
 
-  // ── Hero quicknav ──
-  document.querySelectorAll('#p07-quicknav .hero-quicknav__item').forEach(btn => {
-    addEvt(btn, 'click', () => {
-      const target = document.querySelector(btn.dataset.target);
-      if (target) target.scrollIntoView({ behavior: 'smooth' });
-    });
-  });
+function initQuicknav() {
+  const nav = document.getElementById('p07-quicknav');
+  if (!nav) return;
+  const handler = (e) => {
+    const btn = e.target.closest('.hero-quicknav__item');
+    if (!btn) return;
+    const target = btn.dataset.target;
+    const el = document.querySelector(target);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+  addEvt(nav, 'click', handler);
+}
 
-  // ── S1 资源筛选 ──
-  document.querySelectorAll('.p07-filter-tab').forEach(tab => {
-    addEvt(tab, 'click', () => {
-      document.querySelectorAll('.p07-filter-tab').forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
+function initScrollAnimations() {
+  // Section header 入场
+  fadeIn('#p07-icons .section-header');
+  fadeIn('#p07-colors .section-header');
+  fadeIn('#p07-templates .section-header');
+  fadeIn('#p07-science .section-header');
+  fadeIn('#p07-vectors .section-header');
+  fadeIn('#p07-fonts .section-header');
+  fadeIn('#p07-tutorials .section-header');
 
-      const filter = tab.dataset.filter;
-      document.querySelectorAll('.p07-resource-card').forEach(card => {
-        const show = filter === 'all' || card.dataset.category === filter;
-        if (show) {
-          card.classList.remove('hidden');
-          gsap.fromTo(card,
-            { opacity: 0, y: 10 },
-            { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' }
-          );
-        } else {
-          card.classList.add('hidden');
-        }
+  // 卡片入场：桌面端三层动效 / 移动端简化
+  ScrollTrigger.matchMedia({
+    '(min-width: 769px)': function () {
+      document.querySelectorAll('.p07-resource-item').forEach(item => {
+        const isReverse = item.classList.contains('p07-item-reverse');
+        const illust = item.querySelector('.p07-resource-illustration');
+        const info = item.querySelector('.p07-resource-info');
+
+        // 整体卡片
+        gsap.fromTo(item,
+          { opacity: 0, y: 50 },
+          { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out',
+            scrollTrigger: { trigger: item, start: 'top 85%', toggleActions: 'play none none none' } }
+        );
+        // 插图：方向滑入 + 缩放
+        gsap.fromTo(illust,
+          { opacity: 0, x: isReverse ? 40 : -40, scale: 0.9 },
+          { opacity: 1, x: 0, scale: 1, duration: 0.8, ease: 'power3.out', delay: 0.15,
+            scrollTrigger: { trigger: item, start: 'top 85%', toggleActions: 'play none none none' } }
+        );
+        // 信息区子元素 stagger
+        const infoChildren = info.querySelectorAll('.p07-resource-name, .p07-resource-desc, .p07-resource-tags, .p07-resource-link');
+        gsap.fromTo(infoChildren,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.5, stagger: 0.08, ease: 'power3.out', delay: 0.25,
+            scrollTrigger: { trigger: item, start: 'top 85%', toggleActions: 'play none none none' } }
+        );
       });
-    });
-  });
-
-  // ── S1 卡片滚动入场 ──
-  fadeIn('#p07-s1 .section-header', { trigger: '#p07-s1' });
-  document.querySelectorAll('.p07-resource-card').forEach((card, i) => {
-    gsap.fromTo(card,
-      { opacity: 0, y: 30 },
-      {
-        opacity: 1, y: 0, duration: 0.5, ease: 'power3.out',
-        delay: (i % 3) * 0.08,
-        scrollTrigger: { trigger: card, start: 'top 88%', once: true }
-      }
-    );
-  });
-
-  // ── S2 Quiz 事件 ──
-  document.querySelectorAll('.p07-quiz-option').forEach(btn => {
-    addEvt(btn, 'click', handleOptionClick);
-  });
-  addEvt(document.getElementById('p07-quiz-restart'), 'click', resetQuiz);
-
-  fadeIn('#p07-s2 .section-header', { trigger: '#p07-s2' });
-  gsap.fromTo('.p07-quiz-wrapper',
-    { opacity: 0, y: 40 },
-    {
-      opacity: 1, y: 0, duration: 0.7, ease: 'power3.out',
-      scrollTrigger: { trigger: '.p07-quiz-wrapper', start: 'top 85%', once: true }
+    },
+    '(max-width: 768px)': function () {
+      document.querySelectorAll('.p07-resource-item').forEach(item => {
+        gsap.fromTo(item,
+          { opacity: 0, y: 25 },
+          { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out',
+            scrollTrigger: { trigger: item, start: 'top 90%', toggleActions: 'play none none none' } }
+        );
+      });
     }
-  );
-
-  // ── S3 许可证卡片入场 ──
-  fadeIn('#p07-s3 .section-header', { trigger: '#p07-s3' });
-  document.querySelectorAll('.p07-license-card').forEach((card, i) => {
-    gsap.fromTo(card,
-      { opacity: 0, y: 30 },
-      {
-        opacity: 1, y: 0, duration: 0.5, ease: 'power3.out',
-        delay: i * 0.08,
-        scrollTrigger: { trigger: card, start: 'top 90%', once: true }
-      }
-    );
   });
 
-  // ── Footer ──
-  fadeIn('#p07-footer', { trigger: '#p07-footer' });
-  addEvt(document.getElementById('p07-prev-btn'), 'click', () => navigateTo('m3-p6'));
-  addEvt(document.getElementById('p07-home-btn'), 'click', () => navigateTo('m3-p1'));
-  addEvt(document.getElementById('p07-next-btn'), 'click', () => navigateTo('m4-p1'));
+  // Footer CTA 入场
+  fadeIn('.page-footer-quote', { y: 40, duration: 0.9 });
+  fadeIn('.page-footer-cta .page-footer-nav', { y: 25, duration: 0.6 });
+}
+
+function initFooterNav() {
+  const prev = document.getElementById('p07-prev-btn');
+  const next = document.getElementById('p07-next-btn');
+  if (prev) addEvt(prev, 'click', () => navigateTo('m3-p6'));
+  if (next) addEvt(next, 'click', () => navigateTo('m4-p1'));
+}
+
+export function init() {
+  initHero();
+  initQuicknav();
+  initScrollAnimations();
+  initFooterNav();
 }
 
 // ══════════════════════════════════════════════════════
@@ -1245,8 +825,8 @@ export function init() {
 // ══════════════════════════════════════════════════════
 export function destroy() {
   killAll();
-  clearTimeout(_resultTimer); _resultTimer = null;
-  _eventHandlers.forEach(({ el, type, fn, opts }) => el.removeEventListener(type, fn, opts));
+  _eventHandlers.forEach(({ el, type, fn, opts }) => {
+    el.removeEventListener(type, fn, opts);
+  });
   _eventHandlers = [];
-  _quizState = { currentStep: 0, answers: {} };
 }
