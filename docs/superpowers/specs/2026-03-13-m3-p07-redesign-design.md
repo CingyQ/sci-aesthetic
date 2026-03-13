@@ -26,15 +26,17 @@
 ```
 Hero（深色，100vh）
 │  快捷导航：7 个类别按钮
-├─ S1 图标库（深色）
-├─ S2 配色工具（浅色）
-├─ S3 PPT / 演示模板（深色）
-├─ S4 科研插图素材（浅色）
-├─ S5 矢量 / 通用素材（深色）
-├─ S6 字体资源（浅色）
-├─ S7 教程 / 灵感（深色）
+├─ S1 图标库（浅色）          id="p07-icons"
+├─ S2 配色工具（深色）        id="p07-colors"
+├─ S3 PPT / 演示模板（浅色）  id="p07-templates"
+├─ S4 科研插图素材（深色）    id="p07-science"
+├─ S5 矢量 / 通用素材（浅色） id="p07-vectors"
+├─ S6 字体资源（深色）        id="p07-fonts"
+├─ S7 教程 / 灵感（浅色）     id="p07-tutorials"
 └─ Footer CTA
 ```
+
+> **注意**：Hero 是深色，所以 S1 从浅色开始，保证明暗严格交替。
 
 每个 section 结构：
 ```
@@ -202,7 +204,7 @@ Hero（深色，100vh）
 }
 .section-light .p07-tag {
   background: rgba(149,213,178,0.12);
-  color: #2e7d52;
+  color: var(--module-3);
 }
 
 /* 访问链接 */
@@ -251,7 +253,10 @@ Hero（深色，100vh）
 </div>
 ```
 
-深色 section 的 eyebrow / subtitle 需要添加对应的颜色覆盖（`color: var(--text-on-dark-2)` 等）。
+**注意**：`section-eyebrow`、`section-title`、`section-subtitle` 是项目内已有的全局 class（各页面普遍使用）。深色 section 需要在 header 元素上添加内联颜色覆盖：
+- eyebrow: `style="color:rgba(149,213,178,0.7)"`
+- title: `style="color:var(--text-on-dark)"`
+- subtitle: `style="color:var(--text-on-dark-2)"`
 
 ---
 
@@ -263,7 +268,14 @@ Hero（深色，100vh）
 - **title**: 素材资源站
 - **subtitle**: Design Resources & Tools
 - **tagline**: 精选 21 个实用资源——图标、配色、模板、插图、字体、教程，按需取用
-- **quicknav**: 7 个按钮（图标库 / 配色工具 / 演示模板 / 科研插图 / 矢量素材 / 字体资源 / 教程灵感）
+- **quicknav**: 7 个按钮，`data-target` 对应 section ID：
+  - 图标库 → `#p07-icons`
+  - 配色工具 → `#p07-colors`
+  - 演示模板 → `#p07-templates`
+  - 科研插图 → `#p07-science`
+  - 矢量素材 → `#p07-vectors`
+  - 字体资源 → `#p07-fonts`
+  - 教程灵感 → `#p07-tutorials`
 - **scroll-hint**: ↓ 向下探索
 - **背景光晕**: 薄荷绿 + 天蓝双色漂移（与 M3 模块色调一致）
 
@@ -279,7 +291,7 @@ Hero（深色，100vh）
 
 ### 资源卡片
 - 每张卡片独立 ScrollTrigger
-- `gsap.fromTo(card, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', scrollTrigger: { trigger: card, start: 'top 88%', once: true } })`
+- `gsap.fromTo(card, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', scrollTrigger: { trigger: card, start: 'top 88%', toggleActions: 'play none none none' } })`
 - 插图区域额外添加 `scale: 0.95 → 1` 的缩放效果
 - 交错布局的卡片还可以添加轻微的 `x` 偏移入场（左图从左滑入，右图从右滑入）
 
@@ -299,11 +311,12 @@ Hero（深色，100vh）
   <p class="page-footer-desc">模块三「矢量绘图与设计」到此完结。模块四将带你进入学术演示设计的世界。</p>
   <div class="page-footer-nav">
     <button class="btn-ghost" id="p07-prev-btn">← 多面板 Figure 组合</button>
-    <button class="btn-ghost" id="p07-home-btn">返回模块首页</button>
     <button class="btn-primary" id="p07-next-btn">进入模块四 →</button>
   </div>
 </section>
 ```
+
+> 两按钮模式：ghost（上一页）+ primary（下一页），符合 design-spec.md Footer CTA 规范。
 
 ---
 
@@ -320,8 +333,12 @@ Hero（深色，100vh）
 ## 10. 技术约束
 
 - `gsap` / `ScrollTrigger` 必须从 `ScrollAnimations.js` 导入
+- `navigateTo` 从 `router.js` 导入（Footer 按钮导航）
 - 外链使用 `target="_blank" rel="noopener"`
 - 代码块 `white-space: pre-wrap`
 - 所有 hero 元素 `opacity:0` inline style
 - `destroy()` 必须调用 `killAll()` 并清理所有事件监听
 - scroll 监听器使用 `{ passive: true }`
+- 移动端所有 section 设置 `scroll-margin-top: 56px`（全局已有规则，但页面 `<style>` 中应显式包含 `@media (max-width: 768px) { #p07-icons, #p07-colors, ... { scroll-margin-top: 56px; } }`）
+- SVG 插图：21 个独特 SVG，线条风格，可在实现时逐步完善。首轮实现可使用简化版 SVG（几何形状 + 线条组合），后续迭代提升精度
+- 实现前应验证所有 21 个 URL 可访问（尤其是 officeplus.cn、scidraw.io、mycolor.space）
