@@ -90,7 +90,7 @@ const styles = `
 .df-toast { position:absolute; top:-28px; left:50%; transform:translateX(-50%); font-size:12px; background:rgba(0,0,0,0.75); color:#fff; padding:4px 12px; border-radius:8px; pointer-events:none; opacity:0; white-space:nowrap; }
 
 /* ── S5 字体 ── */
-.df-fonts-layout { display:flex; gap:var(--space-lg); max-width:var(--w-full); margin:0 auto; }
+.df-fonts-layout { display:flex; gap:var(--space-lg); max-width:var(--w-full); margin:0 auto; align-items:flex-start; }
 .df-fonts-list { width:42%; display:flex; flex-direction:column; gap:var(--space-sm); }
 .df-fonts-preview { width:58%; }
 .df-font-card { padding:var(--space-md); border-radius:12px; border:1px solid rgba(0,0,0,0.06); cursor:pointer; transition:border-color 0.3s, background 0.3s, border-left-width 0.3s; }
@@ -102,7 +102,7 @@ const styles = `
 .df-font-card-tag { font-size:11px; padding:2px 8px; border-radius:10px; background:rgba(0,0,0,0.04); color:var(--text-on-light-3); }
 
 /* ── S6 信噪比 ── */
-.df-snr-wrap { display:flex; gap:var(--space-lg); max-width:var(--w-full); margin:0 auto; }
+.df-snr-wrap { display:flex; gap:var(--space-lg); max-width:var(--w-full); margin:0 auto; align-items:flex-start; }
 .df-snr-slide-col { width:50%; position:relative; }
 .df-snr-steps-col { width:50%; }
 .df-snr-step { min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:var(--space-lg); }
@@ -787,7 +787,7 @@ function initFonts() {
         <li style="margin-bottom:4px;">因变量：标准化测验得分</li>
         <li style="margin-bottom:4px;">统计方法：重复测量方差分析</li>
       </ul>
-      <div style="height:50px;border-radius:8px;background:rgba(0,0,0,0.04);display:flex;align-items:center;justify-content:center;font-size:12px;color:#999;margin-bottom:12px;">[图表区域]</div>
+      <div style="height:50px;border-radius:8px;background:rgba(0,0,0,0.04);display:flex;align-items:flex-end;justify-content:center;gap:4px;padding:0 12px 6px;margin-bottom:12px;"><div style="flex:1;height:55%;background:rgba(0,0,0,0.08);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:82%;background:rgba(240,178,122,0.4);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:40%;background:rgba(0,0,0,0.08);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:65%;background:rgba(0,0,0,0.08);border-radius:3px 3px 0 0;"></div></div>
       <p style="font-family:${combo.bodyFont};font-size:12px;color:#aaa;">数据来源：XX 大学 · 2024 &nbsp; | &nbsp; 第 3 页</p>
     `;
   }
@@ -829,29 +829,38 @@ function initFontsStickyPreview() {
   const preview = document.getElementById('df-fonts-preview');
   if (!container || !preview) return;
 
+  let viewH = window.innerHeight;
+  let containerH = 0, previewH = 0, maxTranslate = 0;
+
+  function cacheLayout() {
+    viewH = window.innerHeight;
+    containerH = container.offsetHeight;
+    previewH = preview.offsetHeight;
+    maxTranslate = Math.max(0, containerH - previewH);
+  }
+  requestAnimationFrame(cacheLayout);
+
   let ticking = false;
   const onScroll = () => {
     if (ticking) return;
     ticking = true;
     requestAnimationFrame(() => {
       ticking = false;
-      const containerRect = container.getBoundingClientRect();
-      const previewH = preview.offsetHeight;
-      const containerH = container.offsetHeight;
-      const maxTranslate = Math.max(0, containerH - previewH);
+      const rect = container.getBoundingClientRect();
 
-      if (containerRect.top >= 0) {
+      if (rect.top >= 0) {
         preview.style.transform = 'translateY(0)';
-      } else if (containerRect.bottom <= previewH) {
+      } else if (-rect.top + viewH >= containerH) {
         preview.style.transform = `translateY(${maxTranslate}px)`;
       } else {
-        const translate = Math.min(-containerRect.top, maxTranslate);
+        const translate = Math.min(-rect.top, maxTranslate);
         preview.style.transform = `translateY(${translate}px)`;
       }
     });
   };
 
   addEvt(window, 'scroll', onScroll, { passive: true });
+  addEvt(window, 'resize', () => { cacheLayout(); onScroll(); });
 }
 
 // ── S6 信噪比 ──

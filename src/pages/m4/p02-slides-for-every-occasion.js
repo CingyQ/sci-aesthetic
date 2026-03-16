@@ -701,10 +701,10 @@ export function render() {
   <!-- ═══ Footer ═══ -->
   <footer class="section-dark" style="padding:var(--space-3xl) var(--space-lg);min-height:50vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
     <div style="max-width:640px;margin:0 auto;">
-      <p class="page-footer-num" style="opacity:0;">02 / 04</p>
-      <h2 class="page-footer-quote" style="opacity:0;">场景决定策略，受众决定详略。</h2>
-      <p class="page-footer-desc" style="opacity:0;">知道了怎么设计，接下来看看怎么把"差"的 PPT 变"好"。</p>
-      <div class="page-footer-nav" style="opacity:0;">
+      <p class="page-footer-num">02 / 04</p>
+      <h2 class="page-footer-quote">场景决定策略，受众决定详略。</h2>
+      <p class="page-footer-desc">知道了怎么设计，接下来看看怎么把"差"的 PPT 变"好"。</p>
+      <div class="page-footer-nav">
         <button class="btn-ghost" id="seo-prev-btn">← 设计速成指南</button>
         <button class="btn-primary" id="seo-next-btn">PPT 改造工坊 →</button>
       </div>
@@ -872,6 +872,8 @@ export function init() {
 
   fadeIn('.seo-conf-profile', { y: 40 });
   fadeIn('#seo-survival-list', { y: 40 });
+  fadeIn('#seo-struct-list .seo-struct-item', { stagger: 0.08, y: 20, duration: 0.5 });
+  fadeIn('#seo-survival-list .seo-survival-item', { stagger: 0.1, y: 20, duration: 0.5 });
 
   fadeIn('.page-footer-quote', { y: 40 });
   fadeIn('.page-footer-num', { y: 20 });

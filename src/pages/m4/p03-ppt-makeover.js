@@ -62,14 +62,27 @@ const styles = `
   font-weight:500;
   letter-spacing:0.02em;
 }
+.mko-scene-tag::before {
+  content:'';
+  display:inline-block;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:currentColor;
+  margin-right:6px;
+  vertical-align:middle;
+  opacity:0.6;
+}
 .section-dark .mko-scene-tag {
   background:rgba(240,178,122,0.18);
   color:#f5c08a;
 }
 
 /* ── BA 容器 ── */
-.mko-ba-container { width:100%; border-radius:12px; overflow:hidden; box-shadow:var(--shadow-lg); }
+.mko-ba-container { width:100%; border-radius:12px; overflow:hidden; box-shadow:var(--shadow-lg); transition:transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.4s; }
+.mko-ba-container:hover { transform:scale(1.01); box-shadow:0 16px 48px rgba(0,0,0,0.15); }
 .section-dark .mko-ba-container { box-shadow:0 8px 40px rgba(0,0,0,0.4); }
+.section-dark .mko-ba-container:hover { box-shadow:0 16px 56px rgba(0,0,0,0.5); }
 
 /* ── 改造要点 ── */
 .mko-takeaway {
@@ -88,6 +101,12 @@ const styles = `
   background:rgba(240,178,122,0.06);
   border-left:3px solid var(--module-4);
   color:var(--text-on-light);
+  transition:transform 0.3s, box-shadow 0.3s;
+  cursor:default;
+}
+.mko-takeaway-item:hover {
+  transform:translateX(4px);
+  box-shadow:inset 3px 0 0 var(--module-4);
 }
 .section-dark .mko-takeaway-item {
   background:rgba(240,178,122,0.08);
@@ -141,6 +160,54 @@ const styles = `
 /* ── Before 幻灯片样式（通用坏设计特征） ── */
 .mko-before-gradient { background:linear-gradient(135deg,#c8d8ee,#dde8ff) !important; }
 .mko-before-blue-header { background:linear-gradient(135deg,#1a4a8a,#2860b0) !important; }
+
+/* ── 改造评分指示器 ── */
+.mko-score-bar {
+  display:flex;
+  align-items:center;
+  gap:var(--space-sm);
+  margin-top:var(--space-md);
+  padding:12px 16px;
+  border-radius:var(--radius-sm);
+  background:rgba(240,178,122,0.06);
+  border:1px solid rgba(240,178,122,0.12);
+}
+.section-dark .mko-score-bar {
+  background:rgba(240,178,122,0.08);
+  border-color:rgba(240,178,122,0.15);
+}
+.mko-score-label {
+  font-size:12px;
+  font-weight:600;
+  color:var(--module-4);
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+.mko-score-track {
+  flex:1;
+  height:6px;
+  border-radius:3px;
+  background:rgba(0,0,0,0.06);
+  overflow:hidden;
+  position:relative;
+}
+.section-dark .mko-score-track { background:rgba(255,255,255,0.08); }
+.mko-score-fill {
+  height:100%;
+  border-radius:3px;
+  background:linear-gradient(90deg, #F0B27A, #95D5B2);
+  transition:width 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+  width:50%;
+}
+.mko-score-value {
+  font-size:18px;
+  font-weight:700;
+  color:var(--module-4);
+  font-family:var(--font-code);
+  min-width:48px;
+  text-align:right;
+}
 
 /* ── 移动端 ── */
 @media (max-width:768px) {
@@ -524,6 +591,11 @@ export function render() {
         <span class="mko-scene-tag">日常汇报</span>
       </div>
       <div class="mko-ba-container" id="mko-ba-1"></div>
+      <div class="mko-score-bar" id="mko-score-1">
+        <span class="mko-score-label">改造评分</span>
+        <div class="mko-score-track"><div class="mko-score-fill" id="mko-score-fill-1"></div></div>
+        <span class="mko-score-value" id="mko-score-val-1">50</span>
+      </div>
       <div class="mko-takeaway">
         <div class="mko-takeaway-item">① 标题精简：30 字以上的标题去掉修饰词，保留核心研究对象和方法</div>
         <div class="mko-takeaway-item">② 字体统一：全页只用一种字体，通过字号和字重建立层次</div>
@@ -545,6 +617,11 @@ export function render() {
         <span class="mko-scene-tag">学术会议</span>
       </div>
       <div class="mko-ba-container" id="mko-ba-2"></div>
+      <div class="mko-score-bar" id="mko-score-2">
+        <span class="mko-score-label">改造评分</span>
+        <div class="mko-score-track"><div class="mko-score-fill" id="mko-score-fill-2"></div></div>
+        <span class="mko-score-value" id="mko-score-val-2">50</span>
+      </div>
       <div class="mko-takeaway">
         <div class="mko-takeaway-item">① 一页一图：把多图合并拆分开来，每张 slide 只展示一个关键数据</div>
         <div class="mko-takeaway-item">② 标题即结论：把"Figure 3"改成"实验组效果提升 42%"，观众秒懂</div>
@@ -566,6 +643,11 @@ export function render() {
         <span class="mko-scene-tag">项目答辩</span>
       </div>
       <div class="mko-ba-container" id="mko-ba-3"></div>
+      <div class="mko-score-bar" id="mko-score-3">
+        <span class="mko-score-label">改造评分</span>
+        <div class="mko-score-track"><div class="mko-score-fill" id="mko-score-fill-3"></div></div>
+        <span class="mko-score-value" id="mko-score-val-3">50</span>
+      </div>
       <div class="mko-takeaway">
         <div class="mko-takeaway-item">① 提炼关键词：200 字的段落浓缩成 3 个关键词 + 一句话说明</div>
         <div class="mko-takeaway-item">② 用数字代替形容词："显著提升"不如"提升 42%"有力量</div>
@@ -587,6 +669,11 @@ export function render() {
         <span class="mko-scene-tag">学位答辩</span>
       </div>
       <div class="mko-ba-container" id="mko-ba-4"></div>
+      <div class="mko-score-bar" id="mko-score-4">
+        <span class="mko-score-label">改造评分</span>
+        <div class="mko-score-track"><div class="mko-score-fill" id="mko-score-fill-4"></div></div>
+        <span class="mko-score-value" id="mko-score-val-4">50</span>
+      </div>
       <div class="mko-takeaway">
         <div class="mko-takeaway-item">① 重绘别截图：截图模糊、配色乱；用 Python/R/AI 重新绘制矢量图</div>
         <div class="mko-takeaway-item">② 标题即结论：把图的标题从编号改成你想让观众记住的那句话</div>
@@ -608,6 +695,11 @@ export function render() {
         <span class="mko-scene-tag">学术会议</span>
       </div>
       <div class="mko-ba-container" id="mko-ba-5"></div>
+      <div class="mko-score-bar" id="mko-score-5">
+        <span class="mko-score-label">改造评分</span>
+        <div class="mko-score-track"><div class="mko-score-fill" id="mko-score-fill-5"></div></div>
+        <span class="mko-score-value" id="mko-score-val-5">50</span>
+      </div>
       <div class="mko-takeaway">
         <div class="mko-takeaway-item">① 只留 3 条核心结论：人类工作记忆上限是 3-4 条，超过就全忘了</div>
         <div class="mko-takeaway-item">② 分层：主结论 &gt; 未来方向 &gt; 联系方式，信息有轻重</div>
@@ -629,6 +721,11 @@ export function render() {
         <span class="mko-scene-tag">学位答辩</span>
       </div>
       <div class="mko-ba-container" id="mko-ba-6"></div>
+      <div class="mko-score-bar" id="mko-score-6">
+        <span class="mko-score-label">改造评分</span>
+        <div class="mko-score-track"><div class="mko-score-fill" id="mko-score-fill-6"></div></div>
+        <span class="mko-score-value" id="mko-score-val-6">50</span>
+      </div>
       <div class="mko-takeaway">
         <div class="mko-takeaway-item">① 模板可以改：校徽保留但缩小，蓝色横幅删掉或替换为简洁色块</div>
         <div class="mko-takeaway-item">② 标题是主角：论文标题字号至少是其他信息的 2 倍，占据视觉中心</div>
@@ -694,6 +791,15 @@ function initQuicknav() {
 
 // ── 6 组 BeforeAfter 案例 ──
 function initCases() {
+  const SCORES = [
+    { before: 25, after: 88 },
+    { before: 20, after: 85 },
+    { before: 15, after: 90 },
+    { before: 30, after: 82 },
+    { before: 22, after: 87 },
+    { before: 28, after: 92 },
+  ];
+
   const caseDefs = [
     { id: 'mko-ba-1', before: BEFORE_1, after: AFTER_1 },
     { id: 'mko-ba-2', before: BEFORE_2, after: AFTER_2 },
@@ -703,9 +809,10 @@ function initCases() {
     { id: 'mko-ba-6', before: BEFORE_6, after: AFTER_6 },
   ];
 
-  caseDefs.forEach(({ id, before, after }) => {
+  caseDefs.forEach(({ id, before, after }, i) => {
     const container = document.getElementById(id);
     if (!container) return;
+
     const ba = createBeforeAfter(container, {
       beforeContent: `<div class="mko-slide mko-slide-before">${before}</div>`,
       afterContent:  `<div class="mko-slide mko-slide-after">${after}</div>`,
@@ -714,6 +821,27 @@ function initCases() {
       initialPosition: 50,
     });
     if (ba) _beforeAfters.push(ba);
+
+    // 拖拽联动评分
+    const scoreFill = document.getElementById(`mko-score-fill-${i + 1}`);
+    const scoreVal  = document.getElementById(`mko-score-val-${i + 1}`);
+    if (scoreFill && scoreVal) {
+      const wrapper = container.querySelector('.before-after');
+      if (wrapper) {
+        const updateScore = () => {
+          const handle = wrapper.querySelector('.before-after__handle');
+          if (!handle) return;
+          const pct = parseFloat(handle.style.left) || 50;
+          const { before: bScore, after: aScore } = SCORES[i];
+          const score = Math.round(bScore + (aScore - bScore) * (1 - pct / 100));
+          scoreFill.style.width = score + '%';
+          scoreVal.textContent = score;
+        };
+        addEvt(wrapper, 'pointermove', updateScore);
+        addEvt(wrapper, 'click', () => requestAnimationFrame(updateScore));
+        updateScore();
+      }
+    }
   });
 }
 
@@ -732,7 +860,16 @@ function initScrollAnimations() {
     const takeaway = section.querySelector('.mko-takeaway');
     if (header)   fadeIn(header,   { y: 40, duration: 0.8 });
     if (ba)       fadeIn(ba,       { y: 40, duration: 0.7, start: 'top 80%' });
-    if (takeaway) fadeIn(takeaway, { y: 20, duration: 0.6, start: 'top 90%' });
+    if (takeaway) {
+      const items = takeaway.querySelectorAll('.mko-takeaway-item');
+      if (items.length) {
+        fadeIn(items, { stagger: 0.12, y: 15, duration: 0.5, start: 'top 90%' });
+      } else {
+        fadeIn(takeaway, { y: 20, duration: 0.6, start: 'top 90%' });
+      }
+    }
+    const scoreBar = section.querySelector('.mko-score-bar');
+    if (scoreBar) fadeIn(scoreBar, { y: 15, duration: 0.5, start: 'top 88%' });
   });
 
   // Footer

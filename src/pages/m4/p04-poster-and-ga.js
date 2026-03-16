@@ -52,7 +52,7 @@ const styles = `
 .pga-compare-value { color:var(--text-on-light); line-height:1.5; }
 
 /* ══ S2 布局模板 ══ */
-.pga-layout-wrap { display:flex; gap:var(--space-lg); max-width:var(--w-full); margin:0 auto; position:relative; }
+.pga-layout-wrap { display:flex; gap:var(--space-lg); max-width:var(--w-full); margin:0 auto; position:relative; align-items:flex-start; }
 .pga-layout-list { width:42%; display:flex; flex-direction:column; gap:var(--space-sm); }
 .pga-layout-preview-col { width:58%; }
 .pga-layout-card { padding:var(--space-md); border-radius:12px; border:1px solid rgba(255,255,255,0.08); cursor:pointer; transition:border-color 0.3s, background 0.3s, border-left-width 0.2s; background:rgba(255,255,255,0.03); border-left:2px solid transparent; }
@@ -80,6 +80,10 @@ const styles = `
 .pga-flow-wrap { display:flex; gap:0; max-width:900px; margin:0 auto; align-items:stretch; position:relative; }
 .pga-flow-step { flex:1; padding:var(--space-md); border-radius:12px; cursor:pointer; transition:background 0.3s, transform 0.3s; text-align:center; position:relative; }
 .pga-flow-step.pga-flow-active { background:rgba(240,178,122,0.12); transform:translateY(-4px); }
+.pga-flow-step.pga-flow-active .pga-flow-num {
+  transform:scale(1.1);
+  transition:transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
+}
 .pga-flow-step:not(.pga-flow-active) { opacity:0.55; }
 .pga-flow-step:hover:not(.pga-flow-active) { opacity:0.8; }
 .pga-flow-num { font-size:clamp(2.5rem,5vw,3.5rem); font-weight:700; color:var(--module-4); font-family:var(--font-heading); line-height:1; margin-bottom:var(--space-sm); }
@@ -114,6 +118,19 @@ const styles = `
 .pga-table tr:nth-child(even) td { background:rgba(255,255,255,0.025); }
 .pga-table tr:hover td { background:rgba(255,255,255,0.04); }
 .pga-table td:first-child { font-weight:600; color:var(--text-on-dark); }
+
+/* ══ pga-section-inner 内容包裹层 ══ */
+.pga-section-inner {
+  padding: var(--space-3xl) var(--space-lg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+/* S2 布局模板：内容从顶部开始，不垂直居中 */
+#pga-poster-layout .pga-section-inner {
+  justify-content: flex-start;
+}
 
 /* ══ Footer ══ */
 .pga-footer-nav { display:flex; gap:var(--space-md); justify-content:center; flex-wrap:wrap; margin-top:var(--space-lg); }
@@ -236,6 +253,7 @@ const LAYOUTS = [
 // ══════════════════════════════════════════════════════
 export function render() {
   return `
+<style>${styles}</style>
 <div class="page-scroll">
 
 <!-- ─────────────── HERO ─────────────── -->
@@ -261,7 +279,7 @@ export function render() {
 
 <!-- ─────────────── S1 海报 vs GA 对比 ─────────────── -->
 <section class="section-light" id="pga-compare" style="scroll-margin-top:56px;">
-  <div class="section-inner">
+  <div class="pga-section-inner">
     <div class="section-header" style="text-align:center;margin-bottom:var(--space-xl);">
       <h2 class="section-title">海报 vs GA</h2>
       <p class="section-subtitle">同为"一页纸传达研究"，用途与设计策略截然不同</p>
@@ -297,7 +315,7 @@ export function render() {
 
 <!-- ─────────────── S2 海报布局模板 ─────────────── -->
 <section class="section-dark" id="pga-poster-layout" style="scroll-margin-top:56px;">
-  <div class="section-inner">
+  <div class="pga-section-inner">
     <div class="section-header" style="text-align:center;margin-bottom:var(--space-xl);">
       <h2 class="section-title" style="color:var(--text-on-dark);">海报布局模板</h2>
       <p class="section-subtitle" style="color:var(--text-on-dark-2);">4 种经典结构，按内容类型选择最合适的</p>
@@ -323,7 +341,7 @@ export function render() {
 
 <!-- ─────────────── S3 海报设计要点 ─────────────── -->
 <section class="section-light" id="pga-poster-tips" style="scroll-margin-top:56px;">
-  <div class="section-inner">
+  <div class="pga-section-inner">
     <div class="section-header" style="text-align:center;margin-bottom:var(--space-xl);">
       <h2 class="section-title">海报设计要点</h2>
       <p class="section-subtitle">让你的海报在展板区脱颖而出的 6 条关键原则</p>
@@ -365,7 +383,7 @@ export function render() {
 
 <!-- ─────────────── S4 GA 设计流程 ─────────────── -->
 <section class="section-dark" id="pga-ga-flow" style="scroll-margin-top:56px;">
-  <div class="section-inner">
+  <div class="pga-section-inner">
     <div class="section-header" style="text-align:center;margin-bottom:var(--space-xl);">
       <h2 class="section-title" style="color:var(--text-on-dark);">GA 设计流程</h2>
       <p class="section-subtitle" style="color:var(--text-on-dark-2);">从论文到一张图，4 步系统化流程</p>
@@ -407,12 +425,15 @@ export function render() {
         </div>
       </div>
     </div>
+    <div id="pga-flow-detail" style="max-width:680px;margin:var(--space-lg) auto 0;padding:var(--space-md);border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);min-height:80px;">
+      <p style="font-size:14px;color:var(--text-on-dark-2);line-height:1.7;" id="pga-flow-detail-text">从论文提炼 1 句核心发现 + 关键方法步骤。把"我们做了什么→发现了什么"压缩成一句话。</p>
+    </div>
   </div>
 </section>
 
 <!-- ─────────────── S5 GA 案例评分 ─────────────── -->
 <section class="section-light" id="pga-ga-rating" style="scroll-margin-top:56px;">
-  <div class="section-inner">
+  <div class="pga-section-inner">
     <div class="section-header" style="text-align:center;margin-bottom:var(--space-xl);">
       <h2 class="section-title">GA 案例评分</h2>
       <p class="section-subtitle">3 种典型水平，看什么是好的 GA，什么需要改进</p>
@@ -509,7 +530,7 @@ export function render() {
 
 <!-- ─────────────── S6 尺寸速查 ─────────────── -->
 <section class="section-dark" id="pga-sizes" style="scroll-margin-top:56px;">
-  <div class="section-inner">
+  <div class="pga-section-inner">
     <div class="section-header" style="text-align:center;margin-bottom:var(--space-xl);">
       <h2 class="section-title" style="color:var(--text-on-dark);">尺寸速查</h2>
       <p class="section-subtitle" style="color:var(--text-on-dark-2);">打印前必查，避免尺寸/格式不符被退稿</p>
@@ -551,10 +572,10 @@ export function render() {
 <!-- ─────────────── Footer CTA ─────────────── -->
 <section class="section-dark page-footer-cta">
   <div class="flex-col-center" style="text-align:center;max-width:680px;margin:0 auto;">
-    <p class="page-footer-num" style="opacity:0;">04 / 04</p>
-    <h2 class="page-footer-quote" style="opacity:0;">一张图胜过千言万语——前提是你选对了那张图。</h2>
-    <p class="page-footer-desc" style="opacity:0;">恭喜完成全部学术演示设计学习！回到首页探索更多模块。</p>
-    <div class="pga-footer-nav" style="opacity:0;">
+    <p class="page-footer-num">04 / 04</p>
+    <h2 class="page-footer-quote">一张图胜过千言万语——前提是你选对了那张图。</h2>
+    <p class="page-footer-desc">恭喜完成全部学术演示设计学习！回到首页探索更多模块。</p>
+    <div class="pga-footer-nav">
       <button class="btn btn-ghost" id="pga-btn-prev">← PPT 改造工坊</button>
       <button class="btn btn-primary" id="pga-btn-next">回到首页 →</button>
     </div>
@@ -569,14 +590,6 @@ export function render() {
 //  init()
 // ══════════════════════════════════════════════════════
 export function init() {
-  // 注入样式
-  if (!document.getElementById('pga-styles')) {
-    const el = document.createElement('style');
-    el.id = 'pga-styles';
-    el.textContent = styles;
-    document.head.appendChild(el);
-  }
-
   // ── Hero 入场动画 ──
   const heroTl = gsap.timeline({ delay: 0.2 });
   heroTl.fromTo('.pga-hero .hero-eyebrow',
@@ -706,7 +719,16 @@ function _initLayoutSection() {
 
 // ── S4 GA 流程步骤点击 ──
 function _initFlowSteps() {
+  const FLOW_DETAILS = [
+    '从论文提炼 1 句核心发现 + 关键方法步骤。把"我们做了什么→发现了什么"压缩成一句话。',
+    '用直觉可懂的视觉隐喻：漏斗（筛选）/ 齿轮（机制）/ 路径（流程）/ 箭头（因果）。',
+    '左到右或上到下的信息流，箭头连接各模块。先在纸上画草图，确定逻辑再开软件。',
+    '≤3 色，与论文图表配色统一。颜色一致性让 GA 和正文图表形成整体感。'
+  ];
+
   const steps = document.querySelectorAll('.pga-flow-step');
+  const detailText = document.getElementById('pga-flow-detail-text');
+
   steps.forEach(step => {
     addEvt(step, 'click', () => {
       const idx = parseInt(step.dataset.step, 10);
@@ -714,10 +736,19 @@ function _initFlowSteps() {
       _activeFlowStep = idx;
       steps.forEach(s => s.classList.remove('pga-flow-active'));
       step.classList.add('pga-flow-active');
+
+      if (detailText) {
+        gsap.to(detailText, {
+          opacity: 0, y: 5, duration: 0.15,
+          onComplete: () => {
+            detailText.textContent = FLOW_DETAILS[idx];
+            gsap.to(detailText, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' });
+          }
+        });
+      }
     });
   });
 
-  // 使用 ScrollTrigger 依次淡入步骤
   fadeIn('.pga-flow-step', { stagger: 0.15, y: 30, duration: 0.7 });
 }
 
@@ -768,10 +799,6 @@ export function destroy() {
   _layoutScrollHandler = null;
   _activeLayoutIndex = 0;
   _activeFlowStep = 0;
-
-  // 移除注入的样式
-  const styleEl = document.getElementById('pga-styles');
-  if (styleEl) styleEl.remove();
 
   killAll();
 }
