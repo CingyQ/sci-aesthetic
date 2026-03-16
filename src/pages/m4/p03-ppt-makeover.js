@@ -245,10 +245,10 @@ const BEFORE_1 = `
   <div style="position:absolute;top:16px;left:20px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,100,0.12);display:flex;align-items:center;justify-content:center;font-size:15px;color:rgba(0,0,100,0.4);font-weight:bold;">校</div>
   <div style="position:absolute;top:18px;right:20px;font-size:13px;color:rgba(0,0,80,0.3);">某某大学</div>
   <div style="display:flex;flex-direction:column;justify-content:center;text-align:center;height:100%;">
-    <div style="font-family:'SimSun',serif;font-size:22px;font-weight:bold;color:#003399;line-height:1.4;margin-bottom:6px;">基于深度学习的多模态医学影像分析与肿瘤区域自动分割系统关键技术研究进展汇报</div>
-    <div style="font-family:'KaiTi',serif;font-size:14px;color:#555;margin-bottom:6px;line-height:1.3;">Research Progress on Key Technologies of Multi-modal Medical Image Analysis and Automatic Tumor Region Segmentation System</div>
+    <div style="font-family:'SimSun',serif;font-size:17px;font-weight:bold;color:#003399;line-height:1.35;margin-bottom:6px;">基于深度学习的多模态医学影像分析与肿瘤区域自动分割系统关键技术研究进展汇报</div>
+    <div style="font-family:'KaiTi',serif;font-size:11px;color:#555;margin-bottom:6px;line-height:1.3;">Research Progress on Key Technologies of Multi-modal Medical Image Analysis and Automatic Tumor Region Segmentation System</div>
     <div style="width:80%;height:1px;background:linear-gradient(90deg,transparent,#003399,transparent);margin:12px auto;"></div>
-    <div style="font-size:14px;color:#333;line-height:1.8;">
+    <div style="font-size:12px;color:#333;line-height:1.8;">
       <span>汇报人：张三</span>&nbsp;&nbsp;<span>学号：2021XXX001</span><br>
       <span>指导老师：李四 教授</span>&nbsp;&nbsp;<span>副导师：王五 副教授</span><br>
       <span>课题组：医学AI实验室</span>&nbsp;&nbsp;<span>学院：计算机科学与技术学院</span>
@@ -383,20 +383,20 @@ const AFTER_3 = `
 // ── Case 4：表格页 ──
 const BEFORE_4 = `
 <div style="background:#fff;width:100%;height:100%;padding:24px 28px;box-sizing:border-box;">
-  <div style="font-size:18px;font-weight:bold;text-align:center;color:#333;margin-bottom:12px;">Table 2. Experimental Results (Pre-Post Comparison)</div>
-  <table style="width:100%;border-collapse:collapse;font-size:14px;border:2px solid #333;">
+  <div style="font-size:15px;font-weight:bold;text-align:center;color:#333;margin-bottom:10px;">Table 2. Experimental Results (Pre-Post Comparison)</div>
+  <table style="width:100%;border-collapse:collapse;font-size:12px;border:2px solid #333;">
     <tr style="background:#4472C4;color:#fff;font-weight:bold;">
-      <th style="border:1px solid #333;padding:6px 8px;font-size:14px;">Group</th>
-      <th style="border:1px solid #333;padding:6px 8px;font-size:14px;">Pre</th>
-      <th style="border:1px solid #333;padding:6px 8px;font-size:14px;">Post</th>
-      <th style="border:1px solid #333;padding:6px 8px;font-size:14px;">Change</th>
-      <th style="border:1px solid #333;padding:6px 8px;font-size:14px;">p-value</th>
+      <th style="border:1px solid #333;padding:4px 6px;">Group</th>
+      <th style="border:1px solid #333;padding:4px 6px;">Pre</th>
+      <th style="border:1px solid #333;padding:4px 6px;">Post</th>
+      <th style="border:1px solid #333;padding:4px 6px;">Change</th>
+      <th style="border:1px solid #333;padding:4px 6px;">p-value</th>
     </tr>
-    <tr><td style="border:1px solid #999;padding:5px 8px;background:#dce6f1;">Exp-A</td><td style="border:1px solid #999;padding:5px 8px;">45.2±8.3</td><td style="border:1px solid #999;padding:5px 8px;">68.7±9.1</td><td style="border:1px solid #999;padding:5px 8px;color:red;font-weight:bold;">+23.5</td><td style="border:1px solid #999;padding:5px 8px;color:red;">&lt;0.001**</td></tr>
-    <tr style="background:#f2f2f2;"><td style="border:1px solid #999;padding:5px 8px;background:#dce6f1;">Exp-B</td><td style="border:1px solid #999;padding:5px 8px;">44.8±7.6</td><td style="border:1px solid #999;padding:5px 8px;">61.3±8.4</td><td style="border:1px solid #999;padding:5px 8px;color:red;">+16.5</td><td style="border:1px solid #999;padding:5px 8px;">0.003**</td></tr>
-    <tr><td style="border:1px solid #999;padding:5px 8px;background:#dce6f1;">Ctrl-1</td><td style="border:1px solid #999;padding:5px 8px;">45.5±8.1</td><td style="border:1px solid #999;padding:5px 8px;">47.2±8.5</td><td style="border:1px solid #999;padding:5px 8px;">+1.7</td><td style="border:1px solid #999;padding:5px 8px;">0.42</td></tr>
-    <tr style="background:#f2f2f2;"><td style="border:1px solid #999;padding:5px 8px;background:#dce6f1;">Ctrl-2</td><td style="border:1px solid #999;padding:5px 8px;">44.1±7.9</td><td style="border:1px solid #999;padding:5px 8px;">45.8±8.2</td><td style="border:1px solid #999;padding:5px 8px;">+1.7</td><td style="border:1px solid #999;padding:5px 8px;">0.38</td></tr>
-    <tr><td style="border:1px solid #999;padding:5px 8px;background:#dce6f1;">Sham</td><td style="border:1px solid #999;padding:5px 8px;">45.0±7.7</td><td style="border:1px solid #999;padding:5px 8px;">46.1±8.0</td><td style="border:1px solid #999;padding:5px 8px;">+1.1</td><td style="border:1px solid #999;padding:5px 8px;">0.55</td></tr>
+    <tr><td style="border:1px solid #999;padding:3px 5px;background:#dce6f1;">Exp-A</td><td style="border:1px solid #999;padding:3px 5px;">45.2±8.3</td><td style="border:1px solid #999;padding:3px 5px;">68.7±9.1</td><td style="border:1px solid #999;padding:3px 5px;color:red;font-weight:bold;">+23.5</td><td style="border:1px solid #999;padding:3px 5px;color:red;">&lt;0.001**</td></tr>
+    <tr style="background:#f2f2f2;"><td style="border:1px solid #999;padding:3px 5px;background:#dce6f1;">Exp-B</td><td style="border:1px solid #999;padding:3px 5px;">44.8±7.6</td><td style="border:1px solid #999;padding:3px 5px;">61.3±8.4</td><td style="border:1px solid #999;padding:3px 5px;color:red;">+16.5</td><td style="border:1px solid #999;padding:3px 5px;">0.003**</td></tr>
+    <tr><td style="border:1px solid #999;padding:3px 5px;background:#dce6f1;">Ctrl-1</td><td style="border:1px solid #999;padding:3px 5px;">45.5±8.1</td><td style="border:1px solid #999;padding:3px 5px;">47.2±8.5</td><td style="border:1px solid #999;padding:3px 5px;">+1.7</td><td style="border:1px solid #999;padding:3px 5px;">0.42</td></tr>
+    <tr style="background:#f2f2f2;"><td style="border:1px solid #999;padding:3px 5px;background:#dce6f1;">Ctrl-2</td><td style="border:1px solid #999;padding:3px 5px;">44.1±7.9</td><td style="border:1px solid #999;padding:3px 5px;">45.8±8.2</td><td style="border:1px solid #999;padding:3px 5px;">+1.7</td><td style="border:1px solid #999;padding:3px 5px;">0.38</td></tr>
+    <tr><td style="border:1px solid #999;padding:3px 5px;background:#dce6f1;">Sham</td><td style="border:1px solid #999;padding:3px 5px;">45.0±7.7</td><td style="border:1px solid #999;padding:3px 5px;">46.1±8.0</td><td style="border:1px solid #999;padding:3px 5px;">+1.1</td><td style="border:1px solid #999;padding:3px 5px;">0.55</td></tr>
   </table>
   <div style="font-size:11px;color:#666;margin-top:6px;line-height:1.4;">Note: Values are means±SD. Pre=baseline, Post=8-week follow-up. Change=Post-Pre. p-values from independent samples t-tests. *p&lt;0.05, **p&lt;0.01, ***p&lt;0.001. ES=effect size (Cohen's d). Exp=experimental group. Ctrl=control group.</div>
 </div>
@@ -452,7 +452,7 @@ const AFTER_4 = `
 // ── Case 5：图表页 ──
 const BEFORE_5 = `
 <div style="background:#fff;width:100%;height:100%;padding:24px 28px;box-sizing:border-box;">
-  <div style="font-size:18px;font-weight:bold;color:#333;margin-bottom:8px;text-align:center;">Fig.3 Results of Experiment</div>
+  <div style="font-size:15px;font-weight:bold;color:#333;margin-bottom:6px;text-align:center;">Fig.3 Results of Experiment</div>
   <div style="display:flex;gap:8px;height:calc(100% - 56px);">
     <div style="flex:1;position:relative;border:1px solid #bbb;background:#f8f8f8;">
       <div style="position:absolute;top:4px;left:4px;right:4px;bottom:4px;background:repeating-linear-gradient(0deg,transparent,transparent 24px,rgba(0,0,0,0.06) 24px,rgba(0,0,0,0.06) 25px);">
@@ -525,17 +525,17 @@ const AFTER_5 = `
 // ── Case 6：结论页 ──
 const BEFORE_6 = `
 <div style="background:#fff;width:100%;height:100%;padding:24px 32px;box-sizing:border-box;">
-  <div style="font-size:22px;font-weight:bold;text-align:center;color:#003399;margin-bottom:12px;">Summary &amp; Conclusions</div>
-  <div style="width:80%;height:2px;background:#003399;margin:0 auto 16px;"></div>
-  <ul style="font-size:15px;color:#333;line-height:1.55;padding-left:24px;margin:0;">
-    <li style="margin-bottom:6px;">本研究成功建立了一套完整的认知干预评估体系，涵盖认知、情感及生理多个维度的综合评价指标</li>
-    <li style="margin-bottom:6px;">实验组在干预后各主要指标均<span style="color:#cc0000;font-weight:bold;">显著优于</span>对照组（p&lt;0.001），差异具有统计学意义</li>
-    <li style="margin-bottom:6px;">效应量分析表明干预效果显著（<span style="font-weight:bold;">Cohen's d = 0.82</span>），具有较高的临床实践意义</li>
-    <li style="margin-bottom:6px;">双盲随机对照设计有效控制了<span style="text-decoration:underline;">安慰剂效应和观察者偏倚</span>，研究内部效度高</li>
-    <li style="margin-bottom:6px;">本研究存在局限性：样本量有限（n=72）、随访时间较短（8周）、单一地区样本</li>
-    <li style="margin-bottom:6px;">未来可考虑扩大样本量（n≥200）、延长随访至12个月、开展多中心验证研究</li>
+  <div style="font-size:18px;font-weight:bold;text-align:center;color:#003399;margin-bottom:8px;">Summary &amp; Conclusions</div>
+  <div style="width:80%;height:2px;background:#003399;margin:0 auto 10px;"></div>
+  <ul style="font-size:12px;color:#333;line-height:1.5;padding-left:20px;margin:0;">
+    <li style="margin-bottom:4px;">本研究建立了一套完整的认知干预评估体系，涵盖认知、情感及生理多维度综合评价</li>
+    <li style="margin-bottom:4px;">实验组在干预后各指标均<span style="color:#cc0000;font-weight:bold;">显著优于</span>对照组（p&lt;0.001），差异有统计学意义</li>
+    <li style="margin-bottom:4px;">效应量分析表明干预效果显著（<span style="font-weight:bold;">Cohen's d = 0.82</span>），临床意义高</li>
+    <li style="margin-bottom:4px;">双盲 RCT 设计有效控制了<span style="text-decoration:underline;">安慰剂效应和观察者偏倚</span></li>
+    <li style="margin-bottom:4px;">局限性：样本量有限（n=72）、随访较短（8周）、单一地区</li>
+    <li style="margin-bottom:4px;">未来：扩大样本（n≥200）、随访延长至12个月、多中心验证</li>
   </ul>
-  <div style="text-align:center;margin-top:14px;font-size:32px;color:#003399;font-weight:bold;text-shadow:1px 1px 3px rgba(0,0,200,0.15);">Thank You! 🎉✨🎊</div>
+  <div style="text-align:center;margin-top:10px;font-size:26px;color:#003399;font-weight:bold;text-shadow:1px 1px 3px rgba(0,0,200,0.15);">Thank You! 🎉✨🎊</div>
 </div>
 `;
 
