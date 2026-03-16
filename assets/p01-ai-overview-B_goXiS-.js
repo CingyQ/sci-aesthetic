@@ -1,4 +1,4 @@
-import{k as T,g as L,f as g}from"./ScrollAnimations-B5Kyk-Xq.js";import{n as w}from"./index--9oJ04dn.js";let k=[],h=[];function B(){return`<div class="page-scroll">
+import{k as T,g as L,f as g}from"./ScrollAnimations-B5Kyk-Xq.js";import{n as w}from"./index-DTvePxRW.js";let k=[],h=[];function B(){return`<div class="page-scroll">
 <style>
 /* ── M2 全局占位符样式（仅在 p01 中声明） ── */
 .m2-placeholder { background: linear-gradient(135deg,#2d2d4a 0%,#1a1a2e 100%); border:1px dashed rgba(184,184,232,0.3); border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; min-height:200px; }
@@ -223,7 +223,7 @@ Four quadrants:
 ④ Supporting Services (bottom-left, olive green): Soil formation, Nutrient cycling,
    Primary production, Biodiversity
 Outer ring: service flow arrows to society, annotated total value $12,100/ha/yr.`}],m=document.getElementById("p01-sc-tabs"),v=document.getElementById("p01-sc-panels");m&&v&&(C.forEach((t,a)=>{const e=document.createElement("button");e.className=`p01-sc-tab${a===0?" active":""}`,e.textContent=t.label,e.dataset.idx=a,m.appendChild(e);const r=document.createElement("div");r.className=`p01-sc-panel${a===0?" active":""}`,r.id=`p01-panel-${a}`,r.innerHTML=`
-        <img loading="lazy" src="/sci-aesthetic/${t.img}" alt="${t.label}" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
+        <img loading="lazy" src="/Git/sci-aesthetic/${t.img}" alt="${t.label}" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
         <div>
           <div class="p01-sc-prompt-box">
             <h4>Prompt</h4>

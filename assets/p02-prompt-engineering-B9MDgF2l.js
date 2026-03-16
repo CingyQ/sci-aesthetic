@@ -1,4 +1,4 @@
-import{k as M,g as L,f as g}from"./ScrollAnimations-B5Kyk-Xq.js";import{n as $}from"./index--9oJ04dn.js";let v=[],F=[];function n(i){return i.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}function H(){return`<div class="page-scroll">
+import{k as M,g as G,f as g}from"./ScrollAnimations-B5Kyk-Xq.js";import{n as $}from"./index-DTvePxRW.js";let v=[],F=[];function n(i){return i.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}function H(){return`<div class="page-scroll">
 <style>
 /* p02 hero 光晕 */
 .p02-hero { position:relative; overflow:hidden; align-items:center; }
@@ -229,7 +229,7 @@ import{k as M,g as L,f as g}from"./ScrollAnimations-B5Kyk-Xq.js";import{n as $}f
     <button class="btn-primary" id="p02-next-btn">AI 输出后处理 →</button>
   </div>
 </section>
-</div>`}function N(){const i=L.timeline({delay:.2});if(i.fromTo("#p02-hero .hero-eyebrow",{opacity:0,y:20},{opacity:1,y:0,duration:.6,ease:"power3.out"},0),i.fromTo("#p02-hero .page-hero-title",{y:30,opacity:0},{opacity:1,y:0,duration:.8,ease:"power3.out"},.15),i.fromTo("#p02-hero .page-hero-sub",{y:20,opacity:0},{opacity:.5,y:0,duration:.8,ease:"power3.out"},.3),i.fromTo(".p02-hero-tagline",{y:20,opacity:0},{opacity:1,y:0,duration:.8,ease:"power3.out"},.45),i.fromTo("#p02-quicknav",{y:20,opacity:0},{opacity:1,y:0,duration:.8,ease:"power3.out"},.6),i.fromTo(".p02-scroll-hint",{opacity:0,y:15},{opacity:1,y:0,duration:.6,ease:"power3.out"},.75),document.querySelectorAll("#p02-quicknav .hero-quicknav__item").forEach(t=>{t.addEventListener("click",()=>{document.querySelector(t.dataset.target)?.scrollIntoView({behavior:"smooth",block:"start"})})}),window.innerWidth>900){const t=document.getElementById("p02-cdtf-body"),e=document.getElementById("p02-cdtf-left"),a=document.querySelectorAll(".p02-cdtf-panel"),r=document.querySelectorAll(".p02-seg");if(t&&e&&a.length){let o=function(){h||(h=!0,requestAnimationFrame(()=>{const B=t.getBoundingClientRect(),z=Math.max(0,-B.top);e.style.transform=`translateY(${c+Math.min(z,A)}px)`;const m=Math.min(q-1,Math.max(0,Math.floor(z/window.innerHeight)));m!==E&&(E=m,a.forEach((b,y)=>b.classList.toggle("active",y===m)),r.forEach((b,y)=>b.classList.toggle("active",y===m+1))),h=!1}))};const q=a.length,I=40;let h=!1,E=0,f=t.offsetHeight,s=e.offsetHeight,c=Math.max(I,(window.innerHeight-s)/2),A=Math.max(0,f-s-c),D=null;const S=()=>{clearTimeout(D),D=setTimeout(()=>{f=t.offsetHeight,s=e.offsetHeight,c=Math.max(I,(window.innerHeight-s)/2),A=Math.max(0,f-s-c)},150)};window.addEventListener("resize",S,{passive:!0}),v.push({fn:S,el:window,event:"resize"}),window.addEventListener("scroll",o,{passive:!0}),v.push({fn:o,el:window})}}g(document.querySelectorAll("#p02-s1 .reading-wrapper"),{stagger:.1,y:30});const u=[{title:"流域水质监测流程图",badImg:"assets/m2/p02-bad-01-watershed.webp",goodImg:"assets/m2/p02-good-01-watershed.webp",bad:`画一个水质监测的流程图
+</div>`}function N(){const i=G.timeline({delay:.2});if(i.fromTo("#p02-hero .hero-eyebrow",{opacity:0,y:20},{opacity:1,y:0,duration:.6,ease:"power3.out"},0),i.fromTo("#p02-hero .page-hero-title",{y:30,opacity:0},{opacity:1,y:0,duration:.8,ease:"power3.out"},.15),i.fromTo("#p02-hero .page-hero-sub",{y:20,opacity:0},{opacity:.5,y:0,duration:.8,ease:"power3.out"},.3),i.fromTo(".p02-hero-tagline",{y:20,opacity:0},{opacity:1,y:0,duration:.8,ease:"power3.out"},.45),i.fromTo("#p02-quicknav",{y:20,opacity:0},{opacity:1,y:0,duration:.8,ease:"power3.out"},.6),i.fromTo(".p02-scroll-hint",{opacity:0,y:15},{opacity:1,y:0,duration:.6,ease:"power3.out"},.75),document.querySelectorAll("#p02-quicknav .hero-quicknav__item").forEach(t=>{t.addEventListener("click",()=>{document.querySelector(t.dataset.target)?.scrollIntoView({behavior:"smooth",block:"start"})})}),window.innerWidth>900){const t=document.getElementById("p02-cdtf-body"),e=document.getElementById("p02-cdtf-left"),a=document.querySelectorAll(".p02-cdtf-panel"),r=document.querySelectorAll(".p02-seg");if(t&&e&&a.length){let o=function(){h||(h=!0,requestAnimationFrame(()=>{const B=t.getBoundingClientRect(),z=Math.max(0,-B.top);e.style.transform=`translateY(${c+Math.min(z,A)}px)`;const m=Math.min(q-1,Math.max(0,Math.floor(z/window.innerHeight)));m!==E&&(E=m,a.forEach((b,y)=>b.classList.toggle("active",y===m)),r.forEach((b,y)=>b.classList.toggle("active",y===m+1))),h=!1}))};const q=a.length,I=40;let h=!1,E=0,f=t.offsetHeight,s=e.offsetHeight,c=Math.max(I,(window.innerHeight-s)/2),A=Math.max(0,f-s-c),D=null;const S=()=>{clearTimeout(D),D=setTimeout(()=>{f=t.offsetHeight,s=e.offsetHeight,c=Math.max(I,(window.innerHeight-s)/2),A=Math.max(0,f-s-c)},150)};window.addEventListener("resize",S,{passive:!0}),v.push({fn:S,el:window,event:"resize"}),window.addEventListener("scroll",o,{passive:!0}),v.push({fn:o,el:window})}}g(document.querySelectorAll("#p02-s1 .reading-wrapper"),{stagger:.1,y:30});const u=[{title:"流域水质监测流程图",badImg:"assets/m2/p02-bad-01-watershed.webp",goodImg:"assets/m2/p02-good-01-watershed.webp",bad:`画一个水质监测的流程图
 用蓝色画
 要好看`,good:`Environmental engineering flowchart, white background, academic style,
 prepared for Environmental Pollution journal.
@@ -279,7 +279,7 @@ NO charts, NO graphs — purely illustrative diagram.
           <div class="p02-compare-col">
             <h4 class="p02-bad-label">❌ 差 Prompt</h4>
             <div class="p02-compare-img">
-              <img loading="lazy" src="/sci-aesthetic/${t.badImg}" alt="Bad prompt example" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
+              <img loading="lazy" src="/Git/sci-aesthetic/${t.badImg}" alt="Bad prompt example" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
             </div>
             <div class="p02-prompt-diff">${t.bad.split(`
 `).map(a=>`<span class="p02-diff-del">${n(a)}</span>`).join(`
@@ -288,7 +288,7 @@ NO charts, NO graphs — purely illustrative diagram.
           <div class="p02-compare-col">
             <h4 class="p02-good-label">✅ 好 Prompt</h4>
             <div class="p02-compare-img">
-              <img loading="lazy" src="/sci-aesthetic/${t.goodImg}" alt="Good prompt example" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
+              <img loading="lazy" src="/Git/sci-aesthetic/${t.goodImg}" alt="Good prompt example" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
             </div>
             <div class="p02-prompt-diff">${t.good.split(`
 `).map(a=>`<span class="p02-diff-add">${n(a)}</span>`).join(`
@@ -325,7 +325,7 @@ Footnote: 'Source: Millennium Ecosystem Assessment (MA 2005)'.`}],d=document.get
       <h3>${e.ver}: ${e.label}</h3>
       <div class="p02-iter-detail-grid">
         <div>
-          <img loading="lazy" src="/sci-aesthetic/${e.img}" alt="Iteration ${e.ver}: ${e.label}" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
+          <img loading="lazy" src="/Git/sci-aesthetic/${e.img}" alt="Iteration ${e.ver}: ${e.label}" style="width:100%;height:auto;border-radius:var(--radius-md);display:block;">
         </div>
         <div>
           <div class="p02-iter-change">
@@ -339,7 +339,7 @@ Footnote: 'Source: Millennium Ecosystem Assessment (MA 2005)'.`}],d=document.get
         </div>
       </div>`)}d&&(x.forEach((t,e)=>{const a=document.createElement("div");a.className=`p02-iter-item${e===0?" active":""}`,a.dataset.idx=e,a.innerHTML=`
         <div class="p02-iter-thumb">
-          <img loading="lazy" src="/sci-aesthetic/${t.img}" alt="Iteration ${t.ver}" style="width:100%;height:auto;display:block;">
+          <img loading="lazy" src="/Git/sci-aesthetic/${t.img}" alt="Iteration ${t.ver}" style="width:100%;height:auto;display:block;">
         </div>
         <div class="p02-iter-ver">${t.ver}</div>
         <div class="p02-iter-label">${t.label}</div>`,d.appendChild(a)}),k(0),d.addEventListener("click",t=>{const e=t.target.closest(".p02-iter-item");if(!e)return;const a=parseInt(e.dataset.idx);d.querySelectorAll(".p02-iter-item").forEach((r,o)=>r.classList.toggle("active",o===a)),k(a)})),g(document.querySelectorAll("#p02-s3 .reading-wrapper, #p02-iter-track"),{stagger:.1,y:30});const P=[{icon:"🔵",label:"概念示意图",desc:"机制、过程、关系可视化",structure:`为《[期刊名]》制作[研究主题]概念示意图
