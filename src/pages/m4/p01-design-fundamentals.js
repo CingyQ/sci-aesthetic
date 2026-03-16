@@ -50,25 +50,7 @@ const styles = `
 .section-dark .df-step-label { color:var(--text-on-dark-2); }
 
 /* ── S1 看懂差距 ── */
-.df-showcase-stage { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 var(--space-lg); }
-.df-showcase-pair { position:relative; max-width:640px; width:100%; }
-.df-showcase-before,
-.df-showcase-after { position:absolute; inset:0; transition:opacity 0.5s ease; }
-.df-showcase-before { opacity:1; }
-.df-showcase-after { opacity:0; }
-.df-showcase-caption { font-size:var(--text-body); color:var(--text-on-dark-2); text-align:center; margin-top:var(--space-md); max-width:480px; line-height:1.7; transition:opacity 0.4s; }
-.df-showcase-dots { display:flex; gap:8px; justify-content:center; margin-top:var(--space-md); }
-.df-showcase-dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.2); transition:background 0.3s, transform 0.3s; }
-.df-showcase-dot.active { background:var(--module-4); transform:scale(1.3); }
-.df-showcase-tabs { display:none; }
-.df-showcase-label { font-size:12px; color:var(--text-on-dark-3); text-align:center; margin-bottom:var(--space-xs); letter-spacing:0.05em; text-transform:uppercase; transition:opacity 0.4s; }
-@media (max-width:768px) {
-  .df-showcase-stage { position:relative; height:auto; padding:var(--space-lg); }
-  .df-showcase-tabs { display:flex; gap:8px; justify-content:center; margin-bottom:var(--space-md); flex-wrap:wrap; }
-  .df-showcase-tab { padding:6px 14px; border-radius:20px; border:1px solid rgba(255,255,255,0.15); background:transparent; color:var(--text-on-dark-2); cursor:pointer; font-size:13px; transition:all 0.3s; }
-  .df-showcase-tab.active { background:var(--module-4); border-color:var(--module-4); color:#1d1d1f; }
-  .df-showcase-dots { display:none; }
-}
+.df-showcase-caption { transition:opacity 0.4s; }
 
 /* ── S2 对比 ── */
 .df-cs-title { transition:font-size 0.4s ease-out, font-weight 0.4s, color 0.4s; font-family:var(--font-heading); }
@@ -370,21 +352,20 @@ export function render() {
   </section>
 
   <!-- ═══ S1 看懂差距 (深色) ═══ -->
-  <section class="section-dark" id="df-showcase" style="padding:var(--space-3xl) var(--space-lg);scroll-margin-top:56px;">
-    <div id="df-showcase-stage" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;padding:0 var(--space-lg);">
-      <div class="section-header" style="text-align:center;margin-bottom:var(--space-lg);">
-        <p class="section-eyebrow" style="color:var(--text-on-dark-3);">01 / 06</p>
-        <h2 class="section-title" style="color:var(--text-on-dark);">看懂差距</h2>
-        <p class="section-subtitle" style="max-width:540px;margin:0 auto;color:var(--text-on-dark-2);">同一份内容，两种表达——差距就在细节里</p>
+  <section class="section-dark" id="df-showcase" style="padding:var(--space-3xl) var(--space-lg);min-height:100vh;display:flex;flex-direction:column;justify-content:center;scroll-margin-top:56px;">
+    <div class="section-header" style="text-align:center;margin-bottom:var(--space-lg);">
+      <p class="section-eyebrow" style="color:var(--text-on-dark-3);">01 / 06</p>
+      <h2 class="section-title" style="color:var(--text-on-dark);">看懂差距</h2>
+      <p class="section-subtitle" style="max-width:540px;margin:0 auto;color:var(--text-on-dark-2);">同一份内容，两种表达——差距就在细节里</p>
+    </div>
+    <div style="max-width:680px;margin:0 auto;width:100%;">
+      <div class="df-showcase-tabs" id="df-showcase-tabs" style="display:flex;gap:8px;justify-content:center;margin-bottom:var(--space-md);flex-wrap:wrap;"></div>
+      <p class="df-showcase-label" id="df-showcase-label" style="font-size:12px;color:var(--text-on-dark-3);text-align:center;margin-bottom:var(--space-xs);letter-spacing:0.05em;text-transform:uppercase;">Before</p>
+      <div id="df-showcase-pair" style="aspect-ratio:16/9;position:relative;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.3);">
+        <div id="df-showcase-before" style="position:absolute;inset:0;transition:opacity 0.5s ease;"></div>
+        <div id="df-showcase-after" style="position:absolute;inset:0;transition:opacity 0.5s ease;opacity:0;"></div>
       </div>
-      <div class="df-showcase-tabs" id="df-showcase-tabs"></div>
-      <p class="df-showcase-label" id="df-showcase-label">Before</p>
-      <div class="df-showcase-pair" id="df-showcase-pair" style="aspect-ratio:16/9;max-width:640px;width:100%;position:relative;">
-        <div class="df-showcase-before" id="df-showcase-before"></div>
-        <div class="df-showcase-after" id="df-showcase-after"></div>
-      </div>
-      <p class="df-showcase-caption" id="df-showcase-caption"></p>
-      <div class="df-showcase-dots" id="df-showcase-dots"></div>
+      <p id="df-showcase-caption" style="font-size:var(--text-body);color:var(--text-on-dark-2);text-align:center;margin-top:var(--space-md);max-width:480px;margin-left:auto;margin-right:auto;line-height:1.7;min-height:1.7em;"></p>
     </div>
   </section>
 
@@ -642,28 +623,22 @@ function initShowcase() {
   const beforeEl = document.getElementById('df-showcase-before');
   const afterEl = document.getElementById('df-showcase-after');
   const captionEl = document.getElementById('df-showcase-caption');
-  const dotsEl = document.getElementById('df-showcase-dots');
   const labelEl = document.getElementById('df-showcase-label');
   const tabsEl = document.getElementById('df-showcase-tabs');
   if (!pair || !beforeEl || !afterEl) return;
 
   let currentSlide = 0;
-  let currentPhase = 'before'; // 'before' | 'after'
+  let currentPhase = 'before';
+  let autoTimer = null;
 
-  // 渲染 dots
+  // 渲染 tab 按钮（桌面端和移动端都用 tab）
+  const TAB_LABELS = ['封面', '文字', '图表', '结论'];
   SHOWCASE_SLIDES.forEach((_, i) => {
-    const dot = document.createElement('div');
-    dot.className = 'df-showcase-dot' + (i === 0 ? ' active' : '');
-    dotsEl.appendChild(dot);
-  });
-  const dots = dotsEl.querySelectorAll('.df-showcase-dot');
-
-  // 渲染 mobile tabs
-  SHOWCASE_SLIDES.forEach((s, i) => {
     const tab = document.createElement('button');
     tab.className = 'df-showcase-tab' + (i === 0 ? ' active' : '');
     tab.dataset.idx = i;
-    tab.textContent = s.caption.slice(0, 6) + '...';
+    tab.textContent = TAB_LABELS[i] || `案例${i + 1}`;
+    tab.style.cssText = 'padding:6px 16px;border-radius:20px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:var(--text-on-dark-2);cursor:pointer;font-size:13px;transition:all 0.3s;';
     tabsEl.appendChild(tab);
   });
 
@@ -678,11 +653,11 @@ function initShowcase() {
     if (phase === 'before') {
       beforeEl.style.opacity = '1';
       afterEl.style.opacity = '0';
-      if (labelEl) labelEl.textContent = 'Before';
+      if (labelEl) labelEl.textContent = 'BEFORE';
     } else {
       beforeEl.style.opacity = '0';
       afterEl.style.opacity = '1';
-      if (labelEl) labelEl.textContent = 'After';
+      if (labelEl) labelEl.textContent = 'AFTER';
     }
 
     if (captionEl) {
@@ -693,57 +668,59 @@ function initShowcase() {
       }, 200);
     }
 
-    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-
-    // 更新 mobile tabs
     tabsEl.querySelectorAll('.df-showcase-tab').forEach((t, i) => {
-      t.classList.toggle('active', i === idx);
+      const isActive = i === idx;
+      t.classList.toggle('active', isActive);
+      t.style.background = isActive ? 'var(--module-4)' : 'transparent';
+      t.style.borderColor = isActive ? 'var(--module-4)' : 'rgba(255,255,255,0.15)';
+      t.style.color = isActive ? '#1d1d1f' : 'var(--text-on-dark-2)';
     });
   }
 
   // 初始显示
   showSlide(0, 'before');
 
-  const isMobile = window.innerWidth <= 768;
+  // Tab 点击切换
+  addEvt(tabsEl, 'click', (e) => {
+    const tab = e.target.closest('.df-showcase-tab');
+    if (!tab) return;
+    const idx = parseInt(tab.dataset.idx);
+    showSlide(idx, 'before');
+    // 重启自动播放
+    clearInterval(autoTimer);
+    startAutoPlay();
+  });
 
-  if (!isMobile) {
-    // 桌面端：ScrollTrigger pin + scrub 驱动
-    ScrollTrigger.create({
-      trigger: '#df-showcase-stage',
-      start: 'top 10%',
-      end: '+=300%',
-      pin: true,
-      scrub: 0.5,
-      onUpdate: (self) => {
-        const p = self.progress;
-        // 8 个阶段：每组 before 和 after 各占 12.5%
-        const totalPhases = SHOWCASE_SLIDES.length * 2; // 8
-        const phaseIndex = Math.min(Math.floor(p * totalPhases), totalPhases - 1);
-        const slideIdx = Math.floor(phaseIndex / 2);
-        const phase = phaseIndex % 2 === 0 ? 'before' : 'after';
+  // 点击幻灯片区域切换 Before/After
+  addEvt(pair, 'click', () => {
+    const nextPhase = currentPhase === 'before' ? 'after' : 'before';
+    showSlide(currentSlide, nextPhase);
+    clearInterval(autoTimer);
+    startAutoPlay();
+  });
 
-        if (slideIdx !== currentSlide || phase !== currentPhase) {
-          showSlide(slideIdx, phase);
-        }
-      },
-    });
-  } else {
-    // 移动端：tab 切换
-    let mobilePhase = 'before';
-    addEvt(tabsEl, 'click', (e) => {
-      const tab = e.target.closest('.df-showcase-tab');
-      if (!tab) return;
-      const idx = parseInt(tab.dataset.idx);
-      showSlide(idx, 'before');
-      mobilePhase = 'before';
-    });
-
-    // 点击 pair 区域切换 before/after
-    addEvt(pair, 'click', () => {
-      mobilePhase = mobilePhase === 'before' ? 'after' : 'before';
-      showSlide(currentSlide, mobilePhase);
-    });
+  // 自动播放：Before 停 2.5s → After 停 2.5s → 下一组
+  function startAutoPlay() {
+    autoTimer = setInterval(() => {
+      if (currentPhase === 'before') {
+        showSlide(currentSlide, 'after');
+      } else {
+        const nextIdx = (currentSlide + 1) % SHOWCASE_SLIDES.length;
+        showSlide(nextIdx, 'before');
+      }
+    }, 2500);
   }
+  startAutoPlay();
+
+  // 页面不可见时暂停
+  const onVisChange = () => {
+    if (document.hidden) {
+      clearInterval(autoTimer);
+    } else {
+      startAutoPlay();
+    }
+  };
+  addEvt(document, 'visibilitychange', onVisChange);
 }
 
 // ── S2 对比 ──
