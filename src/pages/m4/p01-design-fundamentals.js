@@ -150,118 +150,118 @@ const styles = `
 // S1 看懂差距 — 4 组 Before/After
 const SHOWCASE_SLIDES = [
   {
-    before: `<div style="width:100%;height:100%;background:linear-gradient(135deg,#1a3a6b,#2d5aa0);border-radius:12px;padding:28px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
-      <p style="font-family:SimSun,serif;font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:6px;">XX 大学 XX 学院 XX 实验室</p>
-      <h3 style="font-family:SimSun,serif;font-size:16px;color:#fff;line-height:1.6;margin-bottom:10px;">基于深度学习的多模态情感分析<br>——以社交媒体文本与图像融合为例</h3>
-      <p style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.8;">汇报人：张三 &nbsp;|&nbsp; 导师：李四教授<br>2024 年 6 月 15 日 &nbsp;|&nbsp; 第三次组会汇报</p>
+    before: `<div style="width:100%;height:100%;box-sizing:border-box;background:linear-gradient(135deg,#1a3a6b,#2d5aa0);border-radius:12px;padding:44px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+      <p style="font-family:SimSun,serif;font-size:17px;color:rgba(255,255,255,0.5);margin-bottom:10px;">XX 大学 XX 学院 XX 实验室</p>
+      <h3 style="font-family:SimSun,serif;font-size:24px;color:#fff;line-height:1.6;margin-bottom:16px;">基于深度学习的多模态情感分析<br>——以社交媒体文本与图像融合为例</h3>
+      <p style="font-size:15px;color:rgba(255,255,255,0.4);line-height:1.8;">汇报人：张三 &nbsp;|&nbsp; 导师：李四教授<br>2024 年 6 月 15 日 &nbsp;|&nbsp; 第三次组会汇报</p>
     </div>`,
-    after: `<div style="width:100%;height:100%;background:#1d1d1f;border-radius:12px;padding:32px;display:flex;flex-direction:column;justify-content:center;">
-      <div style="width:36px;height:3px;background:var(--module-4);margin-bottom:16px;border-radius:2px;"></div>
-      <h3 style="font-size:20px;color:#f5f5f7;font-weight:700;line-height:1.4;margin-bottom:12px;">多模态情感分析</h3>
-      <p style="font-size:13px;color:rgba(245,245,247,0.5);margin-bottom:20px;">深度学习 + 文本图像融合</p>
-      <div style="display:flex;gap:16px;margin-top:auto;">
-        <span style="font-size:11px;color:rgba(245,245,247,0.35);">张三</span>
-        <span style="font-size:11px;color:rgba(245,245,247,0.35);">2024.06</span>
-        <span style="font-size:11px;color:rgba(245,245,247,0.35);">组会汇报</span>
+    after: `<div style="width:100%;height:100%;box-sizing:border-box;background:#1d1d1f;border-radius:12px;padding:48px;display:flex;flex-direction:column;justify-content:center;">
+      <div style="width:48px;height:4px;background:var(--module-4);margin-bottom:24px;border-radius:2px;"></div>
+      <h3 style="font-size:28px;color:#f5f5f7;font-weight:700;line-height:1.4;margin-bottom:16px;">多模态情感分析</h3>
+      <p style="font-size:18px;color:rgba(245,245,247,0.5);margin-bottom:32px;">深度学习 + 文本图像融合</p>
+      <div style="display:flex;gap:24px;margin-top:auto;">
+        <span style="font-size:15px;color:rgba(245,245,247,0.35);">张三</span>
+        <span style="font-size:15px;color:rgba(245,245,247,0.35);">2024.06</span>
+        <span style="font-size:15px;color:rgba(245,245,247,0.35);">组会汇报</span>
       </div>
     </div>`,
     caption: '同样的信息，不同的表达',
   },
   {
-    before: `<div style="width:100%;height:100%;background:#fff;border-radius:12px;padding:24px;overflow:hidden;">
-      <h3 style="font-size:15px;color:#333;margin-bottom:8px;font-weight:700;">研究背景与动机</h3>
-      <p style="font-size:11px;color:#444;line-height:1.7;margin-bottom:4px;">随着社交媒体的<b style="color:#e74c3c;">快速发展</b>，用户生成内容呈<u>爆发式增长</u>。传统情感分析方法仅关注<span style="color:#2ecc71;">文本模态</span>，忽略了<span style="color:#9b59b6;">图像信息</span>的重要作用。近年来，<b style="color:#e67e22;">多模态学习</b>成为研究热点，但现有方法存在<span style="color:#e74c3c;text-decoration:underline;">模态融合不充分</span>的问题。本研究旨在提出一种新的<b>跨模态注意力机制</b>，以实现更精准的情感判别。</p>
-      <p style="font-size:10px;color:#888;margin-top:4px;">* 参考文献：[1] Wang et al., 2023; [2] Liu et al., 2022; [3] Chen et al., 2024...</p>
+    before: `<div style="width:100%;height:100%;box-sizing:border-box;background:#fff;border-radius:12px;padding:40px;overflow:hidden;display:flex;flex-direction:column;justify-content:center;">
+      <h3 style="font-size:22px;color:#333;margin-bottom:12px;font-weight:700;">研究背景与动机</h3>
+      <p style="font-size:15px;color:#444;line-height:1.8;margin-bottom:8px;">随着社交媒体的<b style="color:#e74c3c;">快速发展</b>，用户生成内容呈<u>爆发式增长</u>。传统情感分析方法仅关注<span style="color:#2ecc71;">文本模态</span>，忽略了<span style="color:#9b59b6;">图像信息</span>的重要作用。近年来，<b style="color:#e67e22;">多模态学习</b>成为研究热点，但现有方法存在<span style="color:#e74c3c;text-decoration:underline;">模态融合不充分</span>的问题。本研究旨在提出一种新的<b>跨模态注意力机制</b>，以实现更精准的情感判别。</p>
+      <p style="font-size:13px;color:#888;margin-top:8px;">* 参考文献：[1] Wang et al., 2023; [2] Liu et al., 2022; [3] Chen et al., 2024...</p>
     </div>`,
-    after: `<div style="width:100%;height:100%;background:#fff;border-radius:12px;padding:28px;display:flex;flex-direction:column;justify-content:center;">
-      <h3 style="font-size:18px;color:#1d1d1f;margin-bottom:20px;font-weight:700;">为什么需要多模态？</h3>
-      <div style="display:flex;gap:16px;">
-        <div style="flex:1;background:#f8f8f8;border-radius:8px;padding:14px;text-align:center;">
-          <div style="font-size:24px;font-weight:700;color:var(--module-4);margin-bottom:4px;">85%</div>
-          <div style="font-size:11px;color:#888;">社交内容含图像</div>
+    after: `<div style="width:100%;height:100%;box-sizing:border-box;background:#fff;border-radius:12px;padding:44px;display:flex;flex-direction:column;justify-content:center;">
+      <h3 style="font-size:26px;color:#1d1d1f;margin-bottom:28px;font-weight:700;">为什么需要多模态？</h3>
+      <div style="display:flex;gap:20px;">
+        <div style="flex:1;background:#f8f8f8;border-radius:10px;padding:24px 16px;text-align:center;">
+          <div style="font-size:40px;font-weight:700;color:var(--module-4);margin-bottom:8px;">85%</div>
+          <div style="font-size:15px;color:#888;">社交内容含图像</div>
         </div>
-        <div style="flex:1;background:#f8f8f8;border-radius:8px;padding:14px;text-align:center;">
-          <div style="font-size:24px;font-weight:700;color:#1d1d1f;margin-bottom:4px;">+12%</div>
-          <div style="font-size:11px;color:#888;">融合后准确率提升</div>
+        <div style="flex:1;background:#f8f8f8;border-radius:10px;padding:24px 16px;text-align:center;">
+          <div style="font-size:40px;font-weight:700;color:#1d1d1f;margin-bottom:8px;">+12%</div>
+          <div style="font-size:15px;color:#888;">融合后准确率提升</div>
         </div>
-        <div style="flex:1;background:#f8f8f8;border-radius:8px;padding:14px;text-align:center;">
-          <div style="font-size:24px;font-weight:700;color:#1d1d1f;margin-bottom:4px;">Gap</div>
-          <div style="font-size:11px;color:#888;">融合机制不充分</div>
+        <div style="flex:1;background:#f8f8f8;border-radius:10px;padding:24px 16px;text-align:center;">
+          <div style="font-size:40px;font-weight:700;color:#1d1d1f;margin-bottom:8px;">Gap</div>
+          <div style="font-size:15px;color:#888;">融合机制不充分</div>
         </div>
       </div>
     </div>`,
     caption: '200 字变 3 个关键词——信息量没少',
   },
   {
-    before: `<div style="width:100%;height:100%;background:#fff;border-radius:12px;padding:24px;">
-      <h3 style="font-size:14px;color:#333;margin-bottom:10px;">各组实验结果对比</h3>
-      <div style="display:flex;align-items:flex-end;gap:4px;height:55%;padding:0 8px;">
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
-          <div style="width:100%;height:60%;background:linear-gradient(180deg,#e74c3c,#c0392b);border-radius:3px 3px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:8px;color:#888;">A1</span>
+    before: `<div style="width:100%;height:100%;box-sizing:border-box;background:#fff;border-radius:12px;padding:40px;">
+      <h3 style="font-size:22px;color:#333;margin-bottom:14px;">各组实验结果对比</h3>
+      <div style="display:flex;align-items:flex-end;gap:8px;height:55%;padding:0 12px;">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <div style="width:100%;height:60%;background:linear-gradient(180deg,#e74c3c,#c0392b);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">A1</span>
         </div>
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
-          <div style="width:100%;height:80%;background:linear-gradient(180deg,#3498db,#2980b9);border-radius:3px 3px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:8px;color:#888;">A2</span>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <div style="width:100%;height:80%;background:linear-gradient(180deg,#3498db,#2980b9);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">A2</span>
         </div>
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
-          <div style="width:100%;height:45%;background:linear-gradient(180deg,#2ecc71,#27ae60);border-radius:3px 3px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:8px;color:#888;">B1</span>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <div style="width:100%;height:45%;background:linear-gradient(180deg,#2ecc71,#27ae60);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">B1</span>
         </div>
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
-          <div style="width:100%;height:72%;background:linear-gradient(180deg,#9b59b6,#8e44ad);border-radius:3px 3px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:8px;color:#888;">B2</span>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <div style="width:100%;height:72%;background:linear-gradient(180deg,#9b59b6,#8e44ad);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">B2</span>
         </div>
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
-          <div style="width:100%;height:55%;background:linear-gradient(180deg,#e67e22,#d35400);border-radius:3px 3px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:8px;color:#888;">C1</span>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <div style="width:100%;height:55%;background:linear-gradient(180deg,#e67e22,#d35400);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">C1</span>
         </div>
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
-          <div style="width:100%;height:90%;background:linear-gradient(180deg,#1abc9c,#16a085);border-radius:3px 3px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:8px;color:#888;">C2</span>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <div style="width:100%;height:90%;background:linear-gradient(180deg,#1abc9c,#16a085);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">C2</span>
         </div>
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
-          <div style="width:100%;height:38%;background:linear-gradient(180deg,#f39c12,#e67e22);border-radius:3px 3px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:8px;color:#888;">D1</span>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <div style="width:100%;height:38%;background:linear-gradient(180deg,#f39c12,#e67e22);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">D1</span>
         </div>
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
-          <div style="width:100%;height:65%;background:linear-gradient(180deg,#e91e63,#c2185b);border-radius:3px 3px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:8px;color:#888;">D2</span>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <div style="width:100%;height:65%;background:linear-gradient(180deg,#e91e63,#c2185b);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">D2</span>
         </div>
       </div>
-      <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;justify-content:center;">
-        <span style="font-size:8px;color:#e74c3c;">■ A1</span><span style="font-size:8px;color:#3498db;">■ A2</span><span style="font-size:8px;color:#2ecc71;">■ B1</span><span style="font-size:8px;color:#9b59b6;">■ B2</span><span style="font-size:8px;color:#e67e22;">■ C1</span><span style="font-size:8px;color:#1abc9c;">■ C2</span><span style="font-size:8px;color:#f39c12;">■ D1</span><span style="font-size:8px;color:#e91e63;">■ D2</span>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;justify-content:center;">
+        <span style="font-size:12px;color:#e74c3c;">■ A1</span><span style="font-size:12px;color:#3498db;">■ A2</span><span style="font-size:12px;color:#2ecc71;">■ B1</span><span style="font-size:12px;color:#9b59b6;">■ B2</span><span style="font-size:12px;color:#e67e22;">■ C1</span><span style="font-size:12px;color:#1abc9c;">■ C2</span><span style="font-size:12px;color:#f39c12;">■ D1</span><span style="font-size:12px;color:#e91e63;">■ D2</span>
       </div>
     </div>`,
-    after: `<div style="width:100%;height:100%;background:#fff;border-radius:12px;padding:28px;display:flex;flex-direction:column;justify-content:center;">
-      <h3 style="font-size:16px;color:#1d1d1f;margin-bottom:4px;font-weight:700;">融合模型准确率高出 12%</h3>
-      <p style="font-size:11px;color:#999;margin-bottom:16px;">实验组 vs 对照组 · F1-Score</p>
-      <div style="display:flex;align-items:flex-end;gap:20px;height:45%;padding:0 20px;">
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
-          <div style="display:flex;gap:4px;width:100%;align-items:flex-end;">
-            <div style="flex:1;height:60%;background:var(--module-4);border-radius:4px 4px 0 0;"></div>
-            <div style="flex:1;height:45%;background:#e0e0e0;border-radius:4px 4px 0 0;"></div>
+    after: `<div style="width:100%;height:100%;box-sizing:border-box;background:#fff;border-radius:12px;padding:44px;display:flex;flex-direction:column;justify-content:center;">
+      <h3 style="font-size:24px;color:#1d1d1f;margin-bottom:6px;font-weight:700;">融合模型准确率高出 12%</h3>
+      <p style="font-size:15px;color:#999;margin-bottom:24px;">实验组 vs 对照组 · F1-Score</p>
+      <div style="display:flex;align-items:flex-end;gap:32px;height:45%;padding:0 28px;">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;">
+          <div style="display:flex;gap:6px;width:100%;align-items:flex-end;">
+            <div style="flex:1;height:60%;background:var(--module-4);border-radius:5px 5px 0 0;"></div>
+            <div style="flex:1;height:45%;background:#e0e0e0;border-radius:5px 5px 0 0;"></div>
           </div>
-          <span style="font-size:10px;color:#888;">文本</span>
+          <span style="font-size:14px;color:#888;">文本</span>
         </div>
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
-          <div style="display:flex;gap:4px;width:100%;align-items:flex-end;">
-            <div style="flex:1;height:75%;background:var(--module-4);border-radius:4px 4px 0 0;"></div>
-            <div style="flex:1;height:52%;background:#e0e0e0;border-radius:4px 4px 0 0;"></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;">
+          <div style="display:flex;gap:6px;width:100%;align-items:flex-end;">
+            <div style="flex:1;height:75%;background:var(--module-4);border-radius:5px 5px 0 0;"></div>
+            <div style="flex:1;height:52%;background:#e0e0e0;border-radius:5px 5px 0 0;"></div>
           </div>
-          <span style="font-size:10px;color:#888;">图像</span>
+          <span style="font-size:14px;color:#888;">图像</span>
         </div>
-        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
-          <div style="display:flex;gap:4px;width:100%;align-items:flex-end;">
-            <div style="flex:1;height:92%;background:var(--module-4);border-radius:4px 4px 0 0;"></div>
-            <div style="flex:1;height:58%;background:#e0e0e0;border-radius:4px 4px 0 0;"></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;">
+          <div style="display:flex;gap:6px;width:100%;align-items:flex-end;">
+            <div style="flex:1;height:92%;background:var(--module-4);border-radius:5px 5px 0 0;"></div>
+            <div style="flex:1;height:58%;background:#e0e0e0;border-radius:5px 5px 0 0;"></div>
           </div>
-          <span style="font-size:10px;color:#888;">融合</span>
+          <span style="font-size:14px;color:#888;">融合</span>
         </div>
       </div>
-      <div style="display:flex;gap:12px;justify-content:center;margin-top:8px;">
-        <span style="font-size:10px;color:var(--module-4);">● 实验组</span>
-        <span style="font-size:10px;color:#ccc;">● 对照组</span>
+      <div style="display:flex;gap:16px;justify-content:center;margin-top:12px;">
+        <span style="font-size:13px;color:var(--module-4);">● 实验组</span>
+        <span style="font-size:13px;color:#ccc;">● 对照组</span>
       </div>
     </div>`,
     caption: '8 种颜色变 2 种——数据更清晰',
   },
   {
-    before: `<div style="width:100%;height:100%;background:#fff;border-radius:12px;padding:24px;display:flex;flex-direction:column;">
-      <h3 style="font-size:15px;color:#333;margin-bottom:10px;">结论与展望</h3>
-      <ul style="font-size:12px;color:#444;list-style:disc inside;line-height:2;flex:1;">
+    before: `<div style="width:100%;height:100%;box-sizing:border-box;background:#fff;border-radius:12px;padding:40px;display:flex;flex-direction:column;justify-content:center;">
+      <h3 style="font-size:22px;color:#333;margin-bottom:14px;">结论与展望</h3>
+      <ul style="font-size:16px;color:#444;list-style:disc inside;line-height:2.2;flex:1;display:flex;flex-direction:column;justify-content:center;">
         <li>多模态融合显著优于单模态</li>
         <li>跨模态注意力机制有效</li>
         <li>消融实验验证各组件贡献</li>
@@ -269,22 +269,22 @@ const SHOWCASE_SLIDES = [
         <li>可扩展到视频模态</li>
         <li>未来计划：更大规模预训练</li>
       </ul>
-      <p style="font-size:24px;text-align:center;margin-top:8px;">Thank You! <span style="font-size:20px;">&#127881;&#10024;&#127882;</span></p>
+      <p style="font-size:36px;text-align:center;margin-top:12px;">Thank You! <span style="font-size:28px;">&#127881;&#10024;&#127882;</span></p>
     </div>`,
-    after: `<div style="width:100%;height:100%;background:#fff;border-radius:12px;padding:32px;display:flex;flex-direction:column;justify-content:center;">
-      <h3 style="font-size:18px;color:#1d1d1f;margin-bottom:20px;font-weight:700;">三个核心发现</h3>
-      <div style="display:flex;flex-direction:column;gap:14px;">
-        <div style="display:flex;gap:12px;align-items:flex-start;">
-          <span style="font-size:18px;font-weight:700;color:var(--module-4);line-height:1;">1</span>
-          <div><div style="font-size:13px;color:#1d1d1f;font-weight:600;">多模态融合准确率 +12%</div><div style="font-size:11px;color:#999;margin-top:2px;">显著优于纯文本和纯图像方法</div></div>
+    after: `<div style="width:100%;height:100%;box-sizing:border-box;background:#fff;border-radius:12px;padding:48px;display:flex;flex-direction:column;justify-content:center;">
+      <h3 style="font-size:26px;color:#1d1d1f;margin-bottom:32px;font-weight:700;">三个核心发现</h3>
+      <div style="display:flex;flex-direction:column;gap:24px;">
+        <div style="display:flex;gap:16px;align-items:flex-start;">
+          <span style="font-size:28px;font-weight:700;color:var(--module-4);line-height:1;">1</span>
+          <div><div style="font-size:18px;color:#1d1d1f;font-weight:600;">多模态融合准确率 +12%</div><div style="font-size:15px;color:#999;margin-top:4px;">显著优于纯文本和纯图像方法</div></div>
         </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;">
-          <span style="font-size:18px;font-weight:700;color:var(--module-4);line-height:1;">2</span>
-          <div><div style="font-size:13px;color:#1d1d1f;font-weight:600;">跨模态注意力是关键</div><div style="font-size:11px;color:#999;margin-top:2px;">消融实验证实贡献度最高</div></div>
+        <div style="display:flex;gap:16px;align-items:flex-start;">
+          <span style="font-size:28px;font-weight:700;color:var(--module-4);line-height:1;">2</span>
+          <div><div style="font-size:18px;color:#1d1d1f;font-weight:600;">跨模态注意力是关键</div><div style="font-size:15px;color:#999;margin-top:4px;">消融实验证实贡献度最高</div></div>
         </div>
-        <div style="display:flex;gap:12px;align-items:flex-start;">
-          <span style="font-size:18px;font-weight:700;color:var(--module-4);line-height:1;">3</span>
-          <div><div style="font-size:13px;color:#1d1d1f;font-weight:600;">框架可扩展至视频模态</div><div style="font-size:11px;color:#999;margin-top:2px;">下一步：大规模多模态预训练</div></div>
+        <div style="display:flex;gap:16px;align-items:flex-start;">
+          <span style="font-size:28px;font-weight:700;color:var(--module-4);line-height:1;">3</span>
+          <div><div style="font-size:18px;color:#1d1d1f;font-weight:600;">框架可扩展至视频模态</div><div style="font-size:15px;color:#999;margin-top:4px;">下一步：大规模多模态预训练</div></div>
         </div>
       </div>
     </div>`,
@@ -303,11 +303,11 @@ const CONTRAST_STOPS = [
 
 // S4 对齐 — 元素数据
 const ALIGN_ITEMS = [
-  { text:'研究成果总结', style:'font-size:18px;font-weight:700;color:#1d1d1f;', rand:{ left:'55%', top:'8%' }, aligned:{ left:'40px', top:'28px' } },
-  { text:'实验组显著优于对照组 (p<0.001)', style:'font-size:13px;color:#555;', rand:{ left:'10%', top:'58%' }, aligned:{ left:'40px', top:'72px' } },
-  { text:'效应量 Cohen\'s d = 0.82', style:'font-size:13px;color:#555;', rand:{ left:'52%', top:'42%' }, aligned:{ left:'40px', top:'102px' } },
-  { text:'[图表区域]', style:'font-size:12px;color:#aaa;background:rgba(0,0,0,0.04);padding:12px 24px;border-radius:6px;', rand:{ left:'8%', top:'22%' }, aligned:{ left:'40px', top:'148px' } },
-  { text:'数据来源：2024 实验记录', style:'font-size:10px;color:#bbb;', rand:{ left:'48%', top:'75%' }, aligned:{ left:'40px', top:'210px' } },
+  { text:'研究成果总结', style:'font-size:24px;font-weight:700;color:#1d1d1f;', rand:{ left:'55%', top:'8%' }, aligned:{ left:'40px', top:'28px' } },
+  { text:'实验组显著优于对照组 (p<0.001)', style:'font-size:16px;color:#555;', rand:{ left:'10%', top:'58%' }, aligned:{ left:'40px', top:'72px' } },
+  { text:'效应量 Cohen\'s d = 0.82', style:'font-size:16px;color:#555;', rand:{ left:'52%', top:'42%' }, aligned:{ left:'40px', top:'108px' } },
+  { text:'■■■ 数据图表', style:'font-size:14px;color:#bbb;background:rgba(0,0,0,0.04);padding:16px 28px;border-radius:8px;display:inline-block;', rand:{ left:'8%', top:'22%' }, aligned:{ left:'40px', top:'156px' } },
+  { text:'数据来源：2024 实验记录', style:'font-size:13px;color:#bbb;', rand:{ left:'48%', top:'75%' }, aligned:{ left:'40px', top:'224px' } },
 ];
 
 // S5 留白 — 3 档
