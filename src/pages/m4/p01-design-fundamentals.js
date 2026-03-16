@@ -50,7 +50,7 @@ const styles = `
 .section-dark .df-step-label { color:var(--text-on-dark-2); }
 
 /* ── S1 看懂差距 ── */
-.df-showcase-stage { position:sticky; top:0; height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 var(--space-lg); }
+.df-showcase-stage { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 var(--space-lg); }
 .df-showcase-pair { position:relative; max-width:640px; width:100%; }
 .df-showcase-before,
 .df-showcase-after { position:absolute; inset:0; transition:opacity 0.5s ease; }
@@ -370,23 +370,21 @@ export function render() {
   </section>
 
   <!-- ═══ S1 看懂差距 (深色) ═══ -->
-  <section class="section-dark" id="df-showcase" style="padding:0;">
-    <div id="df-showcase-pin" style="height:400vh;position:relative;">
-      <div class="df-showcase-stage">
-        <div class="section-header" style="text-align:center;margin-bottom:var(--space-lg);">
-          <p class="section-eyebrow" style="color:var(--text-on-dark-3);">01 / 06</p>
-          <h2 class="section-title" style="color:var(--text-on-dark);">看懂差距</h2>
-          <p class="section-subtitle" style="max-width:540px;margin:0 auto;color:var(--text-on-dark-2);">同一份内容，两种表达——差距就在细节里</p>
-        </div>
-        <div class="df-showcase-tabs" id="df-showcase-tabs"></div>
-        <p class="df-showcase-label" id="df-showcase-label">Before</p>
-        <div class="df-showcase-pair" id="df-showcase-pair" style="aspect-ratio:16/9;">
-          <div class="df-showcase-before" id="df-showcase-before"></div>
-          <div class="df-showcase-after" id="df-showcase-after"></div>
-        </div>
-        <p class="df-showcase-caption" id="df-showcase-caption"></p>
-        <div class="df-showcase-dots" id="df-showcase-dots"></div>
+  <section class="section-dark" id="df-showcase" style="padding:var(--space-3xl) var(--space-lg);scroll-margin-top:56px;">
+    <div id="df-showcase-stage" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;padding:0 var(--space-lg);">
+      <div class="section-header" style="text-align:center;margin-bottom:var(--space-lg);">
+        <p class="section-eyebrow" style="color:var(--text-on-dark-3);">01 / 06</p>
+        <h2 class="section-title" style="color:var(--text-on-dark);">看懂差距</h2>
+        <p class="section-subtitle" style="max-width:540px;margin:0 auto;color:var(--text-on-dark-2);">同一份内容，两种表达——差距就在细节里</p>
       </div>
+      <div class="df-showcase-tabs" id="df-showcase-tabs"></div>
+      <p class="df-showcase-label" id="df-showcase-label">Before</p>
+      <div class="df-showcase-pair" id="df-showcase-pair" style="aspect-ratio:16/9;max-width:640px;width:100%;position:relative;">
+        <div class="df-showcase-before" id="df-showcase-before"></div>
+        <div class="df-showcase-after" id="df-showcase-after"></div>
+      </div>
+      <p class="df-showcase-caption" id="df-showcase-caption"></p>
+      <div class="df-showcase-dots" id="df-showcase-dots"></div>
     </div>
   </section>
 
@@ -709,11 +707,12 @@ function initShowcase() {
   const isMobile = window.innerWidth <= 768;
 
   if (!isMobile) {
-    // 桌面端：ScrollTrigger 驱动
+    // 桌面端：ScrollTrigger pin + scrub 驱动
     ScrollTrigger.create({
-      trigger: '#df-showcase-pin',
-      start: 'top top',
-      end: 'bottom bottom',
+      trigger: '#df-showcase-stage',
+      start: 'top 10%',
+      end: '+=300%',
+      pin: true,
       scrub: 0.5,
       onUpdate: (self) => {
         const p = self.progress;
