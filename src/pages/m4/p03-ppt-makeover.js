@@ -39,7 +39,7 @@ const styles = `
   width: 100%;
   aspect-ratio: 16/9;
   border-radius: 10px;
-  padding: 28px 32px;
+  padding: 40px 48px;
   position: relative;
   overflow: hidden;
   font-size: 13px;
@@ -213,7 +213,7 @@ const styles = `
 @media (max-width:768px) {
   .mko-principles-row { flex-direction:column; }
   .mko-principle-card { padding:var(--space-md); }
-  .mko-slide { padding:16px 18px; font-size:11px; }
+  .mko-slide { padding:24px 28px; font-size:11px; }
   .mko-takeaway { flex-direction:column; }
   .mko-takeaway-item { min-width:unset; }
   #mko-principles,
@@ -241,96 +241,94 @@ const styles = `
 
 // ── Case 1：封面页 ──
 const BEFORE_1 = `
-<div style="background:linear-gradient(135deg,#c8d8ee,#dde8ff);width:100%;height:100%;padding:12px 16px;box-sizing:border-box;position:relative;overflow:hidden;">
-  <div style="position:absolute;top:8px;left:10px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,100,0.12);display:flex;align-items:center;justify-content:center;font-size:8px;color:rgba(0,0,100,0.4);font-weight:bold;">校</div>
-  <div style="position:absolute;top:10px;right:10px;font-size:7px;color:rgba(0,0,80,0.3);">某某大学</div>
-  <div style="text-align:center;padding-top:6px;">
-    <div style="font-family:'SimSun',serif;font-size:10px;font-weight:bold;color:#003399;line-height:1.4;margin-bottom:3px;">基于深度学习的多模态医学影像分析与肿瘤区域自动分割系统关键技术研究进展汇报</div>
-    <div style="font-family:'KaiTi',serif;font-size:7px;color:#555;margin-bottom:2px;line-height:1.3;">Research Progress on Key Technologies of Multi-modal Medical Image Analysis and Automatic Tumor Region Segmentation System</div>
-    <div style="width:80%;height:1px;background:linear-gradient(90deg,transparent,#003399,transparent);margin:6px auto;"></div>
-    <div style="font-size:7px;color:#333;line-height:1.8;">
+<div style="background:linear-gradient(135deg,#c8d8ee,#dde8ff);width:100%;height:100%;padding:24px 32px;box-sizing:border-box;position:relative;overflow:hidden;">
+  <div style="position:absolute;top:16px;left:20px;width:40px;height:40px;border-radius:50%;background:rgba(0,0,100,0.12);display:flex;align-items:center;justify-content:center;font-size:15px;color:rgba(0,0,100,0.4);font-weight:bold;">校</div>
+  <div style="position:absolute;top:18px;right:20px;font-size:13px;color:rgba(0,0,80,0.3);">某某大学</div>
+  <div style="display:flex;flex-direction:column;justify-content:center;text-align:center;height:100%;">
+    <div style="font-family:'SimSun',serif;font-size:22px;font-weight:bold;color:#003399;line-height:1.4;margin-bottom:6px;">基于深度学习的多模态医学影像分析与肿瘤区域自动分割系统关键技术研究进展汇报</div>
+    <div style="font-family:'KaiTi',serif;font-size:14px;color:#555;margin-bottom:6px;line-height:1.3;">Research Progress on Key Technologies of Multi-modal Medical Image Analysis and Automatic Tumor Region Segmentation System</div>
+    <div style="width:80%;height:1px;background:linear-gradient(90deg,transparent,#003399,transparent);margin:12px auto;"></div>
+    <div style="font-size:14px;color:#333;line-height:1.8;">
       <span>汇报人：张三</span>&nbsp;&nbsp;<span>学号：2021XXX001</span><br>
       <span>指导老师：李四 教授</span>&nbsp;&nbsp;<span>副导师：王五 副教授</span><br>
       <span>课题组：医学AI实验室</span>&nbsp;&nbsp;<span>学院：计算机科学与技术学院</span>
     </div>
-    <div style="font-size:6px;color:rgba(0,0,80,0.35);margin-top:4px;font-style:italic;">课题来源：国家自然科学基金面上项目（No. 62xxxxxx）</div>
+    <div style="font-size:11px;color:rgba(0,0,80,0.35);margin-top:8px;font-style:italic;">课题来源：国家自然科学基金面上项目（No. 62xxxxxx）</div>
   </div>
   <div style="position:absolute;bottom:0;left:0;right:0;height:10px;background:linear-gradient(to right,#1a4a8a,#2860b0);"></div>
-  <div style="position:absolute;bottom:10px;left:0;right:0;text-align:center;font-size:6px;color:rgba(0,0,80,0.4);">2024年12月15日 · 第14次组会汇报 · 内部资料请勿外传</div>
-  <div style="position:absolute;left:5px;top:40%;width:2px;height:30%;background:linear-gradient(#2060b8,#6090d8);border-radius:1px;"></div>
-  <div style="position:absolute;right:5px;top:40%;width:2px;height:30%;background:linear-gradient(#2060b8,#6090d8);border-radius:1px;"></div>
+  <div style="position:absolute;bottom:14px;left:0;right:0;text-align:center;font-size:11px;color:rgba(0,0,80,0.4);">2024年12月15日 · 第14次组会汇报 · 内部资料请勿外传</div>
+  <div style="position:absolute;left:8px;top:40%;width:3px;height:30%;background:linear-gradient(#2060b8,#6090d8);border-radius:1px;"></div>
+  <div style="position:absolute;right:8px;top:40%;width:3px;height:30%;background:linear-gradient(#2060b8,#6090d8);border-radius:1px;"></div>
 </div>
 `;
 
 const AFTER_1 = `
-<div style="background:#1d1d1f;width:100%;height:100%;padding:0;box-sizing:border-box;display:flex;overflow:hidden;">
-  <div style="width:4px;background:#F0B27A;flex-shrink:0;"></div>
-  <div style="flex:1;padding:20px 24px;display:flex;flex-direction:column;justify-content:center;">
-    <div style="font-size:7px;letter-spacing:0.14em;color:#666;text-transform:uppercase;margin-bottom:12px;">组会汇报 · 第 14 次</div>
-    <div style="font-size:15px;font-weight:700;color:#f5f5f7;line-height:1.35;margin-bottom:6px;">多模态医学影像</div>
-    <div style="font-size:15px;font-weight:700;color:#f5f5f7;line-height:1.35;margin-bottom:16px;">肿瘤区域自动分割</div>
-    <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:14px;">
-      <div style="font-size:9px;color:#ccc;font-weight:500;">张三 · 2021 级博士</div>
-      <div style="font-size:8px;color:#777;">导师：李四 教授 · 副导师：王五 副教授</div>
-      <div style="font-size:7px;color:#555;">国家自然科学基金面上项目（No. 62xxxxxx）</div>
-    </div>
-    <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:8px;display:flex;justify-content:space-between;">
-      <div style="font-size:7px;color:#555;">医学AI实验室 · 计算机科学与技术学院</div>
-      <div style="font-size:7px;color:#555;">2024 · 12 · 15</div>
-    </div>
+<div style="background:#1d1d1f;width:100%;height:100%;padding:44px 48px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;overflow:hidden;position:relative;">
+  <div style="width:60px;height:5px;background:#F0B27A;border-radius:2px;margin-bottom:20px;"></div>
+  <div style="font-size:13px;letter-spacing:0.14em;color:#666;text-transform:uppercase;margin-bottom:20px;">组会汇报 · 第 14 次</div>
+  <div style="font-size:30px;font-weight:700;color:#f5f5f7;line-height:1.35;margin-bottom:8px;">多模态医学影像</div>
+  <div style="font-size:30px;font-weight:700;color:#f5f5f7;line-height:1.35;margin-bottom:28px;">肿瘤区域自动分割</div>
+  <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px;">
+    <div style="font-size:16px;color:#ccc;font-weight:500;">张三 · 2021 级博士</div>
+    <div style="font-size:15px;color:#777;">导师：李四 教授 · 副导师：王五 副教授</div>
+    <div style="font-size:13px;color:#555;">国家自然科学基金面上项目（No. 62xxxxxx）</div>
+  </div>
+  <div style="border-top:1px solid rgba(255,255,255,0.08);padding-top:14px;display:flex;justify-content:space-between;">
+    <div style="font-size:13px;color:#555;">医学AI实验室 · 计算机科学与技术学院</div>
+    <div style="font-size:13px;color:#555;">2024 · 12 · 15</div>
   </div>
 </div>
 `;
 
 // ── Case 2：目录页 ──
 const BEFORE_2 = `
-<div style="background:#fff;width:100%;height:100%;padding:14px 18px;box-sizing:border-box;position:relative;">
-  <div style="text-align:center;margin-bottom:10px;">
-    <div style="font-size:13px;font-weight:bold;color:#003399;letter-spacing:0.3em;">目&nbsp;&nbsp;录</div>
-    <div style="width:60%;height:2px;background:#003399;margin:4px auto 0;"></div>
+<div style="background:#fff;width:100%;height:100%;padding:32px 36px;box-sizing:border-box;position:relative;">
+  <div style="text-align:center;margin-bottom:20px;">
+    <div style="font-size:26px;font-weight:bold;color:#003399;letter-spacing:0.3em;">目&nbsp;&nbsp;录</div>
+    <div style="width:60%;height:2px;background:#003399;margin:8px auto 0;"></div>
   </div>
-  <div style="font-size:8px;color:#333;line-height:2.2;padding-left:16px;">
-    <div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:50%;background:#4472C4;flex-shrink:0;"></div>一、研究背景与文献综述 ...................... 3</div>
-    <div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:50%;background:#4472C4;flex-shrink:0;"></div>二、研究问题与假设 .......................... 8</div>
-    <div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:50%;background:#4472C4;flex-shrink:0;"></div>三、基于卷积神经网络的图像分割方法 ......... 12</div>
-    <div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:50%;background:#4472C4;flex-shrink:0;"></div>四、实验设计与数据采集 ...................... 18</div>
-    <div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:50%;background:#4472C4;flex-shrink:0;"></div>五、实验结果与分析 .......................... 22</div>
-    <div style="display:flex;align-items:center;gap:6px;"><div style="width:8px;height:8px;border-radius:50%;background:#4472C4;flex-shrink:0;"></div>六、结论与展望 .............................. 28</div>
+  <div style="font-size:16px;color:#333;line-height:2.2;padding-left:28px;">
+    <div style="display:flex;align-items:center;gap:10px;"><div style="width:14px;height:14px;border-radius:50%;background:#4472C4;flex-shrink:0;"></div>一、研究背景与文献综述 ...................... 3</div>
+    <div style="display:flex;align-items:center;gap:10px;"><div style="width:14px;height:14px;border-radius:50%;background:#4472C4;flex-shrink:0;"></div>二、研究问题与假设 .......................... 8</div>
+    <div style="display:flex;align-items:center;gap:10px;"><div style="width:14px;height:14px;border-radius:50%;background:#4472C4;flex-shrink:0;"></div>三、基于卷积神经网络的图像分割方法 ......... 12</div>
+    <div style="display:flex;align-items:center;gap:10px;"><div style="width:14px;height:14px;border-radius:50%;background:#4472C4;flex-shrink:0;"></div>四、实验设计与数据采集 ...................... 18</div>
+    <div style="display:flex;align-items:center;gap:10px;"><div style="width:14px;height:14px;border-radius:50%;background:#4472C4;flex-shrink:0;"></div>五、实验结果与分析 .......................... 22</div>
+    <div style="display:flex;align-items:center;gap:10px;"><div style="width:14px;height:14px;border-radius:50%;background:#4472C4;flex-shrink:0;"></div>六、结论与展望 .............................. 28</div>
   </div>
-  <div style="position:absolute;bottom:6px;right:12px;font-size:7px;color:#999;">2 / 30</div>
+  <div style="position:absolute;bottom:12px;right:24px;font-size:14px;color:#999;">2 / 30</div>
 </div>
 `;
 
 const AFTER_2 = `
-<div style="background:#fff;width:100%;height:100%;padding:18px 24px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;">
-  <div style="font-size:7px;letter-spacing:0.1em;color:#bbb;text-transform:uppercase;margin-bottom:14px;">CONTENTS</div>
-  <div style="display:flex;flex-direction:column;gap:8px;">
-    <div style="display:flex;align-items:baseline;gap:10px;opacity:0.4;">
-      <div style="font-size:18px;font-weight:700;color:#d0d0d0;font-family:'Inter',sans-serif;min-width:28px;">01</div>
-      <div style="font-size:9px;color:#999;">研究背景与文献综述</div>
+<div style="background:#fff;width:100%;height:100%;padding:36px 44px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;">
+  <div style="font-size:13px;letter-spacing:0.1em;color:#bbb;text-transform:uppercase;margin-bottom:24px;">CONTENTS</div>
+  <div style="display:flex;flex-direction:column;gap:14px;">
+    <div style="display:flex;align-items:baseline;gap:18px;opacity:0.4;">
+      <div style="font-size:34px;font-weight:700;color:#d0d0d0;font-family:'Inter',sans-serif;min-width:48px;">01</div>
+      <div style="font-size:16px;color:#999;">研究背景与文献综述</div>
     </div>
-    <div style="display:flex;align-items:baseline;gap:10px;opacity:0.4;">
-      <div style="font-size:18px;font-weight:700;color:#d0d0d0;font-family:'Inter',sans-serif;min-width:28px;">02</div>
-      <div style="font-size:9px;color:#999;">研究问题与假设</div>
+    <div style="display:flex;align-items:baseline;gap:18px;opacity:0.4;">
+      <div style="font-size:34px;font-weight:700;color:#d0d0d0;font-family:'Inter',sans-serif;min-width:48px;">02</div>
+      <div style="font-size:16px;color:#999;">研究问题与假设</div>
     </div>
-    <div style="display:flex;align-items:baseline;gap:10px;padding:6px 0;border-left:3px solid #F0B27A;padding-left:10px;margin-left:-13px;">
-      <div style="font-size:20px;font-weight:700;color:#F0B27A;font-family:'Inter',sans-serif;min-width:28px;">03</div>
+    <div style="display:flex;align-items:baseline;gap:18px;padding:10px 0;border-left:5px solid #F0B27A;padding-left:18px;margin-left:-23px;">
+      <div style="font-size:38px;font-weight:700;color:#F0B27A;font-family:'Inter',sans-serif;min-width:48px;">03</div>
       <div>
-        <div style="font-size:10px;font-weight:600;color:#1d1d1f;">基于 CNN 的图像分割方法</div>
-        <div style="font-size:7px;color:#aaa;margin-top:1px;">本次汇报重点</div>
+        <div style="font-size:20px;font-weight:600;color:#1d1d1f;">基于 CNN 的图像分割方法</div>
+        <div style="font-size:13px;color:#aaa;margin-top:2px;">本次汇报重点</div>
       </div>
     </div>
-    <div style="display:flex;align-items:baseline;gap:10px;opacity:0.4;">
-      <div style="font-size:18px;font-weight:700;color:#d0d0d0;font-family:'Inter',sans-serif;min-width:28px;">04</div>
-      <div style="font-size:9px;color:#999;">实验设计与数据采集</div>
+    <div style="display:flex;align-items:baseline;gap:18px;opacity:0.4;">
+      <div style="font-size:34px;font-weight:700;color:#d0d0d0;font-family:'Inter',sans-serif;min-width:48px;">04</div>
+      <div style="font-size:16px;color:#999;">实验设计与数据采集</div>
     </div>
-    <div style="display:flex;align-items:baseline;gap:10px;opacity:0.4;">
-      <div style="font-size:18px;font-weight:700;color:#d0d0d0;font-family:'Inter',sans-serif;min-width:28px;">05</div>
-      <div style="font-size:9px;color:#999;">实验结果与分析</div>
+    <div style="display:flex;align-items:baseline;gap:18px;opacity:0.4;">
+      <div style="font-size:34px;font-weight:700;color:#d0d0d0;font-family:'Inter',sans-serif;min-width:48px;">05</div>
+      <div style="font-size:16px;color:#999;">实验结果与分析</div>
     </div>
-    <div style="display:flex;align-items:baseline;gap:10px;opacity:0.4;">
-      <div style="font-size:18px;font-weight:700;color:#d0d0d0;font-family:'Inter',sans-serif;min-width:28px;">06</div>
-      <div style="font-size:9px;color:#999;">结论与展望</div>
+    <div style="display:flex;align-items:baseline;gap:18px;opacity:0.4;">
+      <div style="font-size:34px;font-weight:700;color:#d0d0d0;font-family:'Inter',sans-serif;min-width:48px;">06</div>
+      <div style="font-size:16px;color:#999;">结论与展望</div>
     </div>
   </div>
 </div>
@@ -338,141 +336,141 @@ const AFTER_2 = `
 
 // ── Case 3：文字页 ──
 const BEFORE_3 = `
-<div style="background:#f8f8f8;width:100%;height:100%;padding:12px 14px;box-sizing:border-box;">
-  <div style="font-size:10px;font-weight:bold;color:#cc0000;margin-bottom:4px;text-decoration:underline;">研究方法</div>
-  <div style="font-size:7.5px;line-height:1.45;color:#333;">
+<div style="background:#f8f8f8;width:100%;height:100%;padding:24px 28px;box-sizing:border-box;">
+  <div style="font-size:20px;font-weight:bold;color:#cc0000;margin-bottom:8px;text-decoration:underline;">研究方法</div>
+  <div style="font-size:14px;line-height:1.45;color:#333;">
     <span style="color:#003399;font-weight:bold;">本研究采用</span>随机对照双盲实验设计，招募符合纳入标准的受试者共<span style="color:#cc0000;font-weight:bold;">72名</span>，随机分配至实验组（<span style="color:#003399;">n=36</span>）和对照组（<span style="color:#003399;">n=36</span>）。实验组接受为期<span style="font-weight:bold;text-decoration:underline;">8周</span>的干预方案，<span style="color:#cc6600;font-style:italic;">每周两次，每次45分钟</span>。干预内容包括<span style="font-weight:bold;">认知行为训练</span>、生物反馈技术以及个体化方案调整。对照组接受同等时间的安慰剂控制处理。
   </div>
-  <div style="font-size:7.5px;line-height:1.45;color:#333;margin-top:4px;">
+  <div style="font-size:14px;line-height:1.45;color:#333;margin-top:8px;">
     <span style="color:#006600;font-weight:bold;font-style:italic;">主要结局指标</span>为认知功能综合评分（<span style="text-decoration:underline;">MMSE、MoCA</span>），<span style="color:#660066;">次要指标</span>包括焦虑抑郁量表（GAD-7、PHQ-9）及生理指标（心率变异性HRV、皮肤电导SC）。所有数据均采用SPSS 26.0进行统计分析，组间比较采用独立样本t检验，重复测量数据采用<span style="font-weight:bold;color:#003399;">混合线性模型</span>，显著性水平设定为<span style="color:#cc0000;">α=0.05</span>。
   </div>
-  <div style="font-size:7px;color:#444;margin-top:4px;line-height:1.4;">
+  <div style="font-size:13px;color:#444;margin-top:8px;line-height:1.4;">
     为确保实验质量，所有干预人员均接受标准化培训（≥40学时）并通过能力考核（合格率100%）。实验过程中对受试者进行全程监测，详细记录不良事件及依从性数据。数据收集采用双人录入并交叉核验，录入错误率<0.1%。
   </div>
 </div>
 `;
 
 const AFTER_3 = `
-<div style="background:#fff;width:100%;height:100%;padding:16px 20px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;">
-  <div style="font-size:7px;letter-spacing:0.1em;color:#bbb;text-transform:uppercase;margin-bottom:12px;">METHODS</div>
-  <div style="display:flex;flex-direction:column;gap:10px;">
-    <div style="display:flex;gap:12px;align-items:flex-start;">
-      <div style="font-size:20px;font-weight:700;color:#F0B27A;font-family:'Inter',sans-serif;line-height:1;min-width:40px;">72</div>
+<div style="background:#fff;width:100%;height:100%;padding:36px 44px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;">
+  <div style="font-size:13px;letter-spacing:0.1em;color:#bbb;text-transform:uppercase;margin-bottom:20px;">METHODS</div>
+  <div style="display:flex;flex-direction:column;gap:18px;">
+    <div style="display:flex;gap:20px;align-items:flex-start;">
+      <div style="font-size:46px;font-weight:700;color:#F0B27A;font-family:'Inter',sans-serif;line-height:1;min-width:72px;">72</div>
       <div>
-        <div style="font-size:9px;font-weight:600;color:#1d1d1f;margin-bottom:2px;">受试者 · 随机对照双盲</div>
-        <div style="font-size:7px;color:#888;line-height:1.5;">实验组 n=36 vs 对照组 n=36 · 安慰剂控制<br>纳入标准筛选 · SPSS 26.0 统计分析 · α=0.05</div>
+        <div style="font-size:17px;font-weight:600;color:#1d1d1f;margin-bottom:4px;">受试者 · 随机对照双盲</div>
+        <div style="font-size:13px;color:#888;line-height:1.5;">实验组 n=36 vs 对照组 n=36 · 安慰剂控制<br>纳入标准筛选 · SPSS 26.0 统计分析 · α=0.05</div>
       </div>
     </div>
-    <div style="border-top:1px solid #f0f0f0;padding-top:10px;display:flex;gap:12px;align-items:flex-start;">
-      <div style="font-size:20px;font-weight:700;color:#7EC8E3;font-family:'Inter',sans-serif;line-height:1;min-width:40px;">8<span style="font-size:11px;font-weight:400;color:#aaa;">周</span></div>
+    <div style="border-top:1px solid #f0f0f0;padding-top:18px;display:flex;gap:20px;align-items:flex-start;">
+      <div style="font-size:46px;font-weight:700;color:#7EC8E3;font-family:'Inter',sans-serif;line-height:1;min-width:72px;">8<span style="font-size:20px;font-weight:400;color:#aaa;">周</span></div>
       <div>
-        <div style="font-size:9px;font-weight:600;color:#1d1d1f;margin-bottom:2px;">认知行为干预方案</div>
-        <div style="font-size:7px;color:#888;line-height:1.5;">每周 2 次 × 45 min · 认知训练 + 生物反馈 + 个体化调整<br>干预人员标准化培训 ≥40 学时 · 依从性全程监测</div>
+        <div style="font-size:17px;font-weight:600;color:#1d1d1f;margin-bottom:4px;">认知行为干预方案</div>
+        <div style="font-size:13px;color:#888;line-height:1.5;">每周 2 次 × 45 min · 认知训练 + 生物反馈 + 个体化调整<br>干预人员标准化培训 ≥40 学时 · 依从性全程监测</div>
       </div>
     </div>
-    <div style="border-top:1px solid #f0f0f0;padding-top:10px;display:flex;gap:12px;align-items:flex-start;">
-      <div style="font-size:20px;font-weight:700;color:#95D5B2;font-family:'Inter',sans-serif;line-height:1;min-width:40px;">4<span style="font-size:11px;font-weight:400;color:#aaa;">项</span></div>
+    <div style="border-top:1px solid #f0f0f0;padding-top:18px;display:flex;gap:20px;align-items:flex-start;">
+      <div style="font-size:46px;font-weight:700;color:#95D5B2;font-family:'Inter',sans-serif;line-height:1;min-width:72px;">4<span style="font-size:20px;font-weight:400;color:#aaa;">项</span></div>
       <div>
-        <div style="font-size:9px;font-weight:600;color:#1d1d1f;margin-bottom:2px;">核心结局指标</div>
-        <div style="font-size:7px;color:#888;line-height:1.5;">主要：MMSE + MoCA（认知功能）<br>次要：GAD-7 + PHQ-9（情绪）· HRV + SC（生理）</div>
+        <div style="font-size:17px;font-weight:600;color:#1d1d1f;margin-bottom:4px;">核心结局指标</div>
+        <div style="font-size:13px;color:#888;line-height:1.5;">主要：MMSE + MoCA（认知功能）<br>次要：GAD-7 + PHQ-9（情绪）· HRV + SC（生理）</div>
       </div>
     </div>
   </div>
-  <div style="font-size:6.5px;color:#ccc;margin-top:10px;">详细方法与质控流程见演讲者备注 · 数据双人录入交叉核验（错误率 &lt;0.1%）</div>
+  <div style="font-size:12px;color:#ccc;margin-top:18px;">详细方法与质控流程见演讲者备注 · 数据双人录入交叉核验（错误率 &lt;0.1%）</div>
 </div>
 `;
 
 // ── Case 4：表格页 ──
 const BEFORE_4 = `
-<div style="background:#fff;width:100%;height:100%;padding:10px 12px;box-sizing:border-box;">
-  <div style="font-size:9px;font-weight:bold;text-align:center;color:#333;margin-bottom:6px;">Table 2. Experimental Results (Pre-Post Comparison)</div>
-  <table style="width:100%;border-collapse:collapse;font-size:7px;border:2px solid #333;">
+<div style="background:#fff;width:100%;height:100%;padding:24px 28px;box-sizing:border-box;">
+  <div style="font-size:18px;font-weight:bold;text-align:center;color:#333;margin-bottom:12px;">Table 2. Experimental Results (Pre-Post Comparison)</div>
+  <table style="width:100%;border-collapse:collapse;font-size:14px;border:2px solid #333;">
     <tr style="background:#4472C4;color:#fff;font-weight:bold;">
-      <th style="border:1px solid #333;padding:3px 4px;">Group</th>
-      <th style="border:1px solid #333;padding:3px 4px;">Pre</th>
-      <th style="border:1px solid #333;padding:3px 4px;">Post</th>
-      <th style="border:1px solid #333;padding:3px 4px;">Change</th>
-      <th style="border:1px solid #333;padding:3px 4px;">p-value</th>
+      <th style="border:1px solid #333;padding:6px 8px;font-size:14px;">Group</th>
+      <th style="border:1px solid #333;padding:6px 8px;font-size:14px;">Pre</th>
+      <th style="border:1px solid #333;padding:6px 8px;font-size:14px;">Post</th>
+      <th style="border:1px solid #333;padding:6px 8px;font-size:14px;">Change</th>
+      <th style="border:1px solid #333;padding:6px 8px;font-size:14px;">p-value</th>
     </tr>
-    <tr><td style="border:1px solid #999;padding:2px 4px;background:#dce6f1;">Exp-A</td><td style="border:1px solid #999;padding:2px 4px;">45.2±8.3</td><td style="border:1px solid #999;padding:2px 4px;">68.7±9.1</td><td style="border:1px solid #999;padding:2px 4px;color:red;font-weight:bold;">+23.5</td><td style="border:1px solid #999;padding:2px 4px;color:red;">&lt;0.001**</td></tr>
-    <tr style="background:#f2f2f2;"><td style="border:1px solid #999;padding:2px 4px;background:#dce6f1;">Exp-B</td><td style="border:1px solid #999;padding:2px 4px;">44.8±7.6</td><td style="border:1px solid #999;padding:2px 4px;">61.3±8.4</td><td style="border:1px solid #999;padding:2px 4px;color:red;">+16.5</td><td style="border:1px solid #999;padding:2px 4px;">0.003**</td></tr>
-    <tr><td style="border:1px solid #999;padding:2px 4px;background:#dce6f1;">Ctrl-1</td><td style="border:1px solid #999;padding:2px 4px;">45.5±8.1</td><td style="border:1px solid #999;padding:2px 4px;">47.2±8.5</td><td style="border:1px solid #999;padding:2px 4px;">+1.7</td><td style="border:1px solid #999;padding:2px 4px;">0.42</td></tr>
-    <tr style="background:#f2f2f2;"><td style="border:1px solid #999;padding:2px 4px;background:#dce6f1;">Ctrl-2</td><td style="border:1px solid #999;padding:2px 4px;">44.1±7.9</td><td style="border:1px solid #999;padding:2px 4px;">45.8±8.2</td><td style="border:1px solid #999;padding:2px 4px;">+1.7</td><td style="border:1px solid #999;padding:2px 4px;">0.38</td></tr>
-    <tr><td style="border:1px solid #999;padding:2px 4px;background:#dce6f1;">Sham</td><td style="border:1px solid #999;padding:2px 4px;">45.0±7.7</td><td style="border:1px solid #999;padding:2px 4px;">46.1±8.0</td><td style="border:1px solid #999;padding:2px 4px;">+1.1</td><td style="border:1px solid #999;padding:2px 4px;">0.55</td></tr>
+    <tr><td style="border:1px solid #999;padding:5px 8px;background:#dce6f1;">Exp-A</td><td style="border:1px solid #999;padding:5px 8px;">45.2±8.3</td><td style="border:1px solid #999;padding:5px 8px;">68.7±9.1</td><td style="border:1px solid #999;padding:5px 8px;color:red;font-weight:bold;">+23.5</td><td style="border:1px solid #999;padding:5px 8px;color:red;">&lt;0.001**</td></tr>
+    <tr style="background:#f2f2f2;"><td style="border:1px solid #999;padding:5px 8px;background:#dce6f1;">Exp-B</td><td style="border:1px solid #999;padding:5px 8px;">44.8±7.6</td><td style="border:1px solid #999;padding:5px 8px;">61.3±8.4</td><td style="border:1px solid #999;padding:5px 8px;color:red;">+16.5</td><td style="border:1px solid #999;padding:5px 8px;">0.003**</td></tr>
+    <tr><td style="border:1px solid #999;padding:5px 8px;background:#dce6f1;">Ctrl-1</td><td style="border:1px solid #999;padding:5px 8px;">45.5±8.1</td><td style="border:1px solid #999;padding:5px 8px;">47.2±8.5</td><td style="border:1px solid #999;padding:5px 8px;">+1.7</td><td style="border:1px solid #999;padding:5px 8px;">0.42</td></tr>
+    <tr style="background:#f2f2f2;"><td style="border:1px solid #999;padding:5px 8px;background:#dce6f1;">Ctrl-2</td><td style="border:1px solid #999;padding:5px 8px;">44.1±7.9</td><td style="border:1px solid #999;padding:5px 8px;">45.8±8.2</td><td style="border:1px solid #999;padding:5px 8px;">+1.7</td><td style="border:1px solid #999;padding:5px 8px;">0.38</td></tr>
+    <tr><td style="border:1px solid #999;padding:5px 8px;background:#dce6f1;">Sham</td><td style="border:1px solid #999;padding:5px 8px;">45.0±7.7</td><td style="border:1px solid #999;padding:5px 8px;">46.1±8.0</td><td style="border:1px solid #999;padding:5px 8px;">+1.1</td><td style="border:1px solid #999;padding:5px 8px;">0.55</td></tr>
   </table>
-  <div style="font-size:6px;color:#666;margin-top:3px;line-height:1.4;">Note: Values are means±SD. Pre=baseline, Post=8-week follow-up. Change=Post-Pre. p-values from independent samples t-tests. *p&lt;0.05, **p&lt;0.01, ***p&lt;0.001. ES=effect size (Cohen's d). Exp=experimental group. Ctrl=control group.</div>
+  <div style="font-size:11px;color:#666;margin-top:6px;line-height:1.4;">Note: Values are means±SD. Pre=baseline, Post=8-week follow-up. Change=Post-Pre. p-values from independent samples t-tests. *p&lt;0.05, **p&lt;0.01, ***p&lt;0.001. ES=effect size (Cohen's d). Exp=experimental group. Ctrl=control group.</div>
 </div>
 `;
 
 const AFTER_4 = `
-<div style="background:#fff;width:100%;height:100%;padding:16px 20px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;">
-  <div style="margin-bottom:12px;">
-    <div style="font-size:11px;font-weight:700;color:#1d1d1f;line-height:1.3;">实验组 A 改善最显著，提升 <span style="color:#F0B27A;">52%</span></div>
-    <div style="font-size:7px;color:#aaa;margin-top:3px;">前后对比得分（均值±SD），8 周干预后</div>
+<div style="background:#fff;width:100%;height:100%;padding:36px 44px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;">
+  <div style="margin-bottom:20px;">
+    <div style="font-size:22px;font-weight:700;color:#1d1d1f;line-height:1.3;">实验组 A 改善最显著，提升 <span style="color:#F0B27A;">52%</span></div>
+    <div style="font-size:13px;color:#aaa;margin-top:6px;">前后对比得分（均值±SD），8 周干预后</div>
   </div>
-  <table style="width:100%;border-collapse:collapse;font-size:7.5px;">
+  <table style="width:100%;border-collapse:collapse;font-size:14px;">
     <tr>
-      <td style="padding:5px 6px;font-weight:600;color:#aaa;border-bottom:1px solid #eee;font-size:7px;">组别</td>
-      <td style="padding:5px 6px;color:#aaa;border-bottom:1px solid #eee;font-size:7px;">前测</td>
-      <td style="padding:5px 6px;color:#aaa;border-bottom:1px solid #eee;font-size:7px;">后测</td>
-      <td style="padding:5px 6px;color:#aaa;border-bottom:1px solid #eee;font-size:7px;">变化</td>
-      <td style="padding:5px 6px;color:#aaa;border-bottom:1px solid #eee;font-size:7px;">p 值</td>
+      <td style="padding:8px 10px;font-weight:600;color:#aaa;border-bottom:1px solid #eee;font-size:13px;">组别</td>
+      <td style="padding:8px 10px;color:#aaa;border-bottom:1px solid #eee;font-size:13px;">前测</td>
+      <td style="padding:8px 10px;color:#aaa;border-bottom:1px solid #eee;font-size:13px;">后测</td>
+      <td style="padding:8px 10px;color:#aaa;border-bottom:1px solid #eee;font-size:13px;">变化</td>
+      <td style="padding:8px 10px;color:#aaa;border-bottom:1px solid #eee;font-size:13px;">p 值</td>
     </tr>
     <tr style="background:rgba(240,178,122,0.08);">
-      <td style="padding:5px 6px;font-weight:600;color:#1d1d1f;border-bottom:1px solid #f5f5f5;">实验 A</td>
-      <td style="padding:5px 6px;color:#666;border-bottom:1px solid #f5f5f5;">45.2</td>
-      <td style="padding:5px 6px;color:#1d1d1f;font-weight:600;border-bottom:1px solid #f5f5f5;">68.7</td>
-      <td style="padding:5px 6px;color:#F0B27A;font-weight:700;border-bottom:1px solid #f5f5f5;">+23.5</td>
-      <td style="padding:5px 6px;color:#F0B27A;font-weight:600;border-bottom:1px solid #f5f5f5;">&lt;0.001</td>
+      <td style="padding:8px 10px;font-weight:600;color:#1d1d1f;border-bottom:1px solid #f5f5f5;">实验 A</td>
+      <td style="padding:8px 10px;color:#666;border-bottom:1px solid #f5f5f5;">45.2</td>
+      <td style="padding:8px 10px;color:#1d1d1f;font-weight:600;border-bottom:1px solid #f5f5f5;">68.7</td>
+      <td style="padding:8px 10px;color:#F0B27A;font-weight:700;border-bottom:1px solid #f5f5f5;">+23.5</td>
+      <td style="padding:8px 10px;color:#F0B27A;font-weight:600;border-bottom:1px solid #f5f5f5;">&lt;0.001</td>
     </tr>
     <tr>
-      <td style="padding:5px 6px;font-weight:600;color:#1d1d1f;border-bottom:1px solid #f5f5f5;">实验 B</td>
-      <td style="padding:5px 6px;color:#666;border-bottom:1px solid #f5f5f5;">44.8</td>
-      <td style="padding:5px 6px;color:#1d1d1f;border-bottom:1px solid #f5f5f5;">61.3</td>
-      <td style="padding:5px 6px;color:#F0B27A;border-bottom:1px solid #f5f5f5;">+16.5</td>
-      <td style="padding:5px 6px;color:#666;border-bottom:1px solid #f5f5f5;">0.003</td>
+      <td style="padding:8px 10px;font-weight:600;color:#1d1d1f;border-bottom:1px solid #f5f5f5;">实验 B</td>
+      <td style="padding:8px 10px;color:#666;border-bottom:1px solid #f5f5f5;">44.8</td>
+      <td style="padding:8px 10px;color:#1d1d1f;border-bottom:1px solid #f5f5f5;">61.3</td>
+      <td style="padding:8px 10px;color:#F0B27A;border-bottom:1px solid #f5f5f5;">+16.5</td>
+      <td style="padding:8px 10px;color:#666;border-bottom:1px solid #f5f5f5;">0.003</td>
     </tr>
     <tr>
-      <td style="padding:5px 6px;color:#bbb;border-bottom:1px solid #f5f5f5;">对照 1</td>
-      <td style="padding:5px 6px;color:#ccc;border-bottom:1px solid #f5f5f5;">45.5</td>
-      <td style="padding:5px 6px;color:#ccc;border-bottom:1px solid #f5f5f5;">47.2</td>
-      <td style="padding:5px 6px;color:#ccc;border-bottom:1px solid #f5f5f5;">+1.7</td>
-      <td style="padding:5px 6px;color:#ccc;border-bottom:1px solid #f5f5f5;">0.42</td>
+      <td style="padding:8px 10px;color:#bbb;border-bottom:1px solid #f5f5f5;">对照 1</td>
+      <td style="padding:8px 10px;color:#ccc;border-bottom:1px solid #f5f5f5;">45.5</td>
+      <td style="padding:8px 10px;color:#ccc;border-bottom:1px solid #f5f5f5;">47.2</td>
+      <td style="padding:8px 10px;color:#ccc;border-bottom:1px solid #f5f5f5;">+1.7</td>
+      <td style="padding:8px 10px;color:#ccc;border-bottom:1px solid #f5f5f5;">0.42</td>
     </tr>
     <tr>
-      <td style="padding:5px 6px;color:#bbb;">对照 2</td>
-      <td style="padding:5px 6px;color:#ccc;">44.1</td>
-      <td style="padding:5px 6px;color:#ccc;">45.8</td>
-      <td style="padding:5px 6px;color:#ccc;">+1.7</td>
-      <td style="padding:5px 6px;color:#ccc;">0.38</td>
+      <td style="padding:8px 10px;color:#bbb;">对照 2</td>
+      <td style="padding:8px 10px;color:#ccc;">44.1</td>
+      <td style="padding:8px 10px;color:#ccc;">45.8</td>
+      <td style="padding:8px 10px;color:#ccc;">+1.7</td>
+      <td style="padding:8px 10px;color:#ccc;">0.38</td>
     </tr>
   </table>
-  <div style="font-size:6.5px;color:#ccc;margin-top:8px;">均值（±SD）· 独立样本 t 检验 · n=36/组 · Sham 组省略（p=0.55）</div>
+  <div style="font-size:12px;color:#ccc;margin-top:14px;">均值（±SD）· 独立样本 t 检验 · n=36/组 · Sham 组省略（p=0.55）</div>
 </div>
 `;
 
 // ── Case 5：图表页 ──
 const BEFORE_5 = `
-<div style="background:#fff;width:100%;height:100%;padding:10px 12px;box-sizing:border-box;">
-  <div style="font-size:9px;font-weight:bold;color:#333;margin-bottom:4px;text-align:center;">Fig.3 Results of Experiment</div>
-  <div style="display:flex;gap:4px;height:calc(100% - 32px);">
+<div style="background:#fff;width:100%;height:100%;padding:24px 28px;box-sizing:border-box;">
+  <div style="font-size:18px;font-weight:bold;color:#333;margin-bottom:8px;text-align:center;">Fig.3 Results of Experiment</div>
+  <div style="display:flex;gap:8px;height:calc(100% - 56px);">
     <div style="flex:1;position:relative;border:1px solid #bbb;background:#f8f8f8;">
-      <div style="position:absolute;top:2px;left:2px;right:2px;bottom:2px;background:repeating-linear-gradient(0deg,transparent,transparent 14px,rgba(0,0,0,0.06) 14px,rgba(0,0,0,0.06) 15px);">
-        <div style="position:absolute;bottom:0;left:8px;right:8px;display:flex;align-items:flex-end;gap:2px;height:85%;perspective:200px;">
-          <div style="width:10px;height:35%;background:#4472C4;transform:rotateY(-8deg);border-radius:1px 1px 0 0;"></div>
-          <div style="width:10px;height:58%;background:#ED7D31;transform:rotateY(-8deg);border-radius:1px 1px 0 0;"></div>
-          <div style="width:10px;height:25%;background:#A5A5A5;transform:rotateY(-8deg);border-radius:1px 1px 0 0;"></div>
-          <div style="width:10px;height:42%;background:#FFC000;transform:rotateY(-8deg);border-radius:1px 1px 0 0;"></div>
-          <div style="width:10px;height:52%;background:#FF0000;transform:rotateY(-8deg);border-radius:1px 1px 0 0;"></div>
-          <div style="width:10px;height:30%;background:#7030A0;transform:rotateY(-8deg);border-radius:1px 1px 0 0;"></div>
-          <div style="width:10px;height:38%;background:#00B0F0;transform:rotateY(-8deg);border-radius:1px 1px 0 0;"></div>
-          <div style="width:10px;height:62%;background:#FF00FF;transform:rotateY(-8deg);border-radius:1px 1px 0 0;"></div>
+      <div style="position:absolute;top:4px;left:4px;right:4px;bottom:4px;background:repeating-linear-gradient(0deg,transparent,transparent 24px,rgba(0,0,0,0.06) 24px,rgba(0,0,0,0.06) 25px);">
+        <div style="position:absolute;bottom:0;left:14px;right:14px;display:flex;align-items:flex-end;gap:4px;height:85%;perspective:200px;">
+          <div style="width:20px;height:35%;background:#4472C4;transform:rotateY(-8deg);border-radius:2px 2px 0 0;"></div>
+          <div style="width:20px;height:58%;background:#ED7D31;transform:rotateY(-8deg);border-radius:2px 2px 0 0;"></div>
+          <div style="width:20px;height:25%;background:#A5A5A5;transform:rotateY(-8deg);border-radius:2px 2px 0 0;"></div>
+          <div style="width:20px;height:42%;background:#FFC000;transform:rotateY(-8deg);border-radius:2px 2px 0 0;"></div>
+          <div style="width:20px;height:52%;background:#FF0000;transform:rotateY(-8deg);border-radius:2px 2px 0 0;"></div>
+          <div style="width:20px;height:30%;background:#7030A0;transform:rotateY(-8deg);border-radius:2px 2px 0 0;"></div>
+          <div style="width:20px;height:38%;background:#00B0F0;transform:rotateY(-8deg);border-radius:2px 2px 0 0;"></div>
+          <div style="width:20px;height:62%;background:#FF00FF;transform:rotateY(-8deg);border-radius:2px 2px 0 0;"></div>
         </div>
       </div>
-      <div style="position:absolute;bottom:2px;left:0;right:0;font-size:5.5px;color:#666;text-align:center;">T1 T2 T3 T4 T5 T6 T7 T8</div>
-      <div style="position:absolute;top:4px;left:2px;font-size:5px;color:#888;writing-mode:vertical-lr;transform:rotate(180deg);">Score (AU)</div>
+      <div style="position:absolute;bottom:4px;left:0;right:0;font-size:10px;color:#666;text-align:center;">T1 T2 T3 T4 T5 T6 T7 T8</div>
+      <div style="position:absolute;top:8px;left:4px;font-size:9px;color:#888;writing-mode:vertical-lr;transform:rotate(180deg);">Score (AU)</div>
     </div>
-    <div style="width:52px;font-size:5.5px;color:#444;line-height:1.7;padding:2px;">
+    <div style="width:90px;font-size:11px;color:#444;line-height:1.7;padding:4px;">
       <div>■ <span style="color:#4472C4;">Ctrl-W1</span></div>
       <div>■ <span style="color:#ED7D31;">Exp-W1</span></div>
       <div>■ <span style="color:#A5A5A5;">Sham-W1</span></div>
@@ -483,101 +481,101 @@ const BEFORE_5 = `
       <div>■ <span style="color:#FF00FF;">Exp-W8</span></div>
     </div>
   </div>
-  <div style="font-size:5.5px;color:#888;margin-top:2px;text-align:center;">Note: AU = arbitrary units; error bars omitted; n=12/group; *p&lt;0.05</div>
+  <div style="font-size:10px;color:#888;margin-top:4px;text-align:center;">Note: AU = arbitrary units; error bars omitted; n=12/group; *p&lt;0.05</div>
 </div>
 `;
 
 const AFTER_5 = `
-<div style="background:#fff;width:100%;height:100%;padding:16px 20px;box-sizing:border-box;">
-  <div style="font-size:11px;font-weight:700;color:#1d1d1f;margin-bottom:2px;">实验组在第 8 周达到峰值</div>
-  <div style="font-size:7px;color:#aaa;margin-bottom:12px;">平均得分（任意单位）· 误差棒=SEM · n=12/组</div>
-  <div style="display:flex;gap:14px;height:52%;align-items:flex-end;padding-bottom:4px;border-bottom:1px solid #f0f0f0;">
-    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;">
-      <div style="font-size:6px;color:#bbb;">Week 1</div>
-      <div style="display:flex;gap:3px;align-items:flex-end;width:100%;justify-content:center;">
-        <div style="width:14px;height:28px;background:#e0e0e0;border-radius:2px 2px 0 0;"></div>
-        <div style="width:14px;height:30px;background:#F0B27A;border-radius:2px 2px 0 0;"></div>
+<div style="background:#fff;width:100%;height:100%;padding:36px 44px;box-sizing:border-box;">
+  <div style="font-size:22px;font-weight:700;color:#1d1d1f;margin-bottom:4px;">实验组在第 8 周达到峰值</div>
+  <div style="font-size:13px;color:#aaa;margin-bottom:20px;">平均得分（任意单位）· 误差棒=SEM · n=12/组</div>
+  <div style="display:flex;gap:24px;height:52%;align-items:flex-end;padding-bottom:8px;border-bottom:1px solid #f0f0f0;">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;">
+      <div style="font-size:12px;color:#bbb;">Week 1</div>
+      <div style="display:flex;gap:5px;align-items:flex-end;width:100%;justify-content:center;">
+        <div style="width:28px;height:42px;background:#e0e0e0;border-radius:3px 3px 0 0;"></div>
+        <div style="width:28px;height:45px;background:#F0B27A;border-radius:3px 3px 0 0;"></div>
       </div>
     </div>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;">
-      <div style="font-size:6px;color:#bbb;">Week 4</div>
-      <div style="display:flex;gap:3px;align-items:flex-end;width:100%;justify-content:center;">
-        <div style="width:14px;height:30px;background:#e0e0e0;border-radius:2px 2px 0 0;"></div>
-        <div style="width:14px;height:44px;background:#F0B27A;border-radius:2px 2px 0 0;"></div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;">
+      <div style="font-size:12px;color:#bbb;">Week 4</div>
+      <div style="display:flex;gap:5px;align-items:flex-end;width:100%;justify-content:center;">
+        <div style="width:28px;height:45px;background:#e0e0e0;border-radius:3px 3px 0 0;"></div>
+        <div style="width:28px;height:66px;background:#F0B27A;border-radius:3px 3px 0 0;"></div>
       </div>
     </div>
-    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;">
-      <div style="font-size:6px;color:#F0B27A;font-weight:700;">Week 8</div>
-      <div style="display:flex;gap:3px;align-items:flex-end;width:100%;justify-content:center;">
-        <div style="width:14px;height:32px;background:#e0e0e0;border-radius:2px 2px 0 0;"></div>
-        <div style="width:14px;height:62px;background:#F0B27A;border-radius:2px 2px 0 0;position:relative;">
-          <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:6px;color:#F0B27A;font-weight:700;white-space:nowrap;">68.7 ↑</div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;">
+      <div style="font-size:12px;color:#F0B27A;font-weight:700;">Week 8</div>
+      <div style="display:flex;gap:5px;align-items:flex-end;width:100%;justify-content:center;">
+        <div style="width:28px;height:48px;background:#e0e0e0;border-radius:3px 3px 0 0;"></div>
+        <div style="width:28px;height:93px;background:#F0B27A;border-radius:3px 3px 0 0;position:relative;">
+          <div style="position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:11px;color:#F0B27A;font-weight:700;white-space:nowrap;">68.7 ↑</div>
         </div>
       </div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:4px;justify-content:flex-end;padding-bottom:6px;padding-left:6px;border-left:1px solid #f0f0f0;">
-      <div style="display:flex;align-items:center;gap:4px;"><div style="width:8px;height:8px;background:#e0e0e0;border-radius:2px;"></div><div style="font-size:6.5px;color:#999;">对照组</div></div>
-      <div style="display:flex;align-items:center;gap:4px;"><div style="width:8px;height:8px;background:#F0B27A;border-radius:2px;"></div><div style="font-size:6.5px;color:#666;font-weight:600;">实验组</div></div>
+    <div style="display:flex;flex-direction:column;gap:8px;justify-content:flex-end;padding-bottom:10px;padding-left:10px;border-left:1px solid #f0f0f0;">
+      <div style="display:flex;align-items:center;gap:8px;"><div style="width:14px;height:14px;background:#e0e0e0;border-radius:3px;"></div><div style="font-size:12px;color:#999;">对照组</div></div>
+      <div style="display:flex;align-items:center;gap:8px;"><div style="width:14px;height:14px;background:#F0B27A;border-radius:3px;"></div><div style="font-size:12px;color:#666;font-weight:600;">实验组</div></div>
     </div>
   </div>
-  <div style="font-size:6.5px;color:#ccc;margin-top:6px;">p&lt;0.001（W8 组间）· 完整数据与 Sham 组见附录 Slide 22</div>
+  <div style="font-size:12px;color:#ccc;margin-top:10px;">p&lt;0.001（W8 组间）· 完整数据与 Sham 组见附录 Slide 22</div>
 </div>
 `;
 
 // ── Case 6：结论页 ──
 const BEFORE_6 = `
-<div style="background:#fff;width:100%;height:100%;padding:12px 16px;box-sizing:border-box;">
-  <div style="font-size:11px;font-weight:bold;text-align:center;color:#003399;margin-bottom:6px;">Summary &amp; Conclusions</div>
-  <div style="width:80%;height:2px;background:#003399;margin:0 auto 8px;"></div>
-  <ul style="font-size:7.5px;color:#333;line-height:1.55;padding-left:14px;margin:0;">
-    <li style="margin-bottom:3px;">本研究成功建立了一套完整的认知干预评估体系，涵盖认知、情感及生理多个维度的综合评价指标</li>
-    <li style="margin-bottom:3px;">实验组在干预后各主要指标均<span style="color:#cc0000;font-weight:bold;">显著优于</span>对照组（p&lt;0.001），差异具有统计学意义</li>
-    <li style="margin-bottom:3px;">效应量分析表明干预效果显著（<span style="font-weight:bold;">Cohen's d = 0.82</span>），具有较高的临床实践意义</li>
-    <li style="margin-bottom:3px;">双盲随机对照设计有效控制了<span style="text-decoration:underline;">安慰剂效应和观察者偏倚</span>，研究内部效度高</li>
-    <li style="margin-bottom:3px;">本研究存在局限性：样本量有限（n=72）、随访时间较短（8周）、单一地区样本</li>
-    <li style="margin-bottom:3px;">未来可考虑扩大样本量（n≥200）、延长随访至12个月、开展多中心验证研究</li>
+<div style="background:#fff;width:100%;height:100%;padding:24px 32px;box-sizing:border-box;">
+  <div style="font-size:22px;font-weight:bold;text-align:center;color:#003399;margin-bottom:12px;">Summary &amp; Conclusions</div>
+  <div style="width:80%;height:2px;background:#003399;margin:0 auto 16px;"></div>
+  <ul style="font-size:15px;color:#333;line-height:1.55;padding-left:24px;margin:0;">
+    <li style="margin-bottom:6px;">本研究成功建立了一套完整的认知干预评估体系，涵盖认知、情感及生理多个维度的综合评价指标</li>
+    <li style="margin-bottom:6px;">实验组在干预后各主要指标均<span style="color:#cc0000;font-weight:bold;">显著优于</span>对照组（p&lt;0.001），差异具有统计学意义</li>
+    <li style="margin-bottom:6px;">效应量分析表明干预效果显著（<span style="font-weight:bold;">Cohen's d = 0.82</span>），具有较高的临床实践意义</li>
+    <li style="margin-bottom:6px;">双盲随机对照设计有效控制了<span style="text-decoration:underline;">安慰剂效应和观察者偏倚</span>，研究内部效度高</li>
+    <li style="margin-bottom:6px;">本研究存在局限性：样本量有限（n=72）、随访时间较短（8周）、单一地区样本</li>
+    <li style="margin-bottom:6px;">未来可考虑扩大样本量（n≥200）、延长随访至12个月、开展多中心验证研究</li>
   </ul>
-  <div style="text-align:center;margin-top:8px;font-size:16px;color:#003399;font-weight:bold;text-shadow:1px 1px 3px rgba(0,0,200,0.15);">Thank You! 🎉✨🎊</div>
+  <div style="text-align:center;margin-top:14px;font-size:32px;color:#003399;font-weight:bold;text-shadow:1px 1px 3px rgba(0,0,200,0.15);">Thank You! 🎉✨🎊</div>
 </div>
 `;
 
 const AFTER_6 = `
-<div style="background:#1d1d1f;width:100%;height:100%;padding:18px 22px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;">
-  <div style="font-size:7px;letter-spacing:0.12em;color:#555;text-transform:uppercase;margin-bottom:14px;">Take-home Messages</div>
-  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:12px;">
-    <div style="display:flex;align-items:flex-start;gap:10px;">
-      <div style="font-size:18px;font-weight:700;color:#F0B27A;font-family:'Inter',sans-serif;min-width:20px;line-height:1;">1</div>
+<div style="background:#1d1d1f;width:100%;height:100%;padding:36px 44px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;">
+  <div style="font-size:13px;letter-spacing:0.12em;color:#555;text-transform:uppercase;margin-bottom:24px;">Take-home Messages</div>
+  <div style="display:flex;flex-direction:column;gap:18px;margin-bottom:20px;">
+    <div style="display:flex;align-items:flex-start;gap:18px;">
+      <div style="font-size:34px;font-weight:700;color:#F0B27A;font-family:'Inter',sans-serif;min-width:36px;line-height:1;">1</div>
       <div>
-        <div style="font-size:9px;font-weight:600;color:#f5f5f7;line-height:1.3;">多维认知干预体系有效</div>
-        <div style="font-size:7px;color:#666;margin-top:2px;">覆盖认知+情感+生理 · d=0.82 · p&lt;0.001</div>
+        <div style="font-size:17px;font-weight:600;color:#f5f5f7;line-height:1.3;">多维认知干预体系有效</div>
+        <div style="font-size:13px;color:#666;margin-top:4px;">覆盖认知+情感+生理 · d=0.82 · p&lt;0.001</div>
       </div>
     </div>
-    <div style="display:flex;align-items:flex-start;gap:10px;">
-      <div style="font-size:18px;font-weight:700;color:#F0B27A;font-family:'Inter',sans-serif;min-width:20px;line-height:1;">2</div>
+    <div style="display:flex;align-items:flex-start;gap:18px;">
+      <div style="font-size:34px;font-weight:700;color:#F0B27A;font-family:'Inter',sans-serif;min-width:36px;line-height:1;">2</div>
       <div>
-        <div style="font-size:9px;font-weight:600;color:#f5f5f7;line-height:1.3;">第 8 周效果达峰</div>
-        <div style="font-size:7px;color:#666;margin-top:2px;">实验组显著优于对照 · 需要足够干预时长</div>
+        <div style="font-size:17px;font-weight:600;color:#f5f5f7;line-height:1.3;">第 8 周效果达峰</div>
+        <div style="font-size:13px;color:#666;margin-top:4px;">实验组显著优于对照 · 需要足够干预时长</div>
       </div>
     </div>
-    <div style="display:flex;align-items:flex-start;gap:10px;">
-      <div style="font-size:18px;font-weight:700;color:#F0B27A;font-family:'Inter',sans-serif;min-width:20px;line-height:1;">3</div>
+    <div style="display:flex;align-items:flex-start;gap:18px;">
+      <div style="font-size:34px;font-weight:700;color:#F0B27A;font-family:'Inter',sans-serif;min-width:36px;line-height:1;">3</div>
       <div>
-        <div style="font-size:9px;font-weight:600;color:#f5f5f7;line-height:1.3;">双盲 RCT 设计保证可靠性</div>
-        <div style="font-size:7px;color:#666;margin-top:2px;">有效控制安慰剂效应与观察者偏倚</div>
+        <div style="font-size:17px;font-weight:600;color:#f5f5f7;line-height:1.3;">双盲 RCT 设计保证可靠性</div>
+        <div style="font-size:13px;color:#666;margin-top:4px;">有效控制安慰剂效应与观察者偏倚</div>
       </div>
     </div>
   </div>
-  <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:8px;display:flex;flex-direction:column;gap:4px;">
-    <div style="display:flex;gap:6px;align-items:baseline;">
-      <div style="font-size:7px;color:#555;font-weight:600;letter-spacing:0.06em;min-width:48px;">未来方向</div>
-      <div style="font-size:7px;color:#666;">扩大样本（n≥200）· 多中心验证 · 随访延长至 12 个月</div>
+  <div style="border-top:1px solid rgba(255,255,255,0.06);padding-top:14px;display:flex;flex-direction:column;gap:8px;">
+    <div style="display:flex;gap:10px;align-items:baseline;">
+      <div style="font-size:13px;color:#555;font-weight:600;letter-spacing:0.06em;min-width:80px;">未来方向</div>
+      <div style="font-size:13px;color:#666;">扩大样本（n≥200）· 多中心验证 · 随访延长至 12 个月</div>
     </div>
-    <div style="display:flex;gap:6px;align-items:baseline;">
-      <div style="font-size:7px;color:#555;font-weight:600;letter-spacing:0.06em;min-width:48px;">局限性</div>
-      <div style="font-size:7px;color:#666;">n=72 · 单一地区 · 随访 8 周</div>
+    <div style="display:flex;gap:10px;align-items:baseline;">
+      <div style="font-size:13px;color:#555;font-weight:600;letter-spacing:0.06em;min-width:80px;">局限性</div>
+      <div style="font-size:13px;color:#666;">n=72 · 单一地区 · 随访 8 周</div>
     </div>
   </div>
-  <div style="margin-top:10px;font-size:7px;color:#444;">zhangsan@university.edu · github.com/zhangsan/cog-study</div>
+  <div style="margin-top:18px;font-size:13px;color:#444;">zhangsan@university.edu · github.com/zhangsan/cog-study</div>
 </div>
 `;
 
