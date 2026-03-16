@@ -1,5 +1,5 @@
 // p01-design-fundamentals.js — 设计速成指南
-// Hero → S1 对比 → S2 对齐 → S3 留白 → S4 配色 → S5 字体 → S6 信噪比 → S7 视觉层次 → Footer
+// Hero → S1 看懂差距 → S2 对比 → S3 配色 → S4 对齐 → S5 留白 → S6 实战改造 → Footer
 
 import { fadeIn, killAll, gsap, ScrollTrigger } from '../../components/ScrollAnimations.js';
 import { navigateTo } from '../../utils/router.js';
@@ -9,7 +9,7 @@ import { navigateTo } from '../../utils/router.js';
 // ══════════════════════════════════════════════════════
 let _eventHandlers = [];
 let _rafIds = [];
-let _currentSNRStep = -1;
+let _currentMakeoverStep = -1;
 
 function addEvt(el, type, fn, opts) {
   if (!el) return;
@@ -49,32 +49,34 @@ const styles = `
 .df-step-label { font-size:var(--text-caption); text-align:center; margin-top:var(--space-sm); transition:opacity 0.3s; color:var(--text-on-light-2); }
 .section-dark .df-step-label { color:var(--text-on-dark-2); }
 
-/* ── S1 对比 ── */
+/* ── S1 看懂差距 ── */
+.df-showcase-stage { position:sticky; top:0; height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 var(--space-lg); }
+.df-showcase-pair { position:relative; max-width:640px; width:100%; }
+.df-showcase-before,
+.df-showcase-after { position:absolute; inset:0; transition:opacity 0.5s ease; }
+.df-showcase-before { opacity:1; }
+.df-showcase-after { opacity:0; }
+.df-showcase-caption { font-size:var(--text-body); color:var(--text-on-dark-2); text-align:center; margin-top:var(--space-md); max-width:480px; line-height:1.7; transition:opacity 0.4s; }
+.df-showcase-dots { display:flex; gap:8px; justify-content:center; margin-top:var(--space-md); }
+.df-showcase-dot { width:8px; height:8px; border-radius:50%; background:rgba(255,255,255,0.2); transition:background 0.3s, transform 0.3s; }
+.df-showcase-dot.active { background:var(--module-4); transform:scale(1.3); }
+.df-showcase-tabs { display:none; }
+.df-showcase-label { font-size:12px; color:var(--text-on-dark-3); text-align:center; margin-bottom:var(--space-xs); letter-spacing:0.05em; text-transform:uppercase; transition:opacity 0.4s; }
+@media (max-width:768px) {
+  .df-showcase-stage { position:relative; height:auto; padding:var(--space-lg); }
+  .df-showcase-tabs { display:flex; gap:8px; justify-content:center; margin-bottom:var(--space-md); flex-wrap:wrap; }
+  .df-showcase-tab { padding:6px 14px; border-radius:20px; border:1px solid rgba(255,255,255,0.15); background:transparent; color:var(--text-on-dark-2); cursor:pointer; font-size:13px; transition:all 0.3s; }
+  .df-showcase-tab.active { background:var(--module-4); border-color:var(--module-4); color:#1d1d1f; }
+  .df-showcase-dots { display:none; }
+}
+
+/* ── S2 对比 ── */
 .df-cs-title { transition:font-size 0.4s ease-out, font-weight 0.4s, color 0.4s; font-family:var(--font-heading); }
 .df-cs-points { list-style:disc inside; transition:font-size 0.4s, color 0.4s; margin:var(--space-md) 0; }
 .df-cs-points li { margin-bottom:8px; transition:color 0.4s; }
 .df-cs-number { margin-top:var(--space-md); transition:font-size 0.4s ease-out, color 0.4s, font-weight 0.4s; font-family:var(--font-code); }
 
-/* ── S2 对齐 ── */
-.df-align-canvas { aspect-ratio:16/10; position:relative; border-radius:16px; background:rgba(255,255,255,0.04); overflow:hidden; border:1px solid rgba(255,255,255,0.06); }
-.df-align-block { position:absolute; border-radius:8px; background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12); cursor:grab; display:flex; align-items:center; justify-content:center; font-size:12px; color:var(--text-on-dark-2); user-select:none; transition:box-shadow 0.2s; touch-action:none; }
-.df-align-block.dragging { cursor:grabbing; box-shadow:0 8px 32px rgba(0,0,0,0.3); z-index:10; }
-.df-align-grid-line { position:absolute; background:rgba(126,200,227,0.15); opacity:0; transition:opacity 0.4s; }
-.df-align-btns { display:flex; gap:var(--space-sm); justify-content:center; margin-top:var(--space-md); }
-
-/* ── S3 留白 ── */
-.df-stepper { display:flex; gap:8px; justify-content:center; margin-top:var(--space-md); }
-.df-step-btn { width:40px; height:40px; border-radius:50%; border:2px solid var(--border-light); background:transparent; cursor:pointer; font-size:14px; font-weight:600; color:var(--text-on-light-2); transition:all 0.3s; }
-.df-step-btn.df-step-active { background:var(--module-4); border-color:var(--module-4); color:#fff; }
-.df-ws-slide { transition:padding 0.5s ease-out; }
-.df-ws-title { transition:font-size 0.5s ease-out, margin-bottom 0.5s; }
-.df-ws-body p { transition:font-size 0.5s ease-out, margin-bottom 0.5s, opacity 0.4s; }
-.df-ws-chart { transition:margin 0.5s ease-out, height 0.5s; border-radius:8px; background:rgba(0,0,0,0.04); display:flex; align-items:center; justify-content:center; font-size:13px; color:#999; }
-.df-ws-source { transition:font-size 0.5s, opacity 0.5s, margin-top 0.5s; color:#999; }
-.df-ws-pattern { position:absolute; inset:0; opacity:0; transition:opacity 0.5s; pointer-events:none;
-  background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(0,0,0,0.02) 10px,rgba(0,0,0,0.02) 20px); }
-
-/* ── S4 配色 ── */
+/* ── S3 配色 ── */
 .df-color-bad { background: linear-gradient(135deg, #dde4ff 0%, #fff5e0 60%, #ffe0e8 100%) !important; border: 2px dashed rgba(200,0,0,0.18) !important; }
 .df-color-bad ul { list-style:none; padding:0; margin:var(--space-sm) 0; }
 .df-color-bad ul li { margin-bottom:6px; font-size:14px; }
@@ -89,19 +91,25 @@ const styles = `
 .df-swatch-hex { font-size:11px; font-family:var(--font-code); color:var(--text-on-dark-3); cursor:pointer; }
 .df-toast { position:absolute; top:-28px; left:50%; transform:translateX(-50%); font-size:12px; background:rgba(0,0,0,0.75); color:#fff; padding:4px 12px; border-radius:8px; pointer-events:none; opacity:0; white-space:nowrap; }
 
-/* ── S5 字体 ── */
-.df-fonts-layout { display:flex; gap:var(--space-lg); max-width:var(--w-full); margin:0 auto; align-items:flex-start; }
-.df-fonts-list { width:42%; display:flex; flex-direction:column; gap:var(--space-sm); }
-.df-fonts-preview { width:58%; }
-.df-font-card { padding:var(--space-md); border-radius:12px; border:1px solid rgba(0,0,0,0.06); cursor:pointer; transition:border-color 0.3s, background 0.3s, border-left-width 0.3s; }
-.df-font-card:hover { background:rgba(240,178,122,0.02); }
-.df-font-card.df-font-active { border-left:3px solid var(--module-4); background:rgba(240,178,122,0.04); }
-.df-font-card-name { font-size:15px; font-weight:600; margin-bottom:4px; }
-.df-font-card-desc { font-size:13px; color:var(--text-on-light-2); }
-.df-font-card-tags { display:flex; gap:6px; margin-top:8px; }
-.df-font-card-tag { font-size:11px; padding:2px 8px; border-radius:10px; background:rgba(0,0,0,0.04); color:var(--text-on-light-3); }
+/* ── S4 对齐 ── */
+.df-align-slide { position:relative; }
+.df-align-el { position:absolute; transition:none; font-family:var(--font-body); }
+.df-align-guideline { position:absolute; left:40px; top:0; bottom:0; width:1px; background:rgba(126,200,227,0.5); opacity:0; transition:opacity 0.4s; }
+.df-align-btns { display:flex; gap:var(--space-sm); justify-content:center; margin-top:var(--space-md); }
 
-/* ── S6 信噪比 ── */
+/* ── S5 留白 ── */
+.df-stepper { display:flex; gap:8px; justify-content:center; margin-top:var(--space-md); }
+.df-step-btn { width:40px; height:40px; border-radius:50%; border:2px solid var(--border-light); background:transparent; cursor:pointer; font-size:14px; font-weight:600; color:var(--text-on-light-2); transition:all 0.3s; }
+.df-step-btn.df-step-active { background:var(--module-4); border-color:var(--module-4); color:#fff; }
+.df-ws-slide { transition:padding 0.5s ease-out; }
+.df-ws-title { transition:font-size 0.5s ease-out, margin-bottom 0.5s; }
+.df-ws-body p { transition:font-size 0.5s ease-out, margin-bottom 0.5s, opacity 0.4s; }
+.df-ws-chart { transition:margin 0.5s ease-out, height 0.5s; border-radius:8px; background:rgba(0,0,0,0.04); display:flex; align-items:center; justify-content:center; font-size:13px; color:#999; }
+.df-ws-source { transition:font-size 0.5s, opacity 0.5s, margin-top 0.5s; color:#999; }
+.df-ws-pattern { position:absolute; inset:0; opacity:0; transition:opacity 0.5s; pointer-events:none;
+  background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(0,0,0,0.02) 10px,rgba(0,0,0,0.02) 20px); }
+
+/* ── S6 实战改造 ── */
 .df-snr-wrap { display:flex; gap:var(--space-lg); max-width:var(--w-full); margin:0 auto; align-items:flex-start; }
 .df-snr-slide-col { width:50%; position:relative; }
 .df-snr-steps-col { width:50%; }
@@ -129,12 +137,6 @@ const styles = `
 .df-snr-footer { position:absolute; bottom:8px; left:0; right:0; text-align:center; font-size:10px; color:var(--text-on-dark-3); transition:opacity 0.5s; z-index:1; }
 .df-snr-chart-clean { position:relative; z-index:1; transition:opacity 0.5s; }
 
-/* ── S7 视觉层次 ── */
-.df-hier-controls { display:flex; flex-direction:column; gap:var(--space-md); margin-top:var(--space-lg); max-width:480px; margin-left:auto; margin-right:auto; }
-.df-hier-controls label { display:flex; align-items:center; gap:var(--space-sm); font-size:var(--text-caption); color:var(--text-on-light-2); white-space:nowrap; }
-.df-hier-controls .df-slider { flex:1; margin:0; }
-.df-h-l1,.df-h-l2,.df-h-l3,.df-h-l5 { transition:font-size 0.3s ease-out, color 0.3s, margin-bottom 0.3s; }
-
 /* ── 移动端 ── */
 @media (max-width:768px) {
   .df-slide { padding:24px; }
@@ -142,12 +144,7 @@ const styles = `
   .df-slider::-moz-range-thumb { width:24px; height:24px; }
   .df-step-btn { min-width:44px; min-height:44px; }
 
-  /* S5 字体 */
-  .df-fonts-layout { flex-direction:column-reverse; }
-  .df-fonts-list { width:100%; max-height:400px; overflow-y:auto; }
-  .df-fonts-preview { width:100%; }
-
-  /* S6 信噪比 */
+  /* S6 实战改造 */
   .df-snr-wrap { flex-direction:column; }
   .df-snr-slide-col { width:100%; }
   .df-snr-steps-col { width:100%; }
@@ -159,15 +156,161 @@ const styles = `
 
 /* 所有 section 移动端 scroll-margin */
 @media (max-width:768px) {
-  #df-contrast,#df-alignment,#df-whitespace,#df-color,#df-fonts,#df-snr,#df-hierarchy { scroll-margin-top:56px; }
+  #df-showcase,#df-contrast,#df-color,#df-alignment,#df-whitespace,#df-makeover { scroll-margin-top:56px; }
 }
+#df-showcase,#df-contrast,#df-color,#df-alignment,#df-whitespace,#df-makeover { scroll-margin-top:56px; }
 `;
 
 // ══════════════════════════════════════════════════════
 //  数据
 // ══════════════════════════════════════════════════════
 
-// S1 对比 — 5 档
+// S1 看懂差距 — 4 组 Before/After
+const SHOWCASE_SLIDES = [
+  {
+    before: `<div style="width:100%;height:100%;background:linear-gradient(135deg,#1a3a6b,#2d5aa0);border-radius:12px;padding:28px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+      <p style="font-family:SimSun,serif;font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:6px;">XX 大学 XX 学院 XX 实验室</p>
+      <h3 style="font-family:SimSun,serif;font-size:16px;color:#fff;line-height:1.6;margin-bottom:10px;">基于深度学习的多模态情感分析<br>——以社交媒体文本与图像融合为例</h3>
+      <p style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.8;">汇报人：张三 &nbsp;|&nbsp; 导师：李四教授<br>2024 年 6 月 15 日 &nbsp;|&nbsp; 第三次组会汇报</p>
+    </div>`,
+    after: `<div style="width:100%;height:100%;background:#1d1d1f;border-radius:12px;padding:32px;display:flex;flex-direction:column;justify-content:center;">
+      <div style="width:36px;height:3px;background:var(--module-4);margin-bottom:16px;border-radius:2px;"></div>
+      <h3 style="font-size:20px;color:#f5f5f7;font-weight:700;line-height:1.4;margin-bottom:12px;">多模态情感分析</h3>
+      <p style="font-size:13px;color:rgba(245,245,247,0.5);margin-bottom:20px;">深度学习 + 文本图像融合</p>
+      <div style="display:flex;gap:16px;margin-top:auto;">
+        <span style="font-size:11px;color:rgba(245,245,247,0.35);">张三</span>
+        <span style="font-size:11px;color:rgba(245,245,247,0.35);">2024.06</span>
+        <span style="font-size:11px;color:rgba(245,245,247,0.35);">组会汇报</span>
+      </div>
+    </div>`,
+    caption: '同样的信息，不同的表达',
+  },
+  {
+    before: `<div style="width:100%;height:100%;background:#fff;border-radius:12px;padding:24px;overflow:hidden;">
+      <h3 style="font-size:15px;color:#333;margin-bottom:8px;font-weight:700;">研究背景与动机</h3>
+      <p style="font-size:11px;color:#444;line-height:1.7;margin-bottom:4px;">随着社交媒体的<b style="color:#e74c3c;">快速发展</b>，用户生成内容呈<u>爆发式增长</u>。传统情感分析方法仅关注<span style="color:#2ecc71;">文本模态</span>，忽略了<span style="color:#9b59b6;">图像信息</span>的重要作用。近年来，<b style="color:#e67e22;">多模态学习</b>成为研究热点，但现有方法存在<span style="color:#e74c3c;text-decoration:underline;">模态融合不充分</span>的问题。本研究旨在提出一种新的<b>跨模态注意力机制</b>，以实现更精准的情感判别。</p>
+      <p style="font-size:10px;color:#888;margin-top:4px;">* 参考文献：[1] Wang et al., 2023; [2] Liu et al., 2022; [3] Chen et al., 2024...</p>
+    </div>`,
+    after: `<div style="width:100%;height:100%;background:#fff;border-radius:12px;padding:28px;display:flex;flex-direction:column;justify-content:center;">
+      <h3 style="font-size:18px;color:#1d1d1f;margin-bottom:20px;font-weight:700;">为什么需要多模态？</h3>
+      <div style="display:flex;gap:16px;">
+        <div style="flex:1;background:#f8f8f8;border-radius:8px;padding:14px;text-align:center;">
+          <div style="font-size:24px;font-weight:700;color:var(--module-4);margin-bottom:4px;">85%</div>
+          <div style="font-size:11px;color:#888;">社交内容含图像</div>
+        </div>
+        <div style="flex:1;background:#f8f8f8;border-radius:8px;padding:14px;text-align:center;">
+          <div style="font-size:24px;font-weight:700;color:#1d1d1f;margin-bottom:4px;">+12%</div>
+          <div style="font-size:11px;color:#888;">融合后准确率提升</div>
+        </div>
+        <div style="flex:1;background:#f8f8f8;border-radius:8px;padding:14px;text-align:center;">
+          <div style="font-size:24px;font-weight:700;color:#1d1d1f;margin-bottom:4px;">Gap</div>
+          <div style="font-size:11px;color:#888;">融合机制不充分</div>
+        </div>
+      </div>
+    </div>`,
+    caption: '200 字变 3 个关键词——信息量没少',
+  },
+  {
+    before: `<div style="width:100%;height:100%;background:#fff;border-radius:12px;padding:24px;">
+      <h3 style="font-size:14px;color:#333;margin-bottom:10px;">各组实验结果对比</h3>
+      <div style="display:flex;align-items:flex-end;gap:4px;height:55%;padding:0 8px;">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+          <div style="width:100%;height:60%;background:linear-gradient(180deg,#e74c3c,#c0392b);border-radius:3px 3px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:8px;color:#888;">A1</span>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+          <div style="width:100%;height:80%;background:linear-gradient(180deg,#3498db,#2980b9);border-radius:3px 3px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:8px;color:#888;">A2</span>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+          <div style="width:100%;height:45%;background:linear-gradient(180deg,#2ecc71,#27ae60);border-radius:3px 3px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:8px;color:#888;">B1</span>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+          <div style="width:100%;height:72%;background:linear-gradient(180deg,#9b59b6,#8e44ad);border-radius:3px 3px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:8px;color:#888;">B2</span>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+          <div style="width:100%;height:55%;background:linear-gradient(180deg,#e67e22,#d35400);border-radius:3px 3px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:8px;color:#888;">C1</span>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+          <div style="width:100%;height:90%;background:linear-gradient(180deg,#1abc9c,#16a085);border-radius:3px 3px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:8px;color:#888;">C2</span>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+          <div style="width:100%;height:38%;background:linear-gradient(180deg,#f39c12,#e67e22);border-radius:3px 3px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:8px;color:#888;">D1</span>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;">
+          <div style="width:100%;height:65%;background:linear-gradient(180deg,#e91e63,#c2185b);border-radius:3px 3px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:8px;color:#888;">D2</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:6px;justify-content:center;">
+        <span style="font-size:8px;color:#e74c3c;">■ A1</span><span style="font-size:8px;color:#3498db;">■ A2</span><span style="font-size:8px;color:#2ecc71;">■ B1</span><span style="font-size:8px;color:#9b59b6;">■ B2</span><span style="font-size:8px;color:#e67e22;">■ C1</span><span style="font-size:8px;color:#1abc9c;">■ C2</span><span style="font-size:8px;color:#f39c12;">■ D1</span><span style="font-size:8px;color:#e91e63;">■ D2</span>
+      </div>
+    </div>`,
+    after: `<div style="width:100%;height:100%;background:#fff;border-radius:12px;padding:28px;display:flex;flex-direction:column;justify-content:center;">
+      <h3 style="font-size:16px;color:#1d1d1f;margin-bottom:4px;font-weight:700;">融合模型准确率高出 12%</h3>
+      <p style="font-size:11px;color:#999;margin-bottom:16px;">实验组 vs 对照组 · F1-Score</p>
+      <div style="display:flex;align-items:flex-end;gap:20px;height:45%;padding:0 20px;">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <div style="display:flex;gap:4px;width:100%;align-items:flex-end;">
+            <div style="flex:1;height:60%;background:var(--module-4);border-radius:4px 4px 0 0;"></div>
+            <div style="flex:1;height:45%;background:#e0e0e0;border-radius:4px 4px 0 0;"></div>
+          </div>
+          <span style="font-size:10px;color:#888;">文本</span>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <div style="display:flex;gap:4px;width:100%;align-items:flex-end;">
+            <div style="flex:1;height:75%;background:var(--module-4);border-radius:4px 4px 0 0;"></div>
+            <div style="flex:1;height:52%;background:#e0e0e0;border-radius:4px 4px 0 0;"></div>
+          </div>
+          <span style="font-size:10px;color:#888;">图像</span>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
+          <div style="display:flex;gap:4px;width:100%;align-items:flex-end;">
+            <div style="flex:1;height:92%;background:var(--module-4);border-radius:4px 4px 0 0;"></div>
+            <div style="flex:1;height:58%;background:#e0e0e0;border-radius:4px 4px 0 0;"></div>
+          </div>
+          <span style="font-size:10px;color:#888;">融合</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:center;margin-top:8px;">
+        <span style="font-size:10px;color:var(--module-4);">● 实验组</span>
+        <span style="font-size:10px;color:#ccc;">● 对照组</span>
+      </div>
+    </div>`,
+    caption: '8 种颜色变 2 种——数据更清晰',
+  },
+  {
+    before: `<div style="width:100%;height:100%;background:#fff;border-radius:12px;padding:24px;display:flex;flex-direction:column;">
+      <h3 style="font-size:15px;color:#333;margin-bottom:10px;">结论与展望</h3>
+      <ul style="font-size:12px;color:#444;list-style:disc inside;line-height:2;flex:1;">
+        <li>多模态融合显著优于单模态</li>
+        <li>跨模态注意力机制有效</li>
+        <li>消融实验验证各组件贡献</li>
+        <li>社交媒体数据集上 SOTA</li>
+        <li>可扩展到视频模态</li>
+        <li>未来计划：更大规模预训练</li>
+      </ul>
+      <p style="font-size:24px;text-align:center;margin-top:8px;">Thank You! <span style="font-size:20px;">&#127881;&#10024;&#127882;</span></p>
+    </div>`,
+    after: `<div style="width:100%;height:100%;background:#fff;border-radius:12px;padding:32px;display:flex;flex-direction:column;justify-content:center;">
+      <h3 style="font-size:18px;color:#1d1d1f;margin-bottom:20px;font-weight:700;">三个核心发现</h3>
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <span style="font-size:18px;font-weight:700;color:var(--module-4);line-height:1;">1</span>
+          <div><div style="font-size:13px;color:#1d1d1f;font-weight:600;">多模态融合准确率 +12%</div><div style="font-size:11px;color:#999;margin-top:2px;">显著优于纯文本和纯图像方法</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <span style="font-size:18px;font-weight:700;color:var(--module-4);line-height:1;">2</span>
+          <div><div style="font-size:13px;color:#1d1d1f;font-weight:600;">跨模态注意力是关键</div><div style="font-size:11px;color:#999;margin-top:2px;">消融实验证实贡献度最高</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;">
+          <span style="font-size:18px;font-weight:700;color:var(--module-4);line-height:1;">3</span>
+          <div><div style="font-size:13px;color:#1d1d1f;font-weight:600;">框架可扩展至视频模态</div><div style="font-size:11px;color:#999;margin-top:2px;">下一步：大规模多模态预训练</div></div>
+        </div>
+      </div>
+    </div>`,
+    caption: '6 条结论变 3 条——记住的更多',
+  },
+];
+
+// S2 对比 — 5 档
 const CONTRAST_STOPS = [
   { title:{ size:'16px', weight:400, color:'#666' }, body:'#777', num:{ size:'16px', weight:400, color:'#888' }, bg:'#f0f0f0', label:'标题和正文几乎没有区分' },
   { title:{ size:'22px', weight:500, color:'#555' }, body:'#666', num:{ size:'24px', weight:500, color:'#777' }, bg:'#f5f5f5', label:'开始有一点层次感' },
@@ -176,28 +319,27 @@ const CONTRAST_STOPS = [
   { title:{ size:'36px', weight:700, color:'#1d1d1f' }, body:'#555', num:{ size:'72px', weight:700, color:'#D4782F' }, bg:'#ffffff', label:'层次分明，重点一目了然 ✓' },
 ];
 
-// S3 留白 — 5 档
-const WHITESPACE_STOPS = [
-  { pad:'20px', titleMb:'4px', titleSize:'13px', bodySize:'11px', bodyMb:'2px', chartH:'40px', chartM:'4px 0', srcSize:'10px', srcOpacity:1, pattern:true,  label:'过载：内容拥挤，无法聚焦' },
-  { pad:'26px', titleMb:'8px', titleSize:'14px', bodySize:'12px', bodyMb:'4px', chartH:'50px', chartM:'6px 0', srcSize:'11px', srcOpacity:0.9, pattern:false, label:'拥挤：去掉花纹，但仍然拥挤' },
-  { pad:'32px', titleMb:'16px',titleSize:'16px', bodySize:'14px', bodyMb:'8px', chartH:'60px', chartM:'12px 0', srcSize:'12px', srcOpacity:0.7, pattern:false, label:'适中：开始有呼吸感' },
-  { pad:'38px', titleMb:'24px',titleSize:'18px', bodySize:'15px', bodyMb:'12px',chartH:'70px', chartM:'16px 0', srcSize:'12px', srcOpacity:0.5, pattern:false, label:'舒适：清晰分组，重点突出' },
-  { pad:'44px', titleMb:'32px',titleSize:'22px', bodySize:'16px', bodyMb:'16px',chartH:'80px', chartM:'24px 0', srcSize:'11px', srcOpacity:0.3, pattern:false, label:'极简：大量留白，只保留核心 ✓' },
+// S4 对齐 — 元素数据
+const ALIGN_ITEMS = [
+  { text:'研究成果总结', style:'font-size:18px;font-weight:700;color:#1d1d1f;', rand:{ left:'55%', top:'8%' }, aligned:{ left:'40px', top:'28px' } },
+  { text:'实验组显著优于对照组 (p<0.001)', style:'font-size:13px;color:#555;', rand:{ left:'10%', top:'58%' }, aligned:{ left:'40px', top:'72px' } },
+  { text:'效应量 Cohen\'s d = 0.82', style:'font-size:13px;color:#555;', rand:{ left:'52%', top:'42%' }, aligned:{ left:'40px', top:'102px' } },
+  { text:'[图表区域]', style:'font-size:12px;color:#aaa;background:rgba(0,0,0,0.04);padding:12px 24px;border-radius:6px;', rand:{ left:'8%', top:'22%' }, aligned:{ left:'40px', top:'148px' } },
+  { text:'数据来源：2024 实验记录', style:'font-size:10px;color:#bbb;', rand:{ left:'48%', top:'75%' }, aligned:{ left:'40px', top:'210px' } },
 ];
 
-// S4 配色方案
+// S5 留白 — 3 档
+const WHITESPACE_STOPS = [
+  { pad:'24px', titleMb:'6px', titleSize:'14px', bodySize:'12px', bodyMb:'4px', chartH:'50px', chartM:'6px 0', srcSize:'11px', srcOpacity:1, pattern:true, label:'过载：所有内容挤在一起' },
+  { pad:'36px', titleMb:'20px', titleSize:'18px', bodySize:'15px', bodyMb:'10px', chartH:'70px', chartM:'14px 0', srcSize:'12px', srcOpacity:0.6, pattern:false, label:'适中：内容开始有呼吸感' },
+  { pad:'48px', titleMb:'32px', titleSize:'22px', bodySize:'16px', bodyMb:'16px', chartH:'90px', chartM:'24px 0', srcSize:'11px', srcOpacity:0.3, pattern:false, label:'极简：只保留核心信息 ✓' },
+];
+
+// S3 配色方案
 const COLOR_SCHEMES = [
   { name:'学术蓝', primary:'#2B5797', accent:'#E8833A', neutral:'#888', title:'#2B5797', body:'#444', bg:'#f8fafc', listColor:'#333' },
   { name:'低饱和绿', primary:'#3A7D5C', accent:'#D4A843', neutral:'#999', title:'#3A7D5C', body:'#555', bg:'#f6faf8', listColor:'#444' },
   { name:'暖灰调', primary:'#5C5C5C', accent:'#C06040', neutral:'#aaa', title:'#5C5C5C', body:'#666', bg:'#faf9f8', listColor:'#555' },
-];
-
-// S5 字体组合
-const FONT_COMBOS = [
-  { name:'正式学术', titleFont:"'Noto Serif SC', serif", bodyFont:"'Noto Sans SC', sans-serif", desc:'沉稳权威，适合答辩和正式报告', tags:['答辩','论文','报告'] },
-  { name:'现代简洁', titleFont:"'Inter', sans-serif", bodyFont:"'Noto Sans SC', sans-serif", desc:'干净利落，适合组会和内部汇报', tags:['组会','汇报','日常'] },
-  { name:'创意混搭', titleFont:"'Playfair Display', serif", bodyFont:"'Noto Sans SC', sans-serif", desc:'衬线+黑体混搭，适合海报和 GA', tags:['海报','GA','展示'] },
-  { name:'纯英文学术', titleFont:"'Playfair Display', serif", bodyFont:"'Inter', sans-serif", desc:'纯英文场景首选，经典学术感', tags:['英文','期刊','国际会议'] },
 ];
 
 // ══════════════════════════════════════════════════════
@@ -214,24 +356,44 @@ export function render() {
       <p class="hero-eyebrow" style="opacity:0;">Module 04 / Page 01</p>
       <h1 class="page-hero-title" style="color:var(--text-on-dark);opacity:0;">设计速成指南</h1>
       <p class="page-hero-sub" style="opacity:0;">Design Fundamentals</p>
-      <p class="df-hero-tagline" style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;margin-top:var(--space-sm);opacity:0;">7 条规则，让你的学术演示告别"能用就行"</p>
+      <p class="df-hero-tagline" style="font-family:var(--font-body);font-size:var(--text-body);color:var(--text-on-dark-2);max-width:540px;line-height:1.8;margin-top:var(--space-sm);opacity:0;">不用学设计理论——4 个原则 + 1 次实战，你的 PPT 就能脱胎换骨</p>
       <nav class="hero-quicknav" id="df-quicknav" style="opacity:0;">
+        <button class="hero-quicknav__item" data-target="#df-showcase">看懂差距</button>
         <button class="hero-quicknav__item" data-target="#df-contrast">对比</button>
+        <button class="hero-quicknav__item" data-target="#df-color">配色</button>
         <button class="hero-quicknav__item" data-target="#df-alignment">对齐</button>
         <button class="hero-quicknav__item" data-target="#df-whitespace">留白</button>
-        <button class="hero-quicknav__item" data-target="#df-color">配色</button>
-        <button class="hero-quicknav__item" data-target="#df-fonts">字体</button>
-        <button class="hero-quicknav__item" data-target="#df-snr">信噪比</button>
-        <button class="hero-quicknav__item" data-target="#df-hierarchy">视觉层次</button>
+        <button class="hero-quicknav__item" data-target="#df-makeover">实战改造</button>
       </nav>
       <div class="df-scroll-hint" style="opacity:0;">↓ 向下探索</div>
     </div>
   </section>
 
-  <!-- ═══ S1 对比 (浅色) ═══ -->
+  <!-- ═══ S1 看懂差距 (深色) ═══ -->
+  <section class="section-dark" id="df-showcase" style="padding:0;">
+    <div id="df-showcase-pin" style="height:400vh;position:relative;">
+      <div class="df-showcase-stage">
+        <div class="section-header" style="text-align:center;margin-bottom:var(--space-lg);">
+          <p class="section-eyebrow" style="color:var(--text-on-dark-3);">01 / 06</p>
+          <h2 class="section-title" style="color:var(--text-on-dark);">看懂差距</h2>
+          <p class="section-subtitle" style="max-width:540px;margin:0 auto;color:var(--text-on-dark-2);">同一份内容，两种表达——差距就在细节里</p>
+        </div>
+        <div class="df-showcase-tabs" id="df-showcase-tabs"></div>
+        <p class="df-showcase-label" id="df-showcase-label">Before</p>
+        <div class="df-showcase-pair" id="df-showcase-pair" style="aspect-ratio:16/9;">
+          <div class="df-showcase-before" id="df-showcase-before"></div>
+          <div class="df-showcase-after" id="df-showcase-after"></div>
+        </div>
+        <p class="df-showcase-caption" id="df-showcase-caption"></p>
+        <div class="df-showcase-dots" id="df-showcase-dots"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ S2 对比 (浅色) ═══ -->
   <section class="section-light" id="df-contrast" style="padding:var(--space-3xl) var(--space-lg);min-height:100vh;display:flex;flex-direction:column;justify-content:center;">
     <div class="section-header" style="text-align:center;margin-bottom:var(--space-xl);">
-      <p class="section-eyebrow">01 / 07</p>
+      <p class="section-eyebrow">02 / 06</p>
       <h2 class="section-title">对比</h2>
       <p class="section-subtitle" style="max-width:540px;margin:0 auto;">大小、粗细、颜色——差异要足够大，不要"差不多"</p>
     </div>
@@ -248,58 +410,13 @@ export function render() {
       <input type="range" class="df-slider" id="df-contrast-slider" min="0" max="100" value="0" step="25">
       <p class="df-step-label" id="df-contrast-label">标题和正文几乎没有区分</p>
     </div>
+    <p style="max-width:540px;margin:var(--space-lg) auto 0;text-align:center;font-size:var(--text-body);color:var(--text-on-light-2);line-height:1.8;">标题比正文大一号不够——要大三号。对比不是微调，是让差异大到<strong>一眼就能看出层次</strong>。</p>
   </section>
 
-  <!-- ═══ S2 对齐 (深色) ═══ -->
-  <section class="section-dark" id="df-alignment" style="padding:var(--space-3xl) var(--space-lg);min-height:100vh;display:flex;flex-direction:column;justify-content:center;">
-    <div class="section-header" style="text-align:center;margin-bottom:var(--space-xl);">
-      <p class="section-eyebrow" style="color:var(--text-on-dark-3);">02 / 07</p>
-      <h2 class="section-title" style="color:var(--text-on-dark);">对齐</h2>
-      <p class="section-subtitle" style="max-width:540px;margin:0 auto;color:var(--text-on-dark-2);">看不见的线条，是秩序感的来源</p>
-    </div>
-    <div class="df-align-wrap" style="max-width:720px;margin:0 auto;width:100%;">
-      <div class="df-align-canvas" id="df-align-canvas"></div>
-      <div class="df-align-btns">
-        <button class="btn-primary" id="df-align-btn">自动对齐</button>
-        <button class="btn-ghost" id="df-shuffle-btn">打乱</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ S3 留白 (浅色) ═══ -->
-  <section class="section-light" id="df-whitespace" style="padding:var(--space-3xl) var(--space-lg);min-height:100vh;display:flex;flex-direction:column;justify-content:center;">
-    <div class="section-header" style="text-align:center;margin-bottom:var(--space-xl);">
-      <p class="section-eyebrow">03 / 07</p>
-      <h2 class="section-title">留白</h2>
-      <p class="section-subtitle" style="max-width:540px;margin:0 auto;">留白不是浪费空间，是给内容以呼吸</p>
-    </div>
-    <div class="df-ws-wrap" style="max-width:640px;margin:0 auto;width:100%;">
-      <div class="df-slide df-ws-slide" id="df-ws-slide">
-        <div class="df-ws-pattern" id="df-ws-pattern"></div>
-        <h3 class="df-ws-title">数据分析结果</h3>
-        <div class="df-ws-body">
-          <p class="df-ws-p1">本研究采用双因素方差分析</p>
-          <p class="df-ws-p2">主效应显著 F(2,45)=8.32, p&lt;0.01</p>
-          <p class="df-ws-p3">交互效应不显著 F(2,45)=1.04, p=0.36</p>
-        </div>
-        <div class="df-ws-chart"><div style="display:flex;align-items:flex-end;gap:4px;height:44px;padding:0 4px;"><div style="flex:1;height:55%;background:rgba(0,0,0,0.08);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:82%;background:rgba(240,178,122,0.4);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:40%;background:rgba(0,0,0,0.08);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:65%;background:rgba(0,0,0,0.08);border-radius:3px 3px 0 0;"></div></div></div>
-        <p class="df-ws-source">数据来源：2024 年实验记录</p>
-      </div>
-      <div class="df-stepper" id="df-ws-stepper">
-        <button class="df-step-btn df-step-active" data-step="0">1</button>
-        <button class="df-step-btn" data-step="1">2</button>
-        <button class="df-step-btn" data-step="2">3</button>
-        <button class="df-step-btn" data-step="3">4</button>
-        <button class="df-step-btn" data-step="4">5</button>
-      </div>
-      <p class="df-step-label" id="df-ws-label">过载：内容拥挤，无法聚焦</p>
-    </div>
-  </section>
-
-  <!-- ═══ S4 配色 (深色) ═══ -->
+  <!-- ═══ S3 配色 (深色) ═══ -->
   <section class="section-dark" id="df-color" style="padding:var(--space-3xl) var(--space-lg);min-height:100vh;display:flex;flex-direction:column;justify-content:center;">
     <div class="section-header" style="text-align:center;margin-bottom:var(--space-xl);">
-      <p class="section-eyebrow" style="color:var(--text-on-dark-3);">04 / 07</p>
+      <p class="section-eyebrow" style="color:var(--text-on-dark-3);">03 / 06</p>
       <h2 class="section-title" style="color:var(--text-on-dark);">配色</h2>
       <p class="section-subtitle" style="max-width:540px;margin:0 auto;color:var(--text-on-dark-2);">一个主色 + 一个强调色，够了</p>
     </div>
@@ -331,29 +448,60 @@ export function render() {
     </div>
   </section>
 
-  <!-- ═══ S5 字体 (浅色) ═══ -->
-  <section class="section-light" id="df-fonts" style="padding:var(--space-3xl) var(--space-lg);min-height:100vh;display:flex;flex-direction:column;justify-content:center;">
+  <!-- ═══ S4 对齐 (浅色) ═══ -->
+  <section class="section-light" id="df-alignment" style="padding:var(--space-3xl) var(--space-lg);min-height:100vh;display:flex;flex-direction:column;justify-content:center;">
     <div class="section-header" style="text-align:center;margin-bottom:var(--space-xl);">
-      <p class="section-eyebrow">05 / 07</p>
-      <h2 class="section-title">字体搭配</h2>
-      <p class="section-subtitle" style="max-width:540px;margin:0 auto;">好的字体组合 = 个性 + 可读性</p>
+      <p class="section-eyebrow">04 / 06</p>
+      <h2 class="section-title">对齐</h2>
+      <p class="section-subtitle" style="max-width:540px;margin:0 auto;">看不见的线条，是秩序感的来源</p>
     </div>
-    <div class="df-fonts-wrap" style="max-width:var(--w-full);margin:0 auto;width:100%;">
-      <div class="df-fonts-layout" id="df-fonts-layout">
-        <div class="df-fonts-list" id="df-fonts-list"></div>
-        <div class="df-fonts-preview" id="df-fonts-preview">
-          <div class="df-slide" id="df-fonts-slide" style="aspect-ratio:auto;min-height:360px;"></div>
-        </div>
+    <div class="df-align-wrap" style="max-width:640px;margin:0 auto;width:100%;">
+      <div class="df-slide df-align-slide" id="df-align-slide" style="min-height:260px;aspect-ratio:auto;">
+        <div class="df-align-guideline" id="df-align-guideline"></div>
+      </div>
+      <div class="df-align-btns">
+        <button class="btn-primary" id="df-align-btn">对齐</button>
+        <button class="btn-ghost" id="df-shuffle-btn">打乱</button>
       </div>
     </div>
+    <p style="max-width:540px;margin:var(--space-lg) auto 0;text-align:center;font-size:var(--text-body);color:var(--text-on-light-2);line-height:1.8;">看不见的线条是秩序感的来源。所有元素沿同一条隐形线排列，观众的视线就能自然流动，而不是在页面上乱跳。</p>
   </section>
 
-  <!-- ═══ S6 信噪比 (深色) ═══ -->
-  <section class="section-dark" id="df-snr" style="padding:var(--space-3xl) var(--space-lg);">
+  <!-- ═══ S5 留白 (深色) ═══ -->
+  <section class="section-dark" id="df-whitespace" style="padding:var(--space-3xl) var(--space-lg);min-height:100vh;display:flex;flex-direction:column;justify-content:center;">
     <div class="section-header" style="text-align:center;margin-bottom:var(--space-xl);">
-      <p class="section-eyebrow" style="color:var(--text-on-dark-3);">06 / 07</p>
-      <h2 class="section-title" style="color:var(--text-on-dark);">信噪比</h2>
-      <p class="section-subtitle" style="max-width:540px;margin:0 auto;color:var(--text-on-dark-2);">每个元素都应该传达信息，否则删掉它</p>
+      <p class="section-eyebrow" style="color:var(--text-on-dark-3);">05 / 06</p>
+      <h2 class="section-title" style="color:var(--text-on-dark);">留白</h2>
+      <p class="section-subtitle" style="max-width:540px;margin:0 auto;color:var(--text-on-dark-2);">留白不是浪费空间，是给内容以呼吸</p>
+    </div>
+    <div class="df-ws-wrap" style="max-width:640px;margin:0 auto;width:100%;">
+      <div class="df-slide df-ws-slide" id="df-ws-slide">
+        <div class="df-ws-pattern" id="df-ws-pattern"></div>
+        <h3 class="df-ws-title">数据分析结果</h3>
+        <div class="df-ws-body">
+          <p class="df-ws-p1">本研究采用双因素方差分析</p>
+          <p class="df-ws-p2">主效应显著 F(2,45)=8.32, p&lt;0.01</p>
+          <p class="df-ws-p3">交互效应不显著 F(2,45)=1.04, p=0.36</p>
+        </div>
+        <div class="df-ws-chart"><div style="display:flex;align-items:flex-end;gap:4px;height:44px;padding:0 4px;"><div style="flex:1;height:55%;background:rgba(0,0,0,0.08);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:82%;background:rgba(240,178,122,0.4);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:40%;background:rgba(0,0,0,0.08);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:65%;background:rgba(0,0,0,0.08);border-radius:3px 3px 0 0;"></div></div></div>
+        <p class="df-ws-source">数据来源：2024 年实验记录</p>
+      </div>
+      <div class="df-stepper" id="df-ws-stepper">
+        <button class="df-step-btn df-step-active" data-step="0">1</button>
+        <button class="df-step-btn" data-step="1">2</button>
+        <button class="df-step-btn" data-step="2">3</button>
+      </div>
+      <p class="df-step-label" id="df-ws-label" style="color:var(--text-on-dark-2);">过载：所有内容挤在一起</p>
+    </div>
+    <p style="max-width:540px;margin:var(--space-lg) auto 0;text-align:center;font-size:var(--text-body);color:var(--text-on-dark-2);line-height:1.8;">留白不是浪费空间，是给内容呼吸的房间。当你删掉一个元素后发现什么都没少——说明它本来就不该在那里。</p>
+  </section>
+
+  <!-- ═══ S6 实战改造 (深色) ═══ -->
+  <section class="section-dark" id="df-makeover" style="padding:var(--space-3xl) var(--space-lg);">
+    <div class="section-header" style="text-align:center;margin-bottom:var(--space-xl);">
+      <p class="section-eyebrow" style="color:var(--text-on-dark-3);">06 / 06</p>
+      <h2 class="section-title" style="color:var(--text-on-dark);">实战改造</h2>
+      <p class="section-subtitle" style="max-width:540px;margin:0 auto;color:var(--text-on-dark-2);">四个原则同时作用，一张幻灯片脱胎换骨</p>
     </div>
     <div class="df-snr-wrap" id="df-snr-wrap">
       <div class="df-snr-slide-col" id="df-snr-slide-col">
@@ -397,62 +545,38 @@ export function render() {
               </div>
             </div>
           </div>
-          <div class="df-snr-footer">© 2024 Research Lab | Page 3/15 | Confidential</div>
+          <div class="df-snr-footer">&copy; 2024 Research Lab | Page 3/15 | Confidential</div>
         </div>
       </div>
       <div class="df-snr-steps-col" id="df-snr-steps-col">
         <div class="df-snr-tabs" id="df-snr-tabs">
-          <button class="df-snr-tab df-snr-tab-active" data-step="0">1</button>
-          <button class="df-snr-tab" data-step="1">2</button>
-          <button class="df-snr-tab" data-step="2">3</button>
-          <button class="df-snr-tab" data-step="3">4</button>
-          <button class="df-snr-tab" data-step="4">5</button>
+          <button class="df-snr-tab df-snr-tab-active" data-step="0">0</button>
+          <button class="df-snr-tab" data-step="1">1</button>
+          <button class="df-snr-tab" data-step="2">2</button>
+          <button class="df-snr-tab" data-step="3">3</button>
+          <button class="df-snr-tab" data-step="4">4</button>
         </div>
         <div class="df-snr-step df-snr-step-active" data-step="0">
-          <h3>Step 1：原始版</h3>
-          <p>所有装饰元素可见——边框、渐变、剪贴画、密集文字、花哨字体。典型的"信息过载"幻灯片。</p>
+          <h3>原始版</h3>
+          <p>这是一张典型的"什么都想放"的幻灯片。花边框、渐变背景、剪贴画、Comic Sans——每个元素都在争夺注意力，结果谁都看不到。</p>
         </div>
         <div class="df-snr-step" data-step="1">
-          <h3>Step 2：去装饰</h3>
-          <p>移除不传达信息的装饰元素——双线边框、渐变背景、剪贴画图标全部消失。</p>
+          <h3>Step 1：删掉噪音</h3>
+          <p>不传达信息的装饰就是噪音。边框和剪贴画看起来热闹，但没有一个元素在帮助观众理解你的研究成果。删掉它们，信息反而更清晰。</p>
         </div>
         <div class="df-snr-step" data-step="2">
-          <h3>Step 3：精简文字</h3>
-          <p>8 条 bullet points 精简为 3 条关键发现。密集表格替换为简洁图表。</p>
+          <h3>Step 2：建立对比</h3>
+          <p>标题是观众第一眼看到的东西。当标题和正文一样大，没人知道从哪里开始读。把标题放大加粗，关键数字用强调色突出——层次立刻出现。</p>
         </div>
         <div class="df-snr-step" data-step="3">
-          <h3>Step 4：优化排版</h3>
-          <p>统一字体、修正对齐、扩大间距。信息开始有呼吸感。</p>
+          <h3>Step 3：精简留白</h3>
+          <p>8 条 bullet point 没人看得完。砍到 3 条核心发现，删掉密集表格换成简洁图表。留出呼吸空间，每条信息才能被真正看到。</p>
         </div>
         <div class="df-snr-step" data-step="4">
-          <h3>Step 5：最终版</h3>
-          <p>极简布局——只剩标题、3 个关键发现、一张清晰图表。每个元素都传达信息。</p>
+          <h3>Step 4：统一风格</h3>
+          <p>最后一步：Comic Sans 换成正规字体，6 种颜色收敛为主色+强调色，所有元素沿同一条线对齐。四个原则同时作用，一张专业的 slide 就诞生了。</p>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- ═══ S7 视觉层次 (浅色) ═══ -->
-  <section class="section-light" id="df-hierarchy" style="padding:var(--space-3xl) var(--space-lg);min-height:100vh;display:flex;flex-direction:column;justify-content:center;">
-    <div class="section-header" style="text-align:center;margin-bottom:var(--space-xl);">
-      <p class="section-eyebrow">07 / 07</p>
-      <h2 class="section-title">视觉层次</h2>
-      <p class="section-subtitle" style="max-width:540px;margin:0 auto;">让观众的视线自然流动：从最重要到最次要</p>
-    </div>
-    <div class="df-hier-wrap" style="max-width:640px;margin:0 auto;width:100%;">
-      <div class="df-slide" id="df-hier-slide">
-        <h3 class="df-h-l1" style="font-size:16px;color:#888;margin-bottom:8px;">实验设计与分析方法</h3>
-        <p class="df-h-l2" style="font-size:16px;color:#888;margin-bottom:8px;">双因素混合设计</p>
-        <p class="df-h-l3" style="font-size:16px;color:#888;margin-bottom:8px;line-height:1.6;">本研究采用 2×3 混合设计，自变量为干预类型和时间点。因变量为标准化测验得分。采用重复测量方差分析检验主效应和交互效应。</p>
-        <div class="df-h-l4" style="height:60px;border-radius:8px;background:rgba(0,0,0,0.04);display:flex;align-items:flex-end;justify-content:center;margin-bottom:8px;padding:0 8px;"><div style="display:flex;align-items:flex-end;gap:4px;height:44px;padding:0 4px;"><div style="flex:1;height:55%;background:rgba(0,0,0,0.08);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:82%;background:rgba(240,178,122,0.4);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:40%;background:rgba(0,0,0,0.08);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:65%;background:rgba(0,0,0,0.08);border-radius:3px 3px 0 0;"></div></div></div>
-        <p class="df-h-l5" style="font-size:16px;color:#888;">数据来源：XX 大学心理学实验室 · 2024</p>
-      </div>
-      <div class="df-hier-controls">
-        <label>大小差异 <input type="range" class="df-slider" id="df-hier-size" min="0" max="100" value="0"></label>
-        <label>颜色差异 <input type="range" class="df-slider" id="df-hier-color" min="0" max="100" value="0"></label>
-        <label>位置权重 <input type="range" class="df-slider" id="df-hier-position" min="0" max="100" value="0"></label>
-      </div>
-      <p class="df-step-label" id="df-hier-label">层次感：弱</p>
     </div>
   </section>
 
@@ -460,7 +584,7 @@ export function render() {
   <section class="section-dark page-footer-cta" style="padding:var(--space-3xl) var(--space-lg);">
     <p class="page-footer-num">01 / 04</p>
     <h2 class="page-footer-quote">好的设计不是装饰，是让信息自己说话。</h2>
-    <p class="page-footer-desc">掌握了这 7 条规则，接下来看看如何应用到真实的 PPT 中。</p>
+    <p class="page-footer-desc">掌握了 4 个原则，接下来看看不同场景下的 PPT 该怎么设计。</p>
     <div class="page-footer-nav">
       <button class="btn-ghost" id="df-prev-btn">← 素材资源站</button>
       <button class="btn-primary" id="df-next-btn">学术演示全场景 →</button>
@@ -477,13 +601,12 @@ export function init() {
   initHero();
   initQuicknav();
   initFooterNav();
+  initShowcase();
   initContrast();
+  initColor();
   initAlignment();
   initWhitespace();
-  initColor();
-  initFonts();
-  initSNR();
-  initHierarchy();
+  initMakeover();
   initScrollAnimations();
 }
 
@@ -515,7 +638,116 @@ function initFooterNav() {
   if (next) addEvt(next, 'click', () => navigateTo('m4-p2'));
 }
 
-// ── S1 对比 ──
+// ── S1 看懂差距 ──
+function initShowcase() {
+  const pair = document.getElementById('df-showcase-pair');
+  const beforeEl = document.getElementById('df-showcase-before');
+  const afterEl = document.getElementById('df-showcase-after');
+  const captionEl = document.getElementById('df-showcase-caption');
+  const dotsEl = document.getElementById('df-showcase-dots');
+  const labelEl = document.getElementById('df-showcase-label');
+  const tabsEl = document.getElementById('df-showcase-tabs');
+  if (!pair || !beforeEl || !afterEl) return;
+
+  let currentSlide = 0;
+  let currentPhase = 'before'; // 'before' | 'after'
+
+  // 渲染 dots
+  SHOWCASE_SLIDES.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'df-showcase-dot' + (i === 0 ? ' active' : '');
+    dotsEl.appendChild(dot);
+  });
+  const dots = dotsEl.querySelectorAll('.df-showcase-dot');
+
+  // 渲染 mobile tabs
+  SHOWCASE_SLIDES.forEach((s, i) => {
+    const tab = document.createElement('button');
+    tab.className = 'df-showcase-tab' + (i === 0 ? ' active' : '');
+    tab.dataset.idx = i;
+    tab.textContent = s.caption.slice(0, 6) + '...';
+    tabsEl.appendChild(tab);
+  });
+
+  function showSlide(idx, phase) {
+    currentSlide = idx;
+    currentPhase = phase;
+    const slide = SHOWCASE_SLIDES[idx];
+
+    beforeEl.innerHTML = slide.before;
+    afterEl.innerHTML = slide.after;
+
+    if (phase === 'before') {
+      beforeEl.style.opacity = '1';
+      afterEl.style.opacity = '0';
+      if (labelEl) labelEl.textContent = 'Before';
+    } else {
+      beforeEl.style.opacity = '0';
+      afterEl.style.opacity = '1';
+      if (labelEl) labelEl.textContent = 'After';
+    }
+
+    if (captionEl) {
+      captionEl.style.opacity = '0';
+      setTimeout(() => {
+        captionEl.textContent = phase === 'after' ? slide.caption : '';
+        captionEl.style.opacity = phase === 'after' ? '1' : '0';
+      }, 200);
+    }
+
+    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+
+    // 更新 mobile tabs
+    tabsEl.querySelectorAll('.df-showcase-tab').forEach((t, i) => {
+      t.classList.toggle('active', i === idx);
+    });
+  }
+
+  // 初始显示
+  showSlide(0, 'before');
+
+  const isMobile = window.innerWidth <= 768;
+
+  if (!isMobile) {
+    // 桌面端：ScrollTrigger 驱动
+    ScrollTrigger.create({
+      trigger: '#df-showcase-pin',
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: 0.5,
+      onUpdate: (self) => {
+        const p = self.progress;
+        // 8 个阶段：每组 before 和 after 各占 12.5%
+        const totalPhases = SHOWCASE_SLIDES.length * 2; // 8
+        const phaseIndex = Math.min(Math.floor(p * totalPhases), totalPhases - 1);
+        const slideIdx = Math.floor(phaseIndex / 2);
+        const phase = phaseIndex % 2 === 0 ? 'before' : 'after';
+
+        if (slideIdx !== currentSlide || phase !== currentPhase) {
+          showSlide(slideIdx, phase);
+        }
+      },
+    });
+  } else {
+    // 移动端：tab 切换
+    let mobilePhase = 'before';
+    addEvt(tabsEl, 'click', (e) => {
+      const tab = e.target.closest('.df-showcase-tab');
+      if (!tab) return;
+      const idx = parseInt(tab.dataset.idx);
+      showSlide(idx, 'before');
+      mobilePhase = 'before';
+    });
+
+    // 点击 pair 区域切换 before/after
+    addEvt(pair, 'click', () => {
+      mobilePhase = mobilePhase === 'before' ? 'after' : 'before';
+      showSlide(currentSlide, mobilePhase);
+    });
+  }
+}
+
+// ── S2 对比 ──
 function initContrast() {
   const slider = document.getElementById('df-contrast-slider');
   const label = document.getElementById('df-contrast-label');
@@ -544,164 +776,7 @@ function initContrast() {
   update();
 }
 
-// ── S2 对齐 ──
-function initAlignment() {
-  const canvas = document.getElementById('df-align-canvas');
-  if (!canvas) return;
-
-  const isMobile = window.innerWidth <= 768;
-  const blockData = isMobile
-    ? [
-        { label:'标题', w:120, h:36 },
-        { label:'段落', w:140, h:48 },
-        { label:'图片', w:80, h:64 },
-        { label:'按钮', w:72, h:32 },
-      ]
-    : [
-        { label:'标题', w:140, h:36 },
-        { label:'段落', w:160, h:52 },
-        { label:'图片', w:100, h:72 },
-        { label:'按钮', w:80, h:32 },
-        { label:'注释', w:90, h:28 },
-        { label:'图标', w:44, h:44 },
-      ];
-
-  // 散落位置（百分比）
-  const scattered = isMobile
-    ? [ {x:8,y:12}, {x:45,y:55}, {x:15,y:65}, {x:60,y:15} ]
-    : [ {x:5,y:8}, {x:55,y:60}, {x:10,y:55}, {x:68,y:12}, {x:35,y:35}, {x:72,y:45} ];
-
-  // 对齐位置（百分比，3列布局）
-  const aligned = isMobile
-    ? [ {x:5,y:8}, {x:5,y:35}, {x:55,y:8}, {x:55,y:50} ]
-    : [ {x:5,y:8}, {x:5,y:38}, {x:5,y:68}, {x:55,y:8}, {x:55,y:38}, {x:55,y:68} ];
-
-  // 创建网格线
-  const gridEl = document.createElement('div');
-  gridEl.style.cssText = 'position:absolute;inset:0;pointer-events:none;';
-  for (let i = 1; i < 3; i++) {
-    const vLine = document.createElement('div');
-    vLine.className = 'df-align-grid-line';
-    vLine.style.cssText = `left:${(i/3)*100}%;top:0;width:1px;height:100%;`;
-    gridEl.appendChild(vLine);
-    const hLine = document.createElement('div');
-    hLine.className = 'df-align-grid-line';
-    hLine.style.cssText = `top:${(i/3)*100}%;left:0;height:1px;width:100%;`;
-    gridEl.appendChild(hLine);
-  }
-  canvas.appendChild(gridEl);
-
-  const blocks = [];
-  blockData.forEach((bd, i) => {
-    const el = document.createElement('div');
-    el.className = 'df-align-block';
-    el.textContent = bd.label;
-    el.style.width = bd.w + 'px';
-    el.style.height = bd.h + 'px';
-    el.style.left = scattered[i].x + '%';
-    el.style.top = scattered[i].y + '%';
-    canvas.appendChild(el);
-    blocks.push(el);
-
-    // 拖拽
-    addEvt(el, 'pointerdown', (e) => {
-      e.preventDefault();
-      el.setPointerCapture(e.pointerId);
-      el.classList.add('dragging');
-      const rect = canvas.getBoundingClientRect();
-      const offX = e.clientX - el.getBoundingClientRect().left;
-      const offY = e.clientY - el.getBoundingClientRect().top;
-
-      const onMove = (ev) => {
-        const x = ev.clientX - rect.left - offX;
-        const y = ev.clientY - rect.top - offY;
-        el.style.left = Math.max(0, Math.min(rect.width - el.offsetWidth, x)) + 'px';
-        el.style.top = Math.max(0, Math.min(rect.height - el.offsetHeight, y)) + 'px';
-      };
-      const onUp = () => {
-        el.classList.remove('dragging');
-        el.releasePointerCapture(e.pointerId);
-        el.removeEventListener('pointermove', onMove);
-        el.removeEventListener('pointerup', onUp);
-        // snap to grid
-        const rect2 = canvas.getBoundingClientRect();
-        const cellW = rect2.width / 3;
-        const cellH = rect2.height / 3;
-        const cx = el.offsetLeft + el.offsetWidth / 2;
-        const cy = el.offsetTop + el.offsetHeight / 2;
-        const snapX = Math.round(cx / cellW) * cellW - el.offsetWidth / 2;
-        const snapY = Math.round(cy / cellH) * cellH - el.offsetHeight / 2;
-        const dist = Math.hypot(snapX - el.offsetLeft, snapY - el.offsetTop);
-        if (dist < 50) {
-          gsap.to(el, { left: Math.max(8, snapX), top: Math.max(8, snapY), duration: 0.3, ease: 'back.out(1.2)' });
-        }
-      };
-      el.addEventListener('pointermove', onMove);
-      el.addEventListener('pointerup', onUp);
-    });
-  });
-
-  // 自动对齐按钮
-  const alignBtn = document.getElementById('df-align-btn');
-  const shuffleBtn = document.getElementById('df-shuffle-btn');
-  if (alignBtn) {
-    addEvt(alignBtn, 'click', () => {
-      blocks.forEach((el, i) => {
-        gsap.to(el, { left: aligned[i].x + '%', top: aligned[i].y + '%', duration: 0.5, delay: i * 0.08, ease: 'power3.out' });
-      });
-      gridEl.querySelectorAll('.df-align-grid-line').forEach(l => { l.style.opacity = '1'; });
-    });
-  }
-  if (shuffleBtn) {
-    addEvt(shuffleBtn, 'click', () => {
-      blocks.forEach((el, i) => {
-        gsap.to(el, { left: scattered[i].x + '%', top: scattered[i].y + '%', duration: 0.5, delay: i * 0.06, ease: 'power2.out' });
-      });
-      gridEl.querySelectorAll('.df-align-grid-line').forEach(l => { l.style.opacity = '0'; });
-    });
-  }
-}
-
-// ── S3 留白 ──
-function initWhitespace() {
-  const stepper = document.getElementById('df-ws-stepper');
-  const label = document.getElementById('df-ws-label');
-  const slide = document.getElementById('df-ws-slide');
-  const pattern = document.getElementById('df-ws-pattern');
-  if (!stepper || !slide) return;
-
-  const titleEl = slide.querySelector('.df-ws-title');
-  const bodyPs = slide.querySelectorAll('.df-ws-body p');
-  const chart = slide.querySelector('.df-ws-chart');
-  const src = slide.querySelector('.df-ws-source');
-
-  function applyStep(idx) {
-    const s = WHITESPACE_STOPS[idx];
-    gsap.to(slide, { padding: s.pad, duration: 0.5, ease: 'power2.out' });
-    gsap.to(titleEl, { fontSize: s.titleSize, marginBottom: s.titleMb, duration: 0.5, ease: 'power2.out' });
-    bodyPs.forEach(p => {
-      gsap.to(p, { fontSize: s.bodySize, marginBottom: s.bodyMb, duration: 0.5, ease: 'power2.out' });
-    });
-    gsap.to(chart, { height: s.chartH, margin: s.chartM, duration: 0.5, ease: 'power2.out' });
-    gsap.to(src, { fontSize: s.srcSize, opacity: s.srcOpacity, duration: 0.5, ease: 'power2.out' });
-    if (pattern) pattern.style.opacity = s.pattern ? '1' : '0';
-    if (label) label.textContent = s.label;
-
-    stepper.querySelectorAll('.df-step-btn').forEach(btn => {
-      btn.classList.toggle('df-step-active', parseInt(btn.dataset.step) === idx);
-    });
-  }
-
-  addEvt(stepper, 'click', (e) => {
-    const btn = e.target.closest('.df-step-btn');
-    if (!btn) return;
-    applyStep(parseInt(btn.dataset.step));
-  });
-
-  applyStep(0);
-}
-
-// ── S4 配色 ──
+// ── S3 配色 ──
 function initColor() {
   const schemesContainer = document.getElementById('df-color-schemes');
   const swatchesContainer = document.getElementById('df-color-swatches');
@@ -772,111 +847,112 @@ function initColor() {
   applyScheme(0);
 }
 
-// ── S5 字体 ──
-function initFonts() {
-  const list = document.getElementById('df-fonts-list');
-  const slide = document.getElementById('df-fonts-slide');
-  if (!list || !slide) return;
+// ── S4 对齐 ──
+function initAlignment() {
+  const slide = document.getElementById('df-align-slide');
+  const guideline = document.getElementById('df-align-guideline');
+  if (!slide) return;
 
-  function renderPreview(combo) {
-    slide.innerHTML = `
-      <h3 style="font-family:${combo.titleFont};font-size:28px;margin-bottom:12px;color:#1d1d1f;transition:all 0.4s;">实验设计与分析方法</h3>
-      <p style="font-family:${combo.bodyFont};font-size:18px;color:#444;margin-bottom:8px;transition:all 0.4s;">双因素混合设计 · 重复测量</p>
-      <ul style="font-family:${combo.bodyFont};font-size:15px;color:#666;list-style:disc inside;margin-bottom:16px;">
-        <li style="margin-bottom:4px;">自变量：干预类型 × 时间点</li>
-        <li style="margin-bottom:4px;">因变量：标准化测验得分</li>
-        <li style="margin-bottom:4px;">统计方法：重复测量方差分析</li>
-      </ul>
-      <div style="height:50px;border-radius:8px;background:rgba(0,0,0,0.04);display:flex;align-items:flex-end;justify-content:center;gap:4px;padding:0 12px 6px;margin-bottom:12px;"><div style="flex:1;height:55%;background:rgba(0,0,0,0.08);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:82%;background:rgba(240,178,122,0.4);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:40%;background:rgba(0,0,0,0.08);border-radius:3px 3px 0 0;"></div><div style="flex:1;height:65%;background:rgba(0,0,0,0.08);border-radius:3px 3px 0 0;"></div></div>
-      <p style="font-family:${combo.bodyFont};font-size:12px;color:#aaa;">数据来源：XX 大学 · 2024 &nbsp; | &nbsp; 第 3 页</p>
-    `;
-  }
+  const elements = [];
 
-  FONT_COMBOS.forEach((combo, i) => {
-    const card = document.createElement('div');
-    card.className = 'df-font-card' + (i === 0 ? ' df-font-active' : '');
-    card.dataset.idx = i;
-    card.innerHTML = `
-      <div class="df-font-card-name">${combo.name}</div>
-      <div class="df-font-card-desc">${combo.desc}</div>
-      <div class="df-font-card-tags">${combo.tags.map(t => `<span class="df-font-card-tag">${t}</span>`).join('')}</div>
-    `;
-    list.appendChild(card);
+  ALIGN_ITEMS.forEach((item, i) => {
+    const el = document.createElement('div');
+    el.className = 'df-align-el';
+    el.textContent = item.text;
+    el.style.cssText = item.style;
+    // 初始使用打乱位置
+    el.style.left = item.rand.left;
+    el.style.top = item.rand.top;
+    slide.appendChild(el);
+    elements.push(el);
   });
 
-  addEvt(list, 'click', (e) => {
-    const card = e.target.closest('.df-font-card');
-    if (!card) return;
-    const idx = parseInt(card.dataset.idx);
-    list.querySelectorAll('.df-font-card').forEach(c => c.classList.remove('df-font-active'));
-    card.classList.add('df-font-active');
-    renderPreview(FONT_COMBOS[idx]);
-    if (window.innerWidth <= 768) {
-      document.getElementById('df-fonts-preview')?.scrollIntoView({ behavior:'smooth', block:'nearest' });
-    }
-  });
+  const alignBtn = document.getElementById('df-align-btn');
+  const shuffleBtn = document.getElementById('df-shuffle-btn');
 
-  renderPreview(FONT_COMBOS[0]);
-
-  // 桌面端 sticky 预览
-  if (window.innerWidth > 768) {
-    initFontsStickyPreview();
-  }
-}
-
-function initFontsStickyPreview() {
-  const container = document.getElementById('df-fonts-layout');
-  const preview = document.getElementById('df-fonts-preview');
-  if (!container || !preview) return;
-
-  let viewH = window.innerHeight;
-  let containerH = 0, previewH = 0, maxTranslate = 0, centerOffset = 0;
-
-  function cacheLayout() {
-    viewH = window.innerHeight;
-    containerH = container.offsetHeight;
-    previewH = preview.offsetHeight;
-    maxTranslate = Math.max(0, containerH - previewH);
-    centerOffset = Math.max(0, (viewH - previewH) / 2);
-  }
-  requestAnimationFrame(cacheLayout);
-
-  let ticking = false;
-  const onScroll = () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
-      ticking = false;
-      const rect = container.getBoundingClientRect();
-
-      if (rect.top >= centerOffset) {
-        preview.style.transform = 'translateY(0)';
-      } else if (-rect.top + viewH >= containerH) {
-        preview.style.transform = `translateY(${maxTranslate}px)`;
-      } else {
-        const translate = Math.min(-rect.top + centerOffset, maxTranslate);
-        preview.style.transform = `translateY(${translate}px)`;
-      }
+  if (alignBtn) {
+    addEvt(alignBtn, 'click', () => {
+      elements.forEach((el, i) => {
+        gsap.to(el, {
+          left: ALIGN_ITEMS[i].aligned.left,
+          top: ALIGN_ITEMS[i].aligned.top,
+          duration: 0.5,
+          delay: i * 0.08,
+          ease: 'power3.out',
+        });
+      });
+      if (guideline) gsap.to(guideline, { opacity: 1, duration: 0.4 });
     });
-  };
+  }
 
-  addEvt(window, 'scroll', onScroll, { passive: true });
-  addEvt(window, 'resize', () => { cacheLayout(); onScroll(); });
+  if (shuffleBtn) {
+    addEvt(shuffleBtn, 'click', () => {
+      elements.forEach((el, i) => {
+        gsap.to(el, {
+          left: ALIGN_ITEMS[i].rand.left,
+          top: ALIGN_ITEMS[i].rand.top,
+          duration: 0.5,
+          delay: i * 0.06,
+          ease: 'power2.out',
+        });
+      });
+      if (guideline) gsap.to(guideline, { opacity: 0, duration: 0.4 });
+    });
+  }
 }
 
-// ── S6 信噪比 ──
-function initSNR() {
+// ── S5 留白 ──
+function initWhitespace() {
+  const stepper = document.getElementById('df-ws-stepper');
+  const label = document.getElementById('df-ws-label');
+  const slide = document.getElementById('df-ws-slide');
+  const pattern = document.getElementById('df-ws-pattern');
+  if (!stepper || !slide) return;
+
+  const titleEl = slide.querySelector('.df-ws-title');
+  const bodyPs = slide.querySelectorAll('.df-ws-body p');
+  const chart = slide.querySelector('.df-ws-chart');
+  const src = slide.querySelector('.df-ws-source');
+
+  function applyStep(idx) {
+    const s = WHITESPACE_STOPS[idx];
+    gsap.to(slide, { padding: s.pad, duration: 0.5, ease: 'power2.out' });
+    gsap.to(titleEl, { fontSize: s.titleSize, marginBottom: s.titleMb, duration: 0.5, ease: 'power2.out' });
+    bodyPs.forEach(p => {
+      gsap.to(p, { fontSize: s.bodySize, marginBottom: s.bodyMb, duration: 0.5, ease: 'power2.out' });
+    });
+    gsap.to(chart, { height: s.chartH, margin: s.chartM, duration: 0.5, ease: 'power2.out' });
+    gsap.to(src, { fontSize: s.srcSize, opacity: s.srcOpacity, duration: 0.5, ease: 'power2.out' });
+    if (pattern) pattern.style.opacity = s.pattern ? '1' : '0';
+    if (label) label.textContent = s.label;
+
+    stepper.querySelectorAll('.df-step-btn').forEach(btn => {
+      btn.classList.toggle('df-step-active', parseInt(btn.dataset.step) === idx);
+    });
+  }
+
+  addEvt(stepper, 'click', (e) => {
+    const btn = e.target.closest('.df-step-btn');
+    if (!btn) return;
+    applyStep(parseInt(btn.dataset.step));
+  });
+
+  applyStep(0);
+}
+
+// ── S6 实战改造 ──
+function initMakeover() {
   const isMobile = window.innerWidth <= 768;
   if (isMobile) {
-    initSNRMobile();
+    initMakeoverMobile();
   } else {
-    initSNRDesktop();
+    initMakeoverDesktop();
   }
 }
 
-function updateSNR(step) {
-  if (step === _currentSNRStep) return;
-  _currentSNRStep = step;
+function updateMakeover(step) {
+  if (step === _currentMakeoverStep) return;
+  _currentMakeoverStep = step;
 
   const border = document.querySelector('.df-snr-border');
   const gradient = document.querySelector('.df-snr-gradient');
@@ -900,13 +976,13 @@ function updateSNR(step) {
     gsap.to(footer, { opacity: 1, duration: 0.4 });
     if (bullets) gsap.to(bullets, { fontSize: '13px', duration: 0.4 });
   }
-  // Step 1: 去装饰
+  // Step 1: 删掉噪音
   if (step >= 1) {
     gsap.to(border, { opacity: 0, duration: 0.5 });
     gsap.to(gradient, { opacity: 0, duration: 0.5 });
     cliparts.forEach((c, i) => gsap.to(c, { opacity: 0, scale: 0.5, duration: 0.4, delay: i * 0.1 }));
   }
-  // Step 2: 精简文字
+  // Step 2: 建立对比
   if (step >= 2) {
     extras.forEach((li, i) => gsap.to(li, { opacity: 0, maxHeight: 0, marginBottom: 0, duration: 0.4, delay: i * 0.05 }));
     gsap.to(table, { opacity: 0, height: 0, duration: 0.5 });
@@ -916,7 +992,7 @@ function updateSNR(step) {
     gsap.to(table, { opacity: 1, height: 'auto', duration: 0.4 });
     gsap.to(chart, { opacity: 0, height: 0, duration: 0.3 });
   }
-  // Step 3: 优化排版
+  // Step 3: 精简留白
   if (step >= 3) {
     if (title) gsap.to(title, { fontFamily: "var(--font-heading)", textShadow: 'none', fontSize: '22px', marginBottom: '16px', duration: 0.5 });
     if (bullets) gsap.to(bullets, { fontSize: '15px', duration: 0.5 });
@@ -926,7 +1002,7 @@ function updateSNR(step) {
     if (bullets) gsap.to(bullets, { fontSize: '13px', duration: 0.4 });
     gsap.to(footer, { opacity: 1, fontSize: '10px', duration: 0.4 });
   }
-  // Step 4: 最终版
+  // Step 4: 统一风格
   if (step >= 4) {
     if (title) gsap.to(title, { fontSize: '26px', color: 'var(--text-on-dark)', fontWeight: 600, marginBottom: '20px', duration: 0.5 });
     if (bullets) gsap.to(bullets, { fontSize: '16px', color: 'var(--text-on-dark-2)', duration: 0.5 });
@@ -944,7 +1020,7 @@ function updateSNR(step) {
   });
 }
 
-function initSNRDesktop() {
+function initMakeoverDesktop() {
   const wrap = document.getElementById('df-snr-wrap');
   const slideCol = document.getElementById('df-snr-slide-col');
   if (!wrap || !slideCol) return;
@@ -975,7 +1051,7 @@ function initSNRDesktop() {
 
       const progress = Math.max(0, Math.min(1, -wrapRect.top / Math.max(1, wrapH - viewH)));
       const stepIdx = Math.min(4, Math.floor(progress * 5));
-      updateSNR(stepIdx);
+      updateMakeover(stepIdx);
     });
   };
 
@@ -983,76 +1059,20 @@ function initSNRDesktop() {
   onScroll();
 }
 
-function initSNRMobile() {
+function initMakeoverMobile() {
   const tabs = document.getElementById('df-snr-tabs');
   if (!tabs) return;
   addEvt(tabs, 'click', (e) => {
     const tab = e.target.closest('.df-snr-tab');
     if (!tab) return;
-    updateSNR(parseInt(tab.dataset.step));
+    updateMakeover(parseInt(tab.dataset.step));
   });
-  updateSNR(0);
-}
-
-// ── S7 视觉层次 ──
-function initHierarchy() {
-  const sizeSlider = document.getElementById('df-hier-size');
-  const colorSlider = document.getElementById('df-hier-color');
-  const posSlider = document.getElementById('df-hier-position');
-  const label = document.getElementById('df-hier-label');
-  if (!sizeSlider) return;
-
-  const l1 = document.querySelector('.df-h-l1');
-  const l2 = document.querySelector('.df-h-l2');
-  const l3 = document.querySelector('.df-h-l3');
-  const l5 = document.querySelector('.df-h-l5');
-
-  const lerp = (a, b, t) => a + (b - a) * t;
-  const lerpColor = (a, b, t) => {
-    const parse = (h) => [parseInt(h.slice(1,3),16), parseInt(h.slice(3,5),16), parseInt(h.slice(5,7),16)];
-    const [r1,g1,b1] = parse(a);
-    const [r2,g2,b2] = parse(b);
-    return `rgb(${Math.round(lerp(r1,r2,t))},${Math.round(lerp(g1,g2,t))},${Math.round(lerp(b1,b2,t))})`;
-  };
-
-  const update = () => {
-    const sv = sizeSlider.value / 100;
-    const cv = colorSlider.value / 100;
-    const pv = posSlider.value / 100;
-
-    // 大小
-    if (l1) l1.style.fontSize = lerp(16, 42, sv) + 'px';
-    if (l2) l2.style.fontSize = lerp(16, 28, sv) + 'px';
-    if (l3) l3.style.fontSize = lerp(16, 16, sv) + 'px';
-    if (l5) l5.style.fontSize = lerp(16, 12, sv) + 'px';
-
-    // 颜色
-    if (l1) l1.style.color = lerpColor('#888888', '#1d1d1f', cv);
-    if (l2) l2.style.color = lerpColor('#888888', '#444444', cv);
-    if (l3) l3.style.color = lerpColor('#888888', '#666666', cv);
-    if (l5) l5.style.color = lerpColor('#888888', '#aaaaaa', cv);
-
-    // 位置权重
-    if (l1) l1.style.marginBottom = lerp(8, 40, pv) + 'px';
-
-    // 标签
-    const avg = (sv + cv + pv) / 3;
-    if (label) {
-      if (avg < 0.33) label.textContent = '层次感：弱';
-      else if (avg < 0.66) label.textContent = '层次感：中等';
-      else label.textContent = '层次感：强 ✓';
-    }
-  };
-
-  addEvt(sizeSlider, 'input', update);
-  addEvt(colorSlider, 'input', update);
-  addEvt(posSlider, 'input', update);
-  update();
+  updateMakeover(0);
 }
 
 // ── 滚动入场动画 ──
 function initScrollAnimations() {
-  ['#df-contrast','#df-alignment','#df-whitespace','#df-color','#df-fonts','#df-snr','#df-hierarchy'].forEach(id => {
+  ['#df-showcase','#df-contrast','#df-color','#df-alignment','#df-whitespace','#df-makeover'].forEach(id => {
     fadeIn(`${id} .section-header`);
   });
 
@@ -1060,9 +1080,7 @@ function initScrollAnimations() {
   fadeIn('.df-align-wrap', { y: 50, duration: 0.7 });
   fadeIn('.df-ws-wrap', { y: 50, duration: 0.7 });
   fadeIn('.df-color-wrap', { y: 50, duration: 0.7 });
-  fadeIn('.df-fonts-wrap', { y: 50, duration: 0.7 });
   fadeIn('.df-snr-wrap', { y: 50, duration: 0.7 });
-  fadeIn('.df-hier-wrap', { y: 50, duration: 0.7 });
 
   fadeIn('.page-footer-quote', { y: 40, duration: 0.9 });
   fadeIn('.page-footer-cta .page-footer-nav', { y: 25, duration: 0.6 });
@@ -1079,5 +1097,5 @@ export function destroy() {
   _eventHandlers = [];
   _rafIds.forEach(id => cancelAnimationFrame(id));
   _rafIds = [];
-  _currentSNRStep = -1;
+  _currentMakeoverStep = -1;
 }
