@@ -1,4 +1,5 @@
 // BeforeAfter.js — 拖拽/滑动对比组件
+// 使用 clip-path 裁切，内容不变形
 // Pointer Events 实现，移动端手指滑动流畅
 
 /**
@@ -25,7 +26,7 @@ export function createBeforeAfter(container, {
 
   wrapper.innerHTML = `
     <div class="before-after__after">${afterContent}</div>
-    <div class="before-after__before" style="width:${initialPosition}%;">${beforeContent}</div>
+    <div class="before-after__before" style="clip-path:inset(0 ${100 - initialPosition}% 0 0);">${beforeContent}</div>
     <div class="before-after__handle" style="left:${initialPosition}%;">
       <div class="before-after__handle-line"></div>
       <div class="before-after__handle-grip">
@@ -49,7 +50,8 @@ export function createBeforeAfter(container, {
 
   function setPosition(pct) {
     const clamped = Math.max(0, Math.min(100, pct));
-    beforeEl.style.width = clamped + '%';
+    // clip-path 裁切：内容始终全宽，只改变可见区域
+    beforeEl.style.clipPath = `inset(0 ${100 - clamped}% 0 0)`;
     handle.style.left = clamped + '%';
   }
 
@@ -59,11 +61,10 @@ export function createBeforeAfter(container, {
   }
 
   function onPointerDown(e) {
-    if (e.target.closest('.before-after__handle') || e.target === wrapper) {
-      isDragging = true;
-      wrapper.setPointerCapture(e.pointerId);
-      setPosition(getPercentFromEvent(e));
-    }
+    // 允许从 before/after 内容区域开始拖拽
+    isDragging = true;
+    wrapper.setPointerCapture(e.pointerId);
+    setPosition(getPercentFromEvent(e));
   }
 
   function onPointerMove(e) {
@@ -80,13 +81,6 @@ export function createBeforeAfter(container, {
   wrapper.addEventListener('pointermove', onPointerMove);
   wrapper.addEventListener('pointerup', onPointerUp);
   wrapper.addEventListener('pointercancel', onPointerUp);
-
-  // 点击任意位置也移动分割线
-  wrapper.addEventListener('click', (e) => {
-    if (!isDragging) {
-      setPosition(getPercentFromEvent(e));
-    }
-  });
 
   return {
     setPosition,

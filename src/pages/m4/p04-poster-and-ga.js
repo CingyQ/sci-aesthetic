@@ -681,15 +681,15 @@ function _initLayoutSection() {
   if (!wrapEl || !previewColEl) return;
 
   let ticking = false;
-  let wrapTop = 0, wrapH = 0, previewH = 0, maxTranslate = 0;
-  const viewH = window.innerHeight;
+  let wrapH = 0, previewH = 0, maxTranslate = 0, centerOffset = 0;
+  let viewH = window.innerHeight;
 
   function cacheLayout() {
-    const rect = wrapEl.getBoundingClientRect();
-    wrapTop = rect.top + window.scrollY;
+    viewH = window.innerHeight;
     wrapH = wrapEl.offsetHeight;
     previewH = previewColEl.offsetHeight;
     maxTranslate = Math.max(0, wrapH - previewH);
+    centerOffset = Math.max(0, (viewH - previewH) / 2);
   }
 
   function onScroll() {
@@ -697,10 +697,16 @@ function _initLayoutSection() {
       _layoutRafId = requestAnimationFrame(() => {
         // 仅桌面端启用
         if (window.innerWidth > 768) {
-          const scrollTop = window.scrollY;
-          const offsetInSection = scrollTop + viewH * 0.4 - wrapTop;
-          const t = Math.max(0, Math.min(maxTranslate, offsetInSection));
-          previewColEl.style.transform = `translateY(${t}px)`;
+          const wrapRect = wrapEl.getBoundingClientRect();
+
+          if (wrapRect.top >= centerOffset) {
+            previewColEl.style.transform = 'translateY(0)';
+          } else if (-wrapRect.top + viewH >= wrapH) {
+            previewColEl.style.transform = `translateY(${maxTranslate}px)`;
+          } else {
+            const translate = Math.min(-wrapRect.top + centerOffset, maxTranslate);
+            previewColEl.style.transform = `translateY(${translate}px)`;
+          }
         } else {
           previewColEl.style.transform = '';
         }

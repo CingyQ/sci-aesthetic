@@ -830,13 +830,14 @@ function initFontsStickyPreview() {
   if (!container || !preview) return;
 
   let viewH = window.innerHeight;
-  let containerH = 0, previewH = 0, maxTranslate = 0;
+  let containerH = 0, previewH = 0, maxTranslate = 0, centerOffset = 0;
 
   function cacheLayout() {
     viewH = window.innerHeight;
     containerH = container.offsetHeight;
     previewH = preview.offsetHeight;
     maxTranslate = Math.max(0, containerH - previewH);
+    centerOffset = Math.max(0, (viewH - previewH) / 2);
   }
   requestAnimationFrame(cacheLayout);
 
@@ -848,12 +849,12 @@ function initFontsStickyPreview() {
       ticking = false;
       const rect = container.getBoundingClientRect();
 
-      if (rect.top >= 0) {
+      if (rect.top >= centerOffset) {
         preview.style.transform = 'translateY(0)';
       } else if (-rect.top + viewH >= containerH) {
         preview.style.transform = `translateY(${maxTranslate}px)`;
       } else {
-        const translate = Math.min(-rect.top, maxTranslate);
+        const translate = Math.min(-rect.top + centerOffset, maxTranslate);
         preview.style.transform = `translateY(${translate}px)`;
       }
     });
@@ -952,6 +953,8 @@ function initSNRDesktop() {
   const wrapH  = wrap.offsetHeight;
   const maxTranslate = Math.max(0, wrapH - slideH);
   const viewH = window.innerHeight;
+  // 居中偏移：让幻灯片在视口中垂直居中
+  const centerOffset = Math.max(0, (viewH - slideH) / 2);
 
   let ticking = false;
   const onScroll = () => {
@@ -961,12 +964,12 @@ function initSNRDesktop() {
       ticking = false;
       const wrapRect = wrap.getBoundingClientRect();
 
-      if (wrapRect.top >= 0) {
+      if (wrapRect.top >= centerOffset) {
         slideCol.style.transform = 'translateY(0)';
       } else if (-wrapRect.top + viewH >= wrapH) {
         slideCol.style.transform = `translateY(${maxTranslate}px)`;
       } else {
-        const translate = Math.min(-wrapRect.top, maxTranslate);
+        const translate = Math.min(-wrapRect.top + centerOffset, maxTranslate);
         slideCol.style.transform = `translateY(${translate}px)`;
       }
 

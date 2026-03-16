@@ -920,10 +920,10 @@ tr:hover td {
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
   height: 100%;
-  overflow: hidden;
   z-index: 1;
-  border-right: 2px solid rgba(255, 255, 255, 0.3);
+  /* 使用 clip-path 裁切，不用 width——内容不变形 */
 }
 
 .before-after__handle {
