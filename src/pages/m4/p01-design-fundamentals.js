@@ -195,30 +195,30 @@ const SHOWCASE_SLIDES = [
   {
     before: `<div style="width:100%;height:100%;box-sizing:border-box;background:#fff;border-radius:12px;padding:40px;">
       <h3 style="font-size:22px;color:#333;margin-bottom:14px;">各组实验结果对比</h3>
-      <div style="display:flex;align-items:flex-end;gap:8px;height:55%;padding:0 12px;">
+      <div style="display:flex;align-items:flex-end;gap:8px;height:160px;padding:0 12px;">
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
-          <div style="width:100%;height:60%;background:linear-gradient(180deg,#e74c3c,#c0392b);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">A1</span>
+          <div style="width:100%;height:96px;background:linear-gradient(180deg,#e74c3c,#c0392b);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">A1</span>
         </div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
-          <div style="width:100%;height:80%;background:linear-gradient(180deg,#3498db,#2980b9);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">A2</span>
+          <div style="width:100%;height:128px;background:linear-gradient(180deg,#3498db,#2980b9);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">A2</span>
         </div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
-          <div style="width:100%;height:45%;background:linear-gradient(180deg,#2ecc71,#27ae60);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">B1</span>
+          <div style="width:100%;height:72px;background:linear-gradient(180deg,#2ecc71,#27ae60);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">B1</span>
         </div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
-          <div style="width:100%;height:72%;background:linear-gradient(180deg,#9b59b6,#8e44ad);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">B2</span>
+          <div style="width:100%;height:115px;background:linear-gradient(180deg,#9b59b6,#8e44ad);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">B2</span>
         </div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
-          <div style="width:100%;height:55%;background:linear-gradient(180deg,#e67e22,#d35400);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">C1</span>
+          <div style="width:100%;height:88px;background:linear-gradient(180deg,#e67e22,#d35400);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">C1</span>
         </div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
-          <div style="width:100%;height:90%;background:linear-gradient(180deg,#1abc9c,#16a085);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">C2</span>
+          <div style="width:100%;height:144px;background:linear-gradient(180deg,#1abc9c,#16a085);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">C2</span>
         </div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
-          <div style="width:100%;height:38%;background:linear-gradient(180deg,#f39c12,#e67e22);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">D1</span>
+          <div style="width:100%;height:60px;background:linear-gradient(180deg,#f39c12,#e67e22);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">D1</span>
         </div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;">
-          <div style="width:100%;height:65%;background:linear-gradient(180deg,#e91e63,#c2185b);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">D2</span>
+          <div style="width:100%;height:104px;background:linear-gradient(180deg,#e91e63,#c2185b);border-radius:4px 4px 0 0;box-shadow:2px 2px 4px rgba(0,0,0,0.2);"></div><span style="font-size:12px;color:#888;">D2</span>
         </div>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;justify-content:center;">
@@ -228,25 +228,27 @@ const SHOWCASE_SLIDES = [
     after: `<div style="width:100%;height:100%;box-sizing:border-box;background:#fff;border-radius:12px;padding:44px;display:flex;flex-direction:column;justify-content:center;">
       <h3 style="font-size:24px;color:#1d1d1f;margin-bottom:6px;font-weight:700;">融合模型准确率高出 12%</h3>
       <p style="font-size:15px;color:#999;margin-bottom:24px;">实验组 vs 对照组 · F1-Score</p>
-      <div style="display:flex;align-items:flex-end;gap:32px;height:45%;padding:0 28px;">
+      <div style="display:flex;align-items:flex-end;gap:32px;height:140px;padding:0 28px;">
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;">
           <div style="display:flex;gap:6px;width:100%;align-items:flex-end;">
-            <div style="flex:1;height:60%;background:var(--module-4);border-radius:5px 5px 0 0;"></div>
-            <div style="flex:1;height:45%;background:#e0e0e0;border-radius:5px 5px 0 0;"></div>
+            <div style="flex:1;height:84px;background:var(--module-4);border-radius:5px 5px 0 0;"></div>
+            <div style="flex:1;height:63px;background:#e0e0e0;border-radius:5px 5px 0 0;"></div>
           </div>
           <span style="font-size:14px;color:#888;">文本</span>
         </div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;">
           <div style="display:flex;gap:6px;width:100%;align-items:flex-end;">
-            <div style="flex:1;height:75%;background:var(--module-4);border-radius:5px 5px 0 0;"></div>
-            <div style="flex:1;height:52%;background:#e0e0e0;border-radius:5px 5px 0 0;"></div>
+            <div style="flex:1;height:105px;background:var(--module-4);border-radius:5px 5px 0 0;"></div>
+            <div style="flex:1;height:73px;background:#e0e0e0;border-radius:5px 5px 0 0;"></div>
           </div>
           <span style="font-size:14px;color:#888;">图像</span>
         </div>
         <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;">
           <div style="display:flex;gap:6px;width:100%;align-items:flex-end;">
-            <div style="flex:1;height:92%;background:var(--module-4);border-radius:5px 5px 0 0;"></div>
-            <div style="flex:1;height:58%;background:#e0e0e0;border-radius:5px 5px 0 0;"></div>
+            <div style="flex:1;height:130px;background:var(--module-4);border-radius:5px 5px 0 0;position:relative;">
+              <div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:12px;color:var(--module-4);font-weight:700;white-space:nowrap;">92%</div>
+            </div>
+            <div style="flex:1;height:81px;background:#e0e0e0;border-radius:5px 5px 0 0;"></div>
           </div>
           <span style="font-size:14px;color:#888;">融合</span>
         </div>
