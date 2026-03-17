@@ -1,4 +1,4 @@
-import{k as T,g as L,f as g}from"./ScrollAnimations-B5Kyk-Xq.js";import{n as w}from"./index-BY6Mz6oK.js";let k=[],h=[];function B(){return`<div class="page-scroll">
+import{k as T,g as L,f as g}from"./ScrollAnimations-B5Kyk-Xq.js";import{n as w}from"./index-Bdi07Soh.js";let k=[],h=[];function B(){return`<div class="page-scroll">
 <style>
 /* ── M2 全局占位符样式（仅在 p01 中声明） ── */
 .m2-placeholder { background: linear-gradient(135deg,#2d2d4a 0%,#1a1a2e 100%); border:1px dashed rgba(184,184,232,0.3); border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; min-height:200px; }
