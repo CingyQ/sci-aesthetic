@@ -1,4 +1,4 @@
-import{k as N,g as E,S as R}from"./ScrollAnimations-B5Kyk-Xq.js";import{c as C}from"./CodeEditor-CmZbxDVd.js";import{n as j}from"./index-CTmOWimm.js";import{s as W,l as z,c as T}from"./transform-ChPGlSkf.js";import{l as A}from"./line-DQLATXjo.js";import{m as $}from"./monotone-KI2q-aQs.js";import"./path-BckJrc8i.js";let P=null,S=[];const B=[{num:"01",title:"数据整理",en:"Data Cleaning",icon:"🗂",desc:"在绘图前整理数据，确保格式正确、缺失值处理妥当，是出版级图表的基础。",code:`# R 数据整理示例
+import{k as N,g as E,S as R}from"./ScrollAnimations-B5Kyk-Xq.js";import{c as C}from"./CodeEditor-CmZbxDVd.js";import{n as j}from"./index-CwbHssov.js";import{s as W,l as z,c as T}from"./transform-ChPGlSkf.js";import{l as A}from"./line-DQLATXjo.js";import{m as $}from"./monotone-KI2q-aQs.js";import"./path-BckJrc8i.js";let P=null,S=[];const B=[{num:"01",title:"数据整理",en:"Data Cleaning",icon:"🗂",desc:"在绘图前整理数据，确保格式正确、缺失值处理妥当，是出版级图表的基础。",code:`# R 数据整理示例
 library(tidyverse)
 
 data <- read_csv("experiment.csv") |>
