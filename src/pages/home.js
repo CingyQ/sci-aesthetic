@@ -4,6 +4,118 @@ import { fadeIn, countUp, scaleReveal, parallax, killAll, gsap, ScrollTrigger } 
 import { getAllProgress } from '../utils/progress.js';
 import { navigateTo } from '../utils/router.js';
 
+// 首页对比展示数据（复用 P01 的幻灯片素材，但简化为 3 组）
+const HOME_SHOWCASE = [
+  {
+    label: '封面',
+    before: `<div style="width:100%;height:100%;box-sizing:border-box;background:linear-gradient(135deg,#c8d8ee,#dde8ff);padding:40px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+      <div style="font-size:17px;font-weight:bold;color:#003399;line-height:1.4;margin-bottom:8px;">基于深度学习的多模态医学影像分析与肿瘤区域自动分割系统关键技术研究进展汇报</div>
+      <div style="font-size:11px;color:#555;margin-bottom:12px;">Research Progress on Key Technologies of Multi-modal Medical Image Analysis</div>
+      <div style="width:60%;height:1px;background:linear-gradient(90deg,transparent,#003399,transparent);margin:8px auto;"></div>
+      <div style="font-size:12px;color:#333;line-height:2;">汇报人：张三 | 指导老师：李四 教授<br>课题组：医学AI实验室 · 计算机科学与技术学院</div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:10px;background:linear-gradient(to right,#1a4a8a,#2860b0);"></div>
+    </div>`,
+    after: `<div style="width:100%;height:100%;box-sizing:border-box;background:#1d1d1f;padding:48px;display:flex;flex-direction:column;justify-content:center;">
+      <div style="width:50px;height:4px;background:#F0B27A;border-radius:2px;margin-bottom:20px;"></div>
+      <div style="font-size:12px;color:#666;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:16px;">组会汇报 · 第 14 次</div>
+      <div style="font-size:28px;font-weight:700;color:#f5f5f7;line-height:1.35;margin-bottom:24px;">多模态医学影像<br>肿瘤区域自动分割</div>
+      <div style="font-size:14px;color:#999;">张三 · 导师：李四 教授</div>
+      <div style="border-top:1px solid rgba(255,255,255,0.08);margin-top:20px;padding-top:12px;font-size:12px;color:#555;display:flex;justify-content:space-between;">
+        <span>医学AI实验室</span><span>2024 · 12</span>
+      </div>
+    </div>`,
+    caption: '同样的信息，不同的表达',
+  },
+  {
+    label: '图表',
+    before: `<div style="width:100%;height:100%;box-sizing:border-box;background:#fff;padding:40px;">
+      <div style="font-size:16px;font-weight:bold;color:#333;margin-bottom:12px;text-align:center;">Fig.3 Results of Experiment</div>
+      <div style="display:flex;align-items:flex-end;gap:6px;height:160px;padding:0 20px;">
+        <div style="flex:1;height:60%;background:linear-gradient(180deg,#e74c3c,#c0392b);border-radius:3px 3px 0 0;"></div>
+        <div style="flex:1;height:80%;background:linear-gradient(180deg,#3498db,#2980b9);border-radius:3px 3px 0 0;"></div>
+        <div style="flex:1;height:40%;background:linear-gradient(180deg,#2ecc71,#27ae60);border-radius:3px 3px 0 0;"></div>
+        <div style="flex:1;height:65%;background:linear-gradient(180deg,#9b59b6,#8e44ad);border-radius:3px 3px 0 0;"></div>
+        <div style="flex:1;height:50%;background:linear-gradient(180deg,#e67e22,#d35400);border-radius:3px 3px 0 0;"></div>
+        <div style="flex:1;height:90%;background:linear-gradient(180deg,#1abc9c,#16a085);border-radius:3px 3px 0 0;"></div>
+        <div style="flex:1;height:35%;background:linear-gradient(180deg,#f39c12,#e67e22);border-radius:3px 3px 0 0;"></div>
+        <div style="flex:1;height:72%;background:linear-gradient(180deg,#e91e63,#c2185b);border-radius:3px 3px 0 0;"></div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;justify-content:center;font-size:11px;">
+        <span style="color:#e74c3c;">■ A1</span><span style="color:#3498db;">■ A2</span><span style="color:#2ecc71;">■ B1</span><span style="color:#9b59b6;">■ B2</span><span style="color:#e67e22;">■ C1</span><span style="color:#1abc9c;">■ C2</span><span style="color:#f39c12;">■ D1</span><span style="color:#e91e63;">■ D2</span>
+      </div>
+    </div>`,
+    after: `<div style="width:100%;height:100%;box-sizing:border-box;background:#fff;padding:44px;display:flex;flex-direction:column;justify-content:center;">
+      <div style="font-size:22px;font-weight:700;color:#1d1d1f;margin-bottom:4px;">实验组在第 8 周达到峰值</div>
+      <div style="font-size:13px;color:#aaa;margin-bottom:20px;">平均得分 · n=12/组</div>
+      <div style="display:flex;align-items:flex-end;gap:28px;height:140px;padding:0 20px;">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;">
+          <div style="display:flex;gap:5px;width:100%;align-items:flex-end;">
+            <div style="flex:1;height:56px;background:#e0e0e0;border-radius:4px 4px 0 0;"></div>
+            <div style="flex:1;height:60px;background:#F0B27A;border-radius:4px 4px 0 0;"></div>
+          </div>
+          <span style="font-size:13px;color:#aaa;">W1</span>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;">
+          <div style="display:flex;gap:5px;width:100%;align-items:flex-end;">
+            <div style="flex:1;height:60px;background:#e0e0e0;border-radius:4px 4px 0 0;"></div>
+            <div style="flex:1;height:88px;background:#F0B27A;border-radius:4px 4px 0 0;"></div>
+          </div>
+          <span style="font-size:13px;color:#aaa;">W4</span>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;">
+          <div style="display:flex;gap:5px;width:100%;align-items:flex-end;">
+            <div style="flex:1;height:64px;background:#e0e0e0;border-radius:4px 4px 0 0;"></div>
+            <div style="flex:1;height:120px;background:#F0B27A;border-radius:4px 4px 0 0;position:relative;">
+              <div style="position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:11px;color:#F0B27A;font-weight:700;white-space:nowrap;">峰值</div>
+            </div>
+          </div>
+          <span style="font-size:13px;color:#F0B27A;font-weight:600;">W8</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:14px;justify-content:center;margin-top:12px;">
+        <span style="font-size:12px;color:#e0e0e0;">● 对照组</span>
+        <span style="font-size:12px;color:#F0B27A;">● 实验组</span>
+      </div>
+    </div>`,
+    caption: '8 种颜色变 2 种——数据更清晰',
+  },
+  {
+    label: '结论',
+    before: `<div style="width:100%;height:100%;box-sizing:border-box;background:#fff;padding:40px;display:flex;flex-direction:column;justify-content:center;">
+      <div style="font-size:20px;font-weight:bold;text-align:center;color:#003399;margin-bottom:10px;">Summary &amp; Conclusions</div>
+      <div style="width:60%;height:2px;background:#003399;margin:0 auto 14px;"></div>
+      <ul style="font-size:14px;color:#444;list-style:disc inside;line-height:2;">
+        <li>多模态融合显著优于单模态</li>
+        <li>跨模态注意力机制有效</li>
+        <li>消融实验验证各组件贡献</li>
+        <li>社交媒体数据集上 SOTA</li>
+        <li>可扩展到视频模态</li>
+        <li>未来：更大规模预训练</li>
+      </ul>
+      <div style="text-align:center;margin-top:12px;font-size:32px;color:#003399;font-weight:bold;">Thank You! 🎉✨🎊</div>
+    </div>`,
+    after: `<div style="width:100%;height:100%;box-sizing:border-box;background:#1d1d1f;padding:48px;display:flex;flex-direction:column;justify-content:center;">
+      <div style="font-size:12px;color:#555;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:24px;">Take-home Messages</div>
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <span style="font-size:28px;font-weight:700;color:#F0B27A;line-height:1;">1</span>
+          <div><div style="font-size:17px;font-weight:600;color:#f5f5f7;">多模态融合准确率 +12%</div><div style="font-size:13px;color:#666;margin-top:3px;">显著优于纯文本和纯图像方法</div></div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <span style="font-size:28px;font-weight:700;color:#F0B27A;line-height:1;">2</span>
+          <div><div style="font-size:17px;font-weight:600;color:#f5f5f7;">跨模态注意力是关键</div><div style="font-size:13px;color:#666;margin-top:3px;">消融实验证实贡献度最高</div></div>
+        </div>
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <span style="font-size:28px;font-weight:700;color:#F0B27A;line-height:1;">3</span>
+          <div><div style="font-size:17px;font-weight:600;color:#f5f5f7;">框架可扩展至视频</div><div style="font-size:13px;color:#666;margin-top:3px;">下一步：大规模多模态预训练</div></div>
+        </div>
+      </div>
+      <div style="border-top:1px solid rgba(255,255,255,0.06);margin-top:20px;padding-top:12px;font-size:12px;color:#444;">zhangsan@university.edu</div>
+    </div>`,
+    caption: '6 条结论变 3 条——记住的更多',
+  },
+];
+
 // 模块数据
 const MODULES = [
   {
@@ -41,9 +153,9 @@ const MODULES = [
     title: '学术演示设计',
     subtitle: 'Academic Presentation Design',
     color: '#F0B27A',
-    pages: 8,
-    desc: '从一张幻灯片到完整学术传播物料——排版原则、注意力引导、海报设计、Graphical Abstract，全面提升学术表达力。',
-    highlights: ['注意力热力图交互', 'PPT 改造 Before/After', '学术海报布局模板'],
+    pages: 4,
+    desc: '4 条设计原则 + 6 组真实改造案例——从封面到结论，每一张 slide 都能脱胎换骨。',
+    highlights: ['PPT 改造 Before/After', '4 原则速成指南', '学术海报与 GA 设计'],
     icon: `<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`,
   },
 ];
@@ -110,6 +222,28 @@ export function render() {
         </div>
       </section>
 
+      <!-- ====== 对比冲击（深色）====== -->
+      <section class="section-dark home-showcase-section" id="home-showcase" style="padding:var(--space-3xl) var(--space-lg);min-height:80vh;display:flex;align-items:center;">
+        <div class="content-wrapper">
+          <div class="home-showcase-header" style="text-align:center;margin-bottom:var(--space-xl);">
+            <h2 class="home-section-title">同一份内容，两种表达</h2>
+            <p class="home-section-sub">差距就在细节里——我们教你怎么做到</p>
+          </div>
+          <div class="home-showcase-wrap">
+            <div class="home-showcase-tabs" id="home-showcase-tabs" style="display:flex;justify-content:center;margin-bottom:var(--space-md);flex-wrap:wrap;"></div>
+            <p class="home-showcase-label" id="home-showcase-label" style="font-size:12px;color:rgba(255,255,255,0.3);text-align:center;margin-bottom:8px;letter-spacing:0.08em;text-transform:uppercase;">BEFORE</p>
+            <div class="home-showcase-frame" id="home-showcase-frame" style="max-width:680px;margin:0 auto;aspect-ratio:16/9;border-radius:12px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.4);position:relative;cursor:pointer;transition:transform 0.3s,box-shadow 0.3s;">
+              <div id="home-showcase-before" style="position:absolute;inset:0;transition:opacity 0.6s ease;"></div>
+              <div id="home-showcase-after" style="position:absolute;inset:0;transition:opacity 0.6s ease;opacity:0;"></div>
+            </div>
+            <p class="home-showcase-caption" id="home-showcase-caption" style="font-size:16px;color:rgba(255,255,255,0.5);text-align:center;margin-top:20px;max-width:480px;margin-left:auto;margin-right:auto;line-height:1.7;min-height:1.7em;transition:opacity 0.4s;"></p>
+          </div>
+          <div style="text-align:center;margin-top:32px;">
+            <a href="#m4-p1" class="btn-primary" data-route="m4-p1" style="background:#F0B27A;">学习设计原则 →</a>
+          </div>
+        </div>
+      </section>
+
       <!-- ====== 模块导航（交错排列）====== -->
       ${MODULES.map((mod, i) => {
         const isOdd = i % 2 === 1;
@@ -155,7 +289,7 @@ export function render() {
         <div class="content-wrapper">
           <div class="home-stats-grid">
             <div class="home-stat-item">
-              <span class="stat-number home-stat-num" id="stat-entries" data-target="31">0</span>
+              <span class="stat-number home-stat-num" id="stat-entries" data-target="28">0</span>
               <span class="home-stat-label">知识词条</span>
             </div>
             <div class="home-stat-item">
@@ -358,6 +492,9 @@ export function init() {
     });
   }
 
+  // 首页对比展示
+  initHomeShowcase();
+
   // 模块按钮点击
   document.querySelectorAll('.home-module-btn[data-route]').forEach(btn => {
     btn.addEventListener('click', (e) => {
@@ -371,6 +508,14 @@ export function init() {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
       navigateTo('ref');
+    });
+  });
+
+  // 对比展示 CTA 按钮
+  document.querySelectorAll('[data-route="m4-p1"]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      navigateTo('m4-p1');
     });
   });
 
@@ -415,6 +560,10 @@ export function init() {
   // 统计区 fadeIn
   fadeIn('.home-stat-item', { stagger: 0.2, y: 40 });
 
+  // 对比展示 fadeIn
+  fadeIn('#home-showcase .home-showcase-header', { y: 40 });
+  fadeIn('.home-showcase-wrap', { y: 50, duration: 0.8 });
+
   // 学习路径 section fadeIn
   fadeIn('.home-path-header', { y: 40 });
   fadeIn('.home-role-selector', { y: 30 });
@@ -428,6 +577,98 @@ export function init() {
 
   // 速查手册 section
   fadeIn('.home-ref-section .content-wrapper', { y: 40 });
+}
+
+function initHomeShowcase() {
+  const frame = document.getElementById('home-showcase-frame');
+  const beforeEl = document.getElementById('home-showcase-before');
+  const afterEl = document.getElementById('home-showcase-after');
+  const captionEl = document.getElementById('home-showcase-caption');
+  const labelEl = document.getElementById('home-showcase-label');
+  const tabsEl = document.getElementById('home-showcase-tabs');
+  if (!frame || !beforeEl || !afterEl || !tabsEl) return;
+
+  let currentSlide = 0;
+  let currentPhase = 'before';
+  let autoTimer = null;
+
+  // 渲染 tab 按钮
+  HOME_SHOWCASE.forEach((s, i) => {
+    const tab = document.createElement('button');
+    tab.className = 'home-showcase-tab' + (i === 0 ? ' active' : '');
+    tab.dataset.idx = i;
+    tab.textContent = s.label;
+    tab.style.cssText = 'padding:8px 18px;border-radius:20px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.5);cursor:pointer;font-size:14px;transition:all 0.3s;margin:0 4px;';
+    tabsEl.appendChild(tab);
+  });
+
+  function showSlide(idx, phase) {
+    currentSlide = idx;
+    currentPhase = phase;
+    const slide = HOME_SHOWCASE[idx];
+
+    beforeEl.innerHTML = slide.before;
+    afterEl.innerHTML = slide.after;
+
+    if (phase === 'before') {
+      beforeEl.style.opacity = '1';
+      afterEl.style.opacity = '0';
+      if (labelEl) labelEl.textContent = 'BEFORE';
+    } else {
+      beforeEl.style.opacity = '0';
+      afterEl.style.opacity = '1';
+      if (labelEl) labelEl.textContent = 'AFTER';
+    }
+
+    if (captionEl) {
+      captionEl.style.opacity = '0';
+      setTimeout(() => {
+        captionEl.textContent = phase === 'after' ? slide.caption : '';
+        captionEl.style.opacity = phase === 'after' ? '1' : '0';
+      }, 200);
+    }
+
+    tabsEl.querySelectorAll('.home-showcase-tab').forEach((t, i) => {
+      const isActive = i === idx;
+      t.style.background = isActive ? '#F0B27A' : 'transparent';
+      t.style.borderColor = isActive ? '#F0B27A' : 'rgba(255,255,255,0.15)';
+      t.style.color = isActive ? '#1d1d1f' : 'rgba(255,255,255,0.5)';
+    });
+  }
+
+  showSlide(0, 'before');
+
+  // Tab 点击
+  tabsEl.addEventListener('click', (e) => {
+    const tab = e.target.closest('.home-showcase-tab');
+    if (!tab) return;
+    showSlide(parseInt(tab.dataset.idx), 'before');
+    clearInterval(autoTimer);
+    startAutoPlay();
+  });
+
+  // 点击 frame 切换 before/after
+  frame.addEventListener('click', () => {
+    showSlide(currentSlide, currentPhase === 'before' ? 'after' : 'before');
+    clearInterval(autoTimer);
+    startAutoPlay();
+  });
+
+  // 自动轮播
+  function startAutoPlay() {
+    autoTimer = setInterval(() => {
+      if (currentPhase === 'before') {
+        showSlide(currentSlide, 'after');
+      } else {
+        showSlide((currentSlide + 1) % HOME_SHOWCASE.length, 'before');
+      }
+    }, 2500);
+  }
+  startAutoPlay();
+
+  // 存储 timer 以便 destroy 时清理
+  window.__homeShowcaseTimer = autoTimer;
+  window.__homeShowcaseStartAutoPlay = startAutoPlay;
 }
 
 function initRoleSelector() {
@@ -490,6 +731,13 @@ export function destroy() {
   if (window.__heroResizeHandler) {
     window.removeEventListener('resize', window.__heroResizeHandler);
     delete window.__heroResizeHandler;
+  }
+
+  // 清理对比展示自动轮播
+  if (window.__homeShowcaseTimer) {
+    clearInterval(window.__homeShowcaseTimer);
+    delete window.__homeShowcaseTimer;
+    delete window.__homeShowcaseStartAutoPlay;
   }
 
   // 销毁所有 ScrollTrigger
