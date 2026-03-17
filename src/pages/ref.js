@@ -262,17 +262,26 @@ const styles = `
 .ref-shortcut-name { font-weight: 500; color: var(--text-on-light); font-size: 14px; min-width: 100px; }
 .ref-shortcut-desc { color: var(--text-on-light-2); font-size: 13px; }
 
+/* ── scroll-margin 移动端顶部栏 ── */
+#ref-tabs-section { scroll-margin-top: 56px; }
+
 /* ── 移动端 ── */
 @media (max-width: 768px) {
   .ref-chart-grid { grid-template-columns: 1fr; }
+  .ref-chart-card { padding: 12px; }
+  .ref-chart-name { font-size: 14px; }
+  .ref-chart-use, .ref-chart-avoid { font-size: 12px; }
   .ref-palette-row { flex-direction: column; align-items: flex-start; gap: 6px; }
-  .ref-palette-name { width: auto; min-width: auto; }
-  .ref-palette-swatches { gap: 6px; }
+  .ref-palette-name { width: auto; min-width: auto; font-size: 13px; }
+  .ref-palette-swatches { gap: 6px; flex-wrap: wrap; }
   .ref-swatch { width: 32px; height: 32px; }
-  .ref-table { font-size: 13px; }
-  .ref-table th, .ref-table td { padding: 8px 10px; }
+  .ref-table { font-size: 12px; min-width: 600px; }
+  .ref-table th, .ref-table td { padding: 8px 10px; white-space: nowrap; }
+  .ref-table td:first-child { position: sticky; left: 0; background: #2a2a2a; z-index: 1; }
+  .ref-table th:first-child { position: sticky; left: 0; background: #333; z-index: 1; }
   .ref-shortcut-item { flex-wrap: wrap; gap: 8px; }
   .ref-shortcut-name { min-width: auto; }
+  .ref-key { font-size: 12px; padding: 3px 8px; }
 }
 `;
 
@@ -476,10 +485,12 @@ function renderTab(id) {
   const renderer = renderers[id];
   if (!renderer) return;
 
+  // kill 残留动画，防止切换时"乱飘"
+  gsap.killTweensOf(contentEl);
   contentEl.innerHTML = renderer();
 
-  // 入场动画
-  gsap.fromTo(contentEl, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' });
+  // 仅 opacity 淡入，无位移
+  gsap.fromTo(contentEl, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: 'power2.out' });
 
   // 绑定交互
   bindTabInteractions(id, contentEl);
