@@ -1,4 +1,4 @@
-import{k as G,g as B,f as x}from"./ScrollAnimations-B5Kyk-Xq.js";import{n as C}from"./index-e5xGBvMn.js";let a=[],g=[];const f=[{id:"select",name:"选择工具",shortcut:"V",category:"select",desc:"选中、移动、缩放和旋转完整对象。按住 Shift 多选，拖拽角点等比缩放。",use:"选中并整体移动图表元素、调整整体尺寸",svgDemo:`<svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
+import{k as G,g as B,f as x}from"./ScrollAnimations-B5Kyk-Xq.js";import{n as C}from"./index-D9wLY_eR.js";let a=[],g=[];const f=[{id:"select",name:"选择工具",shortcut:"V",category:"select",desc:"选中、移动、缩放和旋转完整对象。按住 Shift 多选，拖拽角点等比缩放。",use:"选中并整体移动图表元素、调整整体尺寸",svgDemo:`<svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">
   <rect x="40" y="30" width="80" height="60" rx="4" fill="none" stroke="#95D5B2" stroke-width="1.5" stroke-dasharray="4 3" class="select-box" style="opacity:0"/>
   <rect x="50" y="40" width="60" height="40" rx="3" fill="#2d2d4a" stroke="#7EC8E3" stroke-width="1.5" class="select-obj"/>
   <circle cx="40" cy="30" r="4" fill="#95D5B2" class="select-handle" style="opacity:0"/>
