@@ -1,4 +1,4 @@
-import{k as S,g as r,f as s}from"./ScrollAnimations-B5Kyk-Xq.js";import{n as z}from"./index-D9wLY_eR.js";import{c as T}from"./TabSwitcher-B5dsPqHB.js";let b=[],u=[],c=null,m=0,y=0;function p(a,t,i,e){a&&(a.addEventListener(t,i,e),b.push({el:a,type:t,fn:i,opts:e}))}const E=`
+import{k as S,g as r,f as s}from"./ScrollAnimations-B5Kyk-Xq.js";import{n as z}from"./index-BY6Mz6oK.js";import{c as T}from"./TabSwitcher-B5dsPqHB.js";let b=[],u=[],c=null,m=0,y=0;function p(a,t,i,e){a&&(a.addEventListener(t,i,e),b.push({el:a,type:t,fn:i,opts:e}))}const E=`
 /* ── Hero 光晕 ── */
 .pga-hero { position:relative; overflow:hidden; }
 .pga-hero::before,
