@@ -151,7 +151,7 @@ const styles = `
 .ref-copy-toast.ref-toast-show { opacity: 1; }
 
 /* ── Tab 1: 图表选择 ── */
-.ref-chart-group { margin-bottom: var(--space-lg); }
+.ref-chart-group { margin-bottom: var(--space-lg); max-width: 960px; margin-left: auto; margin-right: auto; }
 .ref-chart-group-title {
   font-size: var(--text-heading); font-weight: 600; color: var(--text-on-light);
   margin-bottom: var(--space-sm); padding-bottom: 8px;
@@ -183,7 +183,7 @@ const styles = `
 .ref-chart-avoid span { color: var(--color-error); font-weight: 500; }
 
 /* ── Tab 2: 配色方案 ── */
-.ref-palette-group { margin-bottom: var(--space-lg); }
+.ref-palette-group { margin-bottom: var(--space-lg); max-width: 960px; margin-left: auto; margin-right: auto; }
 .ref-palette-group-title {
   font-size: var(--text-heading); font-weight: 600; color: var(--text-on-light);
   margin-bottom: var(--space-sm); padding-bottom: 8px;
@@ -207,7 +207,7 @@ const styles = `
 .ref-swatch:active { transform: scale(0.95); }
 
 /* ── Tab 3 & 4: 表格 ── */
-.ref-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-sm); }
+.ref-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: var(--radius-sm); max-width: 960px; margin: 0 auto; }
 .ref-table {
   width: 100%; border-collapse: collapse; font-size: 14px;
   background: var(--bg-dark); color: var(--text-on-dark);
@@ -238,7 +238,7 @@ const styles = `
 .ref-dpi-cell { white-space: pre-line; }
 
 /* ── Tab 5: 快捷键 ── */
-.ref-shortcut-group { margin-bottom: var(--space-lg); }
+.ref-shortcut-group { margin-bottom: var(--space-lg); max-width: 960px; margin-left: auto; margin-right: auto; }
 .ref-shortcut-group-title {
   font-size: var(--text-heading); font-weight: 600; color: var(--text-on-light);
   margin-bottom: var(--space-sm); padding-bottom: 8px;
