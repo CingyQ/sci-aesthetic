@@ -333,8 +333,8 @@ export function render() {
       </section>
 
       <!-- ====== 速查手册入口（深色）====== -->
-      <section class="section-dark home-ref-section">
-        <div class="content-wrapper" style="text-align:center;">
+      <section class="section-dark home-ref-section" style="padding:var(--space-3xl) var(--space-lg);min-height:40vh;display:flex;align-items:center;justify-content:center;">
+        <div style="text-align:center;width:100%;max-width:var(--w-content);margin:0 auto;">
           <h2 class="home-section-title">速查手册</h2>
           <p class="home-section-sub" style="margin-bottom:var(--space-lg);">图表选择 · 配色方案 · 导出参数 · 快捷键 · 期刊规格<br>随时查阅，一键复制</p>
           <a href="#ref" class="btn-primary" data-route="ref">打开速查手册</a>
